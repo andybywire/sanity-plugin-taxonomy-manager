@@ -6,7 +6,7 @@
   "parts": [
     {
       "implements": "part:@sanity/base/schema-type",
-      "path": "skosConcept.js"
+      "path": "skosTaxonomySettings.js"
     },
     {
       "implements": "part:@sanity/base/schema-type",
@@ -14,7 +14,7 @@
     },
     {
       "implements": "part:@sanity/base/schema-type",
-      "path": "skosTaxonomySettings.js"
+      "path": "skosConcept.js"
     },
     {
       "implements": "part:@sanity/base/schema-type",
