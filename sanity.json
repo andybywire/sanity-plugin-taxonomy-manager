@@ -1,0 +1,24 @@
+{
+  "paths": {
+    "source": "./src",
+    "compiled": "./lib"
+  },
+  "parts": [
+    {
+      "implements": "part:@sanity/base/schema-type",
+      "path": "skosConcept.js"
+    },
+    {
+      "implements": "part:@sanity/base/schema-type",
+      "path": "skosConceptScheme.js"
+    },
+    {
+      "implements": "part:@sanity/base/schema-type",
+      "path": "skosTaxonomySettings.js"
+    },
+    {
+      "implements": "part:@sanity/base/schema-type",
+      "path": "objects/baseIri.js"
+    }
+  ]
+}

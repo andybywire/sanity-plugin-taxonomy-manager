@@ -1,0 +1,70 @@
+{
+  "name": "sanity-plugin-taxonomy-manager",
+  "version": "1.0.0",
+  "description": "Create and manage SKOS compliant taxonomies, thesauri, and classification schemes in Sanity Studio.",
+  "scripts": {
+    "lint": "eslint .",
+    "build": "sanipack build",
+    "watch": "sanipack build --watch",
+    "prepublishOnly": "sanipack build && sanipack verify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/andybywire/sanity-plugin-taxonomy-manager.git"
+  },
+  "keywords": [
+    "sanity",
+    "sanity-plugin"
+  ],
+  "author": "Andy Fitzgerald",
+  "license": "MIT",
+  "dependencies": {
+    "@reach/auto-id": "^0.16.0",
+    "@sanity/base": "^2.28.2",
+    "@sanity/core": "^2.28.1",
+    "@sanity/dashboard": "^2.28.2",
+    "@sanity/default-layout": "^2.28.2",
+    "@sanity/default-login": "^2.28.2",
+    "@sanity/desk-tool": "^2.28.2",
+    "@sanity/production-preview": "^2.15.0",
+    "@sanity/vision": "^2.28.2",
+    "get-it": "^5.0.3",
+    "prop-types": "^15.7",
+    "react": "^17.0",
+    "react-dom": "^17.0",
+    "react-icons": "^4.3.1",
+    "styled-components": "^5.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-sanity": "^5.1.0",
+    "eslint-plugin-react": "^7.29.4",
+    "prettier": "^2.5.1",
+    "sanipack": "^2.1.0"
+  },
+  "peerDependencies": {
+    "react": "^17.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues"
+  },
+  "homepage": "https://github.com/andybywire/sanity-plugin-taxonomy-manager#readme",
+  "prettier": {
+    "semi": false,
+    "printWidth": 100,
+    "bracketSpacing": false,
+    "singleQuote": true
+  },
+  "eslintConfig": {
+    "parser": "sanipack/babel/eslint-parser",
+    "extends": [
+      "sanity",
+      "sanity/react",
+      "prettier"
+    ],
+    "ignorePatterns": [
+      "lib/**/"
+    ]
+  }
+}
