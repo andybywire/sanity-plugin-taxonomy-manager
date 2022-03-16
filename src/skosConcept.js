@@ -22,7 +22,7 @@ export default {
         'iriValue': baseIri,
       }[0]
     `);
-    const conceptIriBase = iriBase.iriValue ? iriBase : undefined;
+    const conceptIriBase = iriBase?.iriValue ? iriBase : undefined;
     const scheme = await client.fetch(`
       *[_type == 'skosConceptScheme']{
         '_type': 'reference',
