@@ -4,7 +4,7 @@
  * @todo Add administrative metadata: author, date, last revised, etc.
  * @todo Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links. Perhaps eventually a navigable tree view.
  */
-import { RiNodeTree } from 'react-icons/ri'
+import {RiNodeTree} from 'react-icons/ri'
 
 export default {
   name: 'skosConceptScheme',
@@ -16,25 +16,26 @@ export default {
       name: 'title',
       title: 'Taxonomy Identifier',
       type: 'string',
-      description: 'Concept schemes are used to group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like.'
+      description:
+        'Concept schemes are used to group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like.',
     },
     {
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 3,
-      description: 'Describe the intended use of this scheme.'
-    }
+      description: 'Describe the intended use of this scheme.',
+    },
   ],
   preview: {
     select: {
-      title: 'title'
+      title: 'title',
     },
     prepare({title}) {
       return {
         title: title,
-        media: RiNodeTree
+        media: RiNodeTree,
       }
-    }
-  }
+    },
+  },
 }

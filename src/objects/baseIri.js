@@ -11,11 +11,12 @@ export default {
       name: 'iriValue',
       title: 'IRI Value',
       type: 'url',
-      description: 'The W3C encourages the use of HTTP URIs when minting concept URIs since they are resolvable to representations that can be accessed using standard Web technologies.'
-    }
+      description:
+        'The W3C encourages the use of HTTP URIs when minting concept URIs since they are resolvable to representations that can be accessed using standard Web technologies.',
+    },
   ],
   options: {
     collapsible: true,
-    collapsed: true
-  }
+    collapsed: true,
+  },
 }

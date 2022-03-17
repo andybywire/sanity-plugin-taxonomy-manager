@@ -30,7 +30,6 @@
     "@sanity/vision": "^2.28.2",
     "get-it": "^5.0.3",
     "prop-types": "^15.7",
-    "react": "^17.0",
     "react-dom": "^17.0",
     "react-icons": "^4.3.1",
     "styled-components": "^5.2.0"
