@@ -3,7 +3,7 @@
  * @todo BaseIri validation: figure out why the validation warning message shows up twice when there's no value.
  * @todo Add IRI pattern selector (or instructions): hash or slash; default to slash
  * @todo Add IRI format selector: PrefLabel or UUID (perhaps from Sanity _id); default to PrefLabel
- * @todo Consider adding an array (or list) here of Concept Schemes. These were originally envisioned as being accessed here, but are in their own top level grouping for now to support editing.
+ * @todo Consider adding an array (or list) here of Concept Schemes. These were originally envisioned as being accessed here, but are in their own top level grouping for now to support editing. They do need to be distinct, addressable entities, so they need to remain documents. 
  */
 import {RiSettings4Line} from 'react-icons/ri'
 

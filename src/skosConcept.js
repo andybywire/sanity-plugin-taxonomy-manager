@@ -1,8 +1,8 @@
 /**
  * Sanity document scheme for SKOS Taxonomy Concepts
- * @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
  * @todo PrefLabel: add document level validation that prevents the creation of two concepts with the same PrefLabel
  * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice)
+ * @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
  * @todo Scheme initial value: Configure "default" option in Concept Scheme; configure initialValue to default to that selection.
  * @todo Abstract broader and related concept filter into reusable function. Need more clarity on what syntax "filter:" needs
  */
