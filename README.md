@@ -1,6 +1,6 @@
 # Sanity Plugin Taxonomy Manager
 
-### WARNING: This plugin is still in development. Please do not use it in production until this warning is removed.
+#### WARNING: This plugin is still in development. Please do not use it in production until this warning is removed.
 
 Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomies, thesauri, and classification schemes in Sanity Studio.
 
@@ -16,6 +16,8 @@ Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomie
 ## Installation
 
 Install using the [Sanity CLI](https://www.sanity.io/docs/cli).
+
+#### NOTE: This plugin is still in development. Please do not use it in production until this warning is removed.
 
 ```bash
 $ sanity install taxonomy-manager
