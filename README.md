@@ -26,8 +26,10 @@ $ sanity install taxonomy-manager
 ## Usage
 
 1. Create the Taxonomy Settings doc and set your taxonomy bases IRI. 
-2. Create a [Concept Scheme](https://www.w3.org/TR/skos-reference/#schemes) (optional)/
-3. Create and describe Concepts. All fields *except* PrefLabel are optional, and are to be used as best fits the needs of your information modeling task. All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/). 
+2. Create a [Concept Scheme](https://www.w3.org/TR/skos-reference/#schemes) to group related concepts (optional)
+3. Create and describe Concepts. 
+    - All fields *except* PrefLabel are optional, and are to be used as best fits the needs of your information modeling task. 
+    - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/). 
 
 ## Configuration
 
@@ -41,6 +43,8 @@ const hiddenDocTypes = (listItem) =>
 !['skosTaxonomySettings', 'skosConcept', 'skosConceptScheme'].includes(
   listItem.getId()
 )
+
+export default () =>
 // ... other structure builder items
 S.divider(),
 S.listItem()
