@@ -8,7 +8,7 @@ Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomie
 
 ## Features
 
-- Adds 3 document types to your schema which are used to generate SKOS compliant concepts and concept schemes: `skosConcept`, `skosConceptScheme`, and `skosTaxonomySettings`
+- Adds three document types to your Sanity schema which are used to generate SKOS compliant concepts and concept schemes: `skosConcept`, `skosConceptScheme`, and `skosTaxonomySettings`
 - Pre-populates [base URI](https://www.w3.org/TR/skos-primer/#secconcept) and [concept scheme](https://www.w3.org/TR/skos-primer/#secscheme) values for new concepts
 - Validates [disjunction between Broader and Related relationships](https://www.w3.org/TR/skos-reference/#L2422)
 - Validates [disjunction between Preferred and Alternate/Hidden labels](https://www.w3.org/TR/skos-reference/#L1567)
@@ -45,34 +45,34 @@ const hiddenDocTypes = (listItem) =>
 )
 
 export default () =>
-// ... other structure builder items
-S.divider(),
-S.listItem()
-  .title('Concepts')
-  .icon(AiFillTags)
+  // ... other structure builder items
+  S.divider(),
+  S.listItem()
+    .title('Concepts')
+    .icon(AiFillTags)
+    .child(
+      S.documentList()
+        .title('Concepts')
+        .filter('_type == "skosConcept"')
+    ),
+  S.listItem()
+  .title('Taxonomy Schemes')
+  .icon(RiNodeTree)
   .child(
     S.documentList()
-      .title('Concepts')
-      .filter('_type == "skosConcept"')
+      .title('Taxonomy Schemes')
+      .filter('_type == "skosConceptScheme"')
   ),
-S.listItem()
-.title('Taxonomy Schemes')
-.icon(RiNodeTree)
-.child(
-  S.documentList()
-    .title('Taxonomy Schemes')
-    .filter('_type == "skosConceptScheme"')
-),
-S.listItem()
-.title('Taxonomy Settings')
-.icon(RiSettings4Line)
-.child(
-  S.document()
-  .schemaType('skosTaxonomySettings')
-  .documentId('skosTaxonomySettings')
-  ),
-  S.divider(),
-// ... other structure builder items
+  S.listItem()
+  .title('Taxonomy Settings')
+  .icon(RiSettings4Line)
+  .child(
+    S.document()
+    .schemaType('skosTaxonomySettings')
+    .documentId('skosTaxonomySettings')
+    ),
+    S.divider(),
+  // ... other structure builder items
 ```
 
 ## [SKOS Overview](https://www.w3.org/TR/skos-reference/)
