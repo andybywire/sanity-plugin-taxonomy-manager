@@ -30,6 +30,8 @@ $ sanity install taxonomy-manager
 3. Create and describe Concepts. 
     - All fields *except* PrefLabel are optional, and are to be used as best fits the needs of your information modeling task. 
     - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/). 
+4. Tag resources with concepts and then integrate into search indexing, navigation, and semantic web services.
+    - 👉  Examples to come!
 
 ## Configuration
 
