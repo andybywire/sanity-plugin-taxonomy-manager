@@ -25,21 +25,20 @@ $ sanity install taxonomy-manager
 
 ## Usage
 
-1. Create the Taxonomy Settings doc and set your taxonomy bases IRI. 
+1. Create the Taxonomy Settings doc and set your taxonomy bases IRI.
 2. Create a [Concept Scheme](https://www.w3.org/TR/skos-reference/#schemes) to group related concepts (optional)
-3. Create and describe Concepts. 
-    - All fields *except* PrefLabel are optional, and are to be used as best fits the needs of your information modeling task. 
-    - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/). 
+3. Create and describe Concepts.
+   - All fields _except_ PrefLabel are optional, and are to be used as best fits the needs of your information modeling task.
+   - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/).
 4. Tag resources with concepts and then integrate into search indexing, navigation, and semantic web services.
-    - 👉  Examples to come!
+   - 👉 Examples to come!
 
 ## Configuration
 
 You can use [Structure Builder](https://www.sanity.io/docs/structure-builder-reference) to create a separate area for your taxonomy tools.
 
 ```js
-import {RiNodeTree} from 'react-icons/ri'
-import {AiFillTags,AiOutlineTags} from 'react-icons/ai'
+import {RiSettings4Line} from 'react-icons/ri'
 
 const hiddenDocTypes = (listItem) =>
 !['skosTaxonomySettings', 'skosConcept', 'skosConceptScheme'].includes(
@@ -49,22 +48,8 @@ const hiddenDocTypes = (listItem) =>
 export default () =>
   // ... other structure builder items
   S.divider(),
-  S.listItem()
-    .title('Concepts')
-    .icon(AiFillTags)
-    .child(
-      S.documentList()
-        .title('Concepts')
-        .filter('_type == "skosConcept"')
-    ),
-  S.listItem()
-  .title('Taxonomy Schemes')
-  .icon(RiNodeTree)
-  .child(
-    S.documentList()
-      .title('Taxonomy Schemes')
-      .filter('_type == "skosConceptScheme"')
-  ),
+  S.documentTypeListItem("skosConcept").title("Concepts"),
+  S.documentTypeListItem("skosConceptScheme").title("Taxonomy Schemes"),
   S.listItem()
   .title('Taxonomy Settings')
   .icon(RiSettings4Line)
@@ -73,7 +58,7 @@ export default () =>
     .schemaType('skosTaxonomySettings')
     .documentId('skosTaxonomySettings')
     ),
-    S.divider(),
+  S.divider(),
   // ... other structure builder items
 ```
 
@@ -81,9 +66,9 @@ export default () =>
 
 > The Simple Knowledge Organization System (SKOS) is a common data model for sharing and linking knowledge organization systems via the Web.
 >
->Many knowledge organization systems, such as thesauri, taxonomies, classification schemes and subject heading systems, share a similar structure, and are used in similar applications. SKOS captures much of this similarity and makes it explicit, to enable data and technology sharing across diverse applications.
+> Many knowledge organization systems, such as thesauri, taxonomies, classification schemes and subject heading systems, share a similar structure, and are used in similar applications. SKOS captures much of this similarity and makes it explicit, to enable data and technology sharing across diverse applications.
 >
->The SKOS data model provides a standard, low-cost migration path for porting existing knowledge organization systems to the Semantic Web. SKOS also provides a lightweight, intuitive language for developing and sharing new knowledge organization systems. It may be used on its own, or in combination with formal knowledge representation languages such as the Web Ontology language (OWL).
+> The SKOS data model provides a standard, low-cost migration path for porting existing knowledge organization systems to the Semantic Web. SKOS also provides a lightweight, intuitive language for developing and sharing new knowledge organization systems. It may be used on its own, or in combination with formal knowledge representation languages such as the Web Ontology language (OWL).
 
 ## License
 
