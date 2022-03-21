@@ -70,6 +70,20 @@ export default () =>
 >
 > The SKOS data model provides a standard, low-cost migration path for porting existing knowledge organization systems to the Semantic Web. SKOS also provides a lightweight, intuitive language for developing and sharing new knowledge organization systems. It may be used on its own, or in combination with formal knowledge representation languages such as the Web Ontology language (OWL).
 
+## To Do
+
+### For Initial Release [1.0.0]
+
+- [ ] Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme
+- [ ] Validate [PrefLabel uniqueness](https://www.w3.org/TR/skos-primer/#secpref) across concept collection
+- [ ] Validate [Related Concept and Transitive Broader disjunction](https://www.w3.org/TR/skos-reference/#L2422)
+
+### For Subsequent Release
+
+- [ ] Add language and country tags to support internationalization, adjust PrefLabel uniqueness rules
+- [ ] Create taxonomy tree view custom input template for `skosConceptScheme`
+- [ ] Add implementation examples for single and multiple hierarchical schemes, faceted classification, and thesauri
+
 ## License
 
 MIT © Andy Fitzgerald
