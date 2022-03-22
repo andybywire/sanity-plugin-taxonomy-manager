@@ -6,10 +6,6 @@
   "parts": [
     {
       "implements": "part:@sanity/base/schema-type",
-      "path": "skosTaxonomySettings.js"
-    },
-    {
-      "implements": "part:@sanity/base/schema-type",
       "path": "skosConceptScheme.js"
     },
     {

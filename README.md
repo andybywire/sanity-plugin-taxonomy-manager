@@ -4,7 +4,8 @@
 
 Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomies, thesauri, and classification schemes in Sanity Studio.
 
-![sanity-taxonomy-manager-poc-demo](https://user-images.githubusercontent.com/3710835/158623598-04a473b4-a720-4c37-adca-6d39cd0c688c.gif)
+<!-- Need to update image/gif:
+![sanity-taxonomy-manager-poc-demo](https://user-images.githubusercontent.com/3710835/158623598-04a473b4-a720-4c37-adca-6d39cd0c688c.gif) -->
 
 ## Features
 
@@ -35,13 +36,23 @@ $ sanity install taxonomy-manager
 
 ## Configuration
 
+Configure your [concept namespace](https://www.w3.org/TR/skos-primer/#secconcept) in `<your-studio-folder>/config/taxonomy-manager.json`:
+
+```json
+{
+  "namespace": "http://example.com/"
+}
+```
+
+This namespace defines the base URI for your concepts and concept schemes. The W3C recommends the use of HTTP URIs when minting concept URIs since they are resolvable to representations that can be accessed using standard Web technologies. For more information about URIs on the Semantic Web, see [Cool URIs for the Semantic Web](https://www.w3.org/TR/2008/NOTE-cooluris-20081203/) and [Best Practice Recipes for Publishing RDF Vocabularies](https://www.w3.org/TR/2008/NOTE-swbp-vocab-pub-20080828/).
+
+
+
 You can use [Structure Builder](https://www.sanity.io/docs/structure-builder-reference) to create a separate area for your taxonomy tools.
 
 ```js
-import {RiSettings4Line} from 'react-icons/ri'
-
 const hiddenDocTypes = (listItem) =>
-!['skosTaxonomySettings', 'skosConcept', 'skosConceptScheme'].includes(
+!['skosConcept', 'skosConceptScheme'].includes(
   listItem.getId()
 )
 
@@ -50,14 +61,6 @@ export default () =>
   S.divider(),
   S.documentTypeListItem("skosConcept").title("Concepts"),
   S.documentTypeListItem("skosConceptScheme").title("Taxonomy Schemes"),
-  S.listItem()
-  .title('Taxonomy Settings')
-  .icon(RiSettings4Line)
-  .child(
-    S.document()
-    .schemaType('skosTaxonomySettings')
-    .documentId('skosTaxonomySettings')
-    ),
   S.divider(),
   // ... other structure builder items
 ```
@@ -74,7 +77,7 @@ export default () =>
 
 ### For Initial Release [1.0.0]
 
-- [ ] Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme
+- [x] Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme
 - [ ] Validate [PrefLabel uniqueness](https://www.w3.org/TR/skos-primer/#secpref) across concept collection
 - [ ] Validate [Related Concept and Transitive Broader disjunction](https://www.w3.org/TR/skos-reference/#L2422)
 

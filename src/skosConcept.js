@@ -7,10 +7,11 @@
  * @todo Abstract broader and related concept filter into reusable function. Need more clarity on what syntax "filter:" needs
  */
 import sanityClient from 'part:@sanity/base/client'
-const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
-import config from "config:sanity-plugin-taxonomy-manager"
+import config from "config:taxonomy-manager"
 import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
 import PrefLabel from './components/prefLabel'
+
+const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
 export default {
   name: 'skosConcept',
@@ -18,13 +19,7 @@ export default {
   type: 'document',
   icon: AiFillTags,
   initialValue: async () => {
-    const iriBase = 
-    (await client.fetch(`
-      *[_id == 'skosTaxonomySettings']{
-        'iriValue': baseIri
-      }[0]
-    `)) ?? undefined
-    const conceptIriBase = iriBase?.iriValue ? iriBase : undefined
+    const iriBase = {'iriValue': config.namespace}
     const scheme =
       (await client.fetch(`
       *[_type == 'skosConceptScheme']{
@@ -33,7 +28,7 @@ export default {
       }[0]
     `)) ?? undefined
     return {
-      conceptIriBase: conceptIriBase,
+      conceptIriBase: iriBase,
       scheme: scheme,
       topConcept: false,
     }
