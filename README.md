@@ -9,7 +9,7 @@ Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomie
 
 ## Features
 
-- Adds three document types to your Sanity schema which are used to generate SKOS compliant concepts and concept schemes: `skosConcept`, `skosConceptScheme`, and `skosTaxonomySettings`
+- Adds two document types to your Sanity schema which are used to generate SKOS compliant concepts and concept schemes: `skosConcept` and `skosConceptScheme`
 - Pre-populates [base URI](https://www.w3.org/TR/skos-primer/#secconcept) and [concept scheme](https://www.w3.org/TR/skos-primer/#secscheme) values for new concepts
 - Validates [disjunction between Broader and Related relationships](https://www.w3.org/TR/skos-reference/#L2422)
 - Validates [disjunction between Preferred and Alternate/Hidden labels](https://www.w3.org/TR/skos-reference/#L1567)
@@ -23,17 +23,6 @@ Install using the [Sanity CLI](https://www.sanity.io/docs/cli).
 ```bash
 $ sanity install taxonomy-manager
 ```
-
-## Usage
-
-1. Create the Taxonomy Settings doc and set your taxonomy bases IRI.
-2. Create a [Concept Scheme](https://www.w3.org/TR/skos-reference/#schemes) to group related concepts (optional)
-3. Create and describe Concepts.
-   - All fields _except_ PrefLabel are optional, and are to be used as best fits the needs of your information modeling task.
-   - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/).
-4. Tag resources with concepts and then integrate into search indexing, navigation, and semantic web services.
-   - 👉 Examples to come!
-
 ## Configuration
 
 Configure your [concept namespace](https://www.w3.org/TR/skos-primer/#secconcept) in `<your-studio-folder>/config/taxonomy-manager.json`:
@@ -45,8 +34,6 @@ Configure your [concept namespace](https://www.w3.org/TR/skos-primer/#secconcept
 ```
 
 This namespace defines the base URI for your concepts and concept schemes. The W3C recommends the use of HTTP URIs when minting concept URIs since they are resolvable to representations that can be accessed using standard Web technologies. For more information about URIs on the Semantic Web, see [Cool URIs for the Semantic Web](https://www.w3.org/TR/2008/NOTE-cooluris-20081203/) and [Best Practice Recipes for Publishing RDF Vocabularies](https://www.w3.org/TR/2008/NOTE-swbp-vocab-pub-20080828/).
-
-
 
 You can use [Structure Builder](https://www.sanity.io/docs/structure-builder-reference) to create a separate area for your taxonomy tools.
 
@@ -63,7 +50,17 @@ export default () =>
   S.documentTypeListItem("skosConceptScheme").title("Taxonomy Schemes"),
   S.divider(),
   // ... other structure builder items
-```
+``` 
+
+## Usage
+
+1. Set your taxonomy bases IRI in the `namespace` field of the configuration file. 
+2. Create a [Concept Scheme](https://www.w3.org/TR/skos-reference/#schemes) to group related concepts (optional)
+3. Create and describe Concepts.
+    - All fields _except_ PrefLabel are optional, and are to be used as best fits the needs of your information modeling task.
+    - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/).
+4. Tag resources with concepts and then integrate into search indexing, navigation, and semantic web services.
+    - 👉 Examples to come!
 
 ## [SKOS Overview](https://www.w3.org/TR/skos-reference/)
 
