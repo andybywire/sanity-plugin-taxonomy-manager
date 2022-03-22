@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [0.2.0] - 2022-03-22
+### Added
+- Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme
+
 ## [0.1.0] - 2022-03-17
 ### Added
 - Tag initial development release
