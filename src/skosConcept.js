@@ -8,6 +8,7 @@
  */
 import sanityClient from 'part:@sanity/base/client'
 const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
+import config from "config:sanity-plugin-taxonomy-manager"
 import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
 import PrefLabel from './components/prefLabel'
 
@@ -17,11 +18,12 @@ export default {
   type: 'document',
   icon: AiFillTags,
   initialValue: async () => {
-    const iriBase = await client.fetch(`
+    const iriBase = 
+    (await client.fetch(`
       *[_id == 'skosTaxonomySettings']{
-        'iriValue': baseIri,
+        'iriValue': baseIri
       }[0]
-    `)
+    `)) ?? undefined
     const conceptIriBase = iriBase?.iriValue ? iriBase : undefined
     const scheme =
       (await client.fetch(`
