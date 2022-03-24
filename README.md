@@ -6,16 +6,16 @@ Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomie
 
 
 #### SKOS Broader and Related Concepts
-<img src="https://user-images.githubusercontent.com/3710835/159759995-180cbbf0-e348-4673-90af-f32062924216.png" width="700" style="border: solid #d0d7de 1px; border-radius: 8px;" />
+<img src="https://user-images.githubusercontent.com/3710835/159759995-180cbbf0-e348-4673-90af-f32062924216.png" width="700">
 
 #### Preferred, Alternative, and Hidden Labels
-<img src="https://user-images.githubusercontent.com/3710835/159759929-cd0ff6a7-31d5-47f0-bcc7-429d05922866.png" width="700" style="border: solid #d0d7de 1px; border-radius: 8px;" />
+<img src="https://user-images.githubusercontent.com/3710835/159759929-cd0ff6a7-31d5-47f0-bcc7-429d05922866.png" width="700">
 
 #### Scope Notes, Definition, and Examples
-<img src="https://user-images.githubusercontent.com/3710835/159759952-50097112-2d80-43d3-ba50-545956e3b2ea.png" width="700" style="border: solid #d0d7de 1px; border-radius: 8px;" />
+<img src="https://user-images.githubusercontent.com/3710835/159759952-50097112-2d80-43d3-ba50-545956e3b2ea.png" width="700">
 
 #### Support for Single or Multiple Taxonomy Schemes (or none)
-<img src="https://user-images.githubusercontent.com/3710835/159759972-b29b42ee-42f9-4616-a560-7b7c8802faa5.png" width="700" style="border: solid #d0d7de 1px; border-radius: 8px;" />
+<img src="https://user-images.githubusercontent.com/3710835/159759972-b29b42ee-42f9-4616-a560-7b7c8802faa5.png" width="700">
 
 <!-- Need to update image/gif:
 ![sanity-taxonomy-manager-poc-demo](https://user-images.githubusercontent.com/3710835/158623598-04a473b4-a720-4c37-adca-6d39cd0c688c.gif) -->
@@ -96,6 +96,8 @@ export default () =>
 - [ ] Add language and country tags to support internationalization, adjust PrefLabel uniqueness rules
 - [ ] Create taxonomy tree view custom input template for `skosConceptScheme`
 - [ ] Add implementation examples for single and multiple hierarchical schemes, faceted classification, and thesauri
+- [ ] Add "Export as Turtle File" to `skosConceptScheme` type
+- [ ] Add functionality to import from .csv and/or .ttl
 
 ## License
 
