@@ -93,6 +93,7 @@ export default () =>
 
 ### For Subsequent Release
 
+- [ ] Move document level validation to individual fields
 - [ ] Add language and country tags to support internationalization, adjust PrefLabel uniqueness rules
 - [ ] Create taxonomy tree view custom input template for `skosConceptScheme`
 - [ ] Add implementation examples for single and multiple hierarchical schemes, faceted classification, and thesauri
