@@ -33,6 +33,7 @@ export default {
       topConcept: false,
     }
   },
+  // Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels:
   validation: (Rule) =>
     Rule.custom((fields) => {
       if (
@@ -67,7 +68,17 @@ export default {
       type: 'string',
       description:
         'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
-      validation: (Rule) => Rule.required().error('Concepts must have a preferred label'),
+      // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well. 
+      validation: Rule => Rule.required().custom((prefLabel, context) => {
+        return client.fetch(`*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`)
+          .then(conceptId => {
+            if (conceptId && conceptId !== context.document._id.replace('drafts.', '')) {
+              return 'Preferred Label must be unique.'
+            } else {
+              return true
+            }
+          })
+        }),
       inputComponent: PrefLabel,
     },
     {
