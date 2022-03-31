@@ -1,16 +1,15 @@
 /**
  * Sanity document scheme for SKOS Taxonomy Concepts
  * @todo PrefLabel: add document level validation that prevents the creation of two concepts with the same PrefLabel
- * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice)
+ * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice) 2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader. 
  * @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
  * @todo Scheme initial value: Configure "default" option in Concept Scheme; configure initialValue to default to that selection.
- * @todo Abstract broader and related concept filter into reusable function. Need more clarity on what syntax "filter:" needs
+ * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
  */
 import sanityClient from 'part:@sanity/base/client'
 import config from "config:taxonomy-manager"
 import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
 import PrefLabel from './components/prefLabel'
-import { set } from '@sanity/form-builder/PatchEvent'
 
 const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
@@ -133,12 +132,14 @@ export default {
           options: {
             filter: ({document}) => {
               return {
+                // Broader filter only performs document-level validation for broader-transitive/related disjunction.
+                // Consider adding custom validation to prevent broader taxonomy inconsistencies.
                 filter:
                   '!(_id in $broader || _id in $related || _id in path("drafts.**") || _id == $self)',
                 params: {
                   self: document._id.replace('drafts.', ''),
-                  broader: document.broader ? document.broader.map(({_ref}) => _ref) : [],
-                  related: document.related ? document.related.map(({_ref}) => _ref) : [],
+                  broader: document.broader.map(({_ref}) => _ref),
+                  related: document.related.map(({_ref}) => _ref),
                 },
               }
             },
@@ -161,9 +162,10 @@ export default {
             filter: async ({document}) => {
               let broaderTrans = [];
               try {
+                // This filter checks for inconsistencies to five levels of hierarchy. Consider adding custom validation to prevent broader taxonomy inconsistencies.
                 // This block starts for the document in question, and looks up the hierarchy tree. Those found to have the document in question as a "broader transitive" are added to a list of concepts to exclude from  potential "Related Concept" candidates.
                 const response = await client.fetch(`*[_type == "skosConcept" && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel}}}}}}`);
-                console.log(response); // for troubleshooting
+                // console.log(response); // for troubleshooting
                 broaderTrans = 
                 await response.flatMap(broader =>
                                   broader.broader?.flatMap(broader => broader.prefLabel)
@@ -191,7 +193,7 @@ export default {
                                           broader.broader?.flatMap(broader => broader.prefLabel))))))
                                 ) // fifth broader term 
                                 .filter(broader => broader) // remove "undefined"
-                console.log(broaderTrans); // for troubleshooting
+                // console.log(broaderTrans); // for troubleshooting
 
                 // The 'broader[]->...' filters below look for the document in question in the broader-transitive path of the remaining concepts and, if found, excludes them from inclusion as a potential "Related Concept" candidate
                 return {
@@ -217,47 +219,6 @@ export default {
                 console.error(`Could not get broader concepts: ${error}`);
               }
             },
-            
-
-
-                
-                // .then(response => response.flatMap(broader => broader.prefLabel) // first broader term — not needed?
-                //           .concat(response.flatMap(broader =>
-                //             broader.broader?.flatMap(broader => broader.prefLabel))
-                //           ) // second broader term
-              
-
-              // const getBroaderTrans = () => {
-              //   if (document.broader) {
-              //     return client.fetch(`*[_type == "skosConcept" && !(_id in path("drafts.**")) && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->}}}}`)
-              //     .then(response => response.flatMap(broader => broader.prefLabel) // first broader term
-              //               .concat(response.flatMap(broader =>
-              //                 broader.broader?.flatMap(broader => broader.prefLabel))
-              //               ) // second broader term
-              //               .concat(response.flatMap(broader => 
-              //                 broader.broader?.flatMap(broader => 
-              //                   broader.broader?.flatMap(broader => broader.prefLabel)))
-              //               ) // third broader term 
-              //               .concat(response.flatMap(broader => 
-              //                 broader.broader?.flatMap(broader => 
-              //                   broader.broader?.flatMap(broader => 
-              //                     broader.broader?.flatMap(broader => broader.prefLabel)))) // --> need to account for cases where there is no value
-              //               ) // fourth broader term 
-              //               .filter(broader => broader) // remove "undefined"
-              //       )
-
-
-              //     // .then(response => JSON.stringify(response, null, 2))
-              //     //.then(() => let conceptBroader = ... set()??)
-              //     // for revision, see: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Promises#async_and_await
-              //     // "allowing you to write code that looks just like synchronous code"
-              //     .then(data => console.log(data))
-              //   } else { 
-              //     return null
-              //   }
-              // };
-
-              // prefLabel instead of _id to check for nesting; return to _id for filter
           },
         },
       ],
