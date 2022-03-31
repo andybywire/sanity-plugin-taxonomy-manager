@@ -10,6 +10,7 @@ import sanityClient from 'part:@sanity/base/client'
 import config from "config:taxonomy-manager"
 import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
 import PrefLabel from './components/prefLabel'
+import { set } from '@sanity/form-builder/PatchEvent'
 
 const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
@@ -31,6 +32,8 @@ export default {
       conceptIriBase: iriBase,
       scheme: scheme,
       topConcept: false,
+      broader: [],     // an empty array is needed here in order to return concepts with no "broader" for "related"
+      related: []
     }
   },
   // Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels:
@@ -155,17 +158,106 @@ export default {
           type: 'reference',
           to: [{type: 'skosConcept'}],
           options: {
-            filter: ({document}) => {
-              return {
-                filter:
-                  '!(_id in $broader || _id in $related || _id in path("drafts.**") || _id == $self)',
-                params: {
-                  self: document._id.replace('drafts.', ''),
-                  broader: document.broader ? document.broader.map(({_ref}) => _ref) : [],
-                  related: document.related ? document.related.map(({_ref}) => _ref) : [],
-                },
+            filter: async ({document}) => {
+              let broaderTrans = [];
+              try {
+                // This block starts for the document in question, and looks up the hierarchy tree. Those found to have the document in question as a "broader transitive" are added to a list of concepts to exclude from  potential "Related Concept" candidates.
+                const response = await client.fetch(`*[_type == "skosConcept" && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel}}}}}}`);
+                console.log(response); // for troubleshooting
+                broaderTrans = 
+                await response.flatMap(broader =>
+                                  broader.broader?.flatMap(broader => broader.prefLabel)
+                                ) // first broader term 
+                                .concat(response.flatMap(broader => 
+                                  broader.broader?.flatMap(broader => 
+                                    broader.broader?.flatMap(broader => broader.prefLabel)))
+                                ) // second broader term 
+                                .concat(response.flatMap(broader => 
+                                  broader.broader?.flatMap(broader => 
+                                    broader.broader?.flatMap(broader => 
+                                      broader.broader?.flatMap(broader => broader.prefLabel))))
+                                ) // third broader term 
+                                .concat(response.flatMap(broader => 
+                                  broader.broader?.flatMap(broader => 
+                                    broader.broader?.flatMap(broader => 
+                                      broader.broader?.flatMap(broader => 
+                                        broader.broader?.flatMap(broader => broader.prefLabel)))))
+                                ) // fourth broader term 
+                                .concat(response.flatMap(broader => 
+                                  broader.broader?.flatMap(broader => 
+                                    broader.broader?.flatMap(broader => 
+                                      broader.broader?.flatMap(broader => 
+                                        broader.broader?.flatMap(broader => 
+                                          broader.broader?.flatMap(broader => broader.prefLabel))))))
+                                ) // fifth broader term 
+                                .filter(broader => broader) // remove "undefined"
+                console.log(broaderTrans); // for troubleshooting
+
+                // The 'broader[]->...' filters below look for the document in question in the broader-transitive path of the remaining concepts and, if found, excludes them from inclusion as a potential "Related Concept" candidate
+                return {
+                  filter:
+                    `!(_id in $related || 
+                      _id in path("drafts.**") || 
+                      _id == $self ||
+                      prefLabel in $broaderTrans ||  
+                      $self in broader[]->._id ||
+                      $self in broader[]->broader[]->._id ||
+                      $self in broader[]->broader[]->broader[]->._id ||
+                      $self in broader[]->broader[]->broader[]->broader[]->._id ||
+                      $self in broader[]->broader[]->broader[]->broader[]->broader[]->._id
+                      )`,
+                  params: {
+                    self: document._id.replace('drafts.', ''),
+                    related: document.related.map(({_ref}) => _ref),
+                    broaderTrans: broaderTrans
+                  },
+                }
+              } 
+              catch(error) {
+                console.error(`Could not get broader concepts: ${error}`);
               }
             },
+            
+
+
+                
+                // .then(response => response.flatMap(broader => broader.prefLabel) // first broader term — not needed?
+                //           .concat(response.flatMap(broader =>
+                //             broader.broader?.flatMap(broader => broader.prefLabel))
+                //           ) // second broader term
+              
+
+              // const getBroaderTrans = () => {
+              //   if (document.broader) {
+              //     return client.fetch(`*[_type == "skosConcept" && !(_id in path("drafts.**")) && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->}}}}`)
+              //     .then(response => response.flatMap(broader => broader.prefLabel) // first broader term
+              //               .concat(response.flatMap(broader =>
+              //                 broader.broader?.flatMap(broader => broader.prefLabel))
+              //               ) // second broader term
+              //               .concat(response.flatMap(broader => 
+              //                 broader.broader?.flatMap(broader => 
+              //                   broader.broader?.flatMap(broader => broader.prefLabel)))
+              //               ) // third broader term 
+              //               .concat(response.flatMap(broader => 
+              //                 broader.broader?.flatMap(broader => 
+              //                   broader.broader?.flatMap(broader => 
+              //                     broader.broader?.flatMap(broader => broader.prefLabel)))) // --> need to account for cases where there is no value
+              //               ) // fourth broader term 
+              //               .filter(broader => broader) // remove "undefined"
+              //       )
+
+
+              //     // .then(response => JSON.stringify(response, null, 2))
+              //     //.then(() => let conceptBroader = ... set()??)
+              //     // for revision, see: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Asynchronous/Promises#async_and_await
+              //     // "allowing you to write code that looks just like synchronous code"
+              //     .then(data => console.log(data))
+              //   } else { 
+              //     return null
+              //   }
+              // };
+
+              // prefLabel instead of _id to check for nesting; return to _id for filter
           },
         },
       ],
