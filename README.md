@@ -4,11 +4,13 @@
 
 ### Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomies, thesauri, and classification schemes in Sanity Studio.
 
-Taxonomies are crucial tools for organization and interoperability between and across data sets. Taxonomy Manager provides a way for content authors to create, use, and maintain standards compliant taxonomies in Sanity Studio. The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, brief hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. 
+Taxonomies are crucial tools for organization and interoperability between and across data sets. Taxonomy Manager provides a way for content authors to create, use, and maintain standards compliant taxonomies in Sanity Studio. 
+
+The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, brief hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. 
 
 ### SKOS Broader and Related Concepts
 
-The concept editor includes filtering and validation to help you create consistent SKOS vocabularies. Adding the same concept to Broader and Related fields is not allowed, and the editor validates disjunction of Related concepts with Broader Transitive up to five levels in either direction. 
+The concept editor includes filtering and validation to help you create consistent SKOS vocabularies. Adding the same concept to Broader and Related fields is not allowed, and the editor validates disjunction of Related concepts with Broader Transitive up to five hierarchical levels in either direction. 
 
 <img src="https://user-images.githubusercontent.com/3710835/159759995-180cbbf0-e348-4673-90af-f32062924216.png" width="700">
 
