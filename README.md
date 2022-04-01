@@ -6,25 +6,25 @@
 
 Taxonomies are crucial tools for organization and interoperability between and across data sets. Taxonomy Manager provides a way for content authors to create, use, and maintain standards compliant taxonomies in Sanity Studio. The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, brief hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. 
 
-#### SKOS Broader and Related Concepts
+### SKOS Broader and Related Concepts
 
 The concept editor includes filtering and validation to help you create consistent SKOS vocabularies. Adding the same concept to Broader and Related fields is not allowed, and the editor validates disjunction of Related concepts with Broader Transitive up to five levels in either direction. 
 
 <img src="https://user-images.githubusercontent.com/3710835/159759995-180cbbf0-e348-4673-90af-f32062924216.png" width="700">
 
-#### Preferred, Alternative, and Hidden Labels
+### Preferred, Alternative, and Hidden Labels
 
 Preferred Labels are validated for uniqueness across concepts, and Preferred, Alternative, and Hidden are validated to prevent duplicates and overlap. 
 
 <img src="https://user-images.githubusercontent.com/3710835/159759929-cd0ff6a7-31d5-47f0-bcc7-429d05922866.png" width="700">
 
-#### Scope Notes, Definition, and Examples
+### Scope Notes, Definition, and Examples
 
 Standard optional SKOS documentation fields are included by default.
 
 <img src="https://user-images.githubusercontent.com/3710835/159759952-50097112-2d80-43d3-ba50-545956e3b2ea.png" width="700">
 
-#### Support for Single or Multiple Taxonomy Schemes (or none)
+### Support for Single or Multiple Taxonomy Schemes (or none)
 
 For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes](https://www.w3.org/TR/skos-reference/#schemes) are supported. Schemes can be used to configure filtered views of concepts in [Sanity Structure Builder](https://www.sanity.io/docs/structure-builder-introduction), and will provide for additional filtering and view options in [future versions of Taxonomy Manager](#to-do).
 
