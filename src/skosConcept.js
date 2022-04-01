@@ -1,13 +1,12 @@
 /**
  * Sanity document scheme for SKOS Taxonomy Concepts
- * @todo PrefLabel: add document level validation that prevents the creation of two concepts with the same PrefLabel
- * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice) 2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader. 
+ * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice). 2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader. Consider more robust filtering and validation for future releases.
  * @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
- * @todo Scheme initial value: Configure "default" option in Concept Scheme; configure initialValue to default to that selection.
+ * @todo Scheme initial value: Configure "default" option in Concept Scheme, for cases when there are multiple schemes; configure initialValue to default to that selection (It's currently configure to take the scheme ordered first. This isn't transparent.)
  * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
  */
 import sanityClient from 'part:@sanity/base/client'
-import config from "config:taxonomy-manager"
+import config from 'config:taxonomy-manager'
 import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
 import PrefLabel from './components/prefLabel'
 
@@ -19,7 +18,7 @@ export default {
   type: 'document',
   icon: AiFillTags,
   initialValue: async () => {
-    const iriBase = {'iriValue': config.namespace}
+    const iriBase = {iriValue: config.namespace}
     const scheme =
       (await client.fetch(`
       *[_type == 'skosConceptScheme']{
@@ -31,8 +30,8 @@ export default {
       conceptIriBase: iriBase,
       scheme: scheme,
       topConcept: false,
-      broader: [],     // an empty array is needed here in order to return concepts with no "broader" for "related"
-      related: []
+      broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
+      related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"P
     }
   },
   // Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels:
@@ -70,16 +69,20 @@ export default {
       type: 'string',
       description:
         'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
-      // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well. 
-      validation: Rule => Rule.required().custom((prefLabel, context) => {
-        return client.fetch(`*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`)
-          .then(conceptId => {
-            if (conceptId && conceptId !== context.document._id.replace('drafts.', '')) {
-              return 'Preferred Label must be unique.'
-            } else {
-              return true
-            }
-          })
+      // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well.
+      validation: (Rule) =>
+        Rule.required().custom((prefLabel, context) => {
+          return client
+            .fetch(
+              `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`
+            )
+            .then((conceptId) => {
+              if (conceptId && conceptId !== context.document._id.replace('drafts.', '')) {
+                return 'Preferred Label must be unique.'
+              } else {
+                return true
+              }
+            })
         }),
       inputComponent: PrefLabel,
     },
@@ -160,45 +163,62 @@ export default {
           to: [{type: 'skosConcept'}],
           options: {
             filter: async ({document}) => {
-              let broaderTrans = [];
+              let broaderTrans = []
               try {
                 // This filter checks for inconsistencies to five levels of hierarchy. Consider adding custom validation to prevent broader taxonomy inconsistencies.
                 // This block starts for the document in question, and looks up the hierarchy tree. Those found to have the document in question as a "broader transitive" are added to a list of concepts to exclude from  potential "Related Concept" candidates.
-                const response = await client.fetch(`*[_type == "skosConcept" && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel}}}}}}`);
+                const response = await client.fetch(
+                  `*[_type == "skosConcept" && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel}}}}}}`
+                )
                 // console.log(response); // for troubleshooting
-                broaderTrans = 
-                await response.flatMap(broader =>
-                                  broader.broader?.flatMap(broader => broader.prefLabel)
-                                ) // first broader term 
-                                .concat(response.flatMap(broader => 
-                                  broader.broader?.flatMap(broader => 
-                                    broader.broader?.flatMap(broader => broader.prefLabel)))
-                                ) // second broader term 
-                                .concat(response.flatMap(broader => 
-                                  broader.broader?.flatMap(broader => 
-                                    broader.broader?.flatMap(broader => 
-                                      broader.broader?.flatMap(broader => broader.prefLabel))))
-                                ) // third broader term 
-                                .concat(response.flatMap(broader => 
-                                  broader.broader?.flatMap(broader => 
-                                    broader.broader?.flatMap(broader => 
-                                      broader.broader?.flatMap(broader => 
-                                        broader.broader?.flatMap(broader => broader.prefLabel)))))
-                                ) // fourth broader term 
-                                .concat(response.flatMap(broader => 
-                                  broader.broader?.flatMap(broader => 
-                                    broader.broader?.flatMap(broader => 
-                                      broader.broader?.flatMap(broader => 
-                                        broader.broader?.flatMap(broader => 
-                                          broader.broader?.flatMap(broader => broader.prefLabel))))))
-                                ) // fifth broader term 
-                                .filter(broader => broader) // remove "undefined"
+                broaderTrans = await response
+                  .flatMap((broader) => broader.broader?.flatMap((broader) => broader.prefLabel)) // first broader term
+                  .concat(
+                    response.flatMap((broader) =>
+                      broader.broader?.flatMap((broader) =>
+                        broader.broader?.flatMap((broader) => broader.prefLabel)
+                      )
+                    )
+                  ) // second broader term
+                  .concat(
+                    response.flatMap((broader) =>
+                      broader.broader?.flatMap((broader) =>
+                        broader.broader?.flatMap((broader) =>
+                          broader.broader?.flatMap((broader) => broader.prefLabel)
+                        )
+                      )
+                    )
+                  ) // third broader term
+                  .concat(
+                    response.flatMap((broader) =>
+                      broader.broader?.flatMap((broader) =>
+                        broader.broader?.flatMap((broader) =>
+                          broader.broader?.flatMap((broader) =>
+                            broader.broader?.flatMap((broader) => broader.prefLabel)
+                          )
+                        )
+                      )
+                    )
+                  ) // fourth broader term
+                  .concat(
+                    response.flatMap((broader) =>
+                      broader.broader?.flatMap((broader) =>
+                        broader.broader?.flatMap((broader) =>
+                          broader.broader?.flatMap((broader) =>
+                            broader.broader?.flatMap((broader) =>
+                              broader.broader?.flatMap((broader) => broader.prefLabel)
+                            )
+                          )
+                        )
+                      )
+                    )
+                  ) // fifth broader term
+                  .filter((broader) => broader) // remove "undefined"
                 // console.log(broaderTrans); // for troubleshooting
 
                 // The 'broader[]->...' filters below look for the document in question in the broader-transitive path of the remaining concepts and, if found, excludes them from inclusion as a potential "Related Concept" candidate
                 return {
-                  filter:
-                    `!(_id in $related || 
+                  filter: `!(_id in $related || 
                       _id in path("drafts.**") || 
                       _id == $self ||
                       prefLabel in $broaderTrans ||  
@@ -211,12 +231,11 @@ export default {
                   params: {
                     self: document._id.replace('drafts.', ''),
                     related: document.related.map(({_ref}) => _ref),
-                    broaderTrans: broaderTrans
+                    broaderTrans: broaderTrans,
                   },
                 }
-              } 
-              catch(error) {
-                console.error(`Could not get broader concepts: ${error}`);
+              } catch (error) {
+                console.error(`Could not get broader concepts: ${error}`)
               }
             },
           },

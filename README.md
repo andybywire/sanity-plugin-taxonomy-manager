@@ -1,20 +1,31 @@
 # Sanity Plugin Taxonomy Manager
 
-#### WARNING: This plugin is still in development. Please do not use it in production until this warning is removed.
+### Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomies, thesauri, and classification schemes in Sanity Studio.
 
-Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomies, thesauri, and classification schemes in Sanity Studio.
-
+Taxonomies are crucial tools for organization and interoperability between and across data sets. Taxonomy Manager provides a way for content authors to create, use, and maintain standards compliant taxonomies in Sanity Studio. The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, brief hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. 
 
 #### SKOS Broader and Related Concepts
+
+The concept editor includes filtering and validation to help you create consistent SKOS vocabularies. Adding the same concept to Broader and Related fields is not allowed, and the editor validates disjunction of Related concepts with Broader Transitive up to five levels in either direction. 
+
 <img src="https://user-images.githubusercontent.com/3710835/159759995-180cbbf0-e348-4673-90af-f32062924216.png" width="700">
 
 #### Preferred, Alternative, and Hidden Labels
+
+Preferred Labels are validated for uniqueness across concepts, and Preferred, Alternative, and Hidden are validated to prevent duplicates and overlap. 
+
 <img src="https://user-images.githubusercontent.com/3710835/159759929-cd0ff6a7-31d5-47f0-bcc7-429d05922866.png" width="700">
 
 #### Scope Notes, Definition, and Examples
+
+Standard optional SKOS documentation fields are included by default.
+
 <img src="https://user-images.githubusercontent.com/3710835/159759952-50097112-2d80-43d3-ba50-545956e3b2ea.png" width="700">
 
 #### Support for Single or Multiple Taxonomy Schemes (or none)
+
+For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes](https://www.w3.org/TR/skos-reference/#schemes) are supported. Schemes can be used to configure filtered views of concepts in [Sanity Structure Builder](https://www.sanity.io/docs/structure-builder-introduction), and will provide for additional filtering and view options in [future versions of Taxonomy Manager](#to-do).
+
 <img src="https://user-images.githubusercontent.com/3710835/159759972-b29b42ee-42f9-4616-a560-7b7c8802faa5.png" width="700">
 
 <!-- Need to update image/gif:
@@ -30,8 +41,6 @@ Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomie
 ## Installation
 
 Install using the [Sanity CLI](https://www.sanity.io/docs/cli).
-
-#### NOTE: This plugin is still in development. Please do not use it in production until this warning is removed.
 
 ```bash
 $ sanity install taxonomy-manager
@@ -75,6 +84,16 @@ export default () =>
 4. Tag resources with concepts and then integrate into search indexing, navigation, and semantic web services.
     - 👉 Examples to come!
 
+<!-- 
+Future "usage" notes:
+- Set above as "basic usage"
+- Single taxonomy
+- Multiple taxonomies
+- Faceted Schemes
+– Thesauri
+ -->
+
+
 ## [SKOS Overview](https://www.w3.org/TR/skos-reference/)
 
 > The Simple Knowledge Organization System (SKOS) is a common data model for sharing and linking knowledge organization systems via the Web.
@@ -88,12 +107,13 @@ export default () =>
 ### For Initial Release [1.0.0]
 
 - [x] Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme
-- [ ] Validate [PrefLabel uniqueness](https://www.w3.org/TR/skos-primer/#secpref) across concept collection
-- [ ] Validate [Related Concept and Transitive Broader disjunction](https://www.w3.org/TR/skos-reference/#L2422)
+- [x] Validate [PrefLabel uniqueness](https://www.w3.org/TR/skos-primer/#secpref) across concept collection
+- [x] Validate [Related Concept and Transitive Broader disjunction](https://www.w3.org/TR/skos-reference/#L2422)
 
 ### For Subsequent Release
 
 - [ ] Move document level validation to individual fields
+- [ ] Add extended disjunction validation for broaderTransitive/Related concepts
 - [ ] Add language and country tags to support internationalization, adjust PrefLabel uniqueness rules
 - [ ] Create taxonomy tree view custom input template for `skosConceptScheme`
 - [ ] Add implementation examples for single and multiple hierarchical schemes, faceted classification, and thesauri
