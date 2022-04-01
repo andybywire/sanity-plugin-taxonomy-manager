@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [1.0.0] - 2022-04-01
+### Added
+- Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme
+- Validate [PrefLabel uniqueness](https://www.w3.org/TR/skos-primer/#secpref) across concept collection
+- Validate [Related Concept and Transitive Broader disjunction](https://www.w3.org/TR/skos-reference/#L2422)
+
 ## [0.2.0] - 2022-03-22
 ### Added
 - Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme

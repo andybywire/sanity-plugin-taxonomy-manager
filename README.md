@@ -108,14 +108,6 @@ Future "usage" notes:
 
 ## To Do
 
-### For Initial Release [1.0.0]
-
-- [x] Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme
-- [x] Validate [PrefLabel uniqueness](https://www.w3.org/TR/skos-primer/#secpref) across concept collection
-- [x] Validate [Related Concept and Transitive Broader disjunction](https://www.w3.org/TR/skos-reference/#L2422)
-
-### For Subsequent Release
-
 - [ ] Move document level validation to individual fields
 - [ ] Add extended disjunction validation for broaderTransitive/Related concepts
 - [ ] Add language and country tags to support internationalization, adjust PrefLabel uniqueness rules
