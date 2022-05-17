@@ -14,7 +14,7 @@ export default {
   fields: [
     {
       name: 'title',
-      title: 'Taxonomy Concept Scheme',
+      title: 'Taxonomy Concept Scheme — test',
       type: 'string',
       description:
         'Concept schemes are used to group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like.',
