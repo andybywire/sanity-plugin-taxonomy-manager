@@ -5,6 +5,7 @@
  * @todo Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links. Perhaps eventually a navigable tree view.
  */
 import {RiNodeTree} from 'react-icons/ri'
+import TreeView from './components/treeView'
 
 export default {
   name: 'skosConceptScheme',
@@ -14,10 +15,16 @@ export default {
   fields: [
     {
       name: 'title',
-      title: 'Taxonomy Concept Scheme — test',
+      title: 'Taxonomy Concept Scheme',
       type: 'string',
       description:
         'Concept schemes are used to group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like.',
+    },
+    {
+      name: 'treeView',
+      title: 'Tree View',
+      type: 'string',
+      inputComponent: TreeView
     },
     {
       name: 'description',
