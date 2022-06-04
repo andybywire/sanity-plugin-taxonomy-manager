@@ -2,46 +2,130 @@
  * Taxonomy Tree View input component for SKOS Concept Schemes
  * This component creates a hierarchical, linked display of concepts associated with the associated Concept Scheme
  */
+
  import React, { useState, useEffect }  from 'react'
- import { route, IntentLink, StateLink, RouterProvider, withRouter, withRouterHOC } from "@sanity/base/router";
+//  import { route, IntentLink, StateLink, RouterProvider, withRouter, withRouterHOC } from "@sanity/base/router";
  import {Stack, Text, Label} from '@sanity/ui'
  import sanityClient from 'part:@sanity/base/client'
- import { createBrowserHistory } from 'history';
+//  import { createBrowserHistory } from 'history';
  
  
  const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
- const router = route('/', [
-  route('/desk/:id'),
- ])
+//  const router = route('/', [
+//   route('/desk/:id'),
+//  ])
 
- const history = createBrowserHistory()
+//  const history = createBrowserHistory()
 
- function handleNavigate(nextUrl, {replace} = {}) {
-  if (replace) {
-     history.replace(nextUrl)
-   } else {
-     history.replace(nextUrl)
-   }
- }
+//  function handleNavigate(nextUrl, {replace} = {}) {
+//   if (replace) {
+//      history.replace(nextUrl)
+//    } else {
+//      history.replace(nextUrl)
+//    }
+//  }
 
  const TreeView = React.forwardRef((props, ref) => {
   
-
   const [concepts, setConcepts] = useState(0);
+  
+  const conceptScheme = props.parent._id;
+  console.log(props.parent._id);
+  // const conceptScheme = 'c569fd55-ce72-488a-8b72-c0f1db3d259c'; // Outcomes
+  // const conceptScheme = '5eaeebb7-2aaf-4b34-8301-ab532f9d5e51'; // Fruit & Veg
+
+
+  
 
   useEffect(() => {
     const fetchConcepts = async () => {
-      const response = await client.fetch(`*[_type == 'skosConcept' && !(_id in path("drafts.**"))] | order(prefLabel asc) {
-        "id":_id,
-        prefLabel,
-        topConcept,
-        broader[]->{prefLabel}
-      }`);
+      const params = {conceptScheme: conceptScheme};
+      const query = 
+        `*[_type=="skosConcept" && references($conceptScheme) && (count(broader[]) < 1 || broader == null) && !(_id in path("drafts.**"))]|order(prefLabel) {
+          "level": 0,
+          "id": _id,
+          prefLabel,
+          topConcept,
+          "narrower": *[_type == "skosConcept" && references(^._id) && !(_id in path("drafts.**"))]|order(prefLabel) {
+            "level": 1,
+            "id": _id,
+            prefLabel,
+            "narrower": *[_type == "skosConcept" && references(^._id) && !(_id in path("drafts.**"))]|order(prefLabel) {
+              "level": 2,
+              "id": _id,
+              prefLabel,
+              "narrower": *[_type == "skosConcept" && references(^._id) && !(_id in path("drafts.**"))]|order(prefLabel) {
+                "level":3,  
+                "id": _id,
+                prefLabel,
+                "narrower": *[_type == "skosConcept" && references(^._id) && !(_id in path("drafts.**"))]|order(prefLabel) {
+                  "level": 4,
+                  "id": _id,
+                  prefLabel,
+                  "narrower": *[_type == "skosConcept" && references(^._id) && !(_id in path("drafts.**"))]|order(prefLabel) {
+                    "level": 5,
+                    "id": _id,
+                    prefLabel
+                  }
+                }
+              }
+            }
+          }
+        }`
+      // `*[_type == 'skosConcept' && !(_id in path("drafts.**"))] | order(prefLabel asc) {
+      //   "id":_id,
+      //   prefLabel,
+      //   topConcept,
+      //   broader[]->{prefLabel}
+      // }`
+      const response = await client.fetch(query, params);
       const conceptsList = await response.map((concept) => {
-        if (concept.topConcept == true) {
-          return <li key={concept.id}>{concept.prefLabel}</li>;
-        }
+        return (
+          <ul> {/* level 0 */}
+            <li key={concept.id}>{concept.prefLabel}
+              {concept.narrower && concept.narrower.map((concept) => {
+                return (
+                  <ul> {/* level 1 */}
+                    <li key={concept.id}>{concept.prefLabel}
+                      {concept.narrower && concept.narrower.map((concept) => {
+                        return (
+                          <ul> {/* level 2 */}
+                            <li key={concept.id}>{concept.prefLabel}
+                              {concept.narrower && concept.narrower.map((concept) => {
+                                return (
+                                  <ul> {/* level 3 */}
+                                    <li key={concept.id}>{concept.prefLabel}
+                                      {concept.narrower && concept.narrower.map((concept) => {
+                                        return (
+                                          <ul> {/* level 4 */}
+                                            <li key={concept.id}>{concept.prefLabel}
+                                              {concept.narrower && concept.narrower.map((concept) => {
+                                                return (
+                                                  <ul> {/* level 5 */}
+                                                    <li key={concept.id}>{concept.prefLabel}</li>
+                                                  </ul>
+                                                )
+                                              })}
+                                            </li>
+                                          </ul>
+                                        )
+                                      })}
+                                    </li>
+                                  </ul>
+                                )
+                              })}
+                            </li>
+                          </ul>
+                        )
+                      })}
+                    </li>
+                  </ul>
+                )
+              })}
+            </li>
+          </ul>
+        )
       });     
       setConcepts(conceptsList)
       // setConcepts(JSON.stringify(response))
@@ -59,21 +143,24 @@
     </Label>
     <Text size={1}>
       <p>{JSON.stringify(props.parent.title)}</p>
-      <p>Concepts: {concepts}</p>
+      <p>Concepts:</p>
+      {concepts}
+      <p>{JSON.stringify(props.parent._id)}</p>
+
       
-      <RouterProvider
+      {/* <RouterProvider
         router={router}
         onNavigate={handleNavigate}
         // state={router.decode(location.pathname)}
-        >
-        <StateLink 
+        > */}
+        {/* <StateLink 
           data-as="a"
           data-ui="PaneItem"
           // state={{id: '/desk/skosConceptScheme;c569fd55-ce72-488a-8b72-c0f1db3d259c;25af2dbf-52f8-445a-93e6-017340794adb%2Ctype%3DskosConcept'}}
           state={{id: 'skosConcept;25af2dbf-52f8-445a-93e6-017340794adb'}}
           >
           Definition
-        </StateLink>
+        </StateLink> */}
 
 
         {/* <Text 
@@ -88,14 +175,14 @@
           >
           Definition
         </Text> */}
-    </RouterProvider>
+    {/* </RouterProvider> */}
       
     </Text>
     </Stack>
   )
  })
 
- export default withRouterHOC(TreeView)
+ export default TreeView
 //  export default withRouterHOC(TreeView)
 
 
@@ -158,3 +245,4 @@ Open Definition
   // New Pane — though doesn't work by just appending the string to the URL
   // %7C%2C
   // |,
+
