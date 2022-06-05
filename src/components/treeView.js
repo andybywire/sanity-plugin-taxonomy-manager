@@ -11,7 +11,7 @@
  const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
  const TreeView = React.forwardRef((props, ref) => {  
-  const [concepts, setConcepts] = useState(0);
+  const [concepts, setConcepts] = useState("Loading hierarchy ...");
   const conceptScheme = props.parent._id;
 
   useEffect(() => {
