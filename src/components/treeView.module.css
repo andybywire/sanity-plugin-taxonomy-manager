@@ -1,0 +1,18 @@
+ul {
+  list-style: none;
+}
+li {
+  font-weight: normal;
+}
+.level_0 {
+  padding-left: 1rem;
+}
+.topConcept {
+  font-weight: bold;
+}
+.orphan {
+  font-weight: normal;
+}
+.polyHier {
+  font-style: italic;
+}

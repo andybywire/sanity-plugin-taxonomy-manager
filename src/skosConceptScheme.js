@@ -22,8 +22,10 @@ export default {
     },
     {
       name: 'treeView',
-      title: 'Tree View',
+      title: 'Concept Scheme Tree View',
       type: 'string',
+      description: 
+        'Concept hierarchy is determined by \'Broader Than\' and \'Top Concept\' relationships assigned to each concept. A holistic view of these relationships is shown below. Top Concepts are indicated in bold. Italicized concepts represent polyhierarchy (concepts that appear in more than one branch of the hierarchy tree.)',
       inputComponent: TreeView
     },
     {
