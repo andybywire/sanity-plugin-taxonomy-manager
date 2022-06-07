@@ -3,15 +3,35 @@
  * This component creates a hierarchical, linked display of concepts associated with the associated Concept Scheme
  */
 
- import React, { useState, useEffect }  from 'react'
- import { Box, Stack, Text } from '@sanity/ui'
- import sanityClient from 'part:@sanity/base/client'
- import * as s from "./treeView.module.css"
+  import React, { useState, useEffect }  from 'react'
+  import { Box, Stack, Text } from '@sanity/ui'
+  import sanityClient from 'part:@sanity/base/client'
+  import * as s from "./treeView.module.css"
  
- const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
+  const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
- const TreeView = React.forwardRef((props, ref) => {  
-  const [concepts, setConcepts] = useState("Loading hierarchy ...");
+  // This saves 50 lines of code:
+  const RecursiveConcept = (props) => {
+    return (
+      <ul> 
+        {props.concepts.map((concept) => {
+          return (
+            <li key={concept.id} className={`${concept.topConcept ? s.topConcept : s.orphan}`}>
+              {concept.prefLabel}
+              {concept.narrower.length > 0 &&  <RecursiveConcept concepts={concept.narrower} />}  
+            </li>
+          )
+        })}
+      </ul>
+    )
+  }
+
+  // The polyhierarchy flag is wonky — needs the conceptScheme variable I define below ... but I also don't like defining the component in there; seems to brittle. 
+  // ${concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}
+
+
+  const TreeView = React.forwardRef((props, ref) => {  
+  const [concepts, setConcepts] = useState([]);
   const conceptScheme = props.parent._id;
 
   useEffect(() => {
@@ -54,54 +74,58 @@
           }
         }`
       const response = await client.fetch(query, params);
-      const conceptsList = await response.map((concept) => {
-        return (
-          <ul className={s.level_0}> {/* level 0 */}
-            <li key={concept.id} className={concept.topConcept ? s.topConcept : s.orphan}>{concept.prefLabel}
-              {concept.narrower && concept.narrower.map((concept) => {
-                return (
-                  <ul> {/* level 1 */}
-                    <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}
-                      {concept.narrower && concept.narrower.map((concept) => {
-                        return (
-                          <ul> {/* level 2 */}
-                            <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}
-                              {concept.narrower && concept.narrower.map((concept) => {
-                                return (
-                                  <ul> {/* level 3 */}
-                                    <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}
-                                      {concept.narrower && concept.narrower.map((concept) => {
-                                        return (
-                                          <ul> {/* level 4 */}
-                                            <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}
-                                              {concept.narrower && concept.narrower.map((concept) => {
-                                                return (
-                                                  <ul> {/* level 5 */}
-                                                    <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}</li>
-                                                  </ul>
-                                                )
-                                              })}
-                                            </li>
-                                          </ul>
-                                        )
-                                      })}
-                                    </li>
-                                  </ul>
-                                )
-                              })}
-                            </li>
-                          </ul>
-                        )
-                      })}
-                    </li>
-                  </ul>
-                )
-              })}
-            </li>
-          </ul>
-        )
-      });     
-      setConcepts(conceptsList)
+      // const conceptsList = await response.map((concept, index) => {
+      //   return (
+
+      //     <ul className={s.level_0}>
+      //       <li key={concept.id} className={concept.topConcept ? s.topConcept : s.orphan}>{concept.prefLabel}
+      //         {concept.narrower && concept.narrower.map((concept) => {
+      //           return (
+      //             <ul> {/* level 1 */}
+
+      //               <RecursiveConcept {...concept} />
+
+      //               {/* <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel} */}
+      //                 {/* {concept.narrower && concept.narrower.map((concept) => {
+      //                   return (
+      //                     <ul> 
+      //                       <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}
+      //                         {concept.narrower && concept.narrower.map((concept) => {
+      //                           return (
+      //                             <ul> 
+      //                               <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}
+      //                                 {concept.narrower && concept.narrower.map((concept) => {
+      //                                   return (
+      //                                     <ul> 
+      //                                       <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}
+      //                                         {concept.narrower && concept.narrower.map((concept) => {
+      //                                           return (
+      //                                             <ul> 
+      //                                               <li key={concept.id} className={concept.broaderSchemas.filter(id => id === conceptScheme).length > 1 && s.polyHier}>{concept.prefLabel}</li>
+      //                                             </ul>
+      //                                           )
+      //                                         })}
+      //                                       </li>
+      //                                     </ul>
+      //                                   )
+      //                                 })}
+      //                               </li>
+      //                             </ul>
+      //                           )
+      //                         })}
+      //                       </li>
+      //                     </ul>
+      //                   )
+      //                 })} */}
+      //               {/* </li> */}
+      //             </ul>
+      //           )
+      //         })}
+      //       </li>
+      //     </ul>
+      //   )
+      // });     
+      setConcepts(response)
     }
     fetchConcepts();
   }, []);
@@ -116,7 +140,7 @@
           {props.type.description}
         </Text>
         <Text size={2}>
-          {concepts}
+          <RecursiveConcept concepts={concepts} />
         </Text>
       </Stack>
     </Box>
