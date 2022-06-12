@@ -28,12 +28,11 @@ Standard optional SKOS documentation fields are included by default.
 
 ### Support for Single or Multiple Taxonomy Schemes (or none)
 
-For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes](https://www.w3.org/TR/skos-reference/#schemes) are supported. Schemes can be used to configure filtered views of concepts in [Sanity Structure Builder](https://www.sanity.io/docs/structure-builder-introduction), and will provide for additional filtering and view options in [future versions of Taxonomy Manager](#to-do).
+For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes](https://www.w3.org/TR/skos-reference/#schemes) are supported. Schemes can be used to configure filtered views of concepts in [Sanity Structure Builder](https://www.sanity.io/docs/structure-builder-introduction), and will provide for additional filtering and view options in [future versions of Taxonomy Manager](#to-do). 
 
-<img src="https://user-images.githubusercontent.com/3710835/159759972-b29b42ee-42f9-4616-a560-7b7c8802faa5.png" width="700">
+<img src="https://user-images.githubusercontent.com/3710835/173248197-afcd1718-8aaa-4925-b2ea-f21f1a16a497.png" width="700">
 
-<!-- Need to update image/gif:
-![sanity-taxonomy-manager-poc-demo](https://user-images.githubusercontent.com/3710835/158623598-04a473b4-a720-4c37-adca-6d39cd0c688c.gif) -->
+Taxonomy Scheme views show a hierarchical list (Tree View) of the concepts included in a given scheme. This list allows for easy visualization of Top Concepts and polyhierarchy (concepts that appear in more than one place in the hierarchy). "Orphan" terms can be identified by looking for top level concepts not denoted as a Top Concept.
 
 ## Features
 
@@ -111,10 +110,14 @@ Future "usage" notes:
 - [ ] Move document level validation to individual fields
 - [ ] Add extended disjunction validation for broaderTransitive/Related concepts
 - [ ] Add language and country tags to support internationalization, adjust PrefLabel uniqueness rules
-- [ ] Create taxonomy tree view custom input template for `skosConceptScheme`
 - [ ] Add implementation examples for single and multiple hierarchical schemes, faceted classification, and thesauri
 - [ ] Add "Export as Turtle File" to `skosConceptScheme` type
 - [ ] Add functionality to import from .csv and/or .ttl
+
+## To Done
+
+- [x] Create taxonomy tree view custom input template for `skosConceptScheme` [2022-06-12]
+
 
 ## License
 
