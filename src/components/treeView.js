@@ -1,7 +1,7 @@
 /**
  * Taxonomy Tree View input component for SKOS Concept Schemes
  * This component creates a hierarchical, linked (TDB) display of concepts associated with the associated Concept Scheme
- * @todo Add ability to set hierarchy depth from config file 
+ * @todo Add ability to set hierarchy depth from config file
  * @todo Add links to concepts that open in a pane to the right (see notes below)
  * @todo Add affordance for collapsing and expanding tree view (see notes below)
  * @todo Add affordance for creating new child concept in pane to the right (or modal) from a tree view concept
@@ -9,14 +9,14 @@
  * @todo Add listener to JS client to reflect hierarchy updates as they happen: https://www.sanity.io/plugins/javascript-api-client
  */
 
-import React, { useState, useEffect }  from 'react'
-import { Box, Stack, Text } from '@sanity/ui'
+import React, {useState, useEffect} from 'react'
+import {Box, Stack, Text} from '@sanity/ui'
 import sanityClient from 'part:@sanity/base/client'
-import * as s from "./treeView.module.css"
+import * as s from './treeView.module.css'
 
 const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
-// This component builds the hierarchy tree, messages loading state, messages no concepts found state. 
+// This component builds the hierarchy tree, messages loading state, messages no concepts found state.
 const RecursiveConcept = (props) => {
   return (
     <>
@@ -24,13 +24,19 @@ const RecursiveConcept = (props) => {
       {props.noConcept && <p>This scheme does not yet have any concepts assigned to it.</p>}
       {props.isLoading ? (
         <p>Loading hierarchy ...</p>
-      ) : (    
-        <ul> 
+      ) : (
+        <ul>
           {props.concepts.map((concept) => {
             return (
-              <li key={concept.id} className={`${concept.topConcept ? s.topConcept : s.orphan} ${concept.broaderSchemas?.filter(id => id === concept.parentScheme).length > 1 && s.polyHier}`}>
+              <li
+                key={concept.id}
+                className={`${concept.topConcept ? s.topConcept : s.orphan} ${
+                  concept.broaderSchemas?.filter((id) => id === concept.parentScheme).length > 1 &&
+                  s.polyHier
+                }`}
+              >
                 {concept.prefLabel}
-                {concept.narrower?.length > 0 &&  <RecursiveConcept concepts={concept.narrower} />}  
+                {concept.narrower?.length > 0 && <RecursiveConcept concepts={concept.narrower} />}
               </li>
             )
           })}
@@ -40,19 +46,18 @@ const RecursiveConcept = (props) => {
   )
 }
 
-const TreeView = React.forwardRef((props, ref) => {  
-
+const TreeView = React.forwardRef((props, ref) => {
   const [concepts, setConcepts] = useState([])
   const [isLoading, setIsLoading] = useState(false)
   const [noConcept, setNoConcept] = useState(false)
   const [isError, setIsError] = useState(false)
 
-  const conceptScheme = props.parent._id;
-  
+  const conceptScheme = props.parent._id
+
   // This function builds the first level of hierarchy, noting Top Concepts and orphans, then calls the recursiveQuery() function
-  const queryBuilder =(depth = 5) => {
+  const queryBuilder = (depth = 5) => {
     if (depth === 0) {
-      return "";
+      return ''
     } else {
       return `*[_type=="skosConcept" && references($conceptScheme) && (count(broader[]) < 1 || broader == null) && !(_id in path("drafts.**"))]|order(prefLabel) {
       "level": 0,
@@ -66,7 +71,7 @@ const TreeView = React.forwardRef((props, ref) => {
   // This function builds all subsequent levels found in the data and notes any concepts that exist in two places in this Concept Scheme (i.e. which are polyhierarchical)
   const recursiveQuery = (depth, count = 1) => {
     if (depth === 0) {
-      return "";
+      return ''
     } else {
       return `"narrower": *[_type == "skosConcept" && references($conceptScheme) && references(^._id) && !(_id in path("drafts.**"))]|order(prefLabel) {
         "level": ${count},
@@ -84,9 +89,9 @@ const TreeView = React.forwardRef((props, ref) => {
       setNoConcept(false)
       setIsLoading(true)
       try {
-        const params = {conceptScheme: conceptScheme};
+        const params = {conceptScheme: conceptScheme}
         const query = `${queryBuilder()}`
-        const response = await client.fetch(query, params);
+        const response = await client.fetch(query, params)
         if (response.length < 1) {
           setNoConcept(true)
         }
@@ -97,8 +102,8 @@ const TreeView = React.forwardRef((props, ref) => {
       }
       setIsLoading(false)
     }
-    fetchConcepts();
-  }, []);
+    fetchConcepts()
+  }, [])
 
   return (
     <Box>
@@ -110,7 +115,12 @@ const TreeView = React.forwardRef((props, ref) => {
           {props.type.description}
         </Text>
         <Text size={2}>
-          <RecursiveConcept concepts={concepts} isLoading={isLoading} noConcept={noConcept} isError={isError}/>
+          <RecursiveConcept
+            concepts={concepts}
+            isLoading={isLoading}
+            noConcept={noConcept}
+            isError={isError}
+          />
         </Text>
       </Stack>
     </Box>
