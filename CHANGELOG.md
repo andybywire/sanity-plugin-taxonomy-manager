@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [1.0.1] - 2022-06-12
+### Added
+- Add "Concept Scheme Tree View" custom component to Taxonomy Schemes view. List shows hierarchy, Top Concepts, orphans, and polyhierarchial concepts.  
+
 ## [1.0.0] - 2022-04-01
 ### Added
 - Move "Settings" data into `config.json`, update initial value fields/functions, and remove "Taxonomy Settings" document scheme
