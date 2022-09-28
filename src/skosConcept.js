@@ -19,6 +19,7 @@ export default {
   icon: AiFillTags,
   initialValue: async () => {
     const iriBase = {iriValue: config.namespace}
+    console.log(iriBase.iriValue);
     const scheme =
       (await client.fetch(`
       *[_type == 'skosConceptScheme']{
@@ -31,7 +32,7 @@ export default {
       scheme: scheme,
       topConcept: false,
       broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
-      related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"P
+      related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
     }
   },
   // Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels:

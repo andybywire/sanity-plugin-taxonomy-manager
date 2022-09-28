@@ -11,6 +11,7 @@
 
 import React, {useState, useEffect} from 'react'
 import {Box, Stack, Text} from '@sanity/ui'
+import {withParent} from 'part:@sanity/form-builder'
 import sanityClient from 'part:@sanity/base/client'
 import * as s from './treeView.module.css'
 
@@ -20,7 +21,7 @@ const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 const RecursiveConcept = (props) => {
   return (
     <>
-      {props.isError && <p>This scheme does not yet have any concepts assigned to it.</p>}
+      {props.isError && <p>Sorry, could not get concepts.</p>}
       {props.noConcept && <p>This scheme does not yet have any concepts assigned to it.</p>}
       {props.isLoading ? (
         <p>Loading hierarchy ...</p>
@@ -46,85 +47,86 @@ const RecursiveConcept = (props) => {
   )
 }
 
-const TreeView = React.forwardRef((props, ref) => {
-  const [concepts, setConcepts] = useState([])
-  const [isLoading, setIsLoading] = useState(false)
-  const [noConcept, setNoConcept] = useState(false)
-  const [isError, setIsError] = useState(false)
+const TreeView = withParent(
+  React.forwardRef((props, ref) => {
+    const [concepts, setConcepts] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+    const [noConcept, setNoConcept] = useState(false)
+    const [isError, setIsError] = useState(false)
 
-  const conceptScheme = props.parent._id
-
-  // This function builds the first level of hierarchy, noting Top Concepts and orphans, then calls the recursiveQuery() function
-  const queryBuilder = (depth = 5) => {
-    if (depth === 0) {
-      return ''
-    } else {
-      return `*[_type=="skosConcept" && references($conceptScheme) && (count(broader[]) < 1 || broader == null) && !(_id in path("drafts.**"))]|order(prefLabel) {
-      "level": 0,
-      "id": _id,
-      prefLabel,
-      topConcept,
-        ${recursiveQuery(depth)}
-      }`
-    }
-  }
-  // This function builds all subsequent levels found in the data and notes any concepts that exist in two places in this Concept Scheme (i.e. which are polyhierarchical)
-  const recursiveQuery = (depth, count = 1) => {
-    if (depth === 0) {
-      return ''
-    } else {
-      return `"narrower": *[_type == "skosConcept" && references($conceptScheme) && references(^._id) && !(_id in path("drafts.**"))]|order(prefLabel) {
-        "level": ${count},
+    // This function builds the first level of hierarchy, noting Top Concepts and orphans, then calls the recursiveQuery() function
+    const queryBuilder = (depth = 5) => {
+      if (depth === 0) {
+        return ''
+      } else {
+        return `*[_type=="skosConcept" && references($conceptScheme) && (count(broader[]) < 1 || broader == null) && !(_id in path("drafts.**"))]|order(prefLabel) {
+        "level": 0,
         "id": _id,
         prefLabel,
-        "broaderSchemas": broader[]->scheme->._id, 
-        "parentScheme": $conceptScheme, ${recursiveQuery(depth - 1, count + 1)} 
-      }`
-    }
-  }
-
-  useEffect(() => {
-    const fetchConcepts = async () => {
-      setIsError(false)
-      setNoConcept(false)
-      setIsLoading(true)
-      try {
-        const params = {conceptScheme: conceptScheme}
-        const query = `${queryBuilder()}`
-        const response = await client.fetch(query, params)
-        if (response.length < 1) {
-          setNoConcept(true)
-        }
-        setConcepts(response)
-      } catch (error) {
-        setIsError(true)
-        console.log(error)
+        topConcept,
+          ${recursiveQuery(depth)}
+        }`
       }
-      setIsLoading(false)
     }
-    fetchConcepts()
-  }, [])
+    // This function builds all subsequent levels found in the data and notes any concepts that exist in two places in this Concept Scheme (i.e. which are polyhierarchical)
+    const recursiveQuery = (depth, count = 1) => {
+      if (depth === 0) {
+        return ''
+      } else {
+        return `"narrower": *[_type == "skosConcept" && references($conceptScheme) && references(^._id) && !(_id in path("drafts.**"))]|order(prefLabel) {
+          "level": ${count},
+          "id": _id,
+          prefLabel,
+          "broaderSchemas": broader[]->scheme->._id, 
+          "parentScheme": $conceptScheme, ${recursiveQuery(depth - 1, count + 1)} 
+        }`
+      }
+    }
 
-  return (
-    <Box>
-      <Stack space={2}>
-        <Text size={1} weight="semibold">
-          {props.type.title}
-        </Text>
-        <Text size={1} muted>
-          {props.type.description}
-        </Text>
-        <Text size={2}>
-          <RecursiveConcept
-            concepts={concepts}
-            isLoading={isLoading}
-            noConcept={noConcept}
-            isError={isError}
-          />
-        </Text>
-      </Stack>
-    </Box>
-  )
-})
+    useEffect(() => {
+      const fetchConcepts = async () => {
+        const conceptScheme = await props.parent._id;
+        setIsError(false)
+        setNoConcept(false)
+        setIsLoading(true)
+        try {
+          const params = {conceptScheme: conceptScheme}
+          const query = `${queryBuilder()}`
+          const response = await client.fetch(query, params)
+          if (response.length < 1) {
+            setNoConcept(true)
+          }
+          setConcepts(response)
+        } catch (error) {
+          setIsError(true)
+          console.log(error)
+        }
+        setIsLoading(false)
+      }
+      fetchConcepts()
+    }, [])
+
+    return (
+      <Box>
+        <Stack space={2}>
+          <Text size={1} weight="semibold">
+            {props.type.title}
+          </Text>
+          <Text size={1} muted>
+            {props.type.description}
+          </Text>
+          <Text size={2}>
+            <RecursiveConcept
+              concepts={concepts}
+              isLoading={isLoading}
+              noConcept={noConcept}
+              isError={isError}
+            />
+          </Text>
+        </Stack>
+      </Box>
+    )
+  })
+)
 
 export default TreeView

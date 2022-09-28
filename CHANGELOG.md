@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [1.0.2] - 2022-09-28
+### Fixed
+- Fixed bug introduced by Sanity Studio update 2.33.0 that made `parent` unavailable to custom components directly.
+### Changed 
+- Made concept scheme assignment `async` to improve consistency of Concept Scheme Tree View rendering. 
+
 ## [1.0.1] - 2022-06-12
 ### Added
 - Add "Concept Scheme Tree View" custom component to Taxonomy Schemes view. List shows hierarchy, Top Concepts, orphans, and polyhierarchial concepts.  
