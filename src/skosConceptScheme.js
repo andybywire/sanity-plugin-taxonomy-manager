@@ -4,6 +4,8 @@
  * @todo Add administrative metadata: author, date, last revised, etc.
  * @todo Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links. Perhaps eventually a navigable tree view.
  */
+
+import React from 'react';
 import {RiNodeTree} from 'react-icons/ri'
 import TreeView from './components/treeView'
 
@@ -17,22 +19,19 @@ export default {
       name: 'title',
       title: 'Taxonomy Concept Scheme',
       type: 'string',
-      description:
-        'Concept schemes are used to group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like.',
+      description:  'Schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like'
     },
     {
       name: 'treeView',
       title: 'Concept Scheme Tree View',
       type: 'string',
-      description: 
-        'Concept hierarchy is determined by \'Broader Than\' and \'Top Concept\' relationships assigned to each concept. A holistic view of these relationships is shown below. Top Concepts are indicated in bold. Italicized concepts represent polyhierarchy (concepts that appear in more than one branch of the hierarchy tree.)',
+      description: <>Top Concepts are indicated in <strong>bold</strong>. Concepts in <em>italics</em> represent polyhierarchy (concepts that appear in more than one branch of the hierarchy tree).</>,
       inputComponent: TreeView
     },
     {
       name: 'description',
       title: 'Description',
       type: 'text',
-      rows: 3,
       description: 'Describe the intended use of this scheme.',
     },
   ],

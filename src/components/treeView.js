@@ -48,12 +48,15 @@ const RecursiveConcept = (props) => {
 }
 
 const TreeView = withParent(
+  
+  // Not using the ref right now, but likely will when the tree becomes interactive. 
   React.forwardRef((props, ref) => {
     const [concepts, setConcepts] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [noConcept, setNoConcept] = useState(false)
     const [isError, setIsError] = useState(false)
 
+    const conceptScheme = props.parent._id ? props.parent._id.replace('drafts.', '') : undefined
     // This function builds the first level of hierarchy, noting Top Concepts and orphans, then calls the recursiveQuery() function
     const queryBuilder = (depth = 5) => {
       if (depth === 0) {
@@ -85,7 +88,9 @@ const TreeView = withParent(
 
     useEffect(() => {
       const fetchConcepts = async () => {
-        const conceptScheme = await props.parent._id;
+        
+        if (props.parent._id === undefined ) return
+
         setIsError(false)
         setNoConcept(false)
         setIsLoading(true)
@@ -95,6 +100,7 @@ const TreeView = withParent(
           const response = await client.fetch(query, params)
           if (response.length < 1) {
             setNoConcept(true)
+            setIsError(false)
           }
           setConcepts(response)
         } catch (error) {
@@ -104,7 +110,7 @@ const TreeView = withParent(
         setIsLoading(false)
       }
       fetchConcepts()
-    }, [])
+    }, [props.parent._id])
 
     return (
       <Box>

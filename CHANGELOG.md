@@ -6,6 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [1.0.3] - 2022-09-29
+### Fixed
+- Concept Scheme Tree View bug that caused by missing parent document value on first render.
+### Changed 
+- Improved taxonomy scheme field descriptions.
+
 ## [1.0.2] - 2022-09-28
 ### Fixed
 - Fixed bug introduced by Sanity Studio update 2.33.0 that made `parent` unavailable to custom components directly.
