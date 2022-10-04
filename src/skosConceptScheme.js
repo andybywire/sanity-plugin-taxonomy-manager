@@ -11,7 +11,7 @@ import TreeView from './components/treeView'
 
 export default {
   name: 'skosConceptScheme',
-  title: 'Taxonomy Schemes',
+  title: 'Taxonomy Scheme',
   type: 'document',
   icon: RiNodeTree,
   fields: [

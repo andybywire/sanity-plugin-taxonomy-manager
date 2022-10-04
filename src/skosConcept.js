@@ -14,7 +14,7 @@ const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
 export default {
   name: 'skosConcept',
-  title: 'Concepts',
+  title: 'Concept',
   type: 'document',
   icon: AiFillTags,
   initialValue: async () => {
