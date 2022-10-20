@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [1.0.4] - 2022-10-20
+### Fixed
+- Taxonomy Tree CSS was spilling over into description fields for the studio. Added unique classes to keep plugin styling from being too enterprising. 
+
 ## [1.0.3] - 2022-09-29
 ### Fixed
 - Concept Scheme Tree View bug that caused by missing parent document value on first render.

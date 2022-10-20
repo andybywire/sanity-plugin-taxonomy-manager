@@ -1,7 +1,7 @@
-ul {
+ul.skosTreeView {
   list-style: none;
 }
-li {
+ul.skosTreeView li {
   font-weight: normal;
 }
 .level_0 {

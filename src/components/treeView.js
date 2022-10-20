@@ -26,7 +26,7 @@ const RecursiveConcept = (props) => {
       {props.isLoading ? (
         <p>Loading hierarchy ...</p>
       ) : (
-        <ul>
+        <ul className='skosTreeView'>
           {props.concepts.map((concept) => {
             return (
               <li
