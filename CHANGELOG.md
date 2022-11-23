@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [1.0.5] - 2022-11-23
+### Fixed
+- README link that was not behaving as intended across applications.  
+
 ## [1.0.4] - 2022-10-20
 ### Fixed
 - Taxonomy Tree CSS was spilling over into description fields for the studio. Added unique classes to keep plugin styling from being too enterprising. 
@@ -71,4 +75,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Keep at the top to track upcoming changes.
 - People can see what changes they might expect in upcoming releases
 - At release time, you can move the Unreleased section changes into a new release version section.
+
+### Release Process 
+1. Safety Checks:
+  - git pull
+  - git status
+  - npm ci
+  - npm test
+2. Prepare the Release:
+  - npm run build
+3. Update the Changelog
+4. Update the Version Number:
+  - npm version patch | minor | major -m "message"
+5. Publish to npm:
+  - npm publish
+6. Publish to Git:
+  - git push
+  - git push --tags
+7. Create a GitHub Release (optional)
+
+source: https://cloudfour.com/thinks/how-to-publish-an-updated-version-of-an-npm-package/
 --->

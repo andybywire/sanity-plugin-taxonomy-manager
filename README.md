@@ -28,7 +28,7 @@ Standard optional SKOS documentation fields are included by default.
 
 ### Support for Single or Multiple Taxonomy Schemes (or none)
 
-For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes](https://www.w3.org/TR/skos-reference/#schemes) are supported. Schemes can be used to configure filtered views of concepts in [Sanity Structure Builder](https://www.sanity.io/docs/structure-builder-introduction), and will provide for additional filtering and view options in [future versions of Taxonomy Manager](#to-do). 
+For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes](https://www.w3.org/TR/skos-reference/#schemes) are supported. Schemes can be used to configure filtered views of concepts in [Sanity Structure Builder](https://www.sanity.io/docs/structure-builder-introduction), and will provide for additional filtering and view options in [future versions of Taxonomy Manager](README.md#to-do). 
 
 <img src="https://user-images.githubusercontent.com/3710835/173248197-afcd1718-8aaa-4925-b2ea-f21f1a16a497.png" width="700">
 
