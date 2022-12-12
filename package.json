@@ -2,44 +2,83 @@
   "name": "sanity-plugin-taxonomy-manager",
   "version": "1.0.5",
   "description": "Create and manage SKOS compliant taxonomies, thesauri, and classification schemes in Sanity Studio.",
-  "scripts": {
-    "lint": "eslint .",
-    "build": "sanipack build",
-    "watch": "sanipack build --watch",
-    "prepublishOnly": "sanipack build && sanipack verify"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/andybywire/sanity-plugin-taxonomy-manager.git"
-  },
   "keywords": [
     "sanity",
     "sanity-plugin"
   ],
-  "author": "Andy Fitzgerald",
+  "homepage": "https://github.com/andybywire/sanity-plugin-taxonomy-manager#readme",
+  "bugs": {
+    "url": "https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/andybywire/sanity-plugin-taxonomy-manager.git"
+  },
   "license": "MIT",
+  "author": "Andy Fitzgerald",
+  "exports": {
+    ".": {
+      "types": "./lib/src/index.d.ts",
+      "source": "./src/index.ts",
+      "import": "./lib/index.esm.js",
+      "require": "./lib/index.js",
+      "default": "./lib/index.esm.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "main": "./lib/index.js",
+  "module": "./lib/index.esm.js",
+  "source": "./src/index.ts",
+  "types": "./lib/src/index.d.ts",
+  "files": [
+    "src",
+    "lib",
+    "v2-incompatible.js",
+    "sanity.json"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "build": "pkg-utils build",
+    "watch": "pkg-utils watch",
+    "prepublishOnly": "npm run build",
+    "prebuild": "npm run clean && plugin-kit verify-package --silent && pkg-utils",
+    "clean": "rimraf lib",
+    "link-watch": "plugin-kit link-watch"
+  },
   "dependencies": {
     "@reach/auto-id": "^0.16.0",
     "@sanity/base": "^2.28.2",
     "@sanity/form-builder": "^2.29.1",
-    "@sanity/ui": "^0.37.5",
+    "@sanity/incompatible-plugin": "^1.0.4",
+    "@sanity/ui": "^1.0.0",
     "react-icons": "^4.3.1"
   },
   "devDependencies": {
-    "eslint": "^7.32.0",
+    "@sanity/pkg-utils": "^1.20.3",
+    "@sanity/plugin-kit": "^2.2.0",
+    "@typescript-eslint/eslint-plugin": "^5.46.0",
+    "@typescript-eslint/parser": "^5.46.0",
+    "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-config-sanity": "^5.1.0",
-    "eslint-plugin-react": "^7.29.4",
-    "prettier": "^2.5.1",
-    "sanipack": "^2.1.0"
+    "eslint-config-sanity": "^6.0.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.8.1",
+    "prettier-plugin-packagejson": "^2.3.0",
+    "react": "^18",
+    "rimraf": "^3.0.2",
+    "sanipack": "^2.1.0",
+    "sanity": "^3.0.0",
+    "typescript": "^4.9.4"
   },
   "peerDependencies": {
-    "react": "^17.0.0"
+    "react": "^18",
+    "sanity": "^3.0.0"
   },
-  "bugs": {
-    "url": "https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues"
+  "engines": {
+    "node": ">=14"
   },
-  "homepage": "https://github.com/andybywire/sanity-plugin-taxonomy-manager#readme",
   "prettier": {
     "semi": false,
     "printWidth": 100,
@@ -56,5 +95,13 @@
     "ignorePatterns": [
       "lib/**/"
     ]
-  }
+  },
+  "sanityPlugin": {
+    "verifyPackage": {
+       "dependencies": false,
+       "studioConfig": false,
+       "eslintImports": false,
+       "tsc": false
+    }
+ }
 }

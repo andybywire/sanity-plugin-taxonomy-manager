@@ -1,6 +1,3 @@
-# Design files
-_local
-
 # Logs
 logs
 *.log
@@ -45,13 +42,20 @@ jspm_packages
 # VS Code settings
 .vscode
 
-# Lockfiles
-yarn.lock
-package-lock.json
+# IntelliJ
+.idea
+*.iml
 
 # Cache
 .cache
 
+# Yalc
+.yalc
+yalc.lock
+
+##npm package zips
+*.tgz
+
 # Compiled plugin
-/lib
+lib
 
