@@ -5,36 +5,37 @@
  * @todo Scheme initial value: Configure "default" option in Concept Scheme, for cases when there are multiple schemes; configure initialValue to default to that selection (It's currently configure to take the scheme ordered first. This isn't transparent.)
  * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
  */
-import sanityClient from 'part:@sanity/base/client'
-import config from 'config:taxonomy-manager'
-import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
-import PrefLabel from './components/prefLabel'
 
-const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
+// import sanityClient from 'part:@sanity/base/client'
+// import config from 'config:taxonomy-manager'
+import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
+// import PrefLabel from './components/prefLabel'
+
+// const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
 
 export default {
   name: 'skosConcept',
   title: 'Concept',
   type: 'document',
   icon: AiFillTags,
-  initialValue: async () => {
-    const iriBase = {iriValue: config.namespace}
-    console.log(iriBase.iriValue);
-    const scheme =
-      (await client.fetch(`
-      *[_type == 'skosConceptScheme']{
-        '_type': 'reference',
-        '_ref': _id
-      }[0]
-    `)) ?? undefined
-    return {
-      conceptIriBase: iriBase,
-      scheme: scheme,
-      topConcept: false,
-      broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
-      related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
-    }
-  },
+  // initialValue: async () => {
+  //   const iriBase = {iriValue: config.namespace}
+  //   console.log(iriBase.iriValue);
+  //   const scheme =
+  //     (await client.fetch(`
+  //     *[_type == 'skosConceptScheme']{
+  //       '_type': 'reference',
+  //       '_ref': _id
+  //     }[0]
+  //   `)) ?? undefined
+  //   return {
+  //     conceptIriBase: iriBase,
+  //     scheme: scheme,
+  //     topConcept: false,
+  //     broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
+  //     related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
+  //   }
+  // },
   // Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels:
   validation: (Rule) =>
     Rule.custom((fields) => {
@@ -68,24 +69,24 @@ export default {
       title: 'Preferred Label',
       group: ['label', 'relationship'],
       type: 'string',
-      description:
-        'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
-      // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well.
-      validation: (Rule) =>
-        Rule.required().custom((prefLabel, context) => {
-          return client
-            .fetch(
-              `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`
-            )
-            .then((conceptId) => {
-              if (conceptId && conceptId !== context.document._id.replace('drafts.', '')) {
-                return 'Preferred Label must be unique.'
-              } else {
-                return true
-              }
-            })
-        }),
-      inputComponent: PrefLabel,
+      // description:
+      //   'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
+      // // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well.
+      // validation: (Rule) =>
+      //   Rule.required().custom((prefLabel, context) => {
+      //     return client
+      //       .fetch(
+      //         `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`
+      //       )
+      //       .then((conceptId) => {
+      //         if (conceptId && conceptId !== context.document._id.replace('drafts.', '')) {
+      //           return 'Preferred Label must be unique.'
+      //         } else {
+      //           return true
+      //         }
+      //       })
+      //   }),
+      // inputComponent: PrefLabel,
     },
     {
       name: 'conceptIriBase',
@@ -162,84 +163,84 @@ export default {
         {
           type: 'reference',
           to: [{type: 'skosConcept'}],
-          options: {
-            filter: async ({document}) => {
-              let broaderTrans = []
-              try {
-                // This filter checks for inconsistencies to five levels of hierarchy. Consider adding custom validation to prevent broader taxonomy inconsistencies.
-                // This block starts for the document in question, and looks up the hierarchy tree. Those found to have the document in question as a "broader transitive" are added to a list of concepts to exclude from  potential "Related Concept" candidates.
-                const response = await client.fetch(
-                  `*[_type == "skosConcept" && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel}}}}}}`
-                )
-                // console.log(response); // for troubleshooting
-                broaderTrans = await response
-                  .flatMap((broader) => broader.broader?.flatMap((broader) => broader.prefLabel)) // first broader term
-                  .concat(
-                    response.flatMap((broader) =>
-                      broader.broader?.flatMap((broader) =>
-                        broader.broader?.flatMap((broader) => broader.prefLabel)
-                      )
-                    )
-                  ) // second broader term
-                  .concat(
-                    response.flatMap((broader) =>
-                      broader.broader?.flatMap((broader) =>
-                        broader.broader?.flatMap((broader) =>
-                          broader.broader?.flatMap((broader) => broader.prefLabel)
-                        )
-                      )
-                    )
-                  ) // third broader term
-                  .concat(
-                    response.flatMap((broader) =>
-                      broader.broader?.flatMap((broader) =>
-                        broader.broader?.flatMap((broader) =>
-                          broader.broader?.flatMap((broader) =>
-                            broader.broader?.flatMap((broader) => broader.prefLabel)
-                          )
-                        )
-                      )
-                    )
-                  ) // fourth broader term
-                  .concat(
-                    response.flatMap((broader) =>
-                      broader.broader?.flatMap((broader) =>
-                        broader.broader?.flatMap((broader) =>
-                          broader.broader?.flatMap((broader) =>
-                            broader.broader?.flatMap((broader) =>
-                              broader.broader?.flatMap((broader) => broader.prefLabel)
-                            )
-                          )
-                        )
-                      )
-                    )
-                  ) // fifth broader term
-                  .filter((broader) => broader) // remove "undefined"
-                // console.log(broaderTrans); // for troubleshooting
+          // options: {
+          //   filter: async ({document}) => {
+          //     let broaderTrans = []
+          //     try {
+          //       // This filter checks for inconsistencies to five levels of hierarchy. Consider adding custom validation to prevent broader taxonomy inconsistencies.
+          //       // This block starts for the document in question, and looks up the hierarchy tree. Those found to have the document in question as a "broader transitive" are added to a list of concepts to exclude from  potential "Related Concept" candidates.
+          //       const response = await client.fetch(
+          //         `*[_type == "skosConcept" && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel}}}}}}`
+          //       )
+          //       // console.log(response); // for troubleshooting
+          //       broaderTrans = await response
+          //         .flatMap((broader) => broader.broader?.flatMap((broader) => broader.prefLabel)) // first broader term
+          //         .concat(
+          //           response.flatMap((broader) =>
+          //             broader.broader?.flatMap((broader) =>
+          //               broader.broader?.flatMap((broader) => broader.prefLabel)
+          //             )
+          //           )
+          //         ) // second broader term
+          //         .concat(
+          //           response.flatMap((broader) =>
+          //             broader.broader?.flatMap((broader) =>
+          //               broader.broader?.flatMap((broader) =>
+          //                 broader.broader?.flatMap((broader) => broader.prefLabel)
+          //               )
+          //             )
+          //           )
+          //         ) // third broader term
+          //         .concat(
+          //           response.flatMap((broader) =>
+          //             broader.broader?.flatMap((broader) =>
+          //               broader.broader?.flatMap((broader) =>
+          //                 broader.broader?.flatMap((broader) =>
+          //                   broader.broader?.flatMap((broader) => broader.prefLabel)
+          //                 )
+          //               )
+          //             )
+          //           )
+          //         ) // fourth broader term
+          //         .concat(
+          //           response.flatMap((broader) =>
+          //             broader.broader?.flatMap((broader) =>
+          //               broader.broader?.flatMap((broader) =>
+          //                 broader.broader?.flatMap((broader) =>
+          //                   broader.broader?.flatMap((broader) =>
+          //                     broader.broader?.flatMap((broader) => broader.prefLabel)
+          //                   )
+          //                 )
+          //               )
+          //             )
+          //           )
+          //         ) // fifth broader term
+          //         .filter((broader) => broader) // remove "undefined"
+          //       // console.log(broaderTrans); // for troubleshooting
 
-                // The 'broader[]->...' filters below look for the document in question in the broader-transitive path of the remaining concepts and, if found, excludes them from inclusion as a potential "Related Concept" candidate
-                return {
-                  filter: `!(_id in $related || 
-                      _id in path("drafts.**") || 
-                      _id == $self ||
-                      prefLabel in $broaderTrans ||  
-                      $self in broader[]->._id ||
-                      $self in broader[]->broader[]->._id ||
-                      $self in broader[]->broader[]->broader[]->._id ||
-                      $self in broader[]->broader[]->broader[]->broader[]->._id ||
-                      $self in broader[]->broader[]->broader[]->broader[]->broader[]->._id
-                      )`,
-                  params: {
-                    self: document._id.replace('drafts.', ''),
-                    related: document.related.map(({_ref}) => _ref),
-                    broaderTrans: broaderTrans,
-                  },
-                }
-              } catch (error) {
-                console.error(`Could not get broader concepts: ${error}`)
-              }
-            },
-          },
+          //       // The 'broader[]->...' filters below look for the document in question in the broader-transitive path of the remaining concepts and, if found, excludes them from inclusion as a potential "Related Concept" candidate
+          //       return {
+          //         filter: `!(_id in $related || 
+          //             _id in path("drafts.**") || 
+          //             _id == $self ||
+          //             prefLabel in $broaderTrans ||  
+          //             $self in broader[]->._id ||
+          //             $self in broader[]->broader[]->._id ||
+          //             $self in broader[]->broader[]->broader[]->._id ||
+          //             $self in broader[]->broader[]->broader[]->broader[]->._id ||
+          //             $self in broader[]->broader[]->broader[]->broader[]->broader[]->._id
+          //             )`,
+          //         params: {
+          //           self: document._id.replace('drafts.', ''),
+          //           related: document.related.map(({_ref}) => _ref),
+          //           broaderTrans: broaderTrans,
+          //         },
+          //       }
+          //     } catch (error) {
+          //       console.error(`Could not get broader concepts: ${error}`)
+          //     }
+          //   },
+          // },
         },
       ],
     },
@@ -300,24 +301,24 @@ export default {
       by: [{field: 'prefLabel', direction: 'asc'}],
     },
   ],
-  preview: {
-    select: {
-      title: 'prefLabel',
-      topConcept: 'topConcept',
-      broader: 'broader.0.prefLabel',
-      broaderPlusOne: 'broader.0.broader.0.prefLabel',
-      broaderPlusTwo: 'broader.0.broader.0.broader.0.prefLabel',
-    },
-    prepare({title, topConcept, broader, broaderPlusOne, broaderPlusTwo}) {
-      const conceptBroader = [broaderPlusOne, broader].filter(Boolean)
-      const broaderPath =
-        conceptBroader.length > 0 ? `${conceptBroader.join(' ▷ ')} ▶︎ ${title}` : ''
-      const hierarchy = broaderPlusTwo ? `... ${broaderPath}` : broaderPath
-      return {
-        title: title,
-        subtitle: topConcept ? 'Top Concept' : hierarchy,
-        media: topConcept ? AiOutlineTag : AiFillTag,
-      }
-    },
-  },
+  // preview: {
+  //   select: {
+  //     title: 'prefLabel',
+  //     topConcept: 'topConcept',
+  //     broader: 'broader.0.prefLabel',
+  //     broaderPlusOne: 'broader.0.broader.0.prefLabel',
+  //     broaderPlusTwo: 'broader.0.broader.0.broader.0.prefLabel',
+  //   },
+  //   prepare({title, topConcept, broader, broaderPlusOne, broaderPlusTwo}) {
+  //     const conceptBroader = [broaderPlusOne, broader].filter(Boolean)
+  //     const broaderPath =
+  //       conceptBroader.length > 0 ? `${conceptBroader.join(' ▷ ')} ▶︎ ${title}` : ''
+  //     const hierarchy = broaderPlusTwo ? `... ${broaderPath}` : broaderPath
+  //     return {
+  //       title: title,
+  //       subtitle: topConcept ? 'Top Concept' : hierarchy,
+  //       media: topConcept ? AiOutlineTag : AiFillTag,
+  //     }
+  //   },
+  // },
 }
