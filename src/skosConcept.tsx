@@ -7,12 +7,15 @@
  */
 
 // import sanityClient from 'part:@sanity/base/client'
+// import sanityClient from '@sanity/client'
 // import config from 'config:taxonomy-manager'
 import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
 import { defineType, defineField } from 'sanity';
 // import PrefLabel from './components/prefLabel'
 
 // const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
+
+// const client = sanityClient({apiVersion: '2021-03-25'})
 
 export default defineType({
   name: 'skosConcept',
