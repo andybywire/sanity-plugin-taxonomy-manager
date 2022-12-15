@@ -1,5 +1,6 @@
 /**
  * Sanity document scheme for SKOS Concept Schemes
+ * @todo Rebuild tree view
  * @todo Afford setting a "default" scheme which is used as an initial value for new concepts. When no default is set, concepts are created without any scheme.
  * @todo Add administrative metadata: author, date, last revised, etc.
  * @todo Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links. Perhaps eventually a navigable tree view.
@@ -25,6 +26,7 @@ export default defineType({
       name: 'treeView',
       title: 'Concept Scheme Tree View',
       type: 'string',
+      hidden: true,
       description: <>Top Concepts are indicated in <strong>bold</strong>. Concepts in <em>italics</em> represent polyhierarchy (concepts that appear in more than one branch of the hierarchy tree).</>,
       // inputComponent: TreeView
     }),

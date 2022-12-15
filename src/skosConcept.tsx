@@ -6,49 +6,45 @@
  * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
  */
 
-// import sanityClient from 'part:@sanity/base/client'
-// import sanityClient from '@sanity/client'
 // import config from 'config:taxonomy-manager'
 import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
-import { defineType, defineField } from 'sanity';
-// import PrefLabel from './components/prefLabel'
-
-// const client = sanityClient.withConfig({apiVersion: '2021-03-25'})
-
-// const client = sanityClient({apiVersion: '2021-03-25'})
+import { defineType, defineField } from 'sanity'
+import { PrefLabel } from './components/PrefLabel'
 
 export default defineType({
   name: 'skosConcept',
   title: 'Concept',
   type: 'document',
   icon: AiFillTags,
-  // initialValue: async () => {
-  //   const iriBase = {iriValue: config.namespace}
-  //   console.log(iriBase.iriValue);
-  //   const scheme =
-  //     (await client.fetch(`
-  //     *[_type == 'skosConceptScheme']{
-  //       '_type': 'reference',
-  //       '_ref': _id
-  //     }[0]
-  //   `)) ?? undefined
-  //   return {
-  //     conceptIriBase: iriBase,
-  //     scheme: scheme,
-  //     topConcept: false,
-  //     broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
-  //     related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
-  //   }
-  // },
+  initialValue: async (props, context) => {
+    // const iriBase = {iriValue: config.namespace}
+    const {getClient} = context
+    const client = getClient({apiVersion: '2021-03-25'})
+    // console.log(iriBase.iriValue);
+    const scheme =
+      (await client.fetch(`
+      *[_type == 'skosConceptScheme']{
+        '_type': 'reference',
+        '_ref': _id
+      }[0]
+    `)) ?? undefined
+    return {
+      // conceptIriBase: iriBase,
+      scheme: scheme,
+      topConcept: false,
+      broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
+      related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
+    }
+  },
   // Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels:
   // validation: (Rule) =>
   //   Rule.custom((fields) => {
   //     if (
-  //       (fields.altLabel &&
+  //       (fields?.altLabel &&
   //         fields.hiddenLabel &&
   //         fields.altLabel.filter((label) => fields.hiddenLabel.includes(label)).length > 0) ||
-  //       (fields.altLabel && fields.altLabel.includes(fields.prefLabel)) ||
-  //       (fields.hiddenLabel && fields.hiddenLabel.includes(fields.prefLabel))
+  //       (fields?.altLabel && fields.altLabel.includes(fields.prefLabel)) ||
+  //       (fields?.hiddenLabel && fields.hiddenLabel.includes(fields.prefLabel))
   //     )
   //       return 'Preferred Label, Alternate Labels, and Hidden Labels must all be unique. Please remove any labels duplicated across label types.'
   //     return true
@@ -73,30 +69,34 @@ export default defineType({
       title: 'Preferred Label',
       group: ['label', 'relationship'],
       type: 'string',
-      // description:
-      //   'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
-      // // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well.
-      // validation: (Rule) =>
-      //   Rule.required().custom((prefLabel, context) => {
-      //     return client
-      //       .fetch(
-      //         `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`
-      //       )
-      //       .then((conceptId) => {
-      //         if (conceptId && conceptId !== context.document._id.replace('drafts.', '')) {
-      //           return 'Preferred Label must be unique.'
-      //         } else {
-      //           return true
-      //         }
-      //       })
-      //   }),
-      // inputComponent: PrefLabel,
+      description:
+      'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
+      components: {
+        input: PrefLabel
+      },
+      // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well.
+      validation: (Rule) =>
+        Rule.required().custom((prefLabel, context) => {
+          const {getClient} = context
+          const client = getClient({ apiVersion: '2022-12-14'})
+          return client
+            .fetch(
+              `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`
+            )
+            .then((conceptId) => {
+              if (conceptId && conceptId !== context.document?._id.replace('drafts.', '')) {
+                return 'Preferred Label must be unique.'
+              } else {
+                return true
+              }
+            })
+        }),
     }),
     defineField({
       name: 'conceptIriBase',
       title: 'Edit the base IRI',
-      // type: 'baseIri',
-      type: 'string'
+      type: 'baseIri'
+      // type: 'string'
     }),
     defineField({
       name: 'altLabel',
@@ -134,7 +134,11 @@ export default defineType({
     defineField({
       name: 'broader',
       title: 'Broader Concept(s)',
-      hidden: ({document}) => document.topConcept,
+      hidden: ({document}) => {
+        if (document === undefined)
+          return false
+        return document.topConcept
+      },
       description:
         'Broader relationships create a hierarchy between concepts, for example to create category/subcategory, part/whole, or class/instance relationships.',
       group: 'relationship',
