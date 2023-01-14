@@ -101,5 +101,6 @@
        "eslintImports": false,
        "tsc": false
     }
- }
+ },
+ "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager"
 }
