@@ -1,3 +1,6 @@
+# Local development files
+_local
+
 # Logs
 logs
 *.log
