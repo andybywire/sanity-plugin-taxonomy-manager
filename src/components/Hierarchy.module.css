@@ -1,0 +1,19 @@
+.skosTreeView {
+  list-style: none;
+}
+.skosTreeView li {
+  margin-top: .75rem;
+}
+.level_0 {
+  padding-left: 0;
+  margin-top: 1rem;
+}
+.topConcept, .orphan {
+  padding-top: .5rem;
+}
+.topConcept {
+  font-weight: bold;
+}
+.orphan, .childConcept {
+  font-weight: normal;
+}

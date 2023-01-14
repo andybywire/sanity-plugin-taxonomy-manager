@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+V3 Changes
+- breaking: V3 studio 
+- breaking: baseIri remapped in the data model
+  - consider offering a migration script? (or just tell people they need to do it ... I don't really expect there are ton of folks actually using this. ... though I will create a script for myself.)
+
+
+
 ## [1.0.5] - 2022-11-23
 ### Fixed
 - README link that was not behaving as intended across applications.  

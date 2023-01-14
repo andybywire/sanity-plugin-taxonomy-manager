@@ -1,6 +1,9 @@
 /**
  * Sanity document scheme for SKOS Taxonomy Concepts
- * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice). 2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader. Consider more robust filtering and validation for future releases.
+ * @todo Improve typings
+ * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice). 
+ *       2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader. Consider more robust filtering and validation for future releases.
+ * @todo Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels
  * @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
  * @todo Scheme initial value: Configure "default" option in Concept Scheme, for cases when there are multiple schemes; configure initialValue to default to that selection (It's currently configure to take the scheme ordered first. This isn't transparent.)
  * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
@@ -17,46 +20,27 @@ export default defineType({
   type: 'document',
   icon: AiFillTags,
   initialValue: async (props, context) => {
-    // const iriBase = {iriValue: config.namespace}
     const {getClient} = context
     const client = getClient({apiVersion: '2021-03-25'})
-    // console.log(iriBase.iriValue);
-    const scheme =
+    const baseIri =
       (await client.fetch(`
-      *[_type == 'skosConceptScheme']{
-        '_type': 'reference',
-        '_ref': _id
-      }[0]
-    `)) ?? undefined
+        *[_type == 'skosConcept' && defined(baseIri)]| order(_createdAt desc)[0].baseIri
+      `)) ?? undefined
     return {
-      // conceptIriBase: iriBase,
-      scheme: scheme,
-      topConcept: false,
+      baseIri: baseIri,
       broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
       related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
     }
   },
-  // Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels:
-  // validation: (Rule) =>
-  //   Rule.custom((fields) => {
-  //     if (
-  //       (fields?.altLabel &&
-  //         fields.hiddenLabel &&
-  //         fields.altLabel.filter((label) => fields.hiddenLabel.includes(label)).length > 0) ||
-  //       (fields?.altLabel && fields.altLabel.includes(fields.prefLabel)) ||
-  //       (fields?.hiddenLabel && fields.hiddenLabel.includes(fields.prefLabel))
-  //     )
-  //       return 'Preferred Label, Alternate Labels, and Hidden Labels must all be unique. Please remove any labels duplicated across label types.'
-  //     return true
-  //   }),
   groups: [
-    {
-      name: 'relationship',
-      title: 'Relationships',
-    },
     {
       name: 'label',
       title: 'Labels',
+      default: true,
+    },
+    {
+      name: 'relationship',
+      title: 'Relationships',
     },
     {
       name: 'note',
@@ -67,7 +51,7 @@ export default defineType({
     defineField({
       name: 'prefLabel',
       title: 'Preferred Label',
-      group: ['label', 'relationship'],
+      group: 'label',
       type: 'string',
       description:
       'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
@@ -93,9 +77,22 @@ export default defineType({
         }),
     }),
     defineField({
+      name: 'baseIri',
+      title: 'Base IRI',
+      type: 'url',
+      group: 'label',
+      validation: Rule => Rule.required().error('Please supply a base IRI.'),
+      description:
+        'The W3C encourages the use of HTTP URIs when minting concept URIs since they are resolvable to representations that can be accessed using standard Web technologies.',
+      options: {
+        collapsible: true
+      }
+    }),
+    defineField({
       name: 'conceptIriBase',
       title: 'Edit the base IRI',
-      type: 'baseIri'
+      type: 'baseIri',
+      group: 'label',
       // type: 'string'
     }),
     defineField({
@@ -119,26 +116,8 @@ export default defineType({
       validation: (Rule) => Rule.unique(),
     }),
     defineField({
-      name: 'topConcept',
-      title: 'Top Concept',
-      group: 'relationship',
-      type: 'boolean',
-      description:
-        'Top concepts provide an efficient entry point to broader/narrower concept hierarchies and/or top level facets. By convention, resources can be a Top Concept, or have Broader relationships, but not both.',
-      hidden: ({document}) => {
-        if (document === undefined )
-          return false
-        return (document.broader ? document.broader.length > 0 : false)
-      }
-    }),
-    defineField({
       name: 'broader',
       title: 'Broader Concept(s)',
-      hidden: ({document}) => {
-        if (document === undefined)
-          return false
-        return document.topConcept
-      },
       description:
         'Broader relationships create a hierarchy between concepts, for example to create category/subcategory, part/whole, or class/instance relationships.',
       group: 'relationship',
@@ -148,7 +127,7 @@ export default defineType({
           type: 'reference',
           to: {type: 'skosConcept'},
           options: {
-            filter: ({document}) => {
+            filter: ({document}:{document: any}) => {
               return {
                 // Broader filter only performs document-level validation for broader-transitive/related disjunction.
                 // Consider adding custom validation to prevent broader taxonomy inconsistencies.
@@ -156,8 +135,8 @@ export default defineType({
                   '!(_id in $broader || _id in $related || _id in path("drafts.**") || _id == $self)',
                 params: {
                   self: document._id.replace('drafts.', ''),
-                  broader: document.broader.map(({_ref}) => _ref),
-                  related: document.related.map(({_ref}) => _ref),
+                  broader: document.broader.map(({_ref}:{_ref: any}) => _ref),
+                  related: document.related.map(({_ref}:{_ref: any}) => _ref),
                 },
               }
             },
@@ -175,103 +154,9 @@ export default defineType({
       of: [
         {
           type: 'reference',
-          to: [{type: 'skosConcept'}],
-          // options: {
-          //   filter: async ({document}) => {
-          //     let broaderTrans = []
-          //     try {
-          //       // This filter checks for inconsistencies to five levels of hierarchy. Consider adding custom validation to prevent broader taxonomy inconsistencies.
-          //       // This block starts for the document in question, and looks up the hierarchy tree. Those found to have the document in question as a "broader transitive" are added to a list of concepts to exclude from  potential "Related Concept" candidates.
-          //       const response = await client.fetch(
-          //         `*[_type == "skosConcept" && prefLabel == "${document.prefLabel}"]{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel,broader[]->{prefLabel}}}}}}`
-          //       )
-          //       // console.log(response); // for troubleshooting
-          //       broaderTrans = await response
-          //         .flatMap((broader) => broader.broader?.flatMap((broader) => broader.prefLabel)) // first broader term
-          //         .concat(
-          //           response.flatMap((broader) =>
-          //             broader.broader?.flatMap((broader) =>
-          //               broader.broader?.flatMap((broader) => broader.prefLabel)
-          //             )
-          //           )
-          //         ) // second broader term
-          //         .concat(
-          //           response.flatMap((broader) =>
-          //             broader.broader?.flatMap((broader) =>
-          //               broader.broader?.flatMap((broader) =>
-          //                 broader.broader?.flatMap((broader) => broader.prefLabel)
-          //               )
-          //             )
-          //           )
-          //         ) // third broader term
-          //         .concat(
-          //           response.flatMap((broader) =>
-          //             broader.broader?.flatMap((broader) =>
-          //               broader.broader?.flatMap((broader) =>
-          //                 broader.broader?.flatMap((broader) =>
-          //                   broader.broader?.flatMap((broader) => broader.prefLabel)
-          //                 )
-          //               )
-          //             )
-          //           )
-          //         ) // fourth broader term
-          //         .concat(
-          //           response.flatMap((broader) =>
-          //             broader.broader?.flatMap((broader) =>
-          //               broader.broader?.flatMap((broader) =>
-          //                 broader.broader?.flatMap((broader) =>
-          //                   broader.broader?.flatMap((broader) =>
-          //                     broader.broader?.flatMap((broader) => broader.prefLabel)
-          //                   )
-          //                 )
-          //               )
-          //             )
-          //           )
-          //         ) // fifth broader term
-          //         .filter((broader) => broader) // remove "undefined"
-          //       // console.log(broaderTrans); // for troubleshooting
-
-          //       // The 'broader[]->...' filters below look for the document in question in the broader-transitive path of the remaining concepts and, if found, excludes them from inclusion as a potential "Related Concept" candidate
-          //       return {
-          //         filter: `!(_id in $related || 
-          //             _id in path("drafts.**") || 
-          //             _id == $self ||
-          //             prefLabel in $broaderTrans ||  
-          //             $self in broader[]->._id ||
-          //             $self in broader[]->broader[]->._id ||
-          //             $self in broader[]->broader[]->broader[]->._id ||
-          //             $self in broader[]->broader[]->broader[]->broader[]->._id ||
-          //             $self in broader[]->broader[]->broader[]->broader[]->broader[]->._id
-          //             )`,
-          //         params: {
-          //           self: document._id.replace('drafts.', ''),
-          //           related: document.related.map(({_ref}) => _ref),
-          //           broaderTrans: broaderTrans,
-          //         },
-          //       }
-          //     } catch (error) {
-          //       console.error(`Could not get broader concepts: ${error}`)
-          //     }
-          //   },
-          // },
+          to: [{type: 'skosConcept'}]
         },
       ],
-    }),
-    defineField({
-      name: 'scheme',
-      title: 'Concept Scheme(s)',
-      group: 'relationship',
-      type: 'reference',
-      description:
-        'Concept schemes are used to group concepts into defined sets, such as thesauri, classification schemes, or facets.',
-      to: [
-        {
-          type: 'skosConceptScheme',
-        },
-      ],
-      options: {
-        disableNew: true,
-      },
     }),
     defineField({
       name: 'scopeNote',
@@ -297,6 +182,32 @@ export default defineType({
       description: 'An example of the use of the concept.',
       rows: 3,
       group: 'note',
+    }),
+    defineField({
+      name: 'topConcept',
+      title: 'Top Concept',
+      group: 'relationship',
+      type: 'boolean',
+      description:
+        <>NOTE: Top Concepts are determined at the Concept Scheme for version 2 of this plugin. Please migrate this value accordingly. This field will be removed in future versions of this plugin. To hide it in the meantime, set Top Concept to "false."<br/><br/>Description: Top concepts provide an efficient entry point to broader/narrower concept hierarchies and/or top level facets. By convention, resources can be a Top Concept, or have Broader relationships, but not both.</>,
+      hidden: ({document}) => !document?.topConcept
+    }),
+    defineField({
+      name: 'scheme',
+      title: 'Concept Scheme(s)',
+      group: 'relationship',
+      type: 'reference',
+      hidden: ({document}) => !document?.scheme,
+      description:
+        <>NOTE: Concept Scheme inclusion is are determined from the Concept Scheme for version 2 of this plugin. Please migrate this value accordingly. This field will be removed in future versions of this plugin. To hide it in the meantime, unset this value (delete it).<br/><br/>Description: Concept schemes are used to group concepts into defined sets, such as thesauri, classification schemes, or facets.</>,
+      to: [
+        {
+          type: 'skosConceptScheme',
+        },
+      ],
+      options: {
+        disableNew: true,
+      },
     }),
   ],
   orderings: [
