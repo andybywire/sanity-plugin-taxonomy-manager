@@ -1,4 +1,4 @@
-# Sanity Plugin Taxonomy Manager
+# Sanity Taxonomy Manager Plugin
 ![NPM Version](https://img.shields.io/npm/v/sanity-plugin-taxonomy-manager?style=flat-square)
 ![License](https://img.shields.io/npm/l/sanity-plugin-taxonomy-manager?style=flat-square)
 
@@ -11,7 +11,7 @@ Taxonomies are crucial tools for organization and interoperability between and a
 
 The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. 
 
-<!-- Add screenshot of hierarchy view from a demo studio -->
+<img src="https://user-images.githubusercontent.com/3710835/212743871-14760a60-0689-4cc3-a13e-55dd7a4ef19a.png" width="700">
 
 ## Features
 
@@ -32,23 +32,25 @@ $ npm i sanity-plugin-taxonomy-manager
 Add the plugin to your project configuration to make the skosConcept and skosConceptScheme document types available in your studio. 
 
 ```js
-// sanity.config.ts
+// sanity.config.js
 
-import { defineConfig } from 'sanity';
-
-import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'; 
+import {defineConfig} from 'sanity'
+import {deskTool} from 'sanity/desk'
+import {structure} from "./deskStructure"
+import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'
+import {schemaTypes} from './schemas'
 
 export default defineConfig({
   name: 'default',
-  title: 'My Cool Project',
-  projectId: 'my-project-id',
+  title: 'Sanity Studio',
+  projectId: 'project-id',
   dataset: 'production',
   plugins: [
-    // Include the taxonomy manager plugin
-    taxonomyManager(),
     deskTool({
-      structure: deskStructure,
-    })
+      structure
+    }), 
+    // Include the taxonomy manager plugin
+    taxonomyManager()
   ],
   schema: {
     types: schemaTypes,
@@ -62,36 +64,34 @@ Use [Structure Builder](https://www.sanity.io/docs/structure-builder-reference) 
 // ./deskStructure.js
 import {TreeView} from 'sanity-plugin-taxonomy-manager' 
 
-export const myStructure = (S) =>
-
-  // ... other structure builder items
-
-  S.divider(),
-  S.listItem()
-    .title('Concept Schemes')
-    .schemaType('skosConceptScheme')
-    .child(
-      S.documentTypeList('skosConceptScheme')
+export const structure = (S) =>
+  S.list()
+    .title('Content')
+    .items([
+      S.listItem()
         .title('Concept Schemes')
-        .child(id =>
-          S.document()
-            .schemaType('skosConceptScheme')
-            .documentId(id)
-            .views([
-              S.view.component(TreeView).title('Tree View'),
-              S.view.form()
-            ]) 
-        )
-  ),
-  S.documentTypeListItem("skosConcept").title("Concepts"),
-  S.divider(),
+        .schemaType('skosConceptScheme')
+        .child(
+          S.documentTypeList('skosConceptScheme')
+            .title('Concept Schemes')
+            .child(id =>
+              S.document()
+                .schemaType('skosConceptScheme')
+                .documentId(id)
+                .views([
+                  S.view.component(TreeView).title('Tree View'),
+                  S.view.form()
+                ]) 
+            )
+      ),
+      S.documentTypeListItem("skosConcept").title("Concepts"),
+      S.divider(),
 
-  // ... other structure builder items
-
-  // Be sure to remove Taxonomy Manager types from the main list
-  ...S.documentTypeListItems().filter(
-    (listItem) => !['skosConcept', 'skosConceptScheme'].includes(listItem.getId())
-  )
+      // Remove Taxonomy Manager types from the default document type list
+      ...S.documentTypeListItems().filter(
+        (listItem) => !['skosConcept', 'skosConceptScheme'].includes(listItem.getId())
+      ),
+    ])
 ``` 
 
 ## Usage
