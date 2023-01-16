@@ -107,23 +107,23 @@ export const structure = (S) =>
 
 The concept editor includes filtering and validation to help you create consistent SKOS vocabularies: 
 
-- **SKOS Broader and Related Concepts**  
+**SKOS Broader and Related Concepts**  
 Adding the same concept to Broader and Related fields is not allowed, and the editor validates disjunction of Related concepts with Broader Transitive up to five hierarchical levels in either direction. 
 
-- **Preferred, Alternative, and Hidden Labels**  
+**Preferred, Alternative, and Hidden Labels**  
 Preferred Labels are validated for uniqueness across concepts, and Preferred, Alternative, and Hidden are validated to prevent duplicates and overlap. 
 
-- **Scope Notes, Definition, and Examples**  
+**Scope Notes, Definition, and Examples**  
 Standard optional SKOS documentation fields are included by default.
 
-- **Support for Single or Multiple Taxonomy Schemes (or none)**  
+**Support for Single or Multiple Taxonomy Schemes (or none)**  
 For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes](https://www.w3.org/TR/skos-reference/#schemes) are supported. Schemes can be used to configure filtered views of concepts in Sanity Structure Builder and can be used to scope values for reference arrays.
   
   <!-- Concept Scheme views show a hierarchical list (Tree View) of the concepts included in a given scheme. This list allows for easy visualization of Top Concepts, polyhierarchy (concepts that appear in more than one place in the hierarchy), and "Orphan" terms (top level concepts not denoted as a "Top Concept"). -->
 
-## [SKOS Overview](https://www.w3.org/TR/skos-reference/)
+## SKOS Overview
 
-> The Simple Knowledge Organization System (SKOS) is a common data model for sharing and linking knowledge organization systems via the Web.
+> The [Simple Knowledge Organization System (SKOS)](https://www.w3.org/TR/skos-reference/) is a common data model for sharing and linking knowledge organization systems via the Web.
 >
 > Many knowledge organization systems, such as thesauri, taxonomies, classification schemes and subject heading systems, share a similar structure, and are used in similar applications. SKOS captures much of this similarity and makes it explicit, to enable data and technology sharing across diverse applications.
 >
