@@ -1,3 +1,5 @@
+/* module.css not used currently because of persistent and inscrutable Rollup error. Current CSS is light enough that it can be included inline, but this is not a scalable solution. To be addressed in subsequent work. */
+
 .skosTreeView {
   list-style: none;
 }

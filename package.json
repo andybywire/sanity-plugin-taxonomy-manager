@@ -23,8 +23,7 @@
       "import": "./lib/index.esm.js",
       "require": "./lib/index.js",
       "default": "./lib/index.esm.js"
-    },
-    "./package.json": "./package.json"
+    }
   },
   "main": "./lib/index.js",
   "module": "./lib/index.esm.js",
@@ -96,11 +95,11 @@
   },
   "sanityPlugin": {
     "verifyPackage": {
-       "dependencies": false,
-       "studioConfig": false,
-       "eslintImports": false,
-       "tsc": false
+      "dependencies": false,
+      "studioConfig": false,
+      "eslintImports": false,
+      "tsc": false
     }
- },
- "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager"
+  },
+  "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager"
 }

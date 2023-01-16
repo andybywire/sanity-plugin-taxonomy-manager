@@ -5,7 +5,8 @@
 import {Flex, Spinner, Text, Inline} from '@sanity/ui'
 import {useEffect, useState} from 'react'
 import {useClient} from 'sanity'
-import s from './Hierarchy.module.css'
+
+// CSS module import plagued by an inscrutable Rollup error. To address in future work. 
 
 // guidance on orphans to link to/integrate: https://www.hedden-information.com/orphan-terms-in-a-taxonomy/
 
@@ -54,14 +55,13 @@ const sleep = (ms: number) => {
   console.log('waiting')
   return new Promise((resolve) => setTimeout(resolve, ms))
 }
-
 const ChildConcepts = ({concepts}: {concepts: any}) => {
   return (
-    <ul className={s.skosTreeView}>
+    <ul style={{listStyle: 'none'}}>
       {concepts.map((concept: any) => {
         return (
           <li key={concept.id}
-          className={s.childConcept}>
+          style={{fontWeight: 'normal', marginTop: '.75rem'}}>
             {concept.prefLabel}
             {concept.childConcepts?.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
           </li>
@@ -133,23 +133,22 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
         gap={5}
         height="fill"
         justify="center"
-        style={{paddingTop: '1rem'}}
-      >
-        <Spinner muted />
-        <Text muted size={1}>
+        style={{ paddingTop: '1rem' }} onResize={undefined} onResizeCapture={undefined}      >
+        <Spinner muted onResize={undefined} onResizeCapture={undefined} />
+        <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
           Loading hierarchy…
         </Text>
       </Flex>
     ) : (
-      <ul className={`${s.skosTreeView} ${s.level_0}`}>
+      <ul style={{listStyle: 'none', paddingLeft: '0', marginTop: '1rem'}}>
         {concepts.topConcepts.map((concept: any) => {
           if (concept?.id)
           return (
             <li key={concept.id}
-            className={s.topConcept}>
-              <Inline space={2}>
+            style={{paddingTop: '.5rem', fontWeight: 'bold', marginTop: '.75rem'}}>
+              <Inline space={2} onResize={undefined} onResizeCapture={undefined}>
                 {concept?.prefLabel}     
-                <Text size={1} muted={true}>
+                <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
                   top concept
                 </Text>
               </Inline>
@@ -160,10 +159,10 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
         {concepts.orphans.map((concept: any) => {
           return (
             <li key={concept.id}
-            className={s.orphan}>
-              <Inline space={2}>
+            style={{paddingTop: '.5rem', fontWeight: 'normal', marginTop: '.75rem'}}>
+              <Inline space={2} onResize={undefined} onResizeCapture={undefined}>
                 {concept?.prefLabel}     
-                <Text size={1} muted={true}>
+                <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
                   orphan
                 </Text>
               </Inline>

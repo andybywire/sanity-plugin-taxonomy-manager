@@ -2,6 +2,8 @@ import {definePlugin} from 'sanity'
 import skosConcept from './skosConcept'
 import skosConceptScheme from './skosConceptScheme'
 import baseIri from './objects/baseIri'
+import TreeView from './components/TreeView'
+
 
 export const taxonomyManager = definePlugin({
   name: 'taxonomyManager',
@@ -13,3 +15,5 @@ export const taxonomyManager = definePlugin({
     ]
   }
 })
+
+export const treeView = TreeView
