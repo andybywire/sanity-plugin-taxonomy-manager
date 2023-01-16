@@ -85,9 +85,9 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
     if (document.displayed._id === undefined ) return
 
     const fetchConcepts = async () => {
-      
+
       console.log(concepts)
-      
+
       setCurrentDoc(documentId)
       
       // reset state variables for new fetch

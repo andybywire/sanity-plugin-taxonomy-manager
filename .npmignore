@@ -1,10 +1,12 @@
 /test
 /coverage
+/_local
 .editorconfig
 .eslintrc
 .gitignore
 .github
 .prettierrc
+.prettierignore
 .travis.yml
 .nyc_output
 .babelrc
