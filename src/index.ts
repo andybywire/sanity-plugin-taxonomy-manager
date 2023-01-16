@@ -5,7 +5,7 @@ import baseIri from './objects/baseIri'
 import TreeView from './components/TreeView'
 
 
-export const taxonomyManager = definePlugin({
+const taxonomyManager = definePlugin({
   name: 'taxonomyManager',
   schema: {
     types: [
@@ -16,4 +16,4 @@ export const taxonomyManager = definePlugin({
   }
 })
 
-export const treeView = TreeView
+export {taxonomyManager, TreeView}
