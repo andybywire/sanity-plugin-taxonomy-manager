@@ -6,10 +6,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
-<!-- V3 Changes
-- breaking: V3 studio 
-- breaking: baseIri remapped in the data model
-  - consider offering a migration script? (or just tell people they need to do it ... I don't really expect there are ton of folks actually using this. ... though I will create a script for myself.) -->
+## [2.0.0] - 2023-01-16
+### ⚠ BREAKING CHANGES
+- This version no longer works in Sanity Studio V2
+
+### Features
+- Initial Sanity Studio V3 release
 
 ## [2.0.0-beta.o] - 2023-01-16
 ### Features
