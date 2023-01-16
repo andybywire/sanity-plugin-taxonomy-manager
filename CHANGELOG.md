@@ -1,4 +1,4 @@
-# Changelog
+# 📓 Changelog
 All notable changes to this project will be documented in this file.
 
 The format of this document is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
@@ -13,7 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 - Initial Sanity Studio V3 release
 
-## [2.0.0-beta.o] - 2023-01-16
+## [2.0.0-beta.0] - 2023-01-16
 ### Features
 - Beta Sanity Studio V3 release
 
