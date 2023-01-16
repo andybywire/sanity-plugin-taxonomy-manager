@@ -2,14 +2,128 @@
 ![NPM Version](https://img.shields.io/npm/v/sanity-plugin-taxonomy-manager?style=flat-square)
 ![License](https://img.shields.io/npm/l/sanity-plugin-taxonomy-manager?style=flat-square)
 
-### Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomies, thesauri, and classification schemes in Sanity Studio.
+<!-- ### Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomies, thesauri, and classification schemes in Sanity Studio. -->
 
 > This is a **Sanity Studio v3** plugin.
 > For the v2 version, please refer to the [v2-branch](https://github.com/andybywire/sanity-plugin-taxonomy-manager/tree/studio-v2).
 
 Taxonomies are crucial tools for organization and interoperability between and across data sets. Taxonomy Manager provides a way for content authors to create, use, and maintain standards compliant taxonomies in Sanity Studio. 
 
-The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, brief hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. 
+The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. 
+
+[Add screenshot of hierarchy view from a demo studio]
+
+## Features
+
+- Adds two document types to your Sanity schema which are used to generate SKOS compliant concepts and concept schemes: `skosConcept` and `skosConceptScheme`
+- Pre-populates [base URI](https://www.w3.org/TR/skos-primer/#secconcept) values for new concepts based on the most recently used base URI
+- Validates [disjunction between Broader and Related relationships](https://www.w3.org/TR/skos-reference/#L2422)
+- Validates [disjunction between Preferred and Alternate/Hidden labels](https://www.w3.org/TR/skos-reference/#L1567)
+
+## Installation
+
+Install using the [Sanity CLI](https://www.sanity.io/docs/cli).
+
+```bash
+$ npm i sanity-plugin-taxonomy-manager
+```
+## Configuration
+
+Add the plugin to your project configuration to make the skosConcept and skosConceptScheme document types available in your studio. 
+
+```js
+// sanity.config.ts
+
+import { defineConfig } from 'sanity';
+
+import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'; 
+
+export default defineConfig({
+  name: 'default',
+  title: 'My Cool Project',
+  projectId: 'my-project-id',
+  dataset: 'production',
+  plugins: [
+    // Include the taxonomy manager plugin
+    taxonomyManager(),
+  ],
+  schema: {
+    
+    --> add structure reference here. 
+
+    types: [
+      {
+        name: 'product',
+        title: 'Product',
+        type: 'document',
+        fields: [
+          {
+            // Include the table as a field
+            // Giving it a semantic title
+            name: 'sizeChart',
+            title: 'Size Chart',
+            type: 'table',
+          },
+        ],
+      },
+    ],
+  },
+});
+```
+
+Use [Structure Builder](https://www.sanity.io/docs/structure-builder-reference) to create a separate area for your taxonomy tools and add the provided Concept Scheme Tree View component.
+
+```js
+// ./deskStructure.js
+import {TreeView} from 'sanity-plugin-taxonomy-manager' 
+
+export const myStructure = (S) =>
+
+  // ... other structure builder items
+
+  S.divider(),
+  S.listItem()
+    .title('Concept Schemes')
+    .schemaType('skosConceptScheme')
+    .child(
+    S.documentTypeList('skosConceptScheme')
+      .title('Concept Schemes')
+      .child(id =>
+        S.document()
+          .schemaType('skosConceptScheme')
+          .documentId(id)
+          .views([
+            S.view.component(TreeView).title('Tree View'),
+            S.view.form()
+          ]) 
+      )
+  ),
+  S.documentTypeListItem("skosConcept").title("Concepts"),
+  S.divider(),
+
+  // ... other structure builder items
+
+  // Be sure to remove Taxonomy Manager types from the main list
+  ...S.documentTypeListItems().filter(
+    (listItem) => !['skosConcept', 'skosConceptScheme', 'howTo', 'referenceResource', 'resourceGuide'].includes(listItem.getId())
+  )
+``` 
+
+## Usage
+
+1. Set your taxonomy bases IRI in the `namespace` field of the configuration file. 
+2. Create a [Concept Scheme](https://www.w3.org/TR/skos-reference/#schemes) to group related concepts (optional)
+3. Create and describe Concepts.
+    - All fields _except_ PrefLabel are optional, and are to be used as best fits the needs of your information modeling task.
+    - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/).
+4. Tag resources with concepts and then integrate into search indexing, navigation, and semantic web services.
+    - 👉 Examples to come!
+
+
+
+
+
+
 
 ### SKOS Broader and Related Concepts
 

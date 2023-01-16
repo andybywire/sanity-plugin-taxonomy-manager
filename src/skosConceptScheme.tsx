@@ -11,15 +11,15 @@ import { defineArrayMember, defineField, defineType } from 'sanity';
 
 export default defineType({
   name: 'skosConceptScheme',
-  title: 'Taxonomy Scheme',
+  title: 'Concept Scheme',
   type: 'document',
   icon: RiNodeTree,
   fields: [
     defineField({
       name: 'title',
-      title: 'Taxonomy Concept Scheme',
+      title: 'Title',
       type: 'string',
-      description:  'Schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like'
+      description:  'Taxonomy schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like'
     }),
     defineField({
       name: 'description',
