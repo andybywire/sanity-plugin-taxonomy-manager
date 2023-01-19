@@ -79,47 +79,40 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
   const [isLoading, setIsLoading] = useState(true)
   const [noConcept, setNoConcept] = useState(false)
   const [isError, setIsError] = useState(false)
-  const [currentDoc, setCurrentDoc] = useState(documentId)
 
   useEffect(() => {
     if (document.displayed._id === undefined ) return
 
+    const isReady = documentId === document.displayed._id.replace(/^drafts\./, '')
+
+    if (!isReady) {
+      console.log('document not loaded yet.')
+      return
+    }
+
     const fetchConcepts = async () => {
-
-      console.log(concepts)
-
-      setCurrentDoc(documentId)
       
       // reset state variables for new fetch
       setIsLoading(true)
       setNoConcept(false)
       setIsError(false)
 
-      // tree view has been loaded at least once, first wait to allow the content lake to update
-      // documentID and document.displayed also don't align on first render
-      concepts.length != 0 && currentDoc == documentId && await sleep(1000)
-      
-      await client.fetch(  
-        trunkBuilder(),
-        {id: documentId}
-      )
-      .then(res => {
+      try {
+        const res = await client.fetch(trunkBuilder(), {id: documentId})
         if (res.topConcepts == null && res.orphans.length < 1) {
-          setIsLoading(false)
           setNoConcept(true)
         } else {
           setIsLoading(false)
           setConcepts(res)
-        }
-      })
-      .catch(error => {
+        } 
+      } catch (error) {
         console.log('Error: ', error)
-        setIsLoading(false)
         setIsError(true)
-      })
+      }
+      setIsLoading(false)
     }
     fetchConcepts()
-  }, [documentId, document.displayed.concepts, document.displayed.topConcepts])
+  }, [documentId, document.displayed._id, document.displayed.concepts, document.displayed.topConcepts])
 
   if (isError == true) {
     return <p>Sorry, could not get concepts.</p>
