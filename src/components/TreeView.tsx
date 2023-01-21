@@ -15,7 +15,7 @@ export const TreeView = ({document, documentId}: {document: any; documentId: any
             Hierarchy Tree
           </Text>
           <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
-            Concept hierarchy is determined by 'Broader' relationships assigned to each concept..
+            Concept hierarchy is determined by 'Broader' relationships assigned to each concept.
           </Text>
           <Hierarchy document={document} documentId={documentId} />
         </Stack>
