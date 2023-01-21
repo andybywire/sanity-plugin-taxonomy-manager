@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [2.0.1] - 2023-01-21
+### Fixed
+- Improved taxonomy tree effect to eliminate extra delay in fetching from the content lake.
+
 ## [2.0.0] - 2023-01-16
 ### ⚠ BREAKING CHANGES
 - This version no longer works in Sanity Studio V2
