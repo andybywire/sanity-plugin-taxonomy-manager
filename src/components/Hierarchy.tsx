@@ -50,11 +50,6 @@ const branchBuilder = (level = 1): string | void => {
   }
 }
 
-// setTimeout function
-const sleep = (ms: number) => {
-  console.log('waiting')
-  return new Promise((resolve) => setTimeout(resolve, ms))
-}
 const ChildConcepts = ({concepts}: {concepts: any}) => {
   return (
     <ul style={{listStyle: 'none'}}>
