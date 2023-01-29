@@ -1,7 +1,8 @@
 import {Container, Stack, Box, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
+import { DocumentVersionsCollection } from '../types'
 
-export const TreeView = ({document, documentId}: {document: any; documentId: any}) => {
+export const TreeView = ({document, documentId}: {document: DocumentVersionsCollection, documentId: string}) => {
   return (
     <Container
       width={1}

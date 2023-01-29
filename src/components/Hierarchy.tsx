@@ -67,7 +67,7 @@ const ChildConcepts = ({concepts}: {concepts: ChildConceptTerms[]}): JSX.Element
   );
 }
 
-const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection, documentId: any}) => {
+const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection, documentId: string}) => {
 
   const client = useClient({apiVersion: '2021-10-21'})
 
