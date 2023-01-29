@@ -18,3 +18,8 @@ export interface DocumentVersionsCollection {
   draft: SanityDocument
   historical: SanityDocument
 }
+
+export interface PrefLabelValue {
+  value: string;
+  renderDefault: (props: PrefLabelValue) => React.ReactElement
+}

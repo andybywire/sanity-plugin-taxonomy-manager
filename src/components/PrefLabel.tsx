@@ -5,8 +5,9 @@
 
 import {Stack, Text} from '@sanity/ui'
 import { useFormValue } from "sanity"
+import { PrefLabelValue } from '../types'
 
-export function PrefLabel(props: any) {
+export function PrefLabel(props: PrefLabelValue) {
   const baseIri = useFormValue(['baseIri'])
   return (
     <Stack space={2}>
