@@ -129,7 +129,7 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
       </Flex>
     ) : (
       <ul style={{listStyle: 'none', paddingLeft: '0', marginTop: '1rem'}}>
-        {concepts.topConcepts.map((concept: any) => {
+        {concepts.topConcepts && concepts.topConcepts.map((concept: any) => {
           if (concept?.id)
           return (
             <li key={concept.id}
@@ -149,10 +149,12 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
             <li key={concept.id}
             style={{paddingTop: '.5rem', fontWeight: 'normal', marginTop: '.75rem'}}>
               <Inline space={2} onResize={undefined} onResizeCapture={undefined}>
-                {concept?.prefLabel}     
-                <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
-                  orphan
-                </Text>
+                {concept?.prefLabel}
+                {concepts.topConcept?.length > 0 &&     
+                  <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
+                    orphan
+                  </Text>
+                }
               </Inline>
               {concept.childConcepts?.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
             </li>
