@@ -5,6 +5,7 @@
 import {Flex, Spinner, Text, Inline} from '@sanity/ui'
 import {useEffect, useState} from 'react'
 import {useClient} from 'sanity'
+import { TopConceptTerms, ChildConceptTerms, DocumentVersionsCollection } from '../types'
 
 // CSS module import plagued by an inscrutable Rollup error. To address in future work. 
 
@@ -50,23 +51,23 @@ const branchBuilder = (level = 1): string | void => {
   }
 }
 
-const ChildConcepts = ({concepts}: {concepts: any}) => {
+const ChildConcepts = ({concepts}: {concepts: ChildConceptTerms[]}): JSX.Element => {
   return (
-    <ul style={{listStyle: 'none'}}>
+    <ul style={{ listStyle: 'none' }}>
       {concepts.map((concept: any) => {
         return (
           <li key={concept.id}
-          style={{fontWeight: 'normal', marginTop: '.75rem'}}>
+            style={{ fontWeight: 'normal', marginTop: '.75rem' }}>
             {concept.prefLabel}
             {concept.childConcepts?.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
           </li>
-        )
+        );
       })}
     </ul>
-  )
+  );
 }
 
-const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => {
+const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection, documentId: any}) => {
 
   const client = useClient({apiVersion: '2021-10-21'})
 
@@ -129,7 +130,7 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
       </Flex>
     ) : (
       <ul style={{listStyle: 'none', paddingLeft: '0', marginTop: '1rem'}}>
-        {concepts.topConcepts && concepts.topConcepts.map((concept: any) => {
+        {concepts.topConcepts && concepts.topConcepts.map((concept: TopConceptTerms) => {
           if (concept?.id)
           return (
             <li key={concept.id}
@@ -140,11 +141,11 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
                   top concept
                 </Text>
               </Inline>
-              {concept?.childConcepts?.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
+              {concept?.childConcepts && concept.childConcepts.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
             </li>
           )
         })}
-        {concepts.orphans.map((concept: any) => {
+        {concepts.orphans.map((concept: ChildConceptTerms) => {
           return (
             <li key={concept.id}
             style={{paddingTop: '.5rem', fontWeight: 'normal', marginTop: '.75rem'}}>
@@ -156,7 +157,7 @@ const Hierarchy = ({document, documentId}: {document: any, documentId: any}) => 
                   </Text>
                 }
               </Inline>
-              {concept.childConcepts?.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
+              {concept?.childConcepts && concept.childConcepts.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
             </li>
           )
         })}

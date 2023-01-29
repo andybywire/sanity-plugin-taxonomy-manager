@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+
+### Features
+- Add support for single level concept schemes with no designated topConcept: Handle absence of topConcepts and omit 'orphan' label when no topConcept is present
+
+
 ## [2.0.1] - 2023-01-21
 ### Fixed
 - Improved taxonomy tree effect to eliminate extra delay in fetching from the content lake.
