@@ -6,9 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
-
-### Features
-- Add support for single level concept schemes with no designated topConcept: Handle absence of topConcepts and omit 'orphan' label when no topConcept is present
+## [2.0.2] - 2023-01-29
+### Added
+- Support for single level concept schemes with no designated topConcept: Handle absence of topConcepts and omit 'orphan' label when no topConcept is present
+- Data specific Types for components & schema definitions
 
 
 ## [2.0.1] - 2023-01-21
@@ -19,11 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ⚠ BREAKING CHANGES
 - This version no longer works in Sanity Studio V2
 
-### Features
+### Added
 - Initial Sanity Studio V3 release
 
 ## [2.0.0-beta.0] - 2023-01-16
-### Features
+### Added
 - Beta Sanity Studio V3 release
 
 ## [1.0.5] - 2022-11-23
