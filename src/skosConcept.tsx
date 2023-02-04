@@ -228,21 +228,18 @@ export default defineType({
   preview: {
     select: {
       title: 'prefLabel',
-      topConcept: 'topConcept',
-      broader: 'broader.0.prefLabel',
-      broaderPlusOne: 'broader.0.broader.0.prefLabel',
-      broaderPlusTwo: 'broader.0.broader.0.broader.0.prefLabel',
+      broader0: 'broader.0.prefLabel',
+      broader1: 'broader.1.prefLabel',
+      broader2: 'broader.2.prefLabel'
     },
-    prepare({title, topConcept, broader, broaderPlusOne, broaderPlusTwo}) {
-      const conceptBroader = [broaderPlusOne, broader].filter(Boolean)
-      const broaderPath =
-        conceptBroader.length > 0 ? `${conceptBroader.join(' ▷ ')} ▶︎ ${title}` : ''
-      const hierarchy = broaderPlusTwo ? `... ${broaderPath}` : broaderPath
+    prepare({title, broader0, broader1, broader2 }) {
+      const subtitle = [broader0, broader1].filter(Boolean).join(', ') + (Boolean(broader2) ? ' ...' : '')
       return {
         title: title,
-        subtitle: topConcept ? 'Top Concept' : hierarchy,
-        media: topConcept ? AiOutlineTag : AiFillTag,
+        subtitle: broader0 ? 'in ' + subtitle : subtitle,
+        media: AiFillTag,
       }
     },
   },
 })
+
