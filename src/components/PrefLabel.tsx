@@ -1,6 +1,5 @@
 /**
  * SKOS Concept Preferred Label input component
- * @todo Provide more appropriate type for component props
  */
 
 import {Stack, Text} from '@sanity/ui'

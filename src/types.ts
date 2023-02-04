@@ -1,3 +1,7 @@
+/**
+ * @todo Troubleshoot PrefLableValue interface declaration. `components: {input: }` in skosConcept.tsx doesn't like it. 
+ */
+
 import {SanityDocument} from '@sanity/client'
 
 export interface TopConceptTerms {
