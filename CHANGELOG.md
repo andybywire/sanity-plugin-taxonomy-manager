@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [2.0.3] - 2023-02-04
+### Added
+- Revise Concept preview subtitle to show immediate broader term(s) only.
+
 ## [2.0.2] - 2023-01-29
 ### Added
 - Support for single level concept schemes with no designated topConcept: Handle absence of topConcepts and omit 'orphan' label when no topConcept is present
