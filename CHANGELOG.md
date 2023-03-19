@@ -6,6 +6,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [2.0.4] - 2023-03-19
+### Added
+- Add detail for Preferred Label and Base IRI usage to README.
+
 ## [2.0.3] - 2023-02-04
 ### Added
 - Revise Concept preview subtitle to show immediate broader term(s) only.
