@@ -18,31 +18,33 @@
   "author": "Andy Fitzgerald",
   "exports": {
     ".": {
-      "types": "./lib/src/index.d.ts",
+      "types": "./lib/index.d.ts",
       "source": "./src/index.ts",
-      "import": "./lib/index.esm.js",
       "require": "./lib/index.js",
+      "import": "./lib/index.esm.js",
       "default": "./lib/index.esm.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.esm.js",
   "source": "./src/index.ts",
-  "types": "./lib/src/index.d.ts",
+  "types": "./lib/index.d.ts",
   "files": [
-    "src",
     "lib",
-    "v2-incompatible.js",
-    "sanity.json"
+    "sanity.json",
+    "src",
+    "v2-incompatible.js"
   ],
   "scripts": {
-    "lint": "eslint .",
-    "build": "pkg-utils build",
-    "watch": "pkg-utils watch",
-    "prepublishOnly": "npm run build",
     "prebuild": "npm run clean && plugin-kit verify-package --silent && pkg-utils",
+    "build": "run-s clean && plugin-kit verify-package --silent && pkg-utils build --strict && pkg-utils --strict",
     "clean": "rimraf lib",
-    "link-watch": "plugin-kit link-watch"
+    "link-watch": "plugin-kit link-watch",
+    "lint": "eslint .",
+    "prepublishOnly": "run-s build",
+    "watch": "pkg-utils watch --strict",
+    "format": "prettier --write --cache --ignore-unknown ."
   },
   "dependencies": {
     "@reach/auto-id": "^0.16.0",
@@ -53,46 +55,36 @@
     "react-icons": "^4.3.1"
   },
   "devDependencies": {
-    "@sanity/pkg-utils": "^1.20.3",
-    "@sanity/plugin-kit": "^2.2.0",
-    "@typescript-eslint/eslint-plugin": "^5.46.0",
-    "@typescript-eslint/parser": "^5.46.0",
-    "eslint": "^8.29.0",
-    "eslint-config-prettier": "^8.5.0",
+    "@sanity/pkg-utils": "^2.2.14",
+    "@sanity/plugin-kit": "^3.1.7",
+    "@types/react": "^18.0.35",
+    "@typescript-eslint/eslint-plugin": "^5.58.0",
+    "@typescript-eslint/parser": "^5.58.0",
+    "eslint": "^8.38.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-config-sanity": "^6.0.0",
     "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "prettier": "2.8.3",
-    "prettier-plugin-packagejson": "^2.3.0",
-    "react": "^18",
-    "rimraf": "^3.0.2",
-    "sanity": "^3.0.0",
-    "typescript": "^4.9.4"
+    "npm-run-all": "^4.1.5",
+    "prettier": "^2.8.7",
+    "prettier-plugin-packagejson": "^2.4.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-is": "^18.2.0",
+    "rimraf": "^5.0.0",
+    "sanity": "^3.8.3",
+    "styled-components": "^5.3.9",
+    "typescript": "^5.0.4"
   },
   "peerDependencies": {
     "react": "^18",
-    "sanity": "^3.0.0"
+    "sanity": "^3"
   },
   "engines": {
     "node": ">=14"
   },
-  "prettier": {
-    "semi": false,
-    "printWidth": 100,
-    "bracketSpacing": false,
-    "singleQuote": true
-  },
-  "eslintConfig": {
-    "extends": [
-      "sanity",
-      "sanity/react",
-      "prettier"
-    ],
-    "ignorePatterns": [
-      "lib/**/"
-    ]
-  },
+  "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager",
   "sanityPlugin": {
     "verifyPackage": {
       "dependencies": false,
@@ -100,6 +92,5 @@
       "eslintImports": false,
       "tsc": false
     }
-  },
-  "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager"
+  }
 }

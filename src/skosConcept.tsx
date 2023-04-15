@@ -1,18 +1,17 @@
-/**
- * Sanity document scheme for SKOS Taxonomy Concepts
- * @todo Improve typings
- * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice). 
- *       2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader. Consider more robust filtering and validation for future releases.
- * @todo Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels
- * @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
- * @todo Scheme initial value: Configure "default" option in Concept Scheme, for cases when there are multiple schemes; configure initialValue to default to that selection (It's currently configure to take the scheme ordered first. This isn't transparent.)
- * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
- */
+// Sanity document scheme for SKOS Taxonomy Concepts
+// @todo Improve typings
+// @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice).
+//       2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader. Consider more robust filtering and validation for future releases.
+// @todo Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels
+// @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
+// @todo Scheme initial value: Configure "default" option in Concept Scheme, for cases when there are multiple schemes; configure initialValue to default to that selection (It's currently configure to take the scheme ordered first. This isn't transparent.)
+// @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
+//
 
 // import config from 'config:taxonomy-manager'
-import {AiFillTag, AiOutlineTag, AiFillTags} from 'react-icons/ai'
-import { defineType, defineField } from 'sanity'
-import { PrefLabel } from './components/PrefLabel'
+import {AiFillTag, AiFillTags} from 'react-icons/ai'
+import {defineType, defineField} from 'sanity'
+import {PrefLabel} from './components/PrefLabel'
 
 export default defineType({
   name: 'skosConcept',
@@ -54,15 +53,15 @@ export default defineType({
       group: 'label',
       type: 'string',
       description:
-      'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
+        'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
       components: {
-        input: PrefLabel
+        input: PrefLabel as any,
       },
       // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well.
       validation: (Rule) =>
         Rule.required().custom((prefLabel, context) => {
           const {getClient} = context
-          const client = getClient({ apiVersion: '2022-12-14'})
+          const client = getClient({apiVersion: '2022-12-14'})
           return client
             .fetch(
               `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`
@@ -70,9 +69,8 @@ export default defineType({
             .then((conceptId) => {
               if (conceptId && conceptId !== context.document?._id.replace('drafts.', '')) {
                 return 'Preferred Label must be unique.'
-              } else {
-                return true
               }
+              return true
             })
         }),
     }),
@@ -81,12 +79,14 @@ export default defineType({
       title: 'Base IRI',
       type: 'url',
       group: 'label',
-      validation: Rule => Rule.required().error('Please supply a base IRI.'),
+      validation: (Rule) =>
+        Rule.required().error('Please supply a base IRI in the format http://example.com/'),
       description:
-        'The W3C encourages the use of HTTP URIs when minting concept URIs since they are resolvable to representations that can be accessed using standard Web technologies.',
+        'Base IRI is the root IRI (Internationalized Resource Identifier) used to create unique concept identifiers. Unique identifiers allow for the clear an unambiguous identification of concepts across namespaces, for example between https://shipparts.com/vocab#Bow and https://wrappingsupplies.com/vocab#Bow. ',
+      // 'The W3C encourages the use of HTTP URIs when minting concept URIs since they are resolvable to representations that can be accessed using standard Web technologies.',
       options: {
-        collapsible: true
-      }
+        collapsible: true,
+      },
     }),
     defineField({
       name: 'conceptIriBase',
@@ -127,7 +127,7 @@ export default defineType({
           type: 'reference',
           to: {type: 'skosConcept'},
           options: {
-            filter: ({document}:{document: any}) => {
+            filter: ({document}: {document: any}) => {
               return {
                 // Broader filter only performs document-level validation for broader-transitive/related disjunction.
                 // Consider adding custom validation to prevent broader taxonomy inconsistencies.
@@ -135,8 +135,8 @@ export default defineType({
                   '!(_id in $broader || _id in $related || _id in path("drafts.**") || _id == $self)',
                 params: {
                   self: document._id.replace('drafts.', ''),
-                  broader: document.broader.map(({_ref}:{_ref: any}) => _ref),
-                  related: document.related.map(({_ref}:{_ref: any}) => _ref),
+                  broader: document.broader.map(({_ref}: {_ref: any}) => _ref),
+                  related: document.related.map(({_ref}: {_ref: any}) => _ref),
                 },
               }
             },
@@ -154,7 +154,7 @@ export default defineType({
       of: [
         {
           type: 'reference',
-          to: [{type: 'skosConcept'}]
+          to: [{type: 'skosConcept'}],
         },
       ],
     }),
@@ -188,9 +188,19 @@ export default defineType({
       title: 'Top Concept',
       group: 'relationship',
       type: 'boolean',
-      description:
-        <>NOTE: Top Concepts are determined at the Concept Scheme for version 2 of this plugin. Please migrate this value accordingly. This field will be removed in future versions of this plugin. To hide it in the meantime, set Top Concept to "false."<br/><br/>Description: Top concepts provide an efficient entry point to broader/narrower concept hierarchies and/or top level facets. By convention, resources can be a Top Concept, or have Broader relationships, but not both.</>,
-      hidden: ({document}) => !document?.topConcept
+      description: (
+        <>
+          NOTE: Top Concepts are determined at the Concept Scheme for version 2 of this plugin.
+          Please migrate this value accordingly. This field will be removed in future versions of
+          this plugin. To hide it in the meantime, set Top Concept to "false."
+          <br />
+          <br />
+          Description: Top concepts provide an efficient entry point to broader/narrower concept
+          hierarchies and/or top level facets. By convention, resources can be a Top Concept, or
+          have Broader relationships, but not both.
+        </>
+      ),
+      hidden: ({document}) => !document?.topConcept,
     }),
     defineField({
       name: 'scheme',
@@ -198,8 +208,17 @@ export default defineType({
       group: 'relationship',
       type: 'reference',
       hidden: ({document}) => !document?.scheme,
-      description:
-        <>NOTE: Concept Scheme inclusion is are determined from the Concept Scheme for version 2 of this plugin. Please migrate this value accordingly. This field will be removed in future versions of this plugin. To hide it in the meantime, unset this value (delete it).<br/><br/>Description: Concept schemes are used to group concepts into defined sets, such as thesauri, classification schemes, or facets.</>,
+      description: (
+        <>
+          NOTE: Concept Scheme inclusion is are determined from the Concept Scheme for version 2 of
+          this plugin. Please migrate this value accordingly. This field will be removed in future
+          versions of this plugin. To hide it in the meantime, unset this value (delete it).
+          <br />
+          <br />
+          Description: Concept schemes are used to group concepts into defined sets, such as
+          thesauri, classification schemes, or facets.
+        </>
+      ),
       to: [
         {
           type: 'skosConceptScheme',
@@ -230,16 +249,15 @@ export default defineType({
       title: 'prefLabel',
       broader0: 'broader.0.prefLabel',
       broader1: 'broader.1.prefLabel',
-      broader2: 'broader.2.prefLabel'
+      broader2: 'broader.2.prefLabel',
     },
-    prepare({title, broader0, broader1, broader2 }) {
-      const subtitle = [broader0, broader1].filter(Boolean).join(', ') + (Boolean(broader2) ? ' ...' : '')
+    prepare({title, broader0, broader1, broader2}) {
+      const subtitle = [broader0, broader1].filter(Boolean).join(', ') + (broader2 ? ' ...' : '')
       return {
         title: title,
-        subtitle: broader0 ? 'in ' + subtitle : subtitle,
+        subtitle: broader0 ? `in ${subtitle}` : subtitle,
         media: AiFillTag,
       }
     },
   },
 })
-

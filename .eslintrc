@@ -8,7 +8,12 @@
     "sanity",
     "sanity/typescript",
     "sanity/react",
+    "plugin:react/jsx-runtime",
     "plugin:react-hooks/recommended",
     "plugin:prettier/recommended"
-  ]
+  ],
+  "rules": {
+    "react/no-unused-prop-types": 0,
+    "no-warning-comments": 0
+  }
 }

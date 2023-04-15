@@ -3,8 +3,8 @@
  */
 
 import {Stack, Text} from '@sanity/ui'
-import { useFormValue } from "sanity"
-import { PrefLabelValue } from '../types'
+import {useFormValue} from 'sanity'
+import {PrefLabelValue} from '../types'
 
 export function PrefLabel(props: PrefLabelValue) {
   const baseIri = useFormValue(['baseIri'])
@@ -13,9 +13,9 @@ export function PrefLabel(props: PrefLabelValue) {
       {props.renderDefault(props)}
       <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
         <>
-        <strong>Concept IRI: </strong>
-        {baseIri ? baseIri : '[base URI not defined] '}
-        {props.value?.replaceAll(' ', '')}
+          <strong>Concept IRI: </strong>
+          {baseIri ? baseIri : '[base URI not defined] '}
+          {props.value?.replaceAll(' ', '')}
         </>
       </Text>
     </Stack>

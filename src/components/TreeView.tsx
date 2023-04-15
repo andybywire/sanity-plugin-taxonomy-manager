@@ -1,8 +1,14 @@
 import {Container, Stack, Box, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
-import { DocumentVersionsCollection } from '../types'
+import {DocumentVersionsCollection} from '../types'
 
-export const TreeView = ({document, documentId}: {document: DocumentVersionsCollection, documentId: string}) => {
+export const TreeView = ({
+  document,
+  documentId,
+}: {
+  document: DocumentVersionsCollection
+  documentId: string
+}) => {
   return (
     <Container
       width={1}
@@ -15,7 +21,7 @@ export const TreeView = ({document, documentId}: {document: DocumentVersionsColl
           <Text size={1} weight="semibold" onResize={undefined} onResizeCapture={undefined}>
             Hierarchy Tree
           </Text>
-          <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
+          <Text size={1} muted onResize={undefined} onResizeCapture={undefined}>
             Concept hierarchy is determined by 'Broader' relationships assigned to each concept.
           </Text>
           <Hierarchy document={document} documentId={documentId} />

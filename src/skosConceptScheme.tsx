@@ -7,7 +7,7 @@
  */
 
 import {RiNodeTree} from 'react-icons/ri'
-import { defineArrayMember, defineField, defineType } from 'sanity';
+import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'skosConceptScheme',
@@ -19,49 +19,46 @@ export default defineType({
       name: 'title',
       title: 'Title',
       type: 'string',
-      description:  'Taxonomy schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like'
+      description:
+        'Taxonomy schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like',
     }),
     defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 5,
-      description: 'Describe the intended use of this scheme.'
+      description: 'Describe the intended use of this scheme.',
     }),
     defineField({
       name: 'topConcepts',
       title: 'Top Concepts',
       type: 'array',
-      validation: Rule => Rule.unique(),
+      validation: (Rule) => Rule.unique(),
       of: [
         defineArrayMember({
           type: 'reference',
-          to: [
-            {type: 'skosConcept'}
-          ]
-        })
+          to: [{type: 'skosConcept'}],
+        }),
       ],
       options: {
-        sortable: false
-      }
+        sortable: false,
+      },
     }),
     defineField({
       name: 'concepts',
       title: 'Concepts',
       type: 'array',
-      validation: Rule => Rule.unique(),
+      validation: (Rule) => Rule.unique(),
       of: [
         defineArrayMember({
           type: 'reference',
-          to: [
-            {type: 'skosConcept'}
-          ]
-        })
+          to: [{type: 'skosConcept'}],
+        }),
       ],
       options: {
-        sortable: false
-      }
-    })
+        sortable: false,
+      },
+    }),
   ],
   preview: {
     select: {

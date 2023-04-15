@@ -5,14 +5,14 @@
 import {Flex, Spinner, Text, Inline} from '@sanity/ui'
 import {useEffect, useState} from 'react'
 import {useClient} from 'sanity'
-import { TopConceptTerms, ChildConceptTerms, DocumentVersionsCollection } from '../types'
+import {TopConceptTerms, ChildConceptTerms, DocumentVersionsCollection} from '../types'
 
-// CSS module import plagued by an inscrutable Rollup error. To address in future work. 
+// CSS module import plagued by an inscrutable Rollup error. To address in future work.
 
 // guidance on orphans to link to/integrate: https://www.hedden-information.com/orphan-terms-in-a-taxonomy/
 
-// Run tree to a depth of 6 levels. Return 5. If there is a 6th, do no return it; return a message. 
-// Perhaps this is most effectively messaged in the UI component. if a 6th, print message. 
+// Run tree to a depth of 6 levels. Return 5. If there is a 6th, do no return it; return a message.
+// Perhaps this is most effectively messaged in the UI component. if a 6th, print message.
 
 const trunkBuilder = (): string => {
   return `coalesce(*[_id == 'drafts.' + $id][0], *[_id == $id][0]) {
@@ -39,36 +39,42 @@ const trunkBuilder = (): string => {
 }
 
 const branchBuilder = (level = 1): string | void => {
-  if (level > 6 ) {
+  if (level > 6) {
     return ''
   } else {
     return `"childConcepts": *[_id in coalesce(*[_id == 'drafts.' + $id][0], *[_id == $id][0]).concepts[]._ref && ^._id in broader[]._ref ]|order(prefLabel){
       "id": _id,
       "level": ${level},
       prefLabel,
-      ${branchBuilder(level +1)}
+      ${branchBuilder(level + 1)}
     }`
   }
 }
 
 const ChildConcepts = ({concepts}: {concepts: ChildConceptTerms[]}): JSX.Element => {
   return (
-    <ul style={{ listStyle: 'none' }}>
+    <ul style={{listStyle: 'none'}}>
       {concepts.map((concept: any) => {
         return (
-          <li key={concept.id}
-            style={{ fontWeight: 'normal', marginTop: '.75rem' }}>
+          <li key={concept.id} style={{fontWeight: 'normal', marginTop: '.75rem'}}>
             {concept.prefLabel}
-            {concept.childConcepts?.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
+            {concept.childConcepts?.length > 0 && (
+              <ChildConcepts concepts={concept.childConcepts} />
+            )}
           </li>
-        );
+        )
       })}
     </ul>
-  );
+  )
 }
 
-const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection, documentId: string}) => {
-
+const Hierarchy = ({
+  document,
+  documentId,
+}: {
+  document: DocumentVersionsCollection
+  documentId: string
+}) => {
   const client = useClient({apiVersion: '2021-10-21'})
 
   const [concepts, setConcepts] = useState<any>([])
@@ -77,7 +83,7 @@ const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection
   const [isError, setIsError] = useState(false)
 
   useEffect(() => {
-    if (document.displayed._id === undefined ) return
+    if (document.displayed._id === undefined) return
 
     const isReady = documentId === document.displayed._id.replace(/^drafts\./, '')
 
@@ -87,7 +93,6 @@ const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection
     }
 
     const fetchConcepts = async () => {
-      
       // reset state variables for new fetch
       setIsLoading(true)
       setNoConcept(false)
@@ -100,7 +105,7 @@ const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection
         } else {
           setIsLoading(false)
           setConcepts(res)
-        } 
+        }
       } catch (error) {
         console.log('Error: ', error)
         setIsError(true)
@@ -108,7 +113,12 @@ const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection
       setIsLoading(false)
     }
     fetchConcepts()
-  }, [documentId, document.displayed._id, document.displayed.concepts, document.displayed.topConcepts])
+  }, [
+    documentId,
+    document.displayed._id,
+    document.displayed.concepts,
+    document.displayed.topConcepts,
+  ])
 
   if (isError == true) {
     return <p>Sorry, could not get concepts.</p>
@@ -122,7 +132,10 @@ const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection
         gap={5}
         height="fill"
         justify="center"
-        style={{ paddingTop: '1rem' }} onResize={undefined} onResizeCapture={undefined}      >
+        style={{paddingTop: '1rem'}}
+        onResize={undefined}
+        onResizeCapture={undefined}
+      >
         <Spinner muted onResize={undefined} onResizeCapture={undefined} />
         <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
           Loading hierarchy…
@@ -130,39 +143,48 @@ const Hierarchy = ({document, documentId}: {document: DocumentVersionsCollection
       </Flex>
     ) : (
       <ul style={{listStyle: 'none', paddingLeft: '0', marginTop: '1rem'}}>
-        {concepts.topConcepts && concepts.topConcepts.map((concept: TopConceptTerms) => {
-          if (concept?.id)
-          return (
-            <li key={concept.id}
-            style={{paddingTop: '.5rem', fontWeight: 'bold', marginTop: '.75rem'}}>
-              <Inline space={2} onResize={undefined} onResizeCapture={undefined}>
-                {concept?.prefLabel}     
-                <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
-                  top concept
-                </Text>
-              </Inline>
-              {concept?.childConcepts && concept.childConcepts.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
-            </li>
-          )
-        })}
+        {concepts.topConcepts &&
+          concepts.topConcepts.map((concept: TopConceptTerms) => {
+            if (concept?.id)
+              return (
+                <li
+                  key={concept.id}
+                  style={{paddingTop: '.5rem', fontWeight: 'bold', marginTop: '.75rem'}}
+                >
+                  <Inline space={2} onResize={undefined} onResizeCapture={undefined}>
+                    {concept?.prefLabel}
+                    <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
+                      top concept
+                    </Text>
+                  </Inline>
+                  {concept?.childConcepts && concept.childConcepts.length > 0 && (
+                    <ChildConcepts concepts={concept.childConcepts} />
+                  )}
+                </li>
+              )
+          })}
         {concepts.orphans.map((concept: ChildConceptTerms) => {
           return (
-            <li key={concept.id}
-            style={{paddingTop: '.5rem', fontWeight: 'normal', marginTop: '.75rem'}}>
+            <li
+              key={concept.id}
+              style={{paddingTop: '.5rem', fontWeight: 'normal', marginTop: '.75rem'}}
+            >
               <Inline space={2} onResize={undefined} onResizeCapture={undefined}>
                 {concept?.prefLabel}
-                {concepts.topConcept?.length > 0 &&     
+                {concepts.topConcept?.length > 0 && (
                   <Text size={1} muted={true} onResize={undefined} onResizeCapture={undefined}>
                     orphan
                   </Text>
-                }
+                )}
               </Inline>
-              {concept?.childConcepts && concept.childConcepts.length > 0 && <ChildConcepts concepts={concept.childConcepts} />}
+              {concept?.childConcepts && concept.childConcepts.length > 0 && (
+                <ChildConcepts concepts={concept.childConcepts} />
+              )}
             </li>
           )
         })}
       </ul>
-    ) 
+    )
   }
 }
 

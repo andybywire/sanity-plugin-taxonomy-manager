@@ -4,18 +4,20 @@
   list-style: none;
 }
 .skosTreeView li {
-  margin-top: .75rem;
+  margin-top: 0.75rem;
 }
 .level_0 {
   padding-left: 0;
   margin-top: 1rem;
 }
-.topConcept, .orphan {
-  padding-top: .5rem;
+.topConcept,
+.orphan {
+  padding-top: 0.5rem;
 }
 .topConcept {
   font-weight: bold;
 }
-.orphan, .childConcept {
+.orphan,
+.childConcept {
   font-weight: normal;
 }
