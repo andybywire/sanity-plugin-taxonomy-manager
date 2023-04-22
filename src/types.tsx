@@ -1,16 +1,16 @@
 /**
- * @todo Troubleshoot PrefLableValue interface declaration. `components: {input: }` in skosConcept.tsx doesn't like it.
+ * @todo Troubleshoot PrefLabelValue interface declaration. `components: {input: }` in skosConcept.tsx doesn't like it.
  */
 
 import {SanityDocument} from '@sanity/client'
 
-export interface TopConceptTerms {
+export interface ChildConceptTerms {
   prefLabel: string
   id: string
   childConcepts?: ChildConceptTerms[]
 }
 
-export interface ChildConceptTerms {
+export interface TopConceptTerms {
   prefLabel: string
   id: string
   childConcepts?: ChildConceptTerms[]
@@ -25,5 +25,6 @@ export interface DocumentVersionsCollection {
 
 export interface PrefLabelValue {
   value: string
+  // eslint-disable-next-line
   renderDefault: (props: PrefLabelValue) => React.ReactElement
 }
