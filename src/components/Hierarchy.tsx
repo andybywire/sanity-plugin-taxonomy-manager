@@ -1,11 +1,20 @@
 /**
  * Concept Scheme Tree View
+ * - Fetches the complete tree of concepts in a concept scheme.
+ * - Displays the tree in a nested list.
+ * @todo Investigate lag in rendering the correct tree. Consider checking against document.displayed and not changing state until _ids match.
+ * @todo Anticipate and handle errors.
+ * @todo Add functionality to expand/collapse the tree.
+ * @todo Add direct linking to terms
+ * @todo Add functionality to add a new term.
  */
 
 import {Flex, Spinner, Text, Inline} from '@sanity/ui'
-import {useEffect, useState} from 'react'
-import {useClient} from 'sanity'
-import {TopConceptTerms, ChildConceptTerms, DocumentVersionsCollection} from '../types'
+import {TopConceptTerms, ChildConceptTerms} from '../types'
+import {SanityDocument} from '@sanity/client'
+import {useListeningQuery} from 'sanity-plugin-utils'
+import {ChildConcepts} from './ChildConcepts'
+import {TopConcepts} from './TopConcepts'
 
 // Recursive function to build out successive branches of the hierarchy up to five levels deep.
 // - Get the prefLabel and _id of each concept in the array of concepts referenced by the broader term,
@@ -49,43 +58,27 @@ const trunkBuilder = (): string => {
   }`
 }
 
-const ChildConcepts = ({concepts}: {concepts: ChildConceptTerms[]}) => {
-  return (
-    <ul style={{listStyle: 'none'}}>
-      {concepts.map((concept: any) => {
-        return (
-          <li key={concept.id} style={{fontWeight: 'normal', marginTop: '.75rem'}}>
-            {concept.prefLabel}
-            {concept.childConcepts?.length > 0 && (
-              <ChildConcepts concepts={concept.childConcepts} />
-            )}
-          </li>
-        )
-      })}
-    </ul>
-  )
-}
-
 const TreeStructure = ({concepts}: {concepts: any}) => {
   return (
     <ul style={{listStyle: 'none', paddingLeft: '0', marginTop: '1rem'}}>
       {concepts.topConcepts &&
         concepts.topConcepts.map((concept: TopConceptTerms) => {
           return (
-            <li
-              key={concept?.id}
-              style={{paddingTop: '.5rem', fontWeight: 'bold', marginTop: '.75rem'}}
-            >
-              <Inline space={2} onResize={undefined} onResizeCapture={undefined}>
-                {concept?.prefLabel}
-                <Text size={1} muted onResize={undefined} onResizeCapture={undefined}>
-                  top concept
-                </Text>
-              </Inline>
-              {concept?.childConcepts && concept.childConcepts.length > 0 && (
-                <ChildConcepts concepts={concept.childConcepts} />
-              )}
-            </li>
+            <TopConcepts key={concept?.id} concept={concept} />
+            // <li
+            //   key={concept?.id}
+            //   style={{paddingTop: '.5rem', fontWeight: 'bold', marginTop: '.75rem'}}
+            // >
+            //   <Inline space={2} onResize={undefined} onResizeCapture={undefined}>
+            //     {concept?.prefLabel}
+            //     <Text size={1} muted onResize={undefined} onResizeCapture={undefined}>
+            //       top concept
+            //     </Text>
+            //   </Inline>
+            //   {concept?.childConcepts && concept.childConcepts.length > 0 && (
+            //     <ChildConcepts concepts={concept.childConcepts} />
+            //   )}
+            // </li>
           )
         })}
       {concepts.orphans.map((concept: ChildConceptTerms) => {
@@ -112,112 +105,34 @@ const TreeStructure = ({concepts}: {concepts: any}) => {
   )
 }
 
-// The Hierarchy component fetches and displays the complete tree.
-export const Hierarchy = ({
-  document,
-  documentId,
-}: {
-  document: DocumentVersionsCollection
-  documentId: string
-}) => {
-  const client = useClient({apiVersion: '2021-10-21'})
-
-  const [concepts, setConcepts] = useState<any>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [noConcept, setNoConcept] = useState(false)
-  const [isError, setIsError] = useState(false)
-  const [isIdAligned, setIsIdAligned] = useState(false) // do the document IDs match?
-
-  const {
-    displayed: {_id: dId, topConcepts: dTopConcepts, concepts: dConcepts},
-  } = document
-
-  const fetchConcepts = async () => {
-    try {
-      // wait 1 second to allow the document to be saved. The arbitrary delay is lamentable, but a recursive query to fetch the tree never finishes.
-      await new Promise((resolve) => setTimeout(resolve, 1000))
-      const res = await client.fetch(trunkBuilder(), {id: dId})
-      if (res.topConcepts === null && res.orphans.length < 1) {
-        setNoConcept(true)
-      } else {
-        setNoConcept(false)
-        setConcepts(res)
-      }
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('Error: ', error)
-      setIsError(true)
-    }
-    setIsLoading(false)
-  }
-
-  useEffect(() => {
-    setNoConcept(false)
-
-    // if documents don't match, return; still loading
-    if (document.displayed._id.replace(/^drafts\./, '') !== documentId) {
-      setIsIdAligned(false)
-      return
-      // If there is no title defined, the display document is not done loading
-    } else if (
-      document.displayed._id.replace(/^drafts\./, '') === documentId &&
-      document.displayed.title === undefined
-    ) {
-      return
-      // set to noConcepts if the documents match, but there are no concepts defined
-    } else if (
-      document.displayed._id.replace(/^drafts\./, '') === documentId &&
-      document.displayed.concepts === undefined &&
-      document.displayed.topConcepts === undefined
-    ) {
-      setIsIdAligned(true)
-      setIsLoading(false)
-      setNoConcept(true)
-      return
-    }
-    setIsIdAligned(true)
-    setIsLoading(true)
-    // if documents are aligned, and there are concepts, fetch the hierarchy
-    fetchConcepts()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dId, dTopConcepts, dConcepts])
-
-  if (isError == true) {
-    return <p>Sorry, could not get concepts.</p>
-    // unaligned IDs mean the display document is still loading. Show nothing.
-  } else if (isIdAligned == false) {
+export const Hierarchy = ({documentId}: {documentId: string}) => {
+  const {data, loading, error} = useListeningQuery<SanityDocument[]>(trunkBuilder(), {
+    params: {id: documentId},
+    initialValue: [],
+  })
+  if (loading) {
     return (
-      <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
-        <p>...</p>
-      </Text>
-    )
-  } else if (noConcept == true) {
-    return (
-      <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
-        <p>This scheme does not yet have any concepts assigned to it.</p>
-      </Text>
+      <Flex
+        align="center"
+        direction="column"
+        gap={5}
+        height="fill"
+        justify="center"
+        style={{paddingTop: '1rem'}}
+        onResize={undefined}
+        onResizeCapture={undefined}
+      >
+        <Spinner muted onResize={undefined} onResizeCapture={undefined} />
+        <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
+          Loading hierarchy…
+        </Text>
+      </Flex>
     )
   }
-  return isLoading ? (
-    // once we're actually getting data, show loading spinner while fetching
-    <Flex
-      align="center"
-      direction="column"
-      gap={5}
-      height="fill"
-      justify="center"
-      style={{paddingTop: '1rem'}}
-      onResize={undefined}
-      onResizeCapture={undefined}
-    >
-      <Spinner muted onResize={undefined} onResizeCapture={undefined} />
-      <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
-        Loading hierarchy…
-      </Text>
-    </Flex>
-  ) : (
-    <TreeStructure concepts={concepts} />
-  )
+  if (error) {
+    return <div>error: {error}</div>
+  }
+  return <TreeStructure concepts={data} />
 }
 
 export default Hierarchy

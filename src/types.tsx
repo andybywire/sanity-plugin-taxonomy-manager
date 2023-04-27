@@ -13,6 +13,7 @@ export interface ChildConceptTerms {
 export interface TopConceptTerms {
   prefLabel: string
   id: string
+
   childConcepts?: ChildConceptTerms[]
 }
 
