@@ -166,6 +166,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - git push
   - git push --tags
 7. Create a GitHub Release (optional)
+8. Update plugin in staging studio, run `sanity deploy`, and validate published package. 
 
 source: https://cloudfour.com/thinks/how-to-publish-an-updated-version-of-an-npm-package/
 --->
