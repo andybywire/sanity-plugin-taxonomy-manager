@@ -2,15 +2,13 @@
  * Concept Scheme Tree View
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
- * @todo Investigate lag in rendering the correct tree. Consider checking against document.displayed and not changing state until _ids match.
- * @todo Anticipate and handle errors.
+ * @todo Investigate lag in rendering the updated tree. Prefer a loading state over old data.
  * @todo Add functionality to expand/collapse the tree.
  * @todo Add direct linking to terms
  * @todo Add functionality to add a new term.
  */
 
 import {Flex, Spinner, Text} from '@sanity/ui'
-// import {SanityDocument} from '@sanity/client'
 import {useListeningQuery} from 'sanity-plugin-utils'
 import {TreeStructure} from './TreeStructure'
 import {trunkBuilder} from './queries'
