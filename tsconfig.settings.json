@@ -10,6 +10,8 @@
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "skipLibCheck": true,
-    "isolatedModules": true
+    "isolatedModules": true,
+    "emitDeclarationOnly": true,
+    "rootDir": "."
   }
 }
