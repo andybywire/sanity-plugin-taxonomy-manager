@@ -18,7 +18,8 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "checkJs": false,
-    "rootDir": "src"
+    "emitDeclarationOnly": true,
+    "rootDir": ".",
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "**/*.spec.ts"]
