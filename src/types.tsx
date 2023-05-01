@@ -1,27 +1,18 @@
-/**
- * @todo Troubleshoot PrefLabelValue interface declaration. `components: {input: }` in skosConcept.tsx doesn't like it.
- */
-
-import {SanityDocument} from '@sanity/client'
-
-export interface ChildConceptTerms {
+export interface ChildConceptTerm {
   prefLabel: string
   id: string
-  childConcepts?: ChildConceptTerms[]
+  childConcepts?: ChildConceptTerm[]
 }
 
-export interface TopConceptTerms {
+export interface TopConceptTerm {
   prefLabel: string
   id: string
-
-  childConcepts?: ChildConceptTerms[]
+  childConcepts?: ChildConceptTerm[]
 }
 
-export interface DocumentVersionsCollection {
-  displayed: SanityDocument
-  published: SanityDocument
-  draft: SanityDocument
-  historical: SanityDocument
+export interface DocumentConcepts {
+  topConcepts: TopConceptTerm[]
+  orphans: ChildConceptTerm[]
 }
 
 export interface PrefLabelValue {

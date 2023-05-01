@@ -1,5 +1,5 @@
 import styled from 'styled-components'
-import {ChildConceptTerms} from '../types'
+import {ChildConceptTerm} from '../types'
 
 const StyledChildConcept = styled.ul`
   list-style: none;
@@ -9,7 +9,7 @@ const StyledChildConcept = styled.ul`
   }
 `
 
-export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerms[]}) => {
+export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
   return (
     <StyledChildConcept>
       {concepts.map((concept: any) => {
