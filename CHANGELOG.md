@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [2.0.5] - 2023-05-01
+
+### Fixed
+
+- Bug in hierarchy tree that caused it to be rendered twice.
+- Issue with style forced the use of inline styles (converted to Styled Components)
+
+### Changed
+
+- Modularized hierarchy tree components
+
 ## [2.0.4] - 2023-03-19
 
 ### Added
