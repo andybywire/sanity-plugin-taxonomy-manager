@@ -8,7 +8,7 @@
  * @todo Add functionality to add a new term.
  */
 
-import {Flex, Spinner, Text} from '@sanity/ui'
+import {Card, Flex, Label, Spinner, Stack, Text} from '@sanity/ui'
 import {useListeningQuery} from 'sanity-plugin-utils'
 import {TreeStructure} from './TreeStructure'
 import {trunkBuilder} from './queries'
@@ -17,7 +17,6 @@ import {DocumentConcepts} from '../types'
 export const Hierarchy = ({documentId}: {documentId: string}) => {
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(trunkBuilder(), {
     params: {id: documentId},
-    // initialValue: [],
   })
   if (loading) {
     return (
@@ -38,7 +37,19 @@ export const Hierarchy = ({documentId}: {documentId: string}) => {
   } else if (error) {
     return <div>error: {error}</div>
   } else if (!data) {
-    return <div>No data</div>
+    return (
+      <Card padding={4}>
+        <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="primary">
+          <Stack space={3}>
+            <Label size={3}>New Concept Scheme</Label>
+            <Text size={2}>
+              To get started with this scheme, go to the "Editor" tab, give the scheme a title, and
+              then start adding concepts.
+            </Text>
+          </Stack>
+        </Card>
+      </Card>
+    )
   }
   return <TreeStructure concepts={data} />
 }

@@ -2,6 +2,7 @@ import {Orphans} from './Orphans'
 import {TopConcepts} from './TopConcepts'
 import styled from 'styled-components'
 import {TopConceptTerm, ChildConceptTerm, DocumentConcepts} from '../types'
+import {Card, Stack, Label, Text} from '@sanity/ui'
 
 const StyledTree = styled.ul`
   list-style: none;
@@ -12,9 +13,17 @@ const StyledTree = styled.ul`
 export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {
   if (concepts.topConcepts === null && concepts.orphans.length === 0)
     return (
-      <StyledTree>
-        <li>There are no concepts assigned to this scheme.</li>
-      </StyledTree>
+      <Card padding={4}>
+        <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="caution">
+          <Stack space={3}>
+            <Label size={3}>No Concepts</Label>
+            <Text size={2}>
+              There are not yet any concepts assigned to this scheme. To add concepts, got to the
+              "Editor" tab and add or create new Top Concepts or Concepts.
+            </Text>
+          </Stack>
+        </Card>
+      </Card>
     )
 
   return (
