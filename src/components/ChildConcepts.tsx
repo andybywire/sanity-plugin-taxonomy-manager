@@ -50,5 +50,3 @@ export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
     </StyledChildConcept>
   )
 }
-
-// {concept.level == 5 && <span> *</>}
