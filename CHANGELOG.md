@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [2.0.6] - 2023-05-04
+
+### Added
+
+- Add Tree View validation of 5 level hierarchy limit
+- Add icons and messaging for schema concepts over 5 levels deep
+- Add "getting started" messaging for new Concept Schemes
+- Add "keeping going" messaging for Concept Schemes with no concepts yet assigned.
+
 ## [2.0.5] - 2023-05-01
 
 ### Fixed
