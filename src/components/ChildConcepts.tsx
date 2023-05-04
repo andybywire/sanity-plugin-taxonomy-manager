@@ -20,7 +20,7 @@ export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
       {concepts.map((concept: any) => {
         return (
           <li key={concept.id}>
-            {concept.prefLabel} — {concept.level}
+            {concept.prefLabel}
             {concept.childConcepts?.length > 0 && concept.level == 5 && (
               <Tooltip
                 content={
