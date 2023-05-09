@@ -158,6 +158,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - People can see what changes they might expect in upcoming releases
 - At release time, you can move the Unreleased section changes into a new release version section.
 
+## Commit Message Prefixes
+### feat: a new feature for the user
+### fix: a bug fix for the user
+### chore: changes that aren't a fix or feature and don't modify src or test files
+### docs: changes to the documentation
+### style: formatting changes that do not affect the meaning of the code
+### test: adding or refactoring tests
+
 ### Release Process
 1. Safety Checks:
   - git pull
@@ -175,7 +183,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - git push
   - git push --tags
 7. Create a GitHub Release (optional)
-8. Update plugin in staging studio, run `sanity deploy`, and validate published package. 
+8. Update (reinstall) plugin in staging studio, run `sanity deploy`, and validate published package. 
 
 source: https://cloudfour.com/thinks/how-to-publish-an-updated-version-of-an-npm-package/
---->
