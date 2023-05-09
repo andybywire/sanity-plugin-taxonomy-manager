@@ -1,6 +1,6 @@
 /**
  * Sanity document scheme for SKOS Concept Schemes
- * @todo Add BaseIri field
+ * @todo Add BaseIri field ✔︎
  * @todo Add administrative metadata: dc:title, dc:author ... date, last revised, etc.
  * @todo Add support for sorting array lists alphabetically (custom component?)
  * @todo Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links.
@@ -15,6 +15,19 @@ export default defineType({
   title: 'Concept Scheme',
   type: 'document',
   icon: RiNodeTree,
+  initialValue: async (props, context) => {
+    const {getClient} = context
+    const client = getClient({apiVersion: '2021-03-25'})
+    const baseIri =
+      (await client.fetch(`
+        *[_type == 'skosConceptScheme' && defined(baseIri)]| order(_createdAt desc)[0].baseIri
+      `)) ?? undefined
+    return {
+      baseIri: baseIri,
+      broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
+      related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
+    }
+  },
   fields: [
     defineField({
       name: 'title',
