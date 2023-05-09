@@ -2,6 +2,7 @@ import styled from 'styled-components'
 import {Tooltip, Box, Stack, Text} from '@sanity/ui'
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {ChildConceptTerm} from '../types'
+import {hues} from '@sanity/color'
 
 const StyledChildConcept = styled.ul`
   list-style: none;
@@ -9,7 +10,7 @@ const StyledChildConcept = styled.ul`
     font-weight: normal;
     margin-top: 0.75rem;
     svg {
-      color: #f03e2f; // red-500
+      color: ${hues.red[500].hex};
     }
   }
 `
