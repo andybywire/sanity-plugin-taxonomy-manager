@@ -1,17 +1,19 @@
-// Sanity document scheme for SKOS Taxonomy Concepts
-// @todo Improve typings
-// @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice).
-//       2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader. Consider more robust filtering and validation for future releases.
-// @todo Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels
-// @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
-// @todo Scheme initial value: Configure "default" option in Concept Scheme, for cases when there are multiple schemes; configure initialValue to default to that selection (It's currently configure to take the scheme ordered first. This isn't transparent.)
-// @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
-//
+/**
+ * Sanity document scheme for SKOS Taxonomy Concepts
+ * @todo Improve typings
+ * @todo Hierarchy, Broader, & Associated: enforce disjointedness between Associated and BroaderTransitive (integrity constraint); prohibit cycles in hierarchical relations (best practice).
+ *       2022-03-31: Filtering added to Related to five levels of hierarchy, document filtering present for Broader.  Consider more robust filtering and validation for future releases.
+ * @todo Document level validation for the disjunction between Preferred, Alternate, and Hidden Labels
+ * @todo Lexical labels: add child level validation so that offending labels are shown directly when a duplicate is entered. Then consider removing document level validation. cf. https://www.sanity.io/docs/validation#9e69d5db6f72
+ * @todo Scheme initial value: Configure "default" option in Concept Scheme, for cases when there are multiple schemes; configure initialValue to default to that selection (It's currently configure to take the scheme ordered first. This isn't transparent.)
+ * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
+ */
 
 // import config from 'config:taxonomy-manager'
 import {AiFillTag, AiFillTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
 import {PrefLabel} from './components/PrefLabel'
+import baseIriField from './modules/baseIriField'
 
 export default defineType({
   name: 'skosConcept',
@@ -31,26 +33,10 @@ export default defineType({
       related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
     }
   },
-  groups: [
-    {
-      name: 'label',
-      title: 'Labels',
-      default: true,
-    },
-    {
-      name: 'relationship',
-      title: 'Relationships',
-    },
-    {
-      name: 'note',
-      title: 'Documentation',
-    },
-  ],
   fields: [
     defineField({
       name: 'prefLabel',
       title: 'Preferred Label',
-      group: 'label',
       type: 'string',
       description:
         'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
@@ -74,53 +60,18 @@ export default defineType({
             })
         }),
     }),
-    defineField({
-      name: 'baseIri',
-      title: 'Base IRI',
-      type: 'url',
-      group: 'label',
-      validation: (Rule) =>
-        Rule.required().error('Please supply a base IRI in the format http://example.com/'),
-      description:
-        'Base IRI is the root IRI (Internationalized Resource Identifier) used to create unique concept identifiers. Unique identifiers allow for the clear an unambiguous identification of concepts across namespaces, for example between https://shipparts.com/vocab#Bow and https://wrappingsupplies.com/vocab#Bow. ',
-      // 'The W3C encourages the use of HTTP URIs when minting concept URIs since they are resolvable to representations that can be accessed using standard Web technologies.',
-      options: {
-        collapsible: true,
-      },
-    }),
+    ...baseIriField,
     defineField({
       name: 'conceptIriBase',
       title: 'Edit the base IRI',
       type: 'baseIri',
-      group: 'label',
-      // type: 'string'
-    }),
-    defineField({
-      name: 'altLabel',
-      title: 'Alternate Label(s)',
-      group: 'label',
-      type: 'array',
-      description:
-        'Alternative labels can be used to assign synonyms, near-synonyms, abbreviations, and acronyms to a concept. Preferred, alternative, and hidden label sets must not overlap.',
-      of: [{type: 'string'}],
-      validation: (Rule) => Rule.unique(),
-    }),
-    defineField({
-      name: 'hiddenLabel',
-      title: 'Hidden Label(s)',
-      group: 'label',
-      type: 'array',
-      description:
-        'Hidden labels are for character strings that need to be accessible to applications performing text-based indexing and search operations, but not visible otherwise. Hidden labels may for instance be used to include misspelled variants of other lexical labels. Preferred, alternative, and hidden label sets must not overlap.',
-      of: [{type: 'string'}],
-      validation: (Rule) => Rule.unique(),
+      // this field is visible only if a conceptIriBase using the old scheme is present
     }),
     defineField({
       name: 'broader',
       title: 'Broader Concept(s)',
       description:
         'Broader relationships create a hierarchy between concepts, for example to create category/subcategory, part/whole, or class/instance relationships.',
-      group: 'relationship',
       type: 'array',
       of: [
         {
@@ -149,7 +100,6 @@ export default defineType({
       title: 'Related Concept(s)',
       description:
         'Associative links between concepts indicate that the two are inherently "related", but that one is not in any way more general than the other. Broader and Associated relationships are mutually exclusive.',
-      group: 'relationship',
       type: 'array',
       of: [
         {
@@ -159,13 +109,30 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'altLabel',
+      title: 'Alternate Label(s)',
+      type: 'array',
+      description:
+        'Alternative labels can be used to assign synonyms, near-synonyms, abbreviations, and acronyms to a concept. Preferred, alternative, and hidden label sets must not overlap.',
+      of: [{type: 'string'}],
+      validation: (Rule) => Rule.unique(),
+    }),
+    defineField({
+      name: 'hiddenLabel',
+      title: 'Hidden Label(s)',
+      type: 'array',
+      description:
+        'Hidden labels are for character strings that need to be accessible to applications performing text-based indexing and search operations, but not visible otherwise. Hidden labels may for instance be used to include misspelled variants of other lexical labels. Preferred, alternative, and hidden label sets must not overlap.',
+      of: [{type: 'string'}],
+      validation: (Rule) => Rule.unique(),
+    }),
+    defineField({
       name: 'scopeNote',
       title: 'Scope Note',
       type: 'text',
       description:
         'A brief statement on the intended meaning of this concept, especially as an indication of how the use of the concept is limited in indexing practice',
       rows: 3,
-      group: 'note',
     }),
     defineField({
       name: 'definition',
@@ -173,7 +140,6 @@ export default defineType({
       type: 'text',
       description: 'A complete explanation of the intended meaning of the concept',
       rows: 3,
-      group: 'note',
     }),
     defineField({
       name: 'example',
@@ -181,12 +147,10 @@ export default defineType({
       type: 'text',
       description: 'An example of the use of the concept.',
       rows: 3,
-      group: 'note',
     }),
     defineField({
       name: 'topConcept',
       title: 'Top Concept',
-      group: 'relationship',
       type: 'boolean',
       description: (
         <>
@@ -205,7 +169,6 @@ export default defineType({
     defineField({
       name: 'scheme',
       title: 'Concept Scheme(s)',
-      group: 'relationship',
       type: 'reference',
       hidden: ({document}) => !document?.scheme,
       description: (

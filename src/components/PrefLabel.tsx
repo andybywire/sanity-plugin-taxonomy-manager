@@ -1,5 +1,6 @@
 /**
  * SKOS Concept Preferred Label input component
+ * Used for Concept and Concept Scheme URI preview
  */
 
 import {Stack, Text} from '@sanity/ui'
@@ -13,7 +14,7 @@ export function PrefLabel(props: PrefLabelValue) {
       {props.renderDefault(props)}
       <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
         <>
-          <strong>Concept IRI: </strong>
+          <strong>URI: </strong>
           {baseIri ? baseIri : '[base URI not defined] '}
           {props.value?.replaceAll(' ', '')}
         </>
