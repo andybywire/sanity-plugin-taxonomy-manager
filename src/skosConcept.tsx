@@ -13,6 +13,7 @@
 import {AiFillTag, AiFillTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
 import {PrefLabel} from './components/PrefLabel'
+import {DescriptionDetail} from './styles'
 import baseIriField from './modules/baseIriField'
 
 export default defineType({
@@ -146,6 +147,101 @@ export default defineType({
       title: 'Examples',
       type: 'text',
       description: 'An example of the use of the concept.',
+      rows: 3,
+    }),
+    defineField({
+      name: 'historyNote',
+      title: 'History Notes',
+      type: 'text',
+      description: (
+        <details>
+          <summary>Significant changes to the meaning of the form of this concept.</summary>
+          <DescriptionDetail>
+            <kbd>
+              Example: childAbuse
+              <br />
+              History Note: "Estab. 1975; heading was: Cruelty to children [1952 - 1975]."
+            </kbd>
+            <p>
+              For more information on the recommended usage of the SKOS documentation properties,
+              see
+              <a
+                href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {' '}
+                W3C SKOS Primer: 2.4 Documentary Notes
+              </a>
+            </p>
+          </DescriptionDetail>
+        </details>
+      ),
+      rows: 3,
+    }),
+    defineField({
+      name: 'editorialNote',
+      title: 'Editorial Notes',
+      type: 'text',
+      description: (
+        <details>
+          <summary>
+            Information to aid in administrative housekeeping, such as reminders of editorial work
+            still to be done, or warnings in the event that future editorial changes might be made.
+          </summary>
+          <DescriptionDetail>
+            <kbd>
+              Example: doubleclick
+              <br />
+              Editorial Note: "Review this term after the company merger is complete."
+            </kbd>
+            <p>
+              For more information on the recommended usage of the SKOS documentation properties,
+              see
+              <a
+                href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {' '}
+                W3C SKOS Primer: 2.4 Documentary Notes
+              </a>
+            </p>
+          </DescriptionDetail>
+        </details>
+      ),
+      rows: 3,
+    }),
+    defineField({
+      name: 'changeNote',
+      title: 'Change Notes',
+      type: 'text',
+      description: (
+        <details>
+          <summary>
+            Fine-grained changes to a concept, for the purposes of administration and maintenance.
+          </summary>
+          <DescriptionDetail>
+            <kbd>
+              Example: tomato
+              <br />
+              Change Note: "Moved from under 'fruits' to under 'vegetables' by Horace Gray"
+            </kbd>
+            <p>
+              For more information on the recommended usage of the SKOS documentation properties,
+              see
+              <a
+                href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
+                target="_blank"
+                rel="noreferrer"
+              >
+                {' '}
+                W3C SKOS Primer: 2.4 Documentary Notes
+              </a>
+            </p>
+          </DescriptionDetail>
+        </details>
+      ),
       rows: 3,
     }),
     defineField({
