@@ -25,8 +25,6 @@ export default defineType({
       `)) ?? undefined
     return {
       baseIri: baseIri,
-      broader: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
-      related: [], // an empty array is needed here in order to return concepts with no "broader" for "related"
     }
   },
   fields: [
