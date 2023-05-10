@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [IN PROGRESS]
+
+### Added
+
+- Base URI field to skosConceptScheme
+
+### Changed
+
+- Improved Base URI field description content and formatting
+
 ## [2.0.6] - 2023-05-04
 
 ### Added
