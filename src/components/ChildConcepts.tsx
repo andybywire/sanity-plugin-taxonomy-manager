@@ -3,6 +3,7 @@ import {Tooltip, Box, Stack, Text} from '@sanity/ui'
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {ChildConceptTerm} from '../types'
 import {hues} from '@sanity/color'
+import {ConceptDetailLink} from './ConceptDetailLink'
 
 const StyledChildConcept = styled.ul`
   list-style: none;
@@ -21,7 +22,7 @@ export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
       {concepts.map((concept: any) => {
         return (
           <li key={concept.id}>
-            {concept.prefLabel}
+            <ConceptDetailLink concept={concept} />
             {concept.childConcepts?.length > 0 && concept.level == 5 && (
               <Tooltip
                 content={

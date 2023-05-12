@@ -1,6 +1,7 @@
 import {Text, Inline} from '@sanity/ui'
 import styled from 'styled-components'
 import {ChildConcepts} from './ChildConcepts'
+import {ConceptDetailLink} from './ConceptDetailLink'
 import {TopConceptTerm} from '../types'
 
 const StyledTopConcept = styled.li`
@@ -12,7 +13,7 @@ export const TopConcepts = ({concept}: {concept: TopConceptTerm}) => {
   return (
     <StyledTopConcept>
       <Inline space={2}>
-        {concept?.prefLabel}
+        <ConceptDetailLink concept={concept} />
         <Text size={1} muted>
           top concept
         </Text>
