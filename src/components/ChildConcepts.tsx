@@ -1,8 +1,12 @@
 import styled from 'styled-components'
-import {Tooltip, Box, Stack, Text} from '@sanity/ui'
+import {Tooltip, Box, Stack, Text, Button} from '@sanity/ui'
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {ChildConceptTerm} from '../types'
 import {hues} from '@sanity/color'
+// import {useOpenInNewPane} from 'sanity-plugin-utils'
+import {usePaneRouter} from 'sanity/desk'
+import {RouterContext} from 'sanity/router'
+import {useCallback, useContext} from 'react'
 
 const StyledChildConcept = styled.ul`
   list-style: none;
@@ -15,6 +19,30 @@ const StyledChildConcept = styled.ul`
   }
 `
 
+function OpenInNewPane(id?: any) {
+  const routerContext = useContext(RouterContext)
+  const {routerPanesState, groupIndex} = usePaneRouter()
+
+  const openInNewPane = useCallback(() => {
+    if (!routerContext || !id) {
+      return
+    }
+
+    const panes = [...routerPanesState]
+    panes.splice(groupIndex + 1, groupIndex + 1, [
+      {
+        id: id.id,
+        params: {type: 'skosConcept'},
+      },
+    ])
+
+    const href = routerContext.resolvePathFromState({panes})
+    routerContext.navigateUrl({path: href})
+  }, [id, routerContext, routerPanesState, groupIndex])
+
+  return <Button onClick={openInNewPane}>placeholder title</Button>
+}
+
 export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
   return (
     <StyledChildConcept>
@@ -22,6 +50,7 @@ export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
         return (
           <li key={concept.id}>
             {concept.prefLabel}
+            <OpenInNewPane id={concept.id} />
             {concept.childConcepts?.length > 0 && concept.level == 5 && (
               <Tooltip
                 content={
