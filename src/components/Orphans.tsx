@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 import {Text, Inline} from '@sanity/ui'
 import {ChildConcepts} from './ChildConcepts'
+import {ConceptDetailLink} from './ConceptDetailLink'
 import {ChildConceptTerm, DocumentConcepts} from '../types'
 
 const StyledOrphan = styled.li`
@@ -19,7 +20,7 @@ export const Orphans = ({
   return (
     <StyledOrphan key={concept.id}>
       <Inline space={2}>
-        {concept?.prefLabel}
+        <ConceptDetailLink concept={concept} />
         {docConcepts.topConcepts?.length > 0 && (
           <Text size={1} muted>
             orphan

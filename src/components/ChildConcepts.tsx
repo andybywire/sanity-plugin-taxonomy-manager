@@ -1,12 +1,9 @@
 import styled from 'styled-components'
-import {Tooltip, Box, Stack, Text, Button} from '@sanity/ui'
+import {Tooltip, Box, Stack, Text} from '@sanity/ui'
 import {ErrorOutlineIcon} from '@sanity/icons'
 import {ChildConceptTerm} from '../types'
 import {hues} from '@sanity/color'
-// import {useOpenInNewPane} from 'sanity-plugin-utils'
-import {usePaneRouter} from 'sanity/desk'
-import {RouterContext} from 'sanity/router'
-import {useCallback, useContext} from 'react'
+import {ConceptDetailLink} from './ConceptDetailLink'
 
 const StyledChildConcept = styled.ul`
   list-style: none;
@@ -16,40 +13,8 @@ const StyledChildConcept = styled.ul`
     svg {
       color: ${hues.red[500].hex};
     }
-    span {
-      cursor: pointer;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
   }
 `
-
-function ConceptDetailLink(concept?: any) {
-  const routerContext = useContext(RouterContext)
-  const {routerPanesState, groupIndex} = usePaneRouter()
-
-  const {id, prefLabel} = concept.concept
-
-  const openInNewPane = useCallback(() => {
-    if (!routerContext || !id) {
-      return
-    }
-
-    const panes = [...routerPanesState]
-    panes.splice(groupIndex + 1, groupIndex + 1, [
-      {
-        id: id,
-        params: {type: 'skosConcept'},
-      },
-    ])
-
-    const href = routerContext.resolvePathFromState({panes})
-    routerContext.navigateUrl({path: href})
-  }, [id, routerContext, routerPanesState, groupIndex])
-
-  return <span onClick={openInNewPane}>{prefLabel}</span>
-}
 
 export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
   return (
