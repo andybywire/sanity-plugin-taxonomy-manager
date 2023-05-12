@@ -20,3 +20,12 @@ export interface PrefLabelValue {
   // eslint-disable-next-line
   renderDefault: (props: PrefLabelValue) => React.ReactElement
 }
+
+export interface ConceptDetailLinkProps {
+  concept: {
+    id: string
+    prefLabel: string
+    childConcepts?: ChildConceptTerm[]
+    level?: number
+  }
+}

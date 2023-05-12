@@ -16,12 +16,20 @@ const StyledChildConcept = styled.ul`
     svg {
       color: ${hues.red[500].hex};
     }
+    span {
+      cursor: pointer;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 `
 
-function OpenInNewPane(id?: any) {
+function ConceptDetailLink(concept?: any) {
   const routerContext = useContext(RouterContext)
   const {routerPanesState, groupIndex} = usePaneRouter()
+
+  const {id, prefLabel} = concept.concept
 
   const openInNewPane = useCallback(() => {
     if (!routerContext || !id) {
@@ -31,7 +39,7 @@ function OpenInNewPane(id?: any) {
     const panes = [...routerPanesState]
     panes.splice(groupIndex + 1, groupIndex + 1, [
       {
-        id: id.id,
+        id: id,
         params: {type: 'skosConcept'},
       },
     ])
@@ -40,7 +48,7 @@ function OpenInNewPane(id?: any) {
     routerContext.navigateUrl({path: href})
   }, [id, routerContext, routerPanesState, groupIndex])
 
-  return <Button onClick={openInNewPane}>placeholder title</Button>
+  return <span onClick={openInNewPane}>{prefLabel}</span>
 }
 
 export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
@@ -49,8 +57,7 @@ export const ChildConcepts = ({concepts}: {concepts: ChildConceptTerm[]}) => {
       {concepts.map((concept: any) => {
         return (
           <li key={concept.id}>
-            {concept.prefLabel}
-            <OpenInNewPane id={concept.id} />
+            <ConceptDetailLink concept={concept} />
             {concept.childConcepts?.length > 0 && concept.level == 5 && (
               <Tooltip
                 content={
