@@ -7,7 +7,7 @@ import {Card, Stack, Label, Text} from '@sanity/ui'
 const StyledTree = styled.ul`
   list-style: none;
   padding-left: 0;
-  margin-top: 1rem;
+  margin-block-start: 0;
 `
 
 export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {

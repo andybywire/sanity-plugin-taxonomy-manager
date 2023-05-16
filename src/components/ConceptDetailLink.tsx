@@ -1,3 +1,9 @@
+/**
+ * Concept Detail Link
+ * Renders a link to a concept in the hierarchy tree that opens in a new pane.
+ * @todo Adapt to use the New Concept Pane hook (it's death spiraling at the moment)
+ */
+
 import {usePaneRouter} from 'sanity/desk'
 import {RouterContext} from 'sanity/router'
 import {useCallback, useContext} from 'react'
