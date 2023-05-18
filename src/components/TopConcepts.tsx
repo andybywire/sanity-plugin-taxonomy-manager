@@ -3,16 +3,21 @@ import styled from 'styled-components'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {TopConceptTerm} from '../types'
+import {hues} from '@sanity/color'
 
 const StyledTopConcept = styled.li`
   padding-top: 0.5rem;
   font-weight: bold;
   margin-top: 0.75rem;
+  .untitled {
+    color: ${hues.gray[400].hex};
+  }
 `
 export const TopConcepts = ({concept}: {concept: TopConceptTerm}) => {
   return (
     <StyledTopConcept>
       <Inline space={2}>
+        {!concept?.prefLabel && <span className="untitled">[Untitled]</span>}
         <ConceptDetailLink concept={concept} />
         <Text size={1} muted>
           top concept

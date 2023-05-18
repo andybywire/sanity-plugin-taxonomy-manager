@@ -21,7 +21,7 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   const routerContext = useContext(RouterContext)
   const {routerPanesState, groupIndex} = usePaneRouter()
 
-  const {id, prefLabel} = concept
+  const {id, prefLabel} = concept ?? {}
 
   const openInNewPane = useCallback(() => {
     if (!routerContext || !id) {
