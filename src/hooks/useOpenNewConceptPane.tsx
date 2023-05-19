@@ -1,3 +1,7 @@
+/**
+ * Open in New Pane Link for Concepts
+ */
+
 import {useCallback, useContext} from 'react'
 import {usePaneRouter} from 'sanity/desk'
 import {RouterContext} from 'sanity/router'
