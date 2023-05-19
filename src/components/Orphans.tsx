@@ -14,6 +14,7 @@ import {AddCircleIcon, TrashIcon} from '@sanity/icons'
 import {useCallback, useContext} from 'react'
 import {SchemeContext} from './TreeView'
 import {useCreateConcept} from '../hooks/useCreateConcept'
+import {useRemoveConcept} from '../hooks/useRemoveConcept'
 
 const StyledOrphan = styled.li`
   padding-top: 0.5rem;
@@ -27,6 +28,7 @@ const StyledOrphan = styled.li`
 export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
   const document: any = useContext(SchemeContext) || {}
   const createConcept = useCreateConcept(document)
+  const removeConcept = useRemoveConcept(document)
 
   const handleAddChild = useCallback(() => {
     // TODO: Add in the data to create as child concept
@@ -35,9 +37,10 @@ export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
 
   const handleRemoveConcept = useCallback(() => {
     // TODO: Add in the functionality to remove concept
+    removeConcept(concept.id)
     // eslint-disable-next-line no-alert
-    alert('Remove concept — TBD')
-  }, [])
+    // alert('Remove concept — TBD')
+  }, [concept.id, removeConcept])
 
   return (
     <StyledOrphan key={concept.id}>

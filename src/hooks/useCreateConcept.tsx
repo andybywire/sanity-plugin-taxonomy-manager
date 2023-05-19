@@ -43,6 +43,7 @@ export function useCreateConcept(document: any) {
         // .patch(draftDoc)
         // .set({testValue: true})
         // .patch(draftDoc, (patch) => patch.set({testValue: topConcept._id}))
+        // consider using .append: https://www.sanity.io/docs/js-client#appending-prepending-elements-to-an-array
         .patch(documentId, (patch) => {
           if (conceptType == 'topConcept') {
             return patch
