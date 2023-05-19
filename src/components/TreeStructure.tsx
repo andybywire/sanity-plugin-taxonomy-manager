@@ -1,7 +1,7 @@
 import {Orphans} from './Orphans'
 import {TopConcepts} from './TopConcepts'
 import styled from 'styled-components'
-import {TopConceptTerm, ChildConceptTerm, DocumentConcepts} from '../types'
+import {TopConceptTerm, ChildConceptTerm} from '../types'
 import {Card, Stack, Label, Text} from '@sanity/ui'
 
 const StyledTree = styled.ul`
@@ -10,7 +10,8 @@ const StyledTree = styled.ul`
   margin-block-start: 0;
 `
 
-export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {
+export const TreeStructure = (data: any) => {
+  const {concepts} = data
   if (concepts.topConcepts === null && concepts.orphans.length === 0)
     return (
       <Card padding={4}>
@@ -33,7 +34,7 @@ export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {
           return <TopConcepts key={concept?.id} concept={concept} />
         })}
       {concepts.orphans.map((concept: ChildConceptTerm) => {
-        return <Orphans key={concept.id} concept={concept} docConcepts={concepts} />
+        return <Orphans key={concept.id} concept={concept} />
       })}
     </StyledTree>
   )

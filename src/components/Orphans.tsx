@@ -8,9 +8,12 @@ import styled from 'styled-components'
 import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
-import {ChildConceptTerm, DocumentConcepts} from '../types'
+import {ChildConceptTerm} from '../types'
 import {hues} from '@sanity/color'
 import {AddCircleIcon, TrashIcon} from '@sanity/icons'
+import {useCallback, useContext} from 'react'
+import {SchemeContext} from './TreeView'
+import {useCreateConcept} from '../hooks/useCreateConcept'
 
 const StyledOrphan = styled.li`
   padding-top: 0.5rem;
@@ -21,19 +24,27 @@ const StyledOrphan = styled.li`
   }
 `
 
-export const Orphans = ({
-  concept,
-  docConcepts,
-}: {
-  concept: ChildConceptTerm
-  docConcepts: DocumentConcepts
-}) => {
+export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
+  const document: any = useContext(SchemeContext) || {}
+  const createConcept = useCreateConcept(document)
+
+  const handleAddChild = useCallback(() => {
+    // TODO: Add in the data to create as child concept
+    createConcept('concept')
+  }, [createConcept])
+
+  const handleRemoveConcept = useCallback(() => {
+    // TODO: Add in the functionality to remove concept
+    // eslint-disable-next-line no-alert
+    alert('Remove concept — TBD')
+  }, [])
+
   return (
     <StyledOrphan key={concept.id}>
       <Inline space={2}>
         {!concept?.prefLabel && <span className="untitled">[Untitled]</span>}
         <ConceptDetailLink concept={concept} />
-        {docConcepts.topConcepts?.length > 0 && (
+        {document.displayed?.topConcepts?.length > 0 && (
           <Text size={1} muted>
             orphan
           </Text>
@@ -51,7 +62,8 @@ export const Orphans = ({
           fallbackPlacements={['right', 'left']}
           placement="top"
         >
-          <AddCircleIcon />
+          {/* Pass props to identify this element to an event handler */}
+          <AddCircleIcon onClick={handleAddChild} />
         </Tooltip>
         <Tooltip
           content={
@@ -66,7 +78,7 @@ export const Orphans = ({
           fallbackPlacements={['right', 'left']}
           placement="top"
         >
-          <TrashIcon />
+          <TrashIcon onClick={handleRemoveConcept} />
         </Tooltip>
       </Inline>
       {concept?.childConcepts && concept.childConcepts.length > 0 && (

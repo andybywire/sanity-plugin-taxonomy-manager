@@ -14,15 +14,14 @@ import {TreeStructure} from './TreeStructure'
 import {trunkBuilder} from './queries'
 import {DocumentConcepts} from '../types'
 
-// consider useDocumentStore here: https://www.sanity.io/docs/studio-react-hooks#7a5503c777f4
-
 export const Hierarchy = ({documentId}: {documentId: string}) => {
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
       fetch: trunkBuilder(),
       listen: `*[_type == "skosConcept"]`,
-      // this is more precise, but also appears to be unreliable:
+      // ⬇ this is more precise, but also appears to be unreliable
       // listen: `*[_type == "skosConcept" && _id in *[_id == $id].topConcepts[]._ref]`,
+      // consider also the need to eventually include the skosConceptScheme doc in the query
     },
     {
       params: {id: documentId},

@@ -8,7 +8,7 @@
 import {Container, Stack, Box, Text, Inline, Button} from '@sanity/ui'
 import {AddIcon} from '@sanity/icons'
 import Hierarchy from './Hierarchy'
-import {useCallback} from 'react'
+import {useCallback, createContext} from 'react'
 import {useCreateConcept} from '../hooks/useCreateConcept'
 
 // Need to pass into this component:
@@ -20,6 +20,8 @@ import {useCreateConcept} from '../hooks/useCreateConcept'
 // - add 'unpublished' badge to newly added concepts not yet published
 // - disable add concept at 5th level; add info icon and tooltip message (or AccessDeniedIcon)
 // - on delete (RemoveCircleIcon), remove from tree and add message in toast: "Concept removed from concept scheme, but not deleted from your concept store. [View Concept] to delete or modify"
+
+export const SchemeContext = createContext(null)
 
 export const TreeView = ({document}: {document: any}) => {
   const documentId = document.displayed._id
@@ -34,41 +36,43 @@ export const TreeView = ({document}: {document: any}) => {
   }, [createConcept])
 
   return (
-    <Container width={1} style={{paddingTop: '1.25rem'}}>
-      <Box padding={4}>
-        <Stack space={4}>
-          <Stack space={2}>
-            <Text size={1} weight="semibold">
-              Hierarchy Tree
-            </Text>
-            <Text size={1} muted>
-              Concept hierarchy is determined by 'Broader' relationships assigned to each concept.
-            </Text>
+    <SchemeContext.Provider value={document}>
+      <Container width={1} style={{paddingTop: '1.25rem'}}>
+        <Box padding={4}>
+          <Stack space={4}>
+            <Stack space={2}>
+              <Text size={1} weight="semibold">
+                Hierarchy Tree
+              </Text>
+              <Text size={1} muted>
+                Concept hierarchy is determined by 'Broader' relationships assigned to each concept.
+              </Text>
+            </Stack>
+            <Inline space={3}>
+              {/* TBD where expand | collapse go. — SelectIcon/TruncateIcon */}
+              {/* Convenience buttons are visible when a toggle is enabled — "Show editor controls in hierarchy view" */}
+              {/* "Show controls" defaults to on; on publish there is a hint to turn them off — ideally a dialogue on the publish action, if not maybe a question and live edit on the toast message. */}
+              {/* Hierarchy view then is description, hierarchy label and description, hierarchy view controls, hierarchy, then [+ top concept] | [+ concept] below. With a view toggle for the hierarchy view, maybe "remove" doesn't need to be hidden. Just show a confirm when it's clicked. */}
+              <Button
+                tone="primary"
+                fontSize={1}
+                icon={AddIcon}
+                onClick={createTopConcept}
+                text="Top Concept"
+              />
+              <Button
+                tone="primary"
+                fontSize={1}
+                icon={AddIcon}
+                onClick={createEntryConcept}
+                text="Concept"
+              />
+            </Inline>
+            <Hierarchy documentId={documentId} />
           </Stack>
-          <Inline space={3}>
-            {/* TBD where expand | collapse go. — SelectIcon/TruncateIcon */}
-            {/* Convenience buttons are visible when a toggle is enabled — "Show editor controls in hierarchy view" */}
-            {/* "Show controls" defaults to on; on publish there is a hint to turn them off — ideally a dialogue on the publish action, if not maybe a question and live edit on the toast message. */}
-            {/* Hierarchy view then is description, hierarchy label and description, hierarchy view controls, hierarchy, then [+ top concept] | [+ concept] below. With a view toggle for the hierarchy view, maybe "remove" doesn't need to be hidden. Just show a confirm when it's clicked. */}
-            <Button
-              tone="primary"
-              fontSize={1}
-              icon={AddIcon}
-              onClick={createTopConcept}
-              text="Top Concept"
-            />
-            <Button
-              tone="primary"
-              fontSize={1}
-              icon={AddIcon}
-              onClick={createEntryConcept}
-              text="Concept"
-            />
-          </Inline>
-          <Hierarchy documentId={documentId} />
-        </Stack>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </SchemeContext.Provider>
   )
 }
 
