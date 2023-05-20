@@ -18,7 +18,7 @@ export const Hierarchy = ({documentId}: {documentId: string}) => {
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
       fetch: trunkBuilder(),
-      listen: `*[_type == "skosConcept"]`,
+      listen: `*[_type == "skosConcept" || _id == $id]`,
       // ⬇ this is more precise, but also appears to be unreliable
       // listen: `*[_type == "skosConcept" && _id in *[_id == $id].topConcepts[]._ref]`,
       // consider also the need to eventually include the skosConceptScheme doc in the query
