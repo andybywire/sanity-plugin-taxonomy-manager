@@ -20,29 +20,33 @@ export function useCreateConcept(document: any) {
   const schemaBaseIri = document.displayed.baseIri
 
   const createConcept = useCallback(
-    (conceptType: string) => {
+    (conceptType: string, conceptId?: string, prefLabel?: string) => {
       const skosConcept = {
         _id: `sc-${randomKey(6)}`,
         _type: 'skosConcept',
         prefLabel: '',
         baseIri: schemaBaseIri,
-        broader: [],
+        broader: [
+          (conceptId && {
+            _key: randomKey(6),
+            _ref: conceptId,
+            _type: 'reference',
+          }) ||
+            null,
+        ],
         related: [],
       }
 
       toast.push({
         closable: true,
         status: 'info',
-        title: 'Creating top concept',
-        description: 'This message is just a test.',
+        title: 'Creating concept',
+        // description: 'This message is just a test.',
       })
 
       client
         .transaction()
         .create(skosConcept)
-        // .patch(draftDoc)
-        // .set({testValue: true})
-        // .patch(draftDoc, (patch) => patch.set({testValue: topConcept._id}))
         // consider using .append: https://www.sanity.io/docs/js-client#appending-prepending-elements-to-an-array
         .patch(documentId, (patch) => {
           if (conceptType == 'topConcept') {
@@ -59,8 +63,8 @@ export function useCreateConcept(document: any) {
           toast.push({
             closable: true,
             status: 'success',
-            title: 'Top concept created',
-            description: `Top concept created.`,
+            title: 'Concept created',
+            // description: `Concept created.`,
           })
           openInNewPane(res.documentIds[0])
         })
@@ -68,7 +72,7 @@ export function useCreateConcept(document: any) {
           toast.push({
             closable: true,
             status: 'error',
-            title: 'Error creating top concept',
+            title: 'Error creating concept',
             description: err.message,
           })
         })
