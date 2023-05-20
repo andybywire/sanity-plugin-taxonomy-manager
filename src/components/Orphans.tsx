@@ -31,9 +31,8 @@ export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
   const removeConcept = useRemoveConcept(document)
 
   const handleAddChild = useCallback(() => {
-    // TODO: Add in the data to create as child concept
-    createConcept('concept')
-  }, [createConcept])
+    createConcept('concept', concept?.id, concept?.prefLabel)
+  }, [concept?.id, concept?.prefLabel, createConcept])
 
   const handleRemoveConcept = useCallback(() => {
     removeConcept(concept.id, 'concept', concept?.prefLabel)
