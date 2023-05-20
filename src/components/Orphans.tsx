@@ -36,11 +36,8 @@ export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
   }, [createConcept])
 
   const handleRemoveConcept = useCallback(() => {
-    // TODO: Add in the functionality to remove concept
-    removeConcept(concept.id)
-    // eslint-disable-next-line no-alert
-    // alert('Remove concept — TBD')
-  }, [concept.id, removeConcept])
+    removeConcept(concept.id, 'concept', concept?.prefLabel)
+  }, [concept.id, concept?.prefLabel, removeConcept])
 
   return (
     <StyledOrphan key={concept.id}>

@@ -19,17 +19,18 @@ export function useRemoveConcept(document: any) {
 
   // conceptId is the id of the concept to be removed
   const removeConcept = useCallback(
-    (conceptId: string) => {
+    (conceptId: string, conceptType: string, prefLabel?: string) => {
+      const type = conceptType == 'topConcept' ? 'topConcepts' : 'concepts'
+
       client
         .patch(documentId)
-        .unset([`concepts[_ref=="${conceptId}"]`])
+        .unset([`${type}[_ref=="${conceptId}"]`])
         .commit()
         .then((res) => {
           toast.push({
             closable: true,
             status: 'success',
-            title: 'Concept removed',
-            description: `Concept removed — name it.`,
+            title: `${prefLabel ? `"${prefLabel}"` : 'Concept'} removed from scheme`,
           })
         })
         .catch((err) => {
