@@ -12,9 +12,9 @@
 // import config from 'config:taxonomy-manager'
 import {AiFillTag, AiFillTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
-import {PrefLabel} from './components/PrefLabel'
 import {DescriptionDetail} from './styles'
 import baseIriField from './modules/baseIriField'
+import {randomKey} from '@sanity/util/content'
 
 export default defineType({
   name: 'skosConcept',
@@ -36,14 +36,19 @@ export default defineType({
   },
   fields: [
     defineField({
+      name: 'conceptId',
+      title: 'Concept ID',
+      type: 'string',
+      initialValue: () => `c_${randomKey(6)}`,
+      hidden: true,
+      readOnly: true,
+    }),
+    defineField({
       name: 'prefLabel',
       title: 'Preferred Label',
       type: 'string',
       description:
         'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
-      components: {
-        input: PrefLabel as any,
-      },
       // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well.
       validation: (Rule) =>
         Rule.required().custom((prefLabel, context) => {
@@ -60,6 +65,46 @@ export default defineType({
               return true
             })
         }),
+    }),
+    defineField({
+      name: 'definition',
+      title: 'Definition',
+      type: 'text',
+      description: 'A complete explanation of the intended meaning of the concept',
+      rows: 3,
+    }),
+    defineField({
+      name: 'example',
+      title: 'Examples',
+      type: 'text',
+      description: 'An example of the use of the concept.',
+      rows: 3,
+    }),
+    defineField({
+      name: 'scopeNote',
+      title: 'Scope Note',
+      type: 'text',
+      description:
+        'A brief statement on the intended meaning of this concept, especially as an indication of how the use of the concept is limited in indexing practice',
+      rows: 3,
+    }),
+    defineField({
+      name: 'altLabel',
+      title: 'Alternate Label(s)',
+      type: 'array',
+      description:
+        'Alternative labels can be used to assign synonyms, near-synonyms, abbreviations, and acronyms to a concept. Preferred, alternative, and hidden label sets must not overlap.',
+      of: [{type: 'string'}],
+      validation: (Rule) => Rule.unique(),
+    }),
+    defineField({
+      name: 'hiddenLabel',
+      title: 'Hidden Label(s)',
+      type: 'array',
+      description:
+        'Hidden labels are for character strings that need to be accessible to applications performing text-based indexing and search operations, but not visible otherwise. Hidden labels may for instance be used to include misspelled variants of other lexical labels. Preferred, alternative, and hidden label sets must not overlap.',
+      of: [{type: 'string'}],
+      validation: (Rule) => Rule.unique(),
     }),
     ...baseIriField,
     defineField({
@@ -108,46 +153,6 @@ export default defineType({
           to: [{type: 'skosConcept'}],
         },
       ],
-    }),
-    defineField({
-      name: 'altLabel',
-      title: 'Alternate Label(s)',
-      type: 'array',
-      description:
-        'Alternative labels can be used to assign synonyms, near-synonyms, abbreviations, and acronyms to a concept. Preferred, alternative, and hidden label sets must not overlap.',
-      of: [{type: 'string'}],
-      validation: (Rule) => Rule.unique(),
-    }),
-    defineField({
-      name: 'hiddenLabel',
-      title: 'Hidden Label(s)',
-      type: 'array',
-      description:
-        'Hidden labels are for character strings that need to be accessible to applications performing text-based indexing and search operations, but not visible otherwise. Hidden labels may for instance be used to include misspelled variants of other lexical labels. Preferred, alternative, and hidden label sets must not overlap.',
-      of: [{type: 'string'}],
-      validation: (Rule) => Rule.unique(),
-    }),
-    defineField({
-      name: 'scopeNote',
-      title: 'Scope Note',
-      type: 'text',
-      description:
-        'A brief statement on the intended meaning of this concept, especially as an indication of how the use of the concept is limited in indexing practice',
-      rows: 3,
-    }),
-    defineField({
-      name: 'definition',
-      title: 'Definition',
-      type: 'text',
-      description: 'A complete explanation of the intended meaning of the concept',
-      rows: 3,
-    }),
-    defineField({
-      name: 'example',
-      title: 'Examples',
-      type: 'text',
-      description: 'An example of the use of the concept.',
-      rows: 3,
     }),
     defineField({
       name: 'historyNote',

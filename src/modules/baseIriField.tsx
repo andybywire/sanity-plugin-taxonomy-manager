@@ -1,5 +1,6 @@
 import {defineField} from 'sanity'
 import {DescriptionDetail} from '../styles'
+import {RdfUri} from '../components/RdfUri'
 
 export default [
   defineField({
@@ -30,6 +31,9 @@ export default [
     ),
     options: {
       collapsible: true,
+    },
+    components: {
+      input: RdfUri as any,
     },
   }),
 ]
