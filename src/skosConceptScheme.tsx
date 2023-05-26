@@ -10,6 +10,7 @@ import {RiNodeTree} from 'react-icons/ri'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import {PrefLabel} from './components/PrefLabel'
 import baseIriField from './modules/baseIriField'
+import {randomKey} from '@sanity/util/content'
 
 export default defineType({
   name: 'skosConceptScheme',
@@ -28,6 +29,14 @@ export default defineType({
     }
   },
   fields: [
+    defineField({
+      name: 'schemeId',
+      title: 'Scheme ID',
+      type: 'string',
+      initialValue: () => `s_${randomKey(6)}`,
+      hidden: true,
+      readOnly: true,
+    }),
     defineField({
       name: 'title',
       title: 'Title',

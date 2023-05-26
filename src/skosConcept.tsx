@@ -15,6 +15,7 @@ import {defineType, defineField} from 'sanity'
 import {PrefLabel} from './components/PrefLabel'
 import {DescriptionDetail} from './styles'
 import baseIriField from './modules/baseIriField'
+import {randomKey} from '@sanity/util/content'
 
 export default defineType({
   name: 'skosConcept',
@@ -35,6 +36,14 @@ export default defineType({
     }
   },
   fields: [
+    defineField({
+      name: 'conceptId',
+      title: 'Concept ID',
+      type: 'string',
+      initialValue: () => `c_${randomKey(6)}`,
+      hidden: true,
+      readOnly: true,
+    }),
     defineField({
       name: 'prefLabel',
       title: 'Preferred Label',
