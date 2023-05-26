@@ -66,6 +66,46 @@ export default defineType({
             })
         }),
     }),
+    defineField({
+      name: 'definition',
+      title: 'Definition',
+      type: 'text',
+      description: 'A complete explanation of the intended meaning of the concept',
+      rows: 3,
+    }),
+    defineField({
+      name: 'example',
+      title: 'Examples',
+      type: 'text',
+      description: 'An example of the use of the concept.',
+      rows: 3,
+    }),
+    defineField({
+      name: 'scopeNote',
+      title: 'Scope Note',
+      type: 'text',
+      description:
+        'A brief statement on the intended meaning of this concept, especially as an indication of how the use of the concept is limited in indexing practice',
+      rows: 3,
+    }),
+    defineField({
+      name: 'altLabel',
+      title: 'Alternate Label(s)',
+      type: 'array',
+      description:
+        'Alternative labels can be used to assign synonyms, near-synonyms, abbreviations, and acronyms to a concept. Preferred, alternative, and hidden label sets must not overlap.',
+      of: [{type: 'string'}],
+      validation: (Rule) => Rule.unique(),
+    }),
+    defineField({
+      name: 'hiddenLabel',
+      title: 'Hidden Label(s)',
+      type: 'array',
+      description:
+        'Hidden labels are for character strings that need to be accessible to applications performing text-based indexing and search operations, but not visible otherwise. Hidden labels may for instance be used to include misspelled variants of other lexical labels. Preferred, alternative, and hidden label sets must not overlap.',
+      of: [{type: 'string'}],
+      validation: (Rule) => Rule.unique(),
+    }),
     ...baseIriField,
     defineField({
       name: 'conceptIriBase',
@@ -113,46 +153,6 @@ export default defineType({
           to: [{type: 'skosConcept'}],
         },
       ],
-    }),
-    defineField({
-      name: 'altLabel',
-      title: 'Alternate Label(s)',
-      type: 'array',
-      description:
-        'Alternative labels can be used to assign synonyms, near-synonyms, abbreviations, and acronyms to a concept. Preferred, alternative, and hidden label sets must not overlap.',
-      of: [{type: 'string'}],
-      validation: (Rule) => Rule.unique(),
-    }),
-    defineField({
-      name: 'hiddenLabel',
-      title: 'Hidden Label(s)',
-      type: 'array',
-      description:
-        'Hidden labels are for character strings that need to be accessible to applications performing text-based indexing and search operations, but not visible otherwise. Hidden labels may for instance be used to include misspelled variants of other lexical labels. Preferred, alternative, and hidden label sets must not overlap.',
-      of: [{type: 'string'}],
-      validation: (Rule) => Rule.unique(),
-    }),
-    defineField({
-      name: 'scopeNote',
-      title: 'Scope Note',
-      type: 'text',
-      description:
-        'A brief statement on the intended meaning of this concept, especially as an indication of how the use of the concept is limited in indexing practice',
-      rows: 3,
-    }),
-    defineField({
-      name: 'definition',
-      title: 'Definition',
-      type: 'text',
-      description: 'A complete explanation of the intended meaning of the concept',
-      rows: 3,
-    }),
-    defineField({
-      name: 'example',
-      title: 'Examples',
-      type: 'text',
-      description: 'An example of the use of the concept.',
-      rows: 3,
     }),
     defineField({
       name: 'historyNote',

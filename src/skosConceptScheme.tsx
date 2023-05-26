@@ -43,7 +43,6 @@ export default defineType({
       description:
         'Taxonomy schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like',
     }),
-    ...baseIriField,
     defineField({
       name: 'description',
       title: 'Description',
@@ -58,6 +57,7 @@ export default defineType({
       type: 'boolean',
       initialValue: true,
     }),
+    ...baseIriField,
     defineField({
       name: 'topConcepts',
       title: 'Top Concepts',
