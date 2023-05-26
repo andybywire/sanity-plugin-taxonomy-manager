@@ -8,7 +8,6 @@
 
 import {RiNodeTree} from 'react-icons/ri'
 import {defineArrayMember, defineField, defineType} from 'sanity'
-import {PrefLabel} from './components/PrefLabel'
 import baseIriField from './modules/baseIriField'
 import {randomKey} from '@sanity/util/content'
 
@@ -43,9 +42,6 @@ export default defineType({
       type: 'string',
       description:
         'Taxonomy schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like',
-      components: {
-        input: PrefLabel as any,
-      },
     }),
     ...baseIriField,
     defineField({

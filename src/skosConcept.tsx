@@ -12,7 +12,6 @@
 // import config from 'config:taxonomy-manager'
 import {AiFillTag, AiFillTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
-import {PrefLabel} from './components/PrefLabel'
 import {DescriptionDetail} from './styles'
 import baseIriField from './modules/baseIriField'
 import {randomKey} from '@sanity/util/content'
@@ -50,9 +49,6 @@ export default defineType({
       type: 'string',
       description:
         'The preferred lexical label for this concept. This label is also used to unambiguously represent this concept via the concept IRI.',
-      components: {
-        input: PrefLabel as any,
-      },
       // If there is a published concept with the current document's prefLabel, return an error message, but only for concepts with distinct _ids — otherwise editing an existing concept shows the error message as well.
       validation: (Rule) =>
         Rule.required().custom((prefLabel, context) => {
