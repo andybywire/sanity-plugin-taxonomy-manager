@@ -47,6 +47,13 @@ export default defineType({
       description: 'Describe the intended use of this scheme.',
     }),
     defineField({
+      name: 'controls',
+      title: 'Concept Management Controls',
+      description: 'Show concept management controls in hierarchy view',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    defineField({
       name: 'topConcepts',
       title: 'Top Concepts',
       type: 'array',

@@ -2,7 +2,6 @@
  * Concept Removal Hook
  * Used for removing concepts and top concepts from the Concept Scheme
  * hierarchy view.
- * @todo: add in logic for removing top concepts vs concepts
  */
 
 import {useClient} from 'sanity'
@@ -46,27 +45,3 @@ export function useRemoveConcept(document: any) {
   )
   return removeConcept
 }
-
-//         .commit()
-//         .then((res) => {
-//           toast.push({
-//             closable: true,
-//             status: 'success',
-//             title: 'Top concept created',
-//             description: `Top concept created.`,
-//           })
-//           openInNewPane(res.documentIds[0])
-//         })
-//         .catch((err) => {
-//           toast.push({
-//             closable: true,
-//             status: 'error',
-//             title: 'Error creating top concept',
-//             description: err.message,
-//           })
-//         })
-//     },
-//     [schemaBaseIri, toast, client, documentId, openInNewPane]
-//   )
-//   return createConcept
-// }

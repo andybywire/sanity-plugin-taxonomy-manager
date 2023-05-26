@@ -1,6 +1,7 @@
 export interface ChildConceptTerm {
   prefLabel: string
   id: string
+  level?: number
   childConcepts?: ChildConceptTerm[]
 }
 

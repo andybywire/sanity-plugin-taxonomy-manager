@@ -1,31 +1,49 @@
+/**
+ * Concept Scheme Tree View
+ * - Fetches the complete tree of concepts in a concept scheme.
+ * - Displays the tree in a nested list.
+ * @todo Add functionality to expand/collapse the tree.
+ */
+
 import {Orphans} from './Orphans'
 import {TopConcepts} from './TopConcepts'
 import styled from 'styled-components'
 import {TopConceptTerm, ChildConceptTerm} from '../types'
-import {Card, Stack, Label, Text} from '@sanity/ui'
+import {hues} from '@sanity/color'
+import {NoConcepts} from './guides/NoConcepts'
 
 const StyledTree = styled.ul`
   list-style: none;
   padding-left: 0;
   margin-block-start: 0;
+  li svg {
+    height: 1.2rem;
+    width: 1.2rem;
+    color: ${hues.gray[800].hex};
+    border-radius: 3px;
+    transition: all 0.2s ease-in-out;
+    &.normal:hover {
+      color: ${hues.gray[100].hex};
+      background-color: ${hues.green[500].hex};
+    }
+    &.warning:hover {
+      color: ${hues.gray[100].hex};
+      background-color: ${hues.yellow[500].hex};
+    }
+    &.error {
+      color: ${hues.red[500].hex};
+    }
+    &.error:hover,
+    &.critical:hover {
+      color: ${hues.gray[100].hex};
+      background-color: ${hues.red[500].hex};
+    }
+  }
 `
 
 export const TreeStructure = (data: any) => {
   const {concepts} = data
-  if (concepts.topConcepts === null && concepts.orphans.length === 0)
-    return (
-      <Card padding={4}>
-        <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="caution">
-          <Stack space={3}>
-            <Label size={3}>No Concepts</Label>
-            <Text size={2}>
-              There are not yet any concepts assigned to this scheme. To add concepts, got to the
-              "Editor" tab and add or create new Top Concepts or Concepts.
-            </Text>
-          </Stack>
-        </Card>
-      </Card>
-    )
+  if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
 
   return (
     <StyledTree>

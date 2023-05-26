@@ -16,43 +16,49 @@ export function useCreateConcept(document: any) {
   const client = useClient({apiVersion: '2021-10-21'})
   const openInNewPane = useOpenNewConceptPane()
 
-  const documentId = document.displayed._id
-  const schemaBaseIri = document.displayed.baseIri
+  // eslint-disable-next-line no-console
+  console.log(document)
+
+  const documentId = document.displayed._id // schema id
+  const schemaBaseIri = document.displayed.baseIri // schema baseIri
 
   const createConcept = useCallback(
     (conceptType: string, conceptId?: string, prefLabel?: string) => {
-      const skosConcept = {
-        _id: `sc-${randomKey(6)}`,
-        _type: 'skosConcept',
-        prefLabel: '',
-        baseIri: schemaBaseIri,
-        broader: [
-          (conceptId && {
-            _key: randomKey(6),
-            _ref: conceptId,
-            _type: 'reference',
-          }) ||
-            null,
-        ],
-        related: [],
+      let skosConcept: any
+      if (conceptId) {
+        skosConcept = {
+          _id: `${randomKey()}`,
+          _type: 'skosConcept',
+          prefLabel: '',
+          baseIri: schemaBaseIri,
+          broader: [
+            conceptId && {
+              _key: randomKey(6),
+              _ref: conceptId,
+              _type: 'reference',
+            },
+          ],
+          related: [],
+        }
+      } else {
+        skosConcept = {
+          _id: `${randomKey()}`,
+          _type: 'skosConcept',
+          prefLabel: '',
+          baseIri: schemaBaseIri,
+          broader: [],
+          related: [],
+        }
       }
-
-      toast.push({
-        closable: true,
-        status: 'info',
-        title: 'Creating concept',
-        // description: 'This message is just a test.',
-      })
 
       client
         .transaction()
         .create(skosConcept)
-        // consider using .append: https://www.sanity.io/docs/js-client#appending-prepending-elements-to-an-array
         .patch(documentId, (patch) => {
           if (conceptType == 'topConcept') {
             return patch
               .setIfMissing({topConcepts: []})
-              .insert('after', 'topConcepts[-1]', [{_ref: skosConcept._id, _type: 'reference'}])
+              .append('topConcepts', [{_ref: skosConcept._id, _type: 'reference'}])
           }
           return patch
             .setIfMissing({concepts: []})
@@ -63,7 +69,7 @@ export function useCreateConcept(document: any) {
           toast.push({
             closable: true,
             status: 'success',
-            title: 'Concept created',
+            title: 'Created new concept',
             // description: `Concept created.`,
           })
           openInNewPane(res.documentIds[0])

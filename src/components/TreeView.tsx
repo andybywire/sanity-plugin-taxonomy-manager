@@ -5,11 +5,10 @@
  * taxonomy documents.
  */
 
-import {Container, Stack, Box, Text, Inline, Button} from '@sanity/ui'
-import {AddIcon} from '@sanity/icons'
+import {Box, Container, Stack, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
-import {useCallback, createContext} from 'react'
-import {useCreateConcept} from '../hooks/useCreateConcept'
+import {createContext} from 'react'
+import {CSSProperties} from 'react'
 
 // Need to pass into this component:
 // - documentId with draft status ✔︎
@@ -24,53 +23,26 @@ import {useCreateConcept} from '../hooks/useCreateConcept'
 export const SchemeContext = createContext(null)
 
 export const TreeView = ({document}: {document: any}) => {
-  const documentId = document.displayed._id
-  const createConcept = useCreateConcept(document)
-
-  const createTopConcept = useCallback(() => {
-    createConcept('topConcept')
-  }, [createConcept])
-
-  const createEntryConcept = useCallback(() => {
-    createConcept('concept')
-  }, [createConcept])
-
+  const containerStyle: CSSProperties = {paddingTop: '1.25rem'}
+  const descriptionStyle: CSSProperties = {whiteSpace: 'pre-wrap'}
   return (
     <SchemeContext.Provider value={document}>
-      <Container width={1} style={{paddingTop: '1.25rem'}}>
-        <Box padding={4}>
-          <Stack space={4}>
-            <Stack space={2}>
-              <Text size={1} weight="semibold">
-                Hierarchy Tree
-              </Text>
-              <Text size={1} muted>
-                Concept hierarchy is determined by 'Broader' relationships assigned to each concept.
-              </Text>
+      <Container width={1} style={containerStyle}>
+        {document.displayed?.description && (
+          <Box padding={4}>
+            <Stack space={4}>
+              <Stack space={2}>
+                <Text size={1} weight="semibold">
+                  Description
+                </Text>
+                <Text size={2} muted style={descriptionStyle}>
+                  {document.displayed.description}
+                </Text>
+              </Stack>
             </Stack>
-            <Inline space={3}>
-              {/* TBD where expand | collapse go. — SelectIcon/TruncateIcon */}
-              {/* Convenience buttons are visible when a toggle is enabled — "Show editor controls in hierarchy view" */}
-              {/* "Show controls" defaults to on; on publish there is a hint to turn them off — ideally a dialogue on the publish action, if not maybe a question and live edit on the toast message. */}
-              {/* Hierarchy view then is description, hierarchy label and description, hierarchy view controls, hierarchy, then [+ top concept] | [+ concept] below. With a view toggle for the hierarchy view, maybe "remove" doesn't need to be hidden. Just show a confirm when it's clicked. */}
-              <Button
-                tone="primary"
-                fontSize={1}
-                icon={AddIcon}
-                onClick={createTopConcept}
-                text="Top Concept"
-              />
-              <Button
-                tone="primary"
-                fontSize={1}
-                icon={AddIcon}
-                onClick={createEntryConcept}
-                text="Concept"
-              />
-            </Inline>
-            <Hierarchy documentId={documentId} />
-          </Stack>
-        </Box>
+          </Box>
+        )}
+        <Hierarchy />
       </Container>
     </SchemeContext.Provider>
   )

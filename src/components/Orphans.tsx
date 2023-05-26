@@ -19,7 +19,7 @@ import {useRemoveConcept} from '../hooks/useRemoveConcept'
 const StyledOrphan = styled.li`
   padding-top: 0.5rem;
   font-weight: normal;
-  margin-top: 0.75rem;
+  margin-top: 1.2rem;
   .untitled {
     color: ${hues.gray[400].hex};
   }
@@ -41,44 +41,48 @@ export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
   return (
     <StyledOrphan key={concept.id}>
       <Inline space={2}>
-        {!concept?.prefLabel && <span className="untitled">[Untitled]</span>}
+        {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
         <ConceptDetailLink concept={concept} />
         {document.displayed?.topConcepts?.length > 0 && (
           <Text size={1} muted>
             orphan
           </Text>
         )}
-        <Tooltip
-          content={
-            <Box padding={2} sizing="border">
-              <Stack padding={1} space={2}>
-                <Text muted size={1}>
-                  Add a child concept
-                </Text>
-              </Stack>
-            </Box>
-          }
-          fallbackPlacements={['right', 'left']}
-          placement="top"
-        >
-          {/* Pass props to identify this element to an event handler */}
-          <AddCircleIcon onClick={handleAddChild} />
-        </Tooltip>
-        <Tooltip
-          content={
-            <Box padding={2} sizing="border">
-              <Stack padding={1} space={2}>
-                <Text muted size={1}>
-                  Remove concept from scheme
-                </Text>
-              </Stack>
-            </Box>
-          }
-          fallbackPlacements={['right', 'left']}
-          placement="top"
-        >
-          <TrashIcon onClick={handleRemoveConcept} />
-        </Tooltip>
+        {document.displayed?.controls && (
+          <>
+            <Tooltip
+              content={
+                <Box padding={2} sizing="border">
+                  <Stack padding={1} space={2}>
+                    <Text muted size={1}>
+                      Add a child concept
+                    </Text>
+                  </Stack>
+                </Box>
+              }
+              fallbackPlacements={['right', 'left']}
+              placement="top"
+            >
+              {/* Pass props to identify this element to an event handler */}
+              <AddCircleIcon className="normal" onClick={handleAddChild} />
+            </Tooltip>
+            <Tooltip
+              content={
+                <Box padding={2} sizing="border">
+                  <Stack padding={1} space={2}>
+                    <Text muted size={1}>
+                      Remove concept from scheme
+                    </Text>
+                  </Stack>
+                </Box>
+              }
+              fallbackPlacements={['right', 'left']}
+              placement="top"
+            >
+              <TrashIcon className="critical" onClick={handleRemoveConcept} />
+            </Tooltip>
+          </>
+        )}
       </Inline>
       {concept?.childConcepts && concept.childConcepts.length > 0 && (
         <ChildConcepts concepts={concept.childConcepts} />
