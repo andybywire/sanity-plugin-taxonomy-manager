@@ -6,8 +6,9 @@
 
 import {useFormValue} from 'sanity'
 import {Stack, Text} from '@sanity/ui'
+import {StringInputProps} from 'sanity'
 
-export function RdfUri(props: any) {
+export function RdfUri(props: StringInputProps) {
   const conceptId = useFormValue(['conceptId'])
   const schemeId = useFormValue(['schemeId'])
   return (

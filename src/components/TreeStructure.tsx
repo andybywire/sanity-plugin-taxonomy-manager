@@ -6,13 +6,12 @@
  */
 
 import {StyledTree} from '../styles'
-import {TopConceptTerm, ChildConceptTerm} from '../types'
+import {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 import {TopConcepts} from './TopConcepts'
 import {Orphans} from './Orphans'
 import {NoConcepts} from './guides'
 
-export const TreeStructure = (data: any) => {
-  const {concepts} = data
+export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {
   if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
 
   return (

@@ -11,8 +11,9 @@ import {Card, Label, Stack, Text, Button, Dialog, Box, TextArea, TextInput} from
 import {AddIcon} from '@sanity/icons'
 import {useAddTitle} from '../../hooks'
 import {InlineHelp} from '../../styles'
+import {SanityDocument} from 'sanity'
 
-export const NewScheme = ({document}: any) => {
+export const NewScheme = ({document}: {document: SanityDocument}) => {
   const [open, setOpen] = useState(false)
   const [titleValue, setTitleValue] = useState('')
   const [descriptionValue, setDescriptionValue] = useState('')

@@ -2,6 +2,7 @@
  * Concept Scheme Tree View
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
+ * @todo type document, likely via extended SanityDocument type.
  */
 
 import {useCallback, useContext} from 'react'
