@@ -3,9 +3,9 @@
  * This component renders a list of child concepts for a given concept.
  */
 
-import styled from 'styled-components'
-import {Children} from './Children'
 import {ChildConceptTerm} from '../types'
+import {Children} from './Children'
+import styled from 'styled-components'
 
 const StyledChildConcepts = styled.ul`
   list-style: none;

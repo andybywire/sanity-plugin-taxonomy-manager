@@ -4,16 +4,16 @@
  * - Displays the tree in a nested list.
  */
 
+import {useCallback, useContext} from 'react'
 import {Flex, Spinner, Stack, Box, Text, Inline, Button} from '@sanity/ui'
 import {AddIcon} from '@sanity/icons'
 import {useListeningQuery} from 'sanity-plugin-utils'
-import {TreeStructure} from './TreeStructure'
-import {trunkBuilder} from './queries'
+import {useCreateConcept} from '../hooks'
+import {trunkBuilder} from '../queries'
 import {DocumentConcepts} from '../types'
-import {useCreateConcept} from '../hooks/useCreateConcept'
-import {useCallback, useContext} from 'react'
 import {SchemeContext} from './TreeView'
-import NewScheme from './guides/NewScheme'
+import {TreeStructure} from './TreeStructure'
+import {NewScheme} from './guides'
 
 export const Hierarchy = () => {
   const document: any = useContext(SchemeContext) || {}

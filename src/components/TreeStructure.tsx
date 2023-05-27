@@ -5,12 +5,12 @@
  * @todo Add functionality to expand/collapse the tree.
  */
 
-import {Orphans} from './Orphans'
-import {TopConcepts} from './TopConcepts'
-import styled from 'styled-components'
-import {TopConceptTerm, ChildConceptTerm} from '../types'
 import {hues} from '@sanity/color'
-import {NoConcepts} from './guides/NoConcepts'
+import {Orphans} from './Orphans'
+import {TopConceptTerm, ChildConceptTerm} from '../types'
+import {TopConcepts} from './TopConcepts'
+import {NoConcepts} from './guides'
+import styled from 'styled-components'
 
 const StyledTree = styled.ul`
   list-style: none;

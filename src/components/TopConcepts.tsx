@@ -1,15 +1,18 @@
+/**
+ * Top Concept Component
+ * Renders a list of top concepts for a given schema.
+ */
+
+import {useCallback, useContext} from 'react'
 import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
 import {AddCircleIcon, TrashIcon} from '@sanity/icons'
-import styled from 'styled-components'
-import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailLink} from './ConceptDetailLink'
-import {ConceptDetailLink} from './ConceptDetailLink'
-import {TopConceptTerm} from '../types'
 import {hues} from '@sanity/color'
-import {useCallback, useContext} from 'react'
+import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {TopConceptTerm} from '../types'
+import {ChildConcepts} from './ChildConcepts'
 import {SchemeContext} from './TreeView'
-import {useCreateConcept} from '../hooks/useCreateConcept'
-import {useRemoveConcept} from '../hooks/useRemoveConcept'
+import {ConceptDetailLink} from './ConceptDetailLink'
+import styled from 'styled-components'
 
 const StyledTopConcept = styled.li`
   padding-top: 0.5rem;

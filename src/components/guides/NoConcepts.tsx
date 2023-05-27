@@ -26,4 +26,3 @@ export const NoConcepts = ({document}: any) => {
     </InlineHelp>
   )
 }
-export default NoConcepts

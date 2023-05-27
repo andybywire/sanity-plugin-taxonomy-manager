@@ -5,20 +5,9 @@
  * taxonomy documents.
  */
 
+import {createContext, CSSProperties} from 'react'
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
-import {createContext} from 'react'
-import {CSSProperties} from 'react'
-
-// Need to pass into this component:
-// - documentId with draft status ✔︎
-// - baseUri ✔︎
-// – show new concepts in draft mode (and note that they need to be published — not this on a tool tip on "Untitled")
-// - update tree when new concepts (draft) are published ✔︎
-// - properly type the document that's passed in ✔︎
-// - add 'unpublished' badge to newly added concepts not yet published
-// - disable add concept at 5th level; add info icon and tooltip message (or AccessDeniedIcon)
-// - on delete (RemoveCircleIcon), remove from tree and add message in toast: "Concept removed from concept scheme, but not deleted from your concept store. [View Concept] to delete or modify"
 
 export const SchemeContext = createContext(null)
 

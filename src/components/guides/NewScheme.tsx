@@ -96,5 +96,3 @@ export const NewScheme = ({document}: any) => {
     </InlineHelp>
   )
 }
-
-export default NewScheme

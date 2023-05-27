@@ -1,20 +1,18 @@
 /**
  * Orphan Concept Component
- * @todo: add border and color on hover add child & remove icons
- *  - red, knocked out, border radius for remove; green for add
+ * Renders a list of orphan concepts for a given schema.
  */
 
-import styled from 'styled-components'
+import {useCallback, useContext} from 'react'
 import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
+import {AddCircleIcon, TrashIcon} from '@sanity/icons'
+import {hues} from '@sanity/color'
+import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {ChildConceptTerm} from '../types'
+import {SchemeContext} from './TreeView'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
-import {ChildConceptTerm} from '../types'
-import {hues} from '@sanity/color'
-import {AddCircleIcon, TrashIcon} from '@sanity/icons'
-import {useCallback, useContext} from 'react'
-import {SchemeContext} from './TreeView'
-import {useCreateConcept} from '../hooks/useCreateConcept'
-import {useRemoveConcept} from '../hooks/useRemoveConcept'
+import styled from 'styled-components'
 
 const StyledOrphan = styled.li`
   padding-top: 0.5rem;

@@ -5,17 +5,15 @@
  * @todo Handle childConcept and level definition checks more elegantly
  */
 
-import styled from 'styled-components'
-import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
-import {ErrorOutlineIcon, InfoOutlineIcon} from '@sanity/icons'
-import {ChildConceptTerm} from '../types'
-import {ConceptDetailLink} from './ConceptDetailLink'
-import {AddCircleIcon, TrashIcon} from '@sanity/icons'
 import {useCallback, useContext} from 'react'
+import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
+import {ErrorOutlineIcon, InfoOutlineIcon, AddCircleIcon, TrashIcon} from '@sanity/icons'
+import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {ChildConceptTerm} from '../types'
 import {SchemeContext} from './TreeView'
-import {useCreateConcept} from '../hooks/useCreateConcept'
-import {useRemoveConcept} from '../hooks/useRemoveConcept'
 import {ChildConcepts} from './ChildConcepts'
+import {ConceptDetailLink} from './ConceptDetailLink'
+import styled from 'styled-components'
 
 const StyledChildConcept = styled.li`
   font-weight: normal;

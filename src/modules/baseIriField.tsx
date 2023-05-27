@@ -1,6 +1,11 @@
+/**
+ * Base Universal Resource Identifier object for Sanity Taxonomy Manager
+ * Used for Concept and Concept Scheme URI fields
+ */
+
 import {defineField} from 'sanity'
 import {DescriptionDetail} from '../styles'
-import {RdfUri} from '../components/RdfUri'
+import {RdfUri} from '../components/inputs'
 
 export default [
   defineField({

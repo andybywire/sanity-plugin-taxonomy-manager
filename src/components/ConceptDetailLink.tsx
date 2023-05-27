@@ -4,9 +4,9 @@
  * @todo Adapt to use the New Concept Pane hook (it's death spiraling at the moment)
  */
 
+import {useCallback, useContext} from 'react'
 import {usePaneRouter} from 'sanity/desk'
 import {RouterContext} from 'sanity/router'
-import {useCallback, useContext} from 'react'
 import {ChildConceptTerm} from '../types'
 import styled from 'styled-components'
 
