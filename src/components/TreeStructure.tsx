@@ -1,30 +1,18 @@
-import {Orphans} from './Orphans'
-import {TopConcepts} from './TopConcepts'
-import styled from 'styled-components'
-import {TopConceptTerm, ChildConceptTerm, DocumentConcepts} from '../types'
-import {Card, Stack, Label, Text} from '@sanity/ui'
+/**
+ * Concept Scheme Tree View
+ * - Fetches the complete tree of concepts in a concept scheme.
+ * - Displays the tree in a nested list.
+ * @todo Add functionality to expand/collapse the tree.
+ */
 
-const StyledTree = styled.ul`
-  list-style: none;
-  padding-left: 0;
-  margin-top: 1rem;
-`
+import {StyledTree} from '../styles'
+import {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
+import {TopConcepts} from './TopConcepts'
+import {Orphans} from './Orphans'
+import {NoConcepts} from './guides'
 
 export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {
-  if (concepts.topConcepts === null && concepts.orphans.length === 0)
-    return (
-      <Card padding={4}>
-        <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="caution">
-          <Stack space={3}>
-            <Label size={3}>No Concepts</Label>
-            <Text size={2}>
-              There are not yet any concepts assigned to this scheme. To add concepts, got to the
-              "Editor" tab and add or create new Top Concepts or Concepts.
-            </Text>
-          </Stack>
-        </Card>
-      </Card>
-    )
+  if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
 
   return (
     <StyledTree>
@@ -33,7 +21,7 @@ export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {
           return <TopConcepts key={concept?.id} concept={concept} />
         })}
       {concepts.orphans.map((concept: ChildConceptTerm) => {
-        return <Orphans key={concept.id} concept={concept} docConcepts={concepts} />
+        return <Orphans key={concept.id} concept={concept} />
       })}
     </StyledTree>
   )

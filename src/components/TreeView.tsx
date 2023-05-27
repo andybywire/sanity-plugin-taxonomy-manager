@@ -1,21 +1,42 @@
-import {Container, Stack, Box, Text} from '@sanity/ui'
+/**
+ * Tree View
+ * This is the view component for the hierarchy tree. It is the
+ * top level of concept scheme views and is passed into Desk
+ * structure to render the primary view for taxonomy documents.
+ * @todo Extend SanityDocument type to include display properties.
+ *    What is the type of the document object returned by the Desk
+ *    structure?
+ */
+
+import {createContext, CSSProperties} from 'react'
+import {Box, Container, Stack, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
 
-export const TreeView = ({documentId}: {documentId: string}) => {
+export const SchemeContext = createContext(null)
+
+export const TreeView = ({document}: {document: any}) => {
+  const containerStyle: CSSProperties = {paddingTop: '1.25rem'}
+  const descriptionStyle: CSSProperties = {whiteSpace: 'pre-wrap'}
   return (
-    <Container width={1} style={{paddingTop: '1.25rem'}}>
-      <Box padding={4}>
-        <Stack space={2}>
-          <Text size={1} weight="semibold">
-            Hierarchy Tree
-          </Text>
-          <Text size={1} muted>
-            Concept hierarchy is determined by 'Broader' relationships assigned to each concept.
-          </Text>
-          <Hierarchy documentId={documentId} />
-        </Stack>
-      </Box>
-    </Container>
+    <SchemeContext.Provider value={document}>
+      <Container width={1} style={containerStyle}>
+        {document.displayed?.description && (
+          <Box padding={4}>
+            <Stack space={4}>
+              <Stack space={2}>
+                <Text size={1} weight="semibold">
+                  Description
+                </Text>
+                <Text size={2} muted style={descriptionStyle}>
+                  {document.displayed.description}
+                </Text>
+              </Stack>
+            </Stack>
+          </Box>
+        )}
+        <Hierarchy />
+      </Container>
+    </SchemeContext.Provider>
   )
 }
 

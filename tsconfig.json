@@ -19,7 +19,7 @@
     "isolatedModules": true,
     "checkJs": false,
     "emitDeclarationOnly": true,
-    "rootDir": ".",
+    "rootDir": "."
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "**/*.spec.ts"]

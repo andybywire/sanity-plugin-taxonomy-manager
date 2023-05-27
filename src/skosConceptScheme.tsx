@@ -8,8 +8,8 @@
 
 import {RiNodeTree} from 'react-icons/ri'
 import {defineArrayMember, defineField, defineType} from 'sanity'
-import {PrefLabel} from './components/PrefLabel'
 import baseIriField from './modules/baseIriField'
+import {randomKey} from '@sanity/util/content'
 
 export default defineType({
   name: 'skosConceptScheme',
@@ -29,16 +29,20 @@ export default defineType({
   },
   fields: [
     defineField({
+      name: 'schemeId',
+      title: 'Scheme ID',
+      type: 'string',
+      initialValue: () => `s_${randomKey(6)}`,
+      hidden: true,
+      readOnly: true,
+    }),
+    defineField({
       name: 'title',
       title: 'Title',
       type: 'string',
       description:
         'Taxonomy schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like',
-      components: {
-        input: PrefLabel as any,
-      },
     }),
-    ...baseIriField,
     defineField({
       name: 'description',
       title: 'Description',
@@ -46,6 +50,14 @@ export default defineType({
       rows: 5,
       description: 'Describe the intended use of this scheme.',
     }),
+    defineField({
+      name: 'controls',
+      title: 'Concept Management Controls',
+      description: 'Show concept management controls in hierarchy view',
+      type: 'boolean',
+      initialValue: true,
+    }),
+    ...baseIriField,
     defineField({
       name: 'topConcepts',
       title: 'Top Concepts',
