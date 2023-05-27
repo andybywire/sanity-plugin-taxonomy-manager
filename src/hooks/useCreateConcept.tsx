@@ -26,7 +26,7 @@ export function useCreateConcept(document: any) {
         skosConcept = {
           _id: `${randomKey()}`,
           _type: 'skosConcept',
-          conceptId: `c_${randomKey(6)}`,
+          conceptId: `${randomKey(6)}`,
           prefLabel: '',
           baseIri: schemaBaseIri,
           broader: [
@@ -42,7 +42,7 @@ export function useCreateConcept(document: any) {
         skosConcept = {
           _id: `${randomKey()}`,
           _type: 'skosConcept',
-          conceptId: `c_${randomKey(6)}`,
+          conceptId: `${randomKey(6)}`,
           prefLabel: '',
           baseIri: schemaBaseIri,
           broader: [],
