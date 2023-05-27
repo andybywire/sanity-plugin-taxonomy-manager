@@ -2,6 +2,7 @@
  * Concept Creation Hook
  * Used for creating concepts and top concepts from the Concept Scheme
  * hierarchy view.
+ * @todo type document, likely via extended SanityDocument type.
  */
 
 import {useClient} from 'sanity'
@@ -10,14 +11,10 @@ import {useCallback} from 'react'
 import {randomKey} from '@sanity/util/content'
 import {useOpenNewConceptPane} from './useOpenNewConceptPane'
 
-// TODO: properly type document (as an extension of SanityDocument)
 export function useCreateConcept(document: any) {
   const toast = useToast()
   const client = useClient({apiVersion: '2021-10-21'})
   const openInNewPane = useOpenNewConceptPane()
-
-  // eslint-disable-next-line no-console
-  console.log(document)
 
   const documentId = document.displayed._id // schema id
   const schemaBaseIri = document.displayed.baseIri // schema baseIri
@@ -72,9 +69,8 @@ export function useCreateConcept(document: any) {
             closable: true,
             status: 'success',
             title: 'Created new concept',
-            // description: `Concept created.`,
           })
-          openInNewPane(res.documentIds[0])
+          openInNewPane(skosConcept._id)
         })
         .catch((err) => {
           toast.push({

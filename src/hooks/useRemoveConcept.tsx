@@ -2,11 +2,12 @@
  * Concept Removal Hook
  * Used for removing concepts and top concepts from the Concept Scheme
  * hierarchy view.
+ * @todo type document, likely via extended SanityDocument type.
  */
 
+import {useCallback} from 'react'
 import {useClient} from 'sanity'
 import {useToast} from '@sanity/ui'
-import {useCallback} from 'react'
 
 // TODO: properly type document (as an extension of SanityDocument)
 export function useRemoveConcept(document: any) {
