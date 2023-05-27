@@ -6,23 +6,13 @@
 import {useCallback, useContext} from 'react'
 import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
 import {AddCircleIcon, TrashIcon} from '@sanity/icons'
-import {hues} from '@sanity/color'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {StyledTopConcept} from '../styles'
 import {TopConceptTerm} from '../types'
 import {ChildConcepts} from './ChildConcepts'
 import {SchemeContext} from './TreeView'
 import {ConceptDetailLink} from './ConceptDetailLink'
-import styled from 'styled-components'
 
-const StyledTopConcept = styled.li`
-  padding-top: 0.5rem;
-  font-weight: bold;
-  margin-top: 1.2rem;
-  .untitled {
-    color: ${hues.gray[400].hex};
-    font-weight: normal;
-  }
-`
 export const TopConcepts = ({concept}: {concept: TopConceptTerm}) => {
   const document: any = useContext(SchemeContext) || {}
   const createConcept = useCreateConcept(document)

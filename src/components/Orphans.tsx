@@ -6,22 +6,12 @@
 import {useCallback, useContext} from 'react'
 import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
 import {AddCircleIcon, TrashIcon} from '@sanity/icons'
-import {hues} from '@sanity/color'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {StyledOrphan} from '../styles'
 import {ChildConceptTerm} from '../types'
 import {SchemeContext} from './TreeView'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
-import styled from 'styled-components'
-
-const StyledOrphan = styled.li`
-  padding-top: 0.5rem;
-  font-weight: normal;
-  margin-top: 1.2rem;
-  .untitled {
-    color: ${hues.gray[400].hex};
-  }
-`
 
 export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
   const document: any = useContext(SchemeContext) || {}

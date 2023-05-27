@@ -6,15 +6,11 @@
  * @todo: Consider adding more instructions, a .gif, or video to this guide.
  */
 
-import {Card, Label, Stack, Text, Button, Dialog, Box, TextArea, TextInput} from '@sanity/ui'
-import styled from 'styled-components'
 import {useCallback, useState} from 'react'
+import {Card, Label, Stack, Text, Button, Dialog, Box, TextArea, TextInput} from '@sanity/ui'
 import {AddIcon} from '@sanity/icons'
-import {useAddTitle} from '../../hooks/useAddTitle'
-
-const InlineHelp = styled.div`
-  margin-top: 2rem;
-`
+import {useAddTitle} from '../../hooks'
+import {InlineHelp} from '../../styles'
 
 export const NewScheme = ({document}: any) => {
   const [open, setOpen] = useState(false)

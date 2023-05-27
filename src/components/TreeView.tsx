@@ -1,8 +1,8 @@
 /**
  * Tree View
- * This is the view component for the hierarchy tree. It is passed
- * into Desk structure and is used to render the primary view for
- * taxonomy documents.
+ * This is the view component for the hierarchy tree. It is the
+ * top level of concept scheme views and is passed into Desk
+ * structure to render the primary view for taxonomy documents.
  */
 
 import {createContext, CSSProperties} from 'react'

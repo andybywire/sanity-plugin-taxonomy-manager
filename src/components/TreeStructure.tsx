@@ -5,41 +5,11 @@
  * @todo Add functionality to expand/collapse the tree.
  */
 
-import {hues} from '@sanity/color'
-import {Orphans} from './Orphans'
+import {StyledTree} from '../styles'
 import {TopConceptTerm, ChildConceptTerm} from '../types'
 import {TopConcepts} from './TopConcepts'
+import {Orphans} from './Orphans'
 import {NoConcepts} from './guides'
-import styled from 'styled-components'
-
-const StyledTree = styled.ul`
-  list-style: none;
-  padding-left: 0;
-  margin-block-start: 0;
-  li svg {
-    height: 1.2rem;
-    width: 1.2rem;
-    color: ${hues.gray[800].hex};
-    border-radius: 3px;
-    transition: all 0.2s ease-in-out;
-    &.normal:hover {
-      color: ${hues.gray[100].hex};
-      background-color: ${hues.green[500].hex};
-    }
-    &.warning:hover {
-      color: ${hues.gray[100].hex};
-      background-color: ${hues.yellow[500].hex};
-    }
-    &.error {
-      color: ${hues.red[500].hex};
-    }
-    &.error:hover,
-    &.critical:hover {
-      color: ${hues.gray[100].hex};
-      background-color: ${hues.red[500].hex};
-    }
-  }
-`
 
 export const TreeStructure = (data: any) => {
   const {concepts} = data

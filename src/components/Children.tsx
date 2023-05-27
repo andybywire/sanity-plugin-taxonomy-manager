@@ -9,19 +9,11 @@ import {useCallback, useContext} from 'react'
 import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
 import {ErrorOutlineIcon, InfoOutlineIcon, AddCircleIcon, TrashIcon} from '@sanity/icons'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {StyledChildConcept} from '../styles'
 import {ChildConceptTerm} from '../types'
 import {SchemeContext} from './TreeView'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
-import styled from 'styled-components'
-
-const StyledChildConcept = styled.li`
-  font-weight: normal;
-  margin-top: 1.5rem;
-  div {
-    // padding-top: 0;
-  }
-`
 
 export const Children = ({concept}: {concept: ChildConceptTerm}) => {
   const document: any = useContext(SchemeContext) || {}

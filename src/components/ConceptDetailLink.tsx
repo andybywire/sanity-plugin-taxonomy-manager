@@ -7,15 +7,8 @@
 import {useCallback, useContext} from 'react'
 import {usePaneRouter} from 'sanity/desk'
 import {RouterContext} from 'sanity/router'
+import {StyledConceptLink} from '../styles'
 import {ChildConceptTerm} from '../types'
-import styled from 'styled-components'
-
-const StyledConceptLink = styled.span`
-  cursor: pointer;
-  &:hover {
-    text-decoration: underline;
-  }
-`
 
 export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   const routerContext = useContext(RouterContext)
