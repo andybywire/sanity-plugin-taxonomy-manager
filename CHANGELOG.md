@@ -209,3 +209,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 8. Update (reinstall) plugin in staging studio, run `sanity deploy`, and validate published package. 
 
 source: https://cloudfour.com/thinks/how-to-publish-an-updated-version-of-an-npm-package/
+
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.0...HEAD
+[2.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.1.0...v2.2.0
+[2.1.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.0.6...v2.1.0
+[2.0.6]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.0.5...v2.0.6
+[2.0.5]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.0.4...v2.0.5
+[2.0.4]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.0.3...v2.0.4
+[2.0.3]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.0.2...v2.0.3
+[2.0.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.0.1...v2.0.2
+[2.0.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.0.0...v2.0.1
+[2.0.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/2.0.0-beta.0...v2.0.0
+[2.0.0-beta.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v1.0.5...v2.0.0-beta.0
+[1.0.5]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v1.0.4...v1.0.5
+[1.0.4]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v1.0.3...v1.0.4
+[1.0.3]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v1.0.2...v1.0.3
+[1.0.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v1.0.1...v1.0.2
+[1.0.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v1.0.0...v1.0.1
+[1.0.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v0.2.0...v1.0.0
+[0.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v0.1.0...v0.2.0
+[0.1.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/releases/tag/v0.1.0
