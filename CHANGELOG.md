@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [2.2.0] - 2023-05-29
+
+### Added
+
+- Concept links to hierarchy view
+- "Add top concept" and "add concept" functionality to hierarchy view
+- Description to Tree View pane
+- "Add Child Concept" functionality to concepts in hierarchy view
+- "Remove Concept" functionality to concepts in hierarchy view
+- Title and description guidance and functionality in hierarchy view
+
 ## [2.1.0] - 2023-05-10
 
 ### Added
