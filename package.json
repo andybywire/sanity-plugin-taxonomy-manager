@@ -57,6 +57,7 @@
     "sanity-plugin-utils": "^1.5.0"
   },
   "devDependencies": {
+    "@sanity/client": "^6.1.2",
     "@sanity/pkg-utils": "^2.2.14",
     "@sanity/plugin-kit": "^3.1.7",
     "@types/react": "^18.0.35",

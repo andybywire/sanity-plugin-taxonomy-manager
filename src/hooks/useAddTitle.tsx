@@ -5,26 +5,24 @@
  * concept / add concept buttons will not work.
  */
 
+import {useCallback} from 'react'
 import {useClient} from 'sanity'
 import {useToast} from '@sanity/ui'
-import {useCallback} from 'react'
 
-// TODO: properly type document (as an extension of SanityDocument)
 export function useAddTitle() {
   const toast = useToast()
   const client = useClient({apiVersion: '2021-10-21'})
-
-  // eslint-disable-next-line no-console
-  console.log(document)
 
   const addTitle = useCallback(
     (document: any, titleValue: string, descriptionValue?: string) => {
       const documentId = document.displayed?._id
       const schemaBaseIri = document.displayed?.baseIri
+      const schemeId = document.displayed?.schemeId
 
       const doc = {
         _id: `drafts.${documentId}`,
         _type: 'skosConceptScheme',
+        schemeId: schemeId,
         controls: true,
         baseIri: schemaBaseIri,
         title: titleValue,

@@ -32,7 +32,7 @@ export default defineType({
       name: 'schemeId',
       title: 'Scheme ID',
       type: 'string',
-      initialValue: () => `s_${randomKey(6)}`,
+      initialValue: () => `${randomKey(6)}`,
       hidden: true,
       readOnly: true,
     }),

@@ -39,7 +39,7 @@ export default defineType({
       name: 'conceptId',
       title: 'Concept ID',
       type: 'string',
-      initialValue: () => `c_${randomKey(6)}`,
+      initialValue: () => `${randomKey(6)}`,
       hidden: true,
       readOnly: true,
     }),
