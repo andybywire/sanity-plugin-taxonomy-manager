@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [TODO] -->
 
+## [2.2.1] - 2023-06-01
+
+### Added
+
+- Add informational dialogues to taxonomy terms when definition, example, or scope note content
+is available.
+
 ## [2.2.0] - 2023-05-29
 
 ### Added
