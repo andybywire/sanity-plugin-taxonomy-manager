@@ -8,7 +8,6 @@ import {Dialog, Box, Text} from '@sanity/ui'
 import {InfoOutlineIcon} from '@sanity/icons'
 import {InfoDialog} from '../styles'
 
-
 export const ConceptDetailDialogue = (concept) => {
   const [open, setOpen] = useState(false)
   const onClose = useCallback(() => setOpen(false), [])
