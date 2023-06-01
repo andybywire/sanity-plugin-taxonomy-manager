@@ -17,6 +17,9 @@ const branchBuilder = (level = 1): string | void => {
       "id": _id,
       "level": ${level},
       prefLabel,
+      definition,
+      example,
+      scopeNote,
       ${branchBuilder(level + 1)}
     }`
 }
@@ -35,6 +38,9 @@ export const trunkBuilder = (): string => {
       "id": _id,
       "level": 0,
       prefLabel,
+      definition,
+      example,
+      scopeNote,
       ${branchBuilder()}
     },
     "orphans": *[
@@ -45,6 +51,9 @@ export const trunkBuilder = (): string => {
       "id": _id,
       "level": 0,
       prefLabel,
+      definition,
+      example,
+      scopeNote,
       ${branchBuilder()}
     }
   }`

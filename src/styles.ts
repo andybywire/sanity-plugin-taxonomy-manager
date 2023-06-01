@@ -20,6 +20,13 @@ export const InfoDialog = styled.div`
       color: ${hues.gray[100].hex};
       background-color: ${hues.blue[400].hex};
     }
+    &.default {
+      color: ${hues.gray[300].hex};
+      &:hover {
+        color: ${hues.gray[100].hex};
+        background-color: ${hues.gray[600].hex};
+      }
+    }
   }
 `
 
