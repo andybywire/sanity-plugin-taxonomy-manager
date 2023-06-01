@@ -12,6 +12,7 @@ import {ChildConceptTerm} from '../types'
 import {SchemeContext} from './TreeView'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
+import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 
 export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
   const document: any = useContext(SchemeContext) || {}
@@ -36,6 +37,7 @@ export const Orphans = ({concept}: {concept: ChildConceptTerm}) => {
             orphan
           </Text>
         )}
+        {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
         {document.displayed?.controls && (
           <>
             <Tooltip

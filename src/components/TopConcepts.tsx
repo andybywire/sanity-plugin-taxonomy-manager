@@ -12,6 +12,7 @@ import {TopConceptTerm} from '../types'
 import {ChildConcepts} from './ChildConcepts'
 import {SchemeContext} from './TreeView'
 import {ConceptDetailLink} from './ConceptDetailLink'
+import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 
 export const TopConcepts = ({concept}: {concept: TopConceptTerm}) => {
   const document: any = useContext(SchemeContext) || {}
@@ -34,6 +35,7 @@ export const TopConcepts = ({concept}: {concept: TopConceptTerm}) => {
         <Text size={1} muted>
           top concept
         </Text>
+        {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
         {document.displayed?.controls && (
           <>
             <Tooltip
