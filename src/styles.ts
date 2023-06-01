@@ -8,6 +8,28 @@ export const DescriptionDetail = styled.p`
 export const InlineHelp = styled.div`
   margin-top: 2rem;
 `
+
+export const InfoDialog = styled.div`
+  svg {
+    height: 1.2rem;
+    width: 1.2rem;
+    color: ${hues.gray[800].hex};
+    border-radius: 3px;
+    transition: all 0.1s ease-in-out;
+    &.brand:hover {
+      color: ${hues.gray[100].hex};
+      background-color: ${hues.blue[400].hex};
+    }
+    &.default {
+      color: ${hues.gray[300].hex};
+      &:hover {
+        color: ${hues.gray[100].hex};
+        background-color: ${hues.gray[600].hex};
+      }
+    }
+  }
+`
+
 export const StyledTree = styled.ul`
   list-style: none;
   padding-left: 0;
