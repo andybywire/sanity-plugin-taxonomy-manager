@@ -223,12 +223,14 @@ is available.
   - npm ci
   - npm test
 2. Prepare the Release:
-  - npm run build
+  - npm run build 
+    (this is to verify there won't be errors on build)
 3. Update the Changelog
 4. Update the Version Number:
   - npm version patch | minor | major -m "message"
 5. Publish to npm:
-  - npm publish
+  - npm publish 
+    (this runs the build steps again)
 6. Publish to Git:
   - git push
   - git push --tags
