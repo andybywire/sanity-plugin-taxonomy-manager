@@ -14,6 +14,7 @@ import {ChildConceptTerm} from '../types'
 import {SchemeContext} from './TreeView'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
+import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 
 export const Children = ({concept}: {concept: ChildConceptTerm}) => {
   const document: any = useContext(SchemeContext) || {}
@@ -36,10 +37,13 @@ export const Children = ({concept}: {concept: ChildConceptTerm}) => {
   return (
     <StyledChildConcept>
       <Inline space={2}>
-        <Text size={2}>
-          {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
-          <ConceptDetailLink concept={concept} />
-        </Text>
+        <Inline space={1}>
+          <Text size={2}>
+            {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
+            <ConceptDetailLink concept={concept} />
+          </Text>
+          {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
+        </Inline>
         {document.displayed?.controls && concept?.level && concept.level < 5 && (
           <Inline space={1}>
             <AddCircleIcon className="normal" onClick={handleAddChild} />
