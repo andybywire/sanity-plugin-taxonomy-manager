@@ -13,7 +13,7 @@ export default [
     title: 'Base URI',
     type: 'url',
     validation: (Rule) =>
-      Rule.required().error('Please supply a base URI in the format http://example.com/'),
+      Rule.required().error(`Please supply a base URI in the format 'http://example.com/'`),
     description: (
       <details>
         <summary>
@@ -21,8 +21,8 @@ export default [
         </summary>
         <DescriptionDetail>
           Unique identifiers allow for the clear an unambiguous identification of concepts across
-          namespaces, for example between https://shipparts.com/vocab#Bow and
-          https://wrappingsupplies.com/vocab#Bow.
+          namespaces, for example between <code>https://shipparts.com/vocab#Bow</code> and {}
+          <code>https://wrappingsupplies.com/vocab#Bow</code>.
         </DescriptionDetail>
         <DescriptionDetail>
           In most cases, it makes sense for your base URI to be the root or a subdirectory of your
