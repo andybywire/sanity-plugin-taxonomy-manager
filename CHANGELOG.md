@@ -235,7 +235,10 @@ is available.
   - git push
   - git push --tags
 7. Create a GitHub Release (optional)
-8. Update (reinstall) plugin in staging studio, run `sanity deploy`, and validate published package. 
+8. Update (reinstall) plugin in staging studio, deploy updated studio, and validate published package. 
+  - npm i sanity-plugin-taxonomy-manager
+  - sanity deploy
+  - https://taxonomy-manager.sanity.studio/
 
 source: https://cloudfour.com/thinks/how-to-publish-an-updated-version-of-an-npm-package/
 -->
