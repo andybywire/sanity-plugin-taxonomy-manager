@@ -4,11 +4,16 @@ import skosConceptScheme from './skosConceptScheme'
 import baseIri from './objects/baseIri'
 import TreeView from './components/TreeView'
 
-const taxonomyManager = definePlugin({
-  name: 'taxonomyManager',
-  schema: {
-    types: [skosConcept, skosConceptScheme, baseIri],
-  },
+const taxonomyManager = definePlugin((options: any) => {
+  const {baseUri} = options || {}
+
+  return {
+    name: 'taxonomyManager',
+    options,
+    schema: {
+      types: [skosConcept(baseUri), skosConceptScheme(baseUri), baseIri],
+    },
+  }
 })
 
 export {taxonomyManager, TreeView}
