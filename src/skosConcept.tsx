@@ -326,15 +326,10 @@ export default function skosConcept(baseUri?: string) {
     preview: {
       select: {
         title: 'prefLabel',
-        broader0: 'broader.0.prefLabel',
-        broader1: 'broader.1.prefLabel',
-        broader2: 'broader.2.prefLabel',
       },
-      prepare({title, broader0, broader1, broader2}) {
-        const subtitle = [broader0, broader1].filter(Boolean).join(', ') + (broader2 ? ' ...' : '')
+      prepare({title}) {
         return {
           title: title,
-          subtitle: broader0 ? `in ${subtitle}` : subtitle,
           media: AiFillTag,
         }
       },
