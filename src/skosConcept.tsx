@@ -14,6 +14,7 @@ import {AiFillTag, AiFillTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
 import {DescriptionDetail} from './styles'
 import baseIriField from './modules/baseIriField'
+import {Identifier} from './components/inputs'
 import {randomKey} from '@sanity/util/content'
 
 export default function skosConcept(baseUri?: string) {
@@ -43,14 +44,6 @@ export default function skosConcept(baseUri?: string) {
       }
     },
     fields: [
-      defineField({
-        name: 'conceptId',
-        title: 'Concept ID',
-        type: 'string',
-        initialValue: () => `${randomKey(6)}`,
-        hidden: true,
-        readOnly: true,
-      }),
       defineField({
         name: 'prefLabel',
         title: 'Preferred Label',
@@ -115,6 +108,18 @@ export default function skosConcept(baseUri?: string) {
         validation: (Rule) => Rule.unique(),
       }),
       ...baseIriField,
+      defineField({
+        name: 'conceptId',
+        title: 'Identifier',
+        description: 'This concept does not yet have a unique identifier.',
+        type: 'string',
+        initialValue: () => `${randomKey(6)}`,
+        hidden: ({document}) => !!document?.conceptId,
+        readOnly: ({document}) => !!document?.conceptId,
+        components: {
+          input: Identifier,
+        },
+      }),
       defineField({
         name: 'conceptIriBase',
         title: 'Edit the base IRI',

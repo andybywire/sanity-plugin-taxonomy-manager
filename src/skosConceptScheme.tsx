@@ -8,6 +8,7 @@
 import {RiNodeTree} from 'react-icons/ri'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 import baseIriField from './modules/baseIriField'
+import {Identifier} from './components/inputs'
 import {randomKey} from '@sanity/util/content'
 
 export default function skosConceptScheme(baseUri?: string) {
@@ -30,14 +31,6 @@ export default function skosConceptScheme(baseUri?: string) {
     },
     fields: [
       defineField({
-        name: 'schemeId',
-        title: 'Scheme ID',
-        type: 'string',
-        initialValue: () => `${randomKey(6)}`,
-        hidden: true,
-        readOnly: true,
-      }),
-      defineField({
         name: 'title',
         title: 'Title',
         type: 'string',
@@ -59,6 +52,18 @@ export default function skosConceptScheme(baseUri?: string) {
         initialValue: true,
       }),
       ...baseIriField,
+      defineField({
+        name: 'schemeId',
+        title: 'Identifier',
+        description: 'This scheme does not yet have a unique identifier.',
+        type: 'string',
+        initialValue: () => `${randomKey(6)}`,
+        hidden: ({document}) => !!document?.schemeId,
+        readOnly: ({document}) => !!document?.schemeId,
+        components: {
+          input: Identifier,
+        },
+      }),
       defineField({
         name: 'topConcepts',
         title: 'Top Concepts',
