@@ -3,6 +3,7 @@ import skosConcept from './skosConcept'
 import skosConceptScheme from './skosConceptScheme'
 import baseIri from './objects/baseIri'
 import TreeView from './components/TreeView'
+import {schemeFilter, branchFilter} from './helpers'
 
 const taxonomyManager = definePlugin((options: any) => {
   const {baseUri} = options || {}
@@ -16,4 +17,4 @@ const taxonomyManager = definePlugin((options: any) => {
   }
 })
 
-export {taxonomyManager, TreeView}
+export {taxonomyManager, TreeView, schemeFilter, branchFilter}
