@@ -8,11 +8,11 @@ type SchemeFilterResult = {
     schemeId: string
   }
 }
-type Options = {
+type SchemeOptions = {
   schemeId: string
 }
 
-export function schemeFilter(options: Options): SchemeFilterResult {
+export function schemeFilter(options: SchemeOptions): SchemeFilterResult {
   const {schemeId} = options || {}
   return {
     filter: `!(_id in path("drafts.**"))
