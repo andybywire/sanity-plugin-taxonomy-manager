@@ -5,7 +5,11 @@ import baseIri from './objects/baseIri'
 import TreeView from './components/TreeView'
 import {schemeFilter, branchFilter} from './helpers'
 
-const taxonomyManager = definePlugin((options: any) => {
+interface Options {
+  baseUri?: string
+}
+
+const taxonomyManager = definePlugin((options?: Options) => {
   const {baseUri} = options || {}
 
   return {
