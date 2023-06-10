@@ -1,14 +1,13 @@
 /**
  * Concept Detail Link
  * Renders a link to a concept in the hierarchy tree that opens in a new pane.
- * @todo Adapt to use the New Concept Pane hook (it's death spiraling at the moment)
  */
 
 import {useCallback, useContext} from 'react'
 import {usePaneRouter} from 'sanity/desk'
 import {RouterContext} from 'sanity/router'
-import {StyledConceptLink} from '../styles'
 import {ChildConceptTerm} from '../types'
+import {StyledConceptLink} from '../styles'
 
 export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   const routerContext = useContext(RouterContext)
@@ -33,5 +32,9 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
     routerContext.navigateUrl({path: href})
   }, [id, routerContext, routerPanesState, groupIndex])
 
-  return <StyledConceptLink onClick={openInNewPane}>{prefLabel}</StyledConceptLink>
+  return (
+    <StyledConceptLink href="#" onClick={openInNewPane}>
+      {prefLabel}
+    </StyledConceptLink>
+  )
 }
