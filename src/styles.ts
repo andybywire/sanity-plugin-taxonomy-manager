@@ -34,7 +34,8 @@ export const StyledTree = styled.ul`
   list-style: none;
   padding-left: 0;
   margin-block-start: 0;
-  li svg {
+  li svg.info,
+  li svg.action {
     height: 1.2rem;
     width: 1.2rem;
     color: ${hues.gray[800].hex};
@@ -57,36 +58,62 @@ export const StyledTree = styled.ul`
       background-color: ${hues.red[500].hex};
     }
   }
-`
-export const StyledTopConcept = styled.li`
-  padding-top: 0.5rem;
-  font-weight: bold;
-  margin-top: 1.2rem;
-  .untitled {
-    color: ${hues.gray[400].hex};
-    font-weight: normal;
+  li svg.spacer {
+    height: 1.5rem;
+    width: 1.5rem;
+    visibility: hidden;
   }
-`
-export const StyledOrphan = styled.li`
-  padding-top: 0.5rem;
-  font-weight: normal;
-  margin-top: 1.2rem;
-  .untitled {
-    color: ${hues.gray[400].hex};
+  button {
+    background: none;
+    border: none;
+    padding: 0.2rem 0 0;
+    cursor: pointer;
+    svg {
+      height: 1.5rem;
+      width: 1.5rem;
+    }
   }
 `
 export const StyledChildConcepts = styled.ul`
   list-style: none;
 `
-export const StyledChildConcept = styled.li`
-  font-weight: normal;
-  margin-top: 1.5rem;
-  div {
-    // padding-top: 0;
+
+export const StyledTopConcept = styled.li`
+  padding-top: 0.5rem;
+  font-weight: bold;
+  margin-top: 1rem;
+  .untitled {
+    color: ${hues.gray[400].hex};
+    font-weight: normal;
+  }
+  button[aria-expanded='true'] svg {
+    rotate: 90deg;
+  }
+  &.closed ul {
+    display: none;
   }
 `
-export const StyledConceptLink = styled.span`
-  cursor: pointer;
+export const StyledOrphan = styled.li`
+  padding-top: 0.5rem;
+  font-weight: normal;
+  margin-top: 1rem;
+  .untitled {
+    color: ${hues.gray[400].hex};
+  }
+`
+export const StyledChildConcept = styled.li`
+  font-weight: normal;
+  margin-top: 1rem;
+  button[aria-expanded='true'] svg {
+    rotate: 90deg;
+  }
+  &.closed ul {
+    display: none;
+  }
+`
+export const StyledConceptLink = styled.a`
+  color: ${hues.gray[800].hex};
+  text-decoration: none;
   &:hover {
     text-decoration: underline;
   }

@@ -5,19 +5,28 @@
  * @todo Handle childConcept and level definition checks more elegantly
  */
 
-import {useCallback, useContext} from 'react'
+import {useCallback, useContext, useState} from 'react'
 import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
-import {ErrorOutlineIcon, InfoOutlineIcon, AddCircleIcon, TrashIcon} from '@sanity/icons'
+import {
+  ErrorOutlineIcon,
+  InfoOutlineIcon,
+  AddCircleIcon,
+  TrashIcon,
+  ToggleArrowRightIcon,
+  SquareIcon,
+} from '@sanity/icons'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
 import {StyledChildConcept} from '../styles'
 import {ChildConceptTerm} from '../types'
 import {SchemeContext} from './TreeView'
+import {TreeContext} from './Hierarchy'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 
 export const Children = ({concept}: {concept: ChildConceptTerm}) => {
   const document: any = useContext(SchemeContext) || {}
+  const {treeVisibility} = useContext(TreeContext) || {}
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
@@ -34,14 +43,36 @@ export const Children = ({concept}: {concept: ChildConceptTerm}) => {
     removeConcept(concept.id, 'concept', concept?.prefLabel)
   }, [concept.id, concept?.prefLabel, removeConcept])
 
+  const [levelVisibility, setLevelVisibility] = useState(treeVisibility)
+
+  const handleToggle = useCallback(() => {
+    if (levelVisibility == 'open') {
+      setLevelVisibility('closed')
+    } else if (levelVisibility == 'closed') {
+      setLevelVisibility('open')
+    }
+  }, [levelVisibility])
+
   return (
-    <StyledChildConcept>
+    <StyledChildConcept className={levelVisibility}>
       <Inline space={2}>
         <Inline space={1}>
-          <Text size={2}>
+          <Inline space={0}>
+            {concept?.childConcepts && concept.childConcepts.length > 0 && (
+              <button
+                onClick={handleToggle}
+                type="button"
+                aria-expanded={levelVisibility == 'open'}
+              >
+                <ToggleArrowRightIcon />
+              </button>
+            )}
+            {concept?.childConcepts && concept.childConcepts.length == 0 && (
+              <SquareIcon className="spacer" />
+            )}
             {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
             <ConceptDetailLink concept={concept} />
-          </Text>
+          </Inline>
           {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
         </Inline>
         {document.displayed?.controls && concept?.level && concept.level < 5 && (

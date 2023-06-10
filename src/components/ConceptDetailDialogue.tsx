@@ -14,38 +14,12 @@ export const ConceptDetailDialogue = ({concept}: {concept: any}) => {
   const onOpen = useCallback(() => setOpen(true), [])
 
   if (!concept) return null
-  else if (!concept.definition && !concept.example && !concept.scopeNote) {
-    return null
-
-    // To Investigate: Showing disabled icons in the absence of explanatory notes.
-    // The goal is to encourage editors to provide descriptions, but the better
-    // practice is likely simply not to show the icon if there is no content there.
-    // For the moment, defaulting to showing no icon.
-
-    // return (
-    //   <InfoDialog>
-    //     <Tooltip
-    //       content={
-    //         <Box padding={2} sizing="border">
-    //           <Stack padding={1} space={2}>
-    //             <Text muted size={1}>
-    //               This concept has no explanatory notes.
-    //             </Text>
-    //           </Stack>
-    //         </Box>
-    //       }
-    //       fallbackPlacements={['right', 'left']}
-    //       placement="top"
-    //     >
-    //       <InfoOutlineIcon className="default" />
-    //     </Tooltip>
-    //   </InfoDialog>
-    // )
-  }
 
   return (
     <InfoDialog>
-      <InfoOutlineIcon className="brand" onClick={onOpen} />
+      <button onClick={onOpen} type="button">
+        <InfoOutlineIcon className="brand info" />
+      </button>
 
       {open && (
         <Dialog

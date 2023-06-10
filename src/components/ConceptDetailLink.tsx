@@ -33,5 +33,9 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
     routerContext.navigateUrl({path: href})
   }, [id, routerContext, routerPanesState, groupIndex])
 
-  return <StyledConceptLink onClick={openInNewPane}>{prefLabel}</StyledConceptLink>
+  return (
+    <StyledConceptLink href="#" onClick={openInNewPane}>
+      {prefLabel}
+    </StyledConceptLink>
+  )
 }
