@@ -1,25 +1,26 @@
 /**
  * Information Icon and Dialogue with Concept Details
- * Affords Tree View access to Definition, Examples, and Scope Notes
+ * - affords Tree View access to Definition, Examples, and Scope Notes
+ * - is rendered only when concept details are present
  */
 
 import {useCallback, useState} from 'react'
 import {Dialog, Box, Text, Stack, Label} from '@sanity/ui'
 import {InfoOutlineIcon} from '@sanity/icons'
-import {InfoDialog} from '../styles'
+import {StyledTreeButton} from '../styles'
 
 export const ConceptDetailDialogue = ({concept}: {concept: any}) => {
   const [open, setOpen] = useState(false)
   const onClose = useCallback(() => setOpen(false), [])
   const onOpen = useCallback(() => setOpen(true), [])
 
-  if (!concept) return null
+  if (!concept || (!concept.definition && !concept.example && !concept.scopeNote)) return null
 
   return (
-    <InfoDialog>
-      <button onClick={onOpen} type="button">
-        <InfoOutlineIcon className="brand info" />
-      </button>
+    <>
+      <StyledTreeButton className="action" aria-label="info" onClick={onOpen} type="button">
+        <InfoOutlineIcon className="info" />
+      </StyledTreeButton>
 
       {open && (
         <Dialog
@@ -55,11 +56,10 @@ export const ConceptDetailDialogue = ({concept}: {concept: any}) => {
                   </Text>
                 </Stack>
               )}
-              {/* <pre>{JSON.stringify(concept, null, 2)}</pre> */}
             </Stack>
           </Box>
         </Dialog>
       )}
-    </InfoDialog>
+    </>
   )
 }

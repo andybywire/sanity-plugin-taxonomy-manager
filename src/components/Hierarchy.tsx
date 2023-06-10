@@ -1,31 +1,25 @@
 /**
- * Concept Scheme Tree View
+ *  Hierarchy Component
+ * - Provides a frame for global controls and tree structure
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
- * @todo add note about random key as way to expand/collapse
- * @todo only show collapse/expand if there are concepts with children
  * @todo type document, likely via extended SanityDocument type.
  */
 
-import {createContext, useCallback, useContext, useState, CSSProperties} from 'react'
-import {Flex, Spinner, Stack, Box, Text, Inline, Button, Label} from '@sanity/ui'
-import {AddIcon} from '@sanity/icons'
+import {createContext, useCallback, useContext, useState} from 'react'
+import {Flex, Spinner, Stack, Box, Text, Inline} from '@sanity/ui'
+import {AddCircleIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
 import {useListeningQuery} from 'sanity-plugin-utils'
 import {useCreateConcept} from '../hooks'
 import {trunkBuilder} from '../queries'
 import {DocumentConcepts} from '../types'
+import {HierarchyButton} from '../styles'
 import {SchemeContext} from './TreeView'
 import {TreeStructure} from './TreeStructure'
 import {NewScheme} from './guides'
 
 export const TreeContext = createContext(null)
-const buttonStyle: CSSProperties = {
-  background: 'none',
-  border: 'none',
-  padding: 0,
-  cursor: 'pointer',
-}
 
 type GlobalVisibility = {
   treeId: string
@@ -46,6 +40,9 @@ export const Hierarchy = () => {
     createConcept('concept')
   }, [createConcept])
 
+  // `randomKey` is used on treeId to initiate a re-rendering of all child
+  // elements on expand/collapse and re-initialize any local toggle state
+  // that had been set.
   const [globalVisibility, setGlobalVisibility] = useState<GlobalVisibility>({
     treeId: randomKey(3),
     treeVisibility: 'open',
@@ -90,7 +87,7 @@ export const Hierarchy = () => {
     return <NewScheme document={document} />
   }
   return (
-    // @ts-expect-error The compiler complains about this being null.
+    // @ts-expect-error — The compiler complains about this being null.
     // I suspect this is an error.
     <TreeContext.Provider value={globalVisibility}>
       <Box padding={4}>
@@ -103,39 +100,42 @@ export const Hierarchy = () => {
               Hierarchy is determined by the 'Broader' relationships assigned to each concept.
             </Text>
           </Stack>
-          <Inline space={3}>
-            <button type="button" onClick={handleCollapse} style={buttonStyle}>
-              <Label muted size={1}>
-                Collapse
-              </Label>
-            </button>
-            <Label muted size={1}>
-              |
-            </Label>
-            <button type="button" onClick={handleExpand} style={buttonStyle}>
-              <Label muted size={1}>
-                Expand
-              </Label>
-            </button>
+          <Inline space={4}>
+            {(data.topConcepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
+              .length > 0 ||
+              data.orphans?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0).length >
+                0) && (
+              <Inline space={2}>
+                <HierarchyButton type="button" onClick={handleCollapse}>
+                  <Text weight="semibold" muted size={1}>
+                    Collapse
+                  </Text>
+                </HierarchyButton>
+                <Text weight="semibold" muted size={1}>
+                  |
+                </Text>
+                <HierarchyButton type="button" onClick={handleExpand}>
+                  <Text weight="semibold" muted size={1}>
+                    Expand
+                  </Text>
+                </HierarchyButton>
+              </Inline>
+            )}
+            {document.displayed?.controls && (
+              <Inline space={4}>
+                <HierarchyButton type="button" className="add" onClick={createTopConcept}>
+                  <Text weight="semibold" muted size={1}>
+                    <AddCircleIcon /> Add Top Concept
+                  </Text>
+                </HierarchyButton>
+                <HierarchyButton type="button" className="add" onClick={createEntryConcept}>
+                  <Text weight="semibold" muted size={1}>
+                    <AddCircleIcon /> Add Concept
+                  </Text>
+                </HierarchyButton>
+              </Inline>
+            )}
           </Inline>
-          {document.displayed?.controls && (
-            <Inline space={3}>
-              <Button
-                tone="primary"
-                fontSize={2}
-                icon={AddIcon}
-                onClick={createTopConcept}
-                text="Top Concept"
-              />
-              <Button
-                tone="primary"
-                fontSize={2}
-                icon={AddIcon}
-                onClick={createEntryConcept}
-                text="Concept"
-              />
-            </Inline>
-          )}
         </Stack>
         <TreeStructure concepts={data} />
       </Box>
