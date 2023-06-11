@@ -9,6 +9,14 @@ interface Options {
   baseUri?: string
 }
 
+/**
+ * Defines a Sanity plugin for managing taxonomies.
+ * @param options - Optional configuration options for the plugin.
+ * @param options.baseUri - The base URI to use for SKOS concepts and concept schemes.
+ * baseURI should follow an IANA http/s scheme and should terminate with either a / or #.
+ * @returns A Sanity plugin object.
+ */
+
 const taxonomyManager = definePlugin((options?: Options) => {
   const {baseUri} = options || {}
 

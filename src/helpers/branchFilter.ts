@@ -2,16 +2,14 @@
  * Pluggable Function for Filtering to a Top Concept Branch within a SKOS Concept Scheme
  */
 
-type BranchFilterResult = {
-  filter: string
-  params: {
-    schemeId: string
-    branchId: string
-  }
-}
 type BranchOptions = {
   schemeId: string
   branchId: string
+}
+
+type BranchFilterResult = {
+  filter: string
+  params: BranchOptions
 }
 
 export function branchFilter(options: BranchOptions): BranchFilterResult {

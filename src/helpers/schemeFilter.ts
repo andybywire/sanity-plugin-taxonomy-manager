@@ -2,14 +2,13 @@
  * Pluggable Function for Filtering to a Single SKOS Concept Scheme
  */
 
-type SchemeFilterResult = {
-  filter: string
-  params: {
-    schemeId: string
-  }
-}
 type SchemeOptions = {
   schemeId: string
+}
+
+type SchemeFilterResult = {
+  filter: string
+  params: SchemeOptions
 }
 
 export function schemeFilter(options: SchemeOptions): SchemeFilterResult {
