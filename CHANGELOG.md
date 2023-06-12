@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Collapse / expand functionality to tree view
 - Keyboard and screen reader support for collapse/expand, editing actions, and detail links
 - Clarify types and parameters for plugin and helpers
+- Add standalone documentation site
 
 ## [2.2.2] - 2023-06-06
 

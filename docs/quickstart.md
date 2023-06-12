@@ -1,37 +1,22 @@
-# Sanity Taxonomy Manager Plugin
-
-![NPM Version](https://img.shields.io/npm/v/sanity-plugin-taxonomy-manager?style=flat-square)
-![License](https://img.shields.io/npm/l/sanity-plugin-taxonomy-manager?style=flat-square)
-
-<!-- ### Create and manage [SKOS](https://www.w3.org/TR/skos-primer/) compliant taxonomies, thesauri, and classification schemes in Sanity Studio. -->
-
-> This is a **Sanity Studio v3** plugin.
-> For the v2 version, please refer to the [v2-branch](https://github.com/andybywire/sanity-plugin-taxonomy-manager/tree/studio-v2).
-
-Taxonomies are crucial tools for organization and interoperability between and across data sets. Taxonomy Manager provides a way for content authors to create, use, and maintain standards compliant taxonomies in Sanity Studio.
-
-The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors.
-
-<img src="https://user-images.githubusercontent.com/3710835/212743871-14760a60-0689-4cc3-a13e-55dd7a4ef19a.png" width="700">
-
-## Features
-
-- Adds two document types to your Sanity schema which are used to generate SKOS compliant concepts and concept schemes: `skosConcept` and `skosConceptScheme`
-- Pre-populates [base URI](https://www.w3.org/TR/skos-primer/#secconcept) values for new concepts based on the most recently used base URI
-- Validates [disjunction between Broader and Related relationships](https://www.w3.org/TR/skos-reference/#L2422)
-- Validates [disjunction between Preferred and Alternate/Hidden labels](https://www.w3.org/TR/skos-reference/#L1567)
+# Quick start
 
 ## Installation
 
-Install using the [Sanity CLI](https://www.sanity.io/docs/cli).
+In your Sanity project folder, run
 
 ```bash
-$ npm i sanity-plugin-taxonomy-manager
+npm i sanity-plugin-taxonomy-manager
+```
+
+or
+
+```bash
+yarn add sanity-plugin-taxonomy-manager
 ```
 
 ## Configuration
 
-Add the plugin to your project configuration to make the skosConcept and skosConceptScheme document types available in your studio.
+Add the plugin to your project configuration to make the `skosConcept` and `skosConceptScheme` document types available in your studio.
 
 ```js
 // sanity.config.js
@@ -53,9 +38,9 @@ export default defineConfig({
     }),
     // Include the taxonomy manager plugin
     taxonomyManager({
-      // Optional: Set a Base URI to use when 
+      // Optional: Set a Base URI to use when
       // creating new concepts & schemes
-      baseUri: 'https://example.com/'
+      baseUri: 'https://example.com/',
     }),
   ],
   schema: {
@@ -63,12 +48,12 @@ export default defineConfig({
   },
 })
 ```
+
 The `baseURI` option allows you to set a default URI (Uniform Resource Identifier) for new concepts and concept schemes. Unique identifiers allow for the clear an unambiguous identification of concepts across namespaces, for example between `https://shipparts.com/vocab#Bow` and `https://wrappingsupplies.com/vocab#Bow`. The base URI of these concepts is `https://shipparts.com/` and `https://wrappingsupplies.com/`, respectively.
 
-- In most cases, it makes sense for your base URI to be the root or a subdirectory of your website. 
+- In most cases, it makes sense for your base URI to be the root or a subdirectory of your website.
 - In all cases, the URI you choose should be in a domain that you control.
 - The `baseUri` default is optional. If you omit it, the Base URI for new concepts and concept schemes is pre-populated based on the most recently used Base URI value.
-
 
 Use [Structure Builder](https://www.sanity.io/docs/structure-builder-reference) to create a separate area for your taxonomy tools and add the provided Concept Scheme Tree View component.
 
@@ -113,46 +98,43 @@ export const structure = (S) =>
    - Concepts may optionally be added to a Concept Scheme as Top Concepts, to represent the broadest concepts of a particular hierarchy and provide efficient access points to broader/narrower concept hierarchies
    - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/).
 1. Use Reference Filter helpers to easily include whole taxonomies or individual taxonomy branches in your document schemas:
+
    - To allow a `reference` field to access any term in a SKOS Concept Scheme, use the `schemeFilter` helper. The `schemeFilter` helper takes one parameter: the RDF URI ID from the Concept Scheme you want to use, located just below the `Base URI` field. Copy the identifier that follows your Base URI:
 
-      ```
-      import {schemeFilter} from 'sanity-plugin-taxonomy-manager'
-      
-      ...
+     ```js
+     import {schemeFilter} from 'sanity-plugin-taxonomy-manager'
 
-      defineField({
-          name: 'gradeLevel',
-          title: 'Grade Level',
-          type: 'reference', 
-          to: {type: 'skosConcept'},
-          options: {
-            filter: () => schemeFilter({schemeId: 'f3deba'}),
-            disableNew: true,
-          },
-        }),
-      ```
+     ...
+
+     defineField({
+         name: 'gradeLevel',
+         title: 'Grade Level',
+         type: 'reference',
+         to: {type: 'skosConcept'},
+         options: {
+           filter: () => schemeFilter({schemeId: 'f3deba'}),
+           disableNew: true,
+         },
+       }),
+     ```
 
    - To limit a `reference` field to a particular branch in a SKOS Concept Scheme, use the `branchFilter` helper. The `branchFilter` helper takes two parameter: the RDF URI ID from the Concept Scheme you want to use and the Concept ID in that Scheme to whose children your field is limited:
 
-      ```
-      import {branchFilter} from 'sanity-plugin-taxonomy-manager'
-      
-      ...
+     ```js
+     import {branchFilter} from 'sanity-plugin-taxonomy-manager'
 
-      defineField({
-          name: 'subject',
-          title: 'Subject',
-          type: 'reference', 
-          to: {type: 'skosConcept'},
-          options: {
-            filter: () => branchFilter({schemeId: 'f3deba', branchId: '25f826'}),
-            disableNew: true,
-          },
-        }),
-      ```
+     ...
+
+     defineField({
+         name: 'subject',
+         title: 'Subject',
+         type: 'reference',
+         to: {type: 'skosConcept'},
+         options: {
+           filter: () => branchFilter({schemeId: 'f3deba', branchId: '25f826'}),
+           disableNew: true,
+         },
+       }),
+     ```
+
 1. Tag resources with concepts and then integrate into search indexing, filtering, navigation, and semantic web services.
-
-## License
-
-MIT © Andy Fitzgerald
-See LICENSE
