@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Document</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="description" content="Description" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0" />
+    <!-- Theme: Simple -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/css/theme-simple.css"
+    />
+
+    <!-- Custom theme styles -->
+    <style>
+      :root {
+        --base-font-size: 16px;
+        --theme-color: #19abf6;
+      }
+      h1.app-name {
+        text-align: left;
+        font-weight: 400;
+        line-height: 1.4;
+      }
+      img {
+        border: 1px solid #ddd;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script>
+      window.$docsify = {
+        name: 'Sanity Taxonomy Manager',
+        repo: 'andybywire/sanity-plugin-taxonomy-manager',
+        homepage: 'home.md',
+        auto2top: true,
+        loadSidebar: true,
+        subMaxLevel: 2,
+        alias: {
+          '.*?/changelog':
+            'https://raw.githubusercontent.com/andybywire/sanity-plugin-taxonomy-manager/main/CHANGELOG.md',
+        },
+        search: {
+          maxAge: 86400, // Expiration time. One day: 86400. When testing locally, clear local storage to refresh.
+          depth: 4, // Headline depth, 1 - 6
+        },
+      }
+    </script>
+    <!-- Docsify v4 -->
+    <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/docsify.min.js"></script>
+    <!-- docsify-themeable -->
+    <script src="https://cdn.jsdelivr.net/npm/docsify-themeable@0/dist/js/docsify-themeable.min.js"></script>
+    <!-- Search -->
+    <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/search.min.js"></script>
+  </body>
+</html>
