@@ -12,7 +12,7 @@
 // import config from 'config:taxonomy-manager'
 import {AiFillTag, AiFillTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
-import {DescriptionDetail} from './styles'
+import {StyledDescription} from './styles'
 import baseIriField from './modules/baseIriField'
 import {Identifier} from './components/inputs'
 import {randomKey} from '@sanity/util/content'
@@ -172,9 +172,9 @@ export default function skosConcept(baseUri?: string) {
         title: 'History Notes',
         type: 'text',
         description: (
-          <details>
+          <StyledDescription>
             <summary>Significant changes to the meaning of the form of this concept.</summary>
-            <DescriptionDetail>
+            <div>
               <kbd>
                 Example: childAbuse
                 <br />
@@ -192,8 +192,8 @@ export default function skosConcept(baseUri?: string) {
                   W3C SKOS Primer: 2.4 Documentary Notes
                 </a>
               </p>
-            </DescriptionDetail>
-          </details>
+            </div>
+          </StyledDescription>
         ),
         rows: 3,
       }),
@@ -202,13 +202,13 @@ export default function skosConcept(baseUri?: string) {
         title: 'Editorial Notes',
         type: 'text',
         description: (
-          <details>
+          <StyledDescription>
             <summary>
               Information to aid in administrative housekeeping, such as reminders of editorial work
               still to be done, or warnings in the event that future editorial changes might be
               made.
             </summary>
-            <DescriptionDetail>
+            <div>
               <kbd>
                 Example: doubleclick
                 <br />
@@ -226,8 +226,8 @@ export default function skosConcept(baseUri?: string) {
                   W3C SKOS Primer: 2.4 Documentary Notes
                 </a>
               </p>
-            </DescriptionDetail>
-          </details>
+            </div>
+          </StyledDescription>
         ),
         rows: 3,
       }),
@@ -236,11 +236,11 @@ export default function skosConcept(baseUri?: string) {
         title: 'Change Notes',
         type: 'text',
         description: (
-          <details>
+          <StyledDescription>
             <summary>
               Fine-grained changes to a concept, for the purposes of administration and maintenance.
             </summary>
-            <DescriptionDetail>
+            <div>
               <kbd>
                 Example: tomato
                 <br />
@@ -258,8 +258,8 @@ export default function skosConcept(baseUri?: string) {
                   W3C SKOS Primer: 2.4 Documentary Notes
                 </a>
               </p>
-            </DescriptionDetail>
-          </details>
+            </div>
+          </StyledDescription>
         ),
         rows: 3,
       }),

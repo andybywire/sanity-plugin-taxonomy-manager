@@ -1,9 +1,14 @@
 import styled from 'styled-components'
 import {hues} from '@sanity/color'
 
-export const DescriptionDetail = styled.p`
-  margin-top: 0.5rem;
-  margin-left: 0.75rem;
+export const StyledDescription = styled.details`
+  summary {
+    cursor: pointer;
+  }
+  div {
+    margin-top: 0.5rem;
+    margin-left: 0.75rem;
+  }
 `
 export const InlineHelp = styled.div`
   margin-top: 2rem;

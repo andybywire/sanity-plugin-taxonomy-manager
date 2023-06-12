@@ -4,7 +4,7 @@
  */
 
 import {defineField} from 'sanity'
-import {DescriptionDetail} from '../styles'
+import {StyledDescription} from '../styles'
 import {RdfUri} from '../components/inputs'
 
 export default [
@@ -15,24 +15,24 @@ export default [
     validation: (Rule) =>
       Rule.required().error(`Please supply a base URI in the format 'http://example.com/'`),
     description: (
-      <details>
+      <StyledDescription>
         <summary>
           The root URI (Uniform Resource Identifier) used to create unique concept identifiers.
         </summary>
-        <DescriptionDetail>
+        <div>
           Unique identifiers allow for the clear an unambiguous identification of concepts across
           namespaces, for example between <code>https://shipparts.com/vocab#Bow</code> and {}
           <code>https://wrappingsupplies.com/vocab#Bow</code>.
-        </DescriptionDetail>
-        <DescriptionDetail>
+        </div>
+        <div>
           In most cases, it makes sense for your base URI to be the root or a subdirectory of your
           website. In all cases, the URI you choose should be in a domain that you control.
-        </DescriptionDetail>
-        <DescriptionDetail>
+        </div>
+        <div>
           For new Concepts and Concept Schemes, the Base URI field is pre-populated based on the
           most recently used Base URI value.
-        </DescriptionDetail>
-      </details>
+        </div>
+      </StyledDescription>
     ),
     options: {
       collapsible: true,
