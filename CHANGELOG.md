@@ -5,13 +5,16 @@ All notable changes to this project will be documented in this file.
 The format of this document is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [unreleased]
+<!-- ## [unreleased] -->
+
+## [2.3.0] - 2023-06-12
 
 ### Added
 - Collapse / expand functionality to tree view
 - Keyboard and screen reader support for collapse/expand, editing actions, and detail links
 - Clarify types and parameters for plugin and helpers
 - Add standalone documentation site
+- Add progressive disclosure to description fields and improve SKOS Concept field descriptions 
 
 ## [2.2.2] - 2023-06-06
 
