@@ -23,10 +23,16 @@ The Taxonomy Manager document schema is based on the [World Wide Web Consortium]
 
 ## Installation
 
-Install using the [Sanity CLI](https://www.sanity.io/docs/cli).
+In your Sanity project folder, run
 
 ```bash
-$ npm i sanity-plugin-taxonomy-manager
+npm i sanity-plugin-taxonomy-manager
+```
+
+or
+
+```bash
+yarn add sanity-plugin-taxonomy-manager
 ```
 
 ## Configuration
