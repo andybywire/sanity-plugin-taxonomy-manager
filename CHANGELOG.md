@@ -176,6 +176,7 @@ is available.
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
 [unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.2...HEAD
+[2.3.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.2...v2.3.0
 [2.2.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.0...v2.2.1
 [2.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.1.0...v2.2.0
