@@ -26,6 +26,10 @@
       img {
         border: 1px solid #ddd;
       }
+      .app-nav {
+        font-size: 1.25rem;
+        font-weight: 400;
+      }
     </style>
   </head>
   <body>
@@ -36,7 +40,9 @@
         repo: 'andybywire/sanity-plugin-taxonomy-manager',
         homepage: 'home.md',
         auto2top: true,
+        loadNavbar: true,
         loadSidebar: true,
+        mergeNavbar: true,
         subMaxLevel: 2,
         alias: {
           '.*?/changelog':
