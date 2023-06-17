@@ -10,7 +10,7 @@
  */
 
 // import config from 'config:taxonomy-manager'
-import {AiFillTag, AiFillTags} from 'react-icons/ai'
+import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
 import {WarningOutlineIcon} from '@sanity/icons'
 import {StyledDescription} from './styles'
@@ -23,7 +23,7 @@ export default function skosConcept(baseUri?: string) {
     name: 'skosConcept',
     title: 'Concept',
     type: 'document',
-    icon: AiFillTags,
+    icon: AiOutlineTags,
     initialValue: async (props, context) => {
       if (baseUri)
         return {
@@ -444,7 +444,7 @@ export default function skosConcept(baseUri?: string) {
       prepare({title}) {
         return {
           title: title,
-          media: AiFillTag,
+          media: AiOutlineTag,
         }
       },
     },

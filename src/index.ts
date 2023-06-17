@@ -6,13 +6,12 @@ import baseIri from './objects/baseIri'
 import TreeView from './components/TreeView'
 import {schemeFilter, branchFilter} from './helpers'
 
-import {structure} from './structure'
-import {ActivityIcon} from '@sanity/icons' // replace w/ custom icon
+import {defaultDocumentNode, structure} from './structure'
+import NodeTree from './components/NodeTree'
 
 interface Options {
   baseUri?: string
 }
-// tool name, list view name, don't show tool
 
 /**
  * Defines a Sanity plugin for managing taxonomies.
@@ -36,7 +35,8 @@ const taxonomyManager = definePlugin((options?: Options) => {
         name: 'taxonomy',
         title: 'Taxonomy',
         structure,
-        icon: ActivityIcon,
+        defaultDocumentNode,
+        icon: NodeTree,
       }),
     ],
   }
