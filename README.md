@@ -8,6 +8,20 @@
 > This is a **Sanity Studio v3** plugin.
 > For the v2 version, please refer to the [v2-branch](https://github.com/andybywire/sanity-plugin-taxonomy-manager/tree/studio-v2).
 
+> 🚨 **Breaking Changes for Concept Fields**
+>
+> Version 2.3.1 of Sanity Taxonomy Manager is the last version to support the `baseUri` and `skosConceptScheme` fields that were part of version 1 and early (patch) versions of v2. 
+>
+> If you are upgrading to Taxonomy Manager version 3 with concepts created in one of these early versions, install this version first. v2.3.1 includes field utilities to help you:
+>
+> - convert `baseUri` to the new schema
+> - generate unique `concept` and `conceptScheme` identifiers
+> - remove deprecated `skosConceptScheme` references in Concepts
+>
+> In Sanity Taxonomy Manager 3.0, both these utilities and the fields that support the deprecated schemes will be removed. Concept tags and queries will still work, but may lead to warnings in the Studio about scheme/data mismatches.
+>
+> Please feel free to reach out on [GitHub Discussions](https://github.com/andybywire/sanity-plugin-taxonomy-manager/discussions) with any questions. 
+
 Taxonomies are crucial tools for organization and interoperability between and across data sets. Taxonomy Manager provides a way for content authors to create, use, and maintain standards compliant taxonomies in Sanity Studio.
 
 The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors.
