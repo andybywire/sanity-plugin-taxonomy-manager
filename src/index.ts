@@ -2,7 +2,6 @@ import {definePlugin} from 'sanity'
 import {deskTool} from 'sanity/desk'
 import skosConcept from './skosConcept'
 import skosConceptScheme from './skosConceptScheme'
-import baseIri from './objects/baseIri'
 import TreeView from './components/TreeView'
 import {schemeFilter, branchFilter} from './helpers'
 
@@ -28,7 +27,7 @@ const taxonomyManager = definePlugin((options?: Options) => {
     name: 'taxonomyManager',
     options,
     schema: {
-      types: [skosConcept(baseUri), skosConceptScheme(baseUri), baseIri],
+      types: [skosConcept(baseUri), skosConceptScheme(baseUri)],
     },
     plugins: [
       deskTool({
