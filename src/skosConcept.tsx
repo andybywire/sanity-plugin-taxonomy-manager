@@ -9,10 +9,10 @@
  * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
  */
 
-import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
 import {WarningOutlineIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
+import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {StyledDescription} from './styles'
 import baseIriField from './modules/baseIriField'
 import {Identifier} from './components/inputs'
