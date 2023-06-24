@@ -1,15 +1,14 @@
-# Sanity Taxonomy Manager
+<h1 class="title">Sanity Taxonomy Manager</h1>
 
-![NPM Version](https://img.shields.io/npm/v/sanity-plugin-taxonomy-manager?style=flat-square)
-![License](https://img.shields.io/npm/l/sanity-plugin-taxonomy-manager?style=flat-square)
+[filename](_includes/shields.md ':include')
 
-### Create and manage standards compliant taxonomies, thesauri, and classification schemes in Sanity Studio. <!-- {docsify-ignore} -->
+<p class='large'>Create and manage standards compliant taxonomies, thesauri, and classification schemes in Sanity Studio.<p>
+
+![taxonomy manager plugin screenshot](_images/taxonomy-manager.png)
 
 - W3C SKOS Compliant Taxonomies and Thesauri
 - Support for hierarchical and faceted taxonomies
 - Purpose built for Sanity Studio
-
-![taxonomy manager plugin screenshot](_images/taxonomy-manager.png)
 
 Taxonomies are crucial tools for organization and interoperability between and across data sets. Taxonomy Manager provides a way for content authors to create, use, and maintain standards compliant taxonomies in Sanity Studio.
 
@@ -49,4 +48,5 @@ For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes
 ## License
 
 MIT © Andy Fitzgerald
-See LICENSE
+See [LICENSE](https://github.com/andybywire/sanity-plugin-taxonomy-manager/blob/main/LICENSE)
+

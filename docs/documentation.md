@@ -1,6 +1,12 @@
-# Quick start
+<h1 class="title">Documentation</h1>
 
-## Installation
+[filename](_includes/shields.md ':include')
+
+<p class='large'>Sanity Taxonomy Manager adds a set of tools and two document types to your Sanity Studio &mdash; SKOS Concept and SKOS Concept Scheme &mdash; that you can use to create, organize, and use standards compliant taxonomies.<p>
+
+## Getting Started
+
+### Installation
 
 In your Sanity project folder, run
 
@@ -14,7 +20,7 @@ or
 yarn add sanity-plugin-taxonomy-manager
 ```
 
-## Configuration
+### Configuration
 
 Add the plugin to your project configuration to make the `skosConcept` and `skosConceptScheme` document types available in your studio.
 
@@ -48,6 +54,8 @@ export default defineConfig({
   },
 })
 ```
+
+### Options
 
 The `baseURI` option allows you to set a default URI (Uniform Resource Identifier) for new concepts and concept schemes. Unique identifiers allow for the clear an unambiguous identification of concepts across namespaces, for example between `https://shipparts.com/vocab#Bow` and `https://wrappingsupplies.com/vocab#Bow`. The base URI of these concepts is `https://shipparts.com/` and `https://wrappingsupplies.com/`, respectively.
 
@@ -90,13 +98,18 @@ export const structure = (S) =>
 
 ## Usage
 
+### Creating Concept Schemes
 1. Create a [Concept Scheme](https://www.w3.org/TR/skos-reference/#schemes) to group related concepts
+
+### Adding Concepts
 1. Create and describe Concepts.
    - All fields _except_ Preferred Label and Base IRI are optional, and are to be used as best fits the needs of your information modeling task.
      - Preferred Label is the preferred lexical label for a resource in a given language. In the current version of Taxonomy Manager, the Preferred Label is automatically used as the final segment for a concept's unique identifier (its URI).
      - Base IRI is the root IRI (Internationalized Resource Identifier) used to create unique concept identifiers. Unique identifiers allow for the clear an unambiguous identification of concepts across namespaces, for example between `https://shipparts.com/vocab#Bow` and `https://wrappingsupplies.com/vocab#Bow`. The base URI of these concepts is `https://shipparts.com/` and `https://wrappingsupplies.com/`, respectively. For a wider introduction to concept identifiers, see [Cool URIs for the Semantic Web](https://www.w3.org/TR/cooluris/).
    - Concepts may optionally be added to a Concept Scheme as Top Concepts, to represent the broadest concepts of a particular hierarchy and provide efficient access points to broader/narrower concept hierarchies
    - All Concept fields map to elements of the machine readable data model described in the [W3C SKOS Recommendation](https://www.w3.org/TR/skos-reference/).
+
+### Adding to Sanity Documents
 1. Use Reference Filter helpers to easily include whole taxonomies or individual taxonomy branches in your document schemas:
 
    - To allow a `reference` field to access any term in a SKOS Concept Scheme, use the `schemeFilter` helper. The `schemeFilter` helper takes one parameter: the RDF URI ID from the Concept Scheme you want to use, located just below the `Base URI` field. Copy the identifier that follows your Base URI:
