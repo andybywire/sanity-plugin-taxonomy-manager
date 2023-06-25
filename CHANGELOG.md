@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [2.3.1] - 2023-06-25
+
+### Added 
+- Document upgrade notice for schemas still using v1.0 configuration
+
 ## [2.3.0] - 2023-06-12
 
 ### Added
@@ -175,7 +180,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.2...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.1...HEAD
+[2.3.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.2...v2.3.0
 [2.2.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.1...v2.2.2
 [2.2.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.0...v2.2.1
