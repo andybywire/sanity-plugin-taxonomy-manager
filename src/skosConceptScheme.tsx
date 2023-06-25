@@ -5,18 +5,18 @@
  * @todo Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links.
  */
 
-import {RiNodeTree} from 'react-icons/ri'
 import {defineArrayMember, defineField, defineType} from 'sanity'
+import {randomKey} from '@sanity/util/content'
 import baseIriField from './modules/baseIriField'
 import {Identifier} from './components/inputs'
-import {randomKey} from '@sanity/util/content'
+import NodeTree from './components/NodeTree'
 
 export default function skosConceptScheme(baseUri?: string) {
   return defineType({
     name: 'skosConceptScheme',
     title: 'Concept Scheme',
     type: 'document',
-    icon: RiNodeTree,
+    icon: NodeTree,
     initialValue: async (props, context) => {
       if (baseUri) return {baseIri: baseUri}
       const {getClient} = context
@@ -102,7 +102,7 @@ export default function skosConceptScheme(baseUri?: string) {
       prepare({title}) {
         return {
           title: title,
-          media: RiNodeTree,
+          media: NodeTree,
         }
       },
     },

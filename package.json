@@ -4,9 +4,12 @@
   "description": "Create and manage SKOS compliant taxonomies, thesauri, and classification schemes in Sanity Studio.",
   "keywords": [
     "sanity",
-    "sanity-plugin"
+    "sanity-plugin",
+    "SKOS",
+    "taxonomy",
+    "thesaurus"
   ],
-  "homepage": "https://github.com/andybywire/sanity-plugin-taxonomy-manager#readme",
+  "homepage": "https://sanitytaxonomymanager.com",
   "bugs": {
     "url": "https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues"
   },
@@ -54,6 +57,7 @@
     "@sanity/ui": "^1.0.0",
     "@types/styled-components": "^5.1.26",
     "react-icons": "^4.3.1",
+    "sanity-plugin-documents-pane": "^2.0.0-v3-studio.5",
     "sanity-plugin-utils": "^1.5.0"
   },
   "devDependencies": {

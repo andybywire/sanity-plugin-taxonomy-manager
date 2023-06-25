@@ -4,6 +4,8 @@
  * plugin.
  * - Input is only visible if no identifier has been assigned
  * - Input disappears once an ID is generated
+ * - Consider removing once custom input ID scenarios have been
+ *   more fleshed out
  */
 
 import {useCallback} from 'react'
