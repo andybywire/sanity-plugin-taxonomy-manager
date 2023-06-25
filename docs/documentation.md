@@ -22,30 +22,62 @@ yarn add sanity-plugin-taxonomy-manager
 
 ### Configuration
 
-Add the plugin to your project configuration to make the `skosConcept` and `skosConceptScheme` document types available in your studio.
+Add `taxonomyManager()` to the plugins array of your [project configuration](https://www.sanity.io/docs/configuration#51515480034b). this will make the Taxonomy Manager Tool available in your studio workspace.
 
 ```js
 // sanity.config.js
 
 import {defineConfig} from 'sanity'
 import {deskTool} from 'sanity/desk'
-import {structure} from './deskStructure'
 import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'
 import {schemaTypes} from './schemas'
 
 export default defineConfig({
   name: 'default',
   title: 'Sanity Studio',
-  projectId: 'project-id',
+  projectId: '<projectId>',
+  dataset: 'production',
+  plugins: [
+    deskTool(),
+    // Include the taxonomy manager plugin
+    taxonomyManager({
+      // Optional: Set a Base URI to use for new concepts & concept schemes
+      baseUri: 'https://example.com/',
+    }),
+  ],
+  schema: {
+    types: schemaTypes,
+  },
+})
+```
+
+The plugin adds `skosConcept` and `skosConceptScheme` document types to your studio. If you display all documents by default, you can use a filter on `documentTypeListItems` in the [desk tool configuration](https://www.sanity.io/docs/desk-tool-api) to exclude taxonomy manager document types from your main document view.
+
+```js
+// sanity.config.js
+
+import {defineConfig} from 'sanity'
+import {deskTool} from 'sanity/desk'
+import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'
+import {schemaTypes} from './schemas'
+
+export default defineConfig({
+  name: 'default',
+  title: 'Sanity Studio',
+  projectId: '<projectId>',
   dataset: 'production',
   plugins: [
     deskTool({
-      structure,
+      structure: (S) =>
+        S.list()
+          .title('Content')
+          .items([
+            ...S.documentTypeListItems().filter(
+              (listItem) => !['skosConcept', 'skosConceptScheme'].includes(listItem.getId())
+            ),
+          ]),
     }),
-    // Include the taxonomy manager plugin
     taxonomyManager({
-      // Optional: Set a Base URI to use when
-      // creating new concepts & schemes
       baseUri: 'https://example.com/',
     }),
   ],
@@ -57,44 +89,11 @@ export default defineConfig({
 
 ### Options
 
-The `baseURI` option allows you to set a default URI (Uniform Resource Identifier) for new concepts and concept schemes. Unique identifiers allow for the clear an unambiguous identification of concepts across namespaces, for example between `https://shipparts.com/vocab#Bow` and `https://wrappingsupplies.com/vocab#Bow`. The base URI of these concepts is `https://shipparts.com/` and `https://wrappingsupplies.com/`, respectively.
+The `baseURI` option allows you to set a default URI (Uniform Resource Identifier) for new concepts and concept schemes. Unique identifiers allow for the clear an unambiguous identification of concepts across namespaces, for example between `https://shipparts.com/vocab/Bow` and `https://wrappingsupplies.com/vocab/Bow`. The base URI of these concepts is `https://shipparts.com/vocab/` and `https://wrappingsupplies.com/vocab/`, respectively.
 
-- In most cases, it makes sense for your base URI to be the root or a subdirectory of your website.
+- In most cases, it makes sense for your base URI to be a directory or subdirectory of your website.
 - In all cases, the URI you choose should be in a domain that you control.
 - The `baseUri` default is optional. If you omit it, the Base URI for new concepts and concept schemes is pre-populated based on the most recently used Base URI value.
-
-Use [Structure Builder](https://www.sanity.io/docs/structure-builder-reference) to create a separate area for your taxonomy tools and add the provided Concept Scheme Tree View component.
-
-```js
-// ./deskStructure.js
-import {TreeView} from 'sanity-plugin-taxonomy-manager'
-
-export const structure = (S) =>
-  S.list()
-    .title('Content')
-    .items([
-      S.listItem()
-        .title('Concept Schemes')
-        .schemaType('skosConceptScheme')
-        .child(
-          S.documentTypeList('skosConceptScheme')
-            .title('Concept Schemes')
-            .child((id) =>
-              S.document()
-                .schemaType('skosConceptScheme')
-                .documentId(id)
-                .views([S.view.component(TreeView).title('Tree View'), S.view.form()])
-            )
-        ),
-      S.documentTypeListItem('skosConcept').title('Concepts'),
-      S.divider(),
-
-      // Remove Taxonomy Manager types from the default document type list
-      ...S.documentTypeListItems().filter(
-        (listItem) => !['skosConcept', 'skosConceptScheme'].includes(listItem.getId())
-      ),
-    ])
-```
 
 ## Usage
 
@@ -151,3 +150,71 @@ export const structure = (S) =>
      ```
 
 1. Tag resources with concepts and then integrate into search indexing, filtering, navigation, and semantic web services.
+
+
+<!-- ## Configuration
+
+Add plugin to your [project configuration](https://www.sanity.io/docs/configuration#51515480034b) to make the Taxonomy Manager Tool available in your studio workspace.
+
+```js
+// sanity.config.js
+
+import {defineConfig} from 'sanity'
+import {deskTool} from 'sanity/desk'
+import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'
+import {schemaTypes} from './schemas'
+
+export default defineConfig({
+  name: 'default',
+  title: 'Sanity Studio',
+  projectId: '<projectId>',
+  dataset: 'production',
+  plugins: [
+    deskTool(),
+    // Include the taxonomy manager plugin
+    taxonomyManager({
+      // Optional: Set a Base URI to use for new concepts & concept schemes
+      baseUri: 'https://example.com/',
+    }),
+  ],
+  schema: {
+    types: schemaTypes,
+  },
+})
+```
+
+The plugin adds `skosConcept` and `skosConceptScheme` document types to your studio. Use a filter on `documentTypeListItems` in the [desk tool configuration](https://www.sanity.io/docs/desk-tool-api) to exclude taxonomy manager document types from your main document view.
+
+```js
+// sanity.config.js
+
+import {defineConfig} from 'sanity'
+import {deskTool} from 'sanity/desk'
+import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'
+import {schemaTypes} from './schemas'
+
+export default defineConfig({
+  name: 'default',
+  title: 'Sanity Studio',
+  projectId: '<projectId>',
+  dataset: 'production',
+  plugins: [
+    deskTool({
+      structure: (S) =>
+        S.list()
+          .title('Content')
+          .items([
+            ...S.documentTypeListItems().filter(
+              (listItem) => !['skosConcept', 'skosConceptScheme'].includes(listItem.getId())
+            ),
+          ]),
+    }),
+    taxonomyManager({
+      baseUri: 'https://example.com/',
+    }),
+  ],
+  schema: {
+    types: schemaTypes,
+  },
+})
+``` -->
