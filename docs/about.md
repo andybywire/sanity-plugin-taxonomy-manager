@@ -4,7 +4,7 @@
 
 <p class='large'>Create and manage standards compliant taxonomies, thesauri, and classification schemes in Sanity Studio.<p>
 
-![taxonomy manager plugin screenshot](_images/taxonomy-manager.png)
+![taxonomy manager plugin screenshot](_images/taxonomyManager.png)
 
 - W3C SKOS Compliant Taxonomies and Thesauri
 - Support for hierarchical and faceted taxonomies
