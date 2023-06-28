@@ -10,7 +10,8 @@
 
 The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. -->
 
-<img src="docs/_images/taxonomyManager.png" style="border: 1px solid #ddd">
+| ![taxonomy manager plugin screenshot](docs/_images/taxonomyManager.png) |
+| --- |
 
 ## Documentation
 
