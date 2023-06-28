@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.0.0] - 2023-06-28
+
+### Added 
+- Standalone tool pane in Sanity Studio
+- Additional taxonomy building instructions to Docs
+- Contributing section to Docs
+- Documentation for upgrade paths for schemas still using v1.0 configurations
+
+### Removed
+- Support for some `baseUri` and `skosConceptScheme` fields created with v1.0 schema
+
 ## [2.3.1] - 2023-06-25
 
 ### Added 
@@ -180,7 +191,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.1...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.0.0...HEAD
+[3.0.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.3.1...v3.0.0
 [2.3.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.3.0...v2.3.1
 [2.3.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.2...v2.3.0
 [2.2.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v2.2.1...v2.2.2
