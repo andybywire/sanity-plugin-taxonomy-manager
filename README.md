@@ -17,6 +17,10 @@ The Taxonomy Manager document schema is based on the [World Wide Web Consortium]
 
 For full documentation, visit [sanitytaxonomymanager.com](https://sanitytaxonomymanager.com).
 
+> **🚨 Breaking Changes for Concept Fields**
+>
+> Version 3 of Sanity Taxonomy Manager includes changes to `baseUri` and `skosConceptScheme` fields that were part of version 1 and early (patch) versions of v2. If you are upgrading to Taxonomy Manager version 3 with concepts created in one of these early versions, [install v2.3.1 first](https://www.npmjs.com/package/sanity-plugin-taxonomy-manager/v/2.3.1): it includes field utilities to help you migrate your terms and schemes to version 3.
+
 ## Features
 <!-- make this more concise -->
 - Adds two document types to your Sanity schema which are used to generate [SKOS](https://www.w3.org/TR/skos-primer/) compliant concepts and taxonomies: `skosConcept` and `skosConceptScheme`
