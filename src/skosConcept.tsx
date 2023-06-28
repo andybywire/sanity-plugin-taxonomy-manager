@@ -9,14 +9,13 @@
  * @todo Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
  */
 
-// import config from 'config:taxonomy-manager'
-import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
 import {WarningOutlineIcon} from '@sanity/icons'
+import {randomKey} from '@sanity/util/content'
+import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {StyledDescription} from './styles'
 import baseIriField from './modules/baseIriField'
 import {Identifier} from './components/inputs'
-import {randomKey} from '@sanity/util/content'
 
 export default function skosConcept(baseUri?: string) {
   return defineType({
@@ -217,12 +216,6 @@ export default function skosConcept(baseUri?: string) {
         },
       }),
       defineField({
-        name: 'conceptIriBase',
-        title: 'Edit the base IRI',
-        type: 'baseIri',
-        // this field is visible only if a conceptIriBase using the old scheme is present
-      }),
-      defineField({
         name: 'broader',
         title: 'Broader Concept(s)',
         description: (
@@ -376,50 +369,6 @@ export default function skosConcept(baseUri?: string) {
           </StyledDescription>
         ),
         rows: 3,
-      }),
-      defineField({
-        name: 'topConcept',
-        title: 'Top Concept',
-        type: 'boolean',
-        description: (
-          <>
-            NOTE: Top Concepts are determined at the Concept Scheme for version 2 of this plugin.
-            Please migrate this value accordingly. This field will be removed in future versions of
-            this plugin. To hide it in the meantime, set Top Concept to "false."
-            <br />
-            <br />
-            Description: Top concepts provide an efficient entry point to broader/narrower concept
-            hierarchies and/or top level facets. By convention, resources can be a Top Concept, or
-            have Broader relationships, but not both.
-          </>
-        ),
-        hidden: ({document}) => !document?.topConcept,
-      }),
-      defineField({
-        name: 'scheme',
-        title: 'Concept Scheme(s)',
-        type: 'reference',
-        hidden: ({document}) => !document?.scheme,
-        description: (
-          <>
-            NOTE: Concept Scheme inclusion is are determined from the Concept Scheme for version 2
-            of this plugin. Please migrate this value accordingly. This field will be removed in
-            future versions of this plugin. To hide it in the meantime, unset this value (delete
-            it).
-            <br />
-            <br />
-            Description: Concept schemes are used to group concepts into defined sets, such as
-            thesauri, classification schemes, or facets.
-          </>
-        ),
-        to: [
-          {
-            type: 'skosConceptScheme',
-          },
-        ],
-        options: {
-          disableNew: true,
-        },
       }),
     ],
     orderings: [
