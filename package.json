@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-taxonomy-manager",
-  "version": "2.3.0",
+  "version": "3.0.1",
   "description": "Create and manage SKOS compliant taxonomies, thesauri, and classification schemes in Sanity Studio.",
   "keywords": [
     "sanity",
@@ -9,7 +9,7 @@
     "taxonomy",
     "thesaurus"
   ],
-  "homepage": "https://sanitytaxonomymanager.com",
+  "homepage": "https://github.com/andybywire/sanity-plugin-taxonomy-manager#readme",
   "bugs": {
     "url": "https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues"
   },
