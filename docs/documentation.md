@@ -89,7 +89,7 @@ export default defineConfig({
 
 ### Options
 
-The `baseURI` option allows you to set a default URI (Uniform Resource Identifier) for new concepts and concept schemes. Unique identifiers allow for the clear an unambiguous identification of concepts across namespaces, for example between `https://shipparts.com/vocab/Bow` and `https://wrappingsupplies.com/vocab/Bow`. The base URI of these concepts is `https://shipparts.com/vocab/` and `https://wrappingsupplies.com/vocab/`, respectively.
+The `baseURI` option allows you to set a default URI (Uniform Resource Identifier) for new concepts and concept schemes. Unique identifiers allow for the clear and unambiguous identification of concepts across namespaces, for example between `https://shipparts.com/vocab/Bow` and `https://wrappingsupplies.com/vocab/Bow`. The base URI of these concepts is `https://shipparts.com/vocab/` and `https://wrappingsupplies.com/vocab/`, respectively.
 
 - In most cases, it makes sense for your base URI to be a directory or subdirectory of your website.
 - In all cases, the URI you choose should be in a domain that you control.
@@ -161,6 +161,57 @@ Depending on the volume of content you need to tag, you may opt for automated or
 Taxonomies are never finished. Rather, they are living systems that grow and evolve with the business. The goal of governance is to create a repeatable, accountable, visible, and predictable process for managing taxonomy changes. 
 
     Successful taxonomy governance establishes long-term ownership and responsibility for taxonomies, responds to feedback from taxonomy users, and assures the sustainable evolution of taxonomies in response to changes in user and system needs. Governance activities include periodic review of taxonomy performance and responding to suggestions, requests, and problems raised by taxonomy users. 
+
+<!-- Merge this once I have at least two here -->
+### Common Structures
+Taxonomies can take a wide range of shapes and sizes, depending on the purposes for which they're created and the subject matter they're designed to represent. There are, nonetheless, a few common patterns that tend to be a good fit for a lot of knowledge representation needs. If you're creating a taxonomy from scratch or adapting one to your needs, consider one of the patterns below as a starting point. 
+
+#### Type Taxonomy
+Type taxonomies are a crucial tool for organizing digital content for findability and discovery. Product catalogs, services listings, resource types, and subject hierarchies are all commonly characterized by "type" organization: each child category describes a more specialize type of thing than the parent category. Well defined type taxonomies area powerful tool for making your content more discoverable and reusable across contexts.
+
+![First example: Housing Advice, subtopics: Foreclosure Counseling, Homebuyer Education; Residential Housing, subtopics: Long-Term Housing, subtopics: Assisted Living, Independent Living, Nursing Home, Public Housing; Safe Housing, Short-Term Housing, subtopics: Nursing Home, Sober Living. Second example: How-To, subtopics: Clinical Procedure, subtopics: Assessment, Intervention; Electronic Health Record (EHR) How-To, Equipment Operation, subtopics: Equipment Setup, Equipment Troubleshooting, Equipment Use; Newsletter. Third example: Anthropology(258), subtopics: Archaeology(101), Sociology(81); Arts and Music(119), Biology(875), subtopics: Ecology(492), Genetics(45), Health(142), Chemistry(62). Fourth example: Specialty Bikes (65), Mountain Bikes (57), Electric Bikes (50), Road Bikes (44), subtopics: Gravel Bikes (32), Endurance Bikes (7), Electric Road Bikes (6), Touring Bikes (5); Kids' Bikes (40), Hybrid Bikes (27).](_images/type-taxonomies%E2%80%93blue.png)
+
+*Examples of type taxonomies (clockwise from top-left): The Open Eligibility Project (human services), Elemeno Health (resource types, using the Sanity Taxonomy Manager plugin), National Geographic (education subjects), REI (product categories)*
+
+Type classification helps users navigate and browse categories from general to more specific and narrow down large content sets to specific items that meet their needs. It also allows information designers to assemble related content into meaningful collections and to provide richer search results based on parent/child relationships.
+
+When combined with search term and traffic data, type taxonomies help you to draw deeper insight from visitor behaviors, and they can play a vital role in providing AI the ground truth it needs to return reliable, trustworthy results.
+
+**Key Features**
+
+- **Relationships:** Type taxonomies organize concepts in "is-a" relationships: "Nutrition Education" is a type of "Health Eduction," which is a type of "Education." These relationships, when consistently maintained, help users to confidently navigate categories, and can allow algorithms to accurately draw inferences about resources tagged with taxonomy terms.
+- **Adaptability:** Type taxonomies can be tailored to a wide range of specific content collections or subject domains.
+- **Flexibility:** Type taxonomies can be used to add structure to simple domains with only a handful of concepts, or can scale to many thousands of terms.
+
+#### Topic Taxonomy
+Topic taxonomies give you a way to group ideas or things that have meaningful associations for your users or your business, but are not necessarily sub-types of one another or of a common parent concept. "Prescription cat food" is "cat food," which is in turn "pet food." Your users however, may look for "kidney diet" cat food under the "cat" category—and "cat food" is not a cat. This is where topic taxonomies can help.
+
+![Activity submenu of the Columbia website, with links to Hiking, Fishing, Ski & Snow, Trail Running, Hunting, Golf; Sports submenu of the Patagonia website, with links to Surfing, Kitesurfing, Fly Fishing, Trail Running, Climbing, Mountain Biking, Snow](_images/topic-taxonomies-blue.png)
+
+*Detail views of the topical categories on the Columbia and Patagonia retail websites.*
+
+Topic classification is often used to provide multiple pathways to a concept, article, or product. Topic classification is also a powerful way to express brand differentiation. Columbia and Patagonia both make and sell a similar range of outdoor activity apparel for adults and kids, and products for both companies fall into clearly delineated types: jackets, shirts, base layers, pants, etc. Topical grouping on each site (which, when at the top level we usually call "categories") tell users of each site what kind of "place" it is.
+
+**Key Features**
+
+- **Relationships:** Topic taxonomies may only be a singe level, or comparatively shallow, and often combine parent-child "is-a" and whole-part "has-a" relationships freely.
+- **Adaptability:** Topic taxonomies are much more flexible than "type" taxonomies, and can be used to express a brand's (or user's) particular perspective.
+- **Size Limitations:** Topic taxonomies are often are not very large: because the relationships are less strict than in many Type taxonomies, large structures in Topic taxonomies may end up hiding concepts in categories users may not expect.
+
+#### Faceted Taxonomy
+Faceted taxonomies are a great option for organizing and classifying resources that don't fit neatly into a single hierarchical tree structure. Consider a faceted taxonomy if you find that you repeat categories at the lower levels of your hierarchical taxonomy, or if there are no clear candidates for top level categories, such as when resources need to be classified in different ways for different audiences.
+
+![Hierarchy view of recipe categories: Breakfast, Lunch: Asian Cuisine, European Cuisine, Latin American Cuisine, etc.; Dinner: Asian Cuisine, European Cuisine: Appetizers, Mains, Sides; Latin American Cuisine: Appetizers, Mains: Burritos, Tacos, Soups, etc; Sides, etc. Faceted view of recipe categories: Course: breakfast, lunch, dinner; Cuisine: Asian, European, Latin American; Dish: Appetizer, Mains: Burritos, Tacos, Soups; Sides.](_images/facets-comparison-blue.png)
+
+*Side by side comparison of recipe categories presented as a hierarchy and as facets*
+
+Faceted classification offers an alternative to the rigidity of tree structures for content that has similar attributes. The example shown above also illustrates an important consideration in the design of effective facets: the attributes described in each facet should be mutually exclusive (you'll hear taxonomists refer to this as "orthogonality"). The values in "Cuisine," for example, have no overlap with the values in "Course" or "Dish." Likewise, the label "Latin American" will only ever appear in the Cuisine menu.
+
+**Key Features**
+
+- **Relationships:** While orthogonality is a key feature of the relationship between facets, within each facet concepts may be structured in any way that makes sense to the taxonomy's target users. Simple lists are by far the most common, but individual facets can also be structured as hierarchies or trees with different kinds of relationships (part/whole, cause/effect, sequence, etc).
+- **Adaptability:** While special care needs to be taken to identify and test facets based on user and business needs and the content being organized, the collection of terms within individual facets tend to accommodate new entities easily. This makes them attractive options for resource collections of mostly homogenous content that is expected to evolve and change over time.
+- **Size Limitations:** Facets allow you to present multiple, mutually exclusive organization schemes easily. The tradeoff is that they introduce additional complexity into discovery and findability. If you find you have fewer than three facets, a type or topic taxonomy may work just as well for your content collection (and introduce less complexity for your users). At the upper end, unless you're building a system for expert users, limit your facets to a half dozen or so.
 
 ### Resources
 As you might imagine, there is much more to creating, using, and managing taxonomies than is covered in this brief guide. Here are a few resources I've found particularly insightful to help you expand on what is presented here:
