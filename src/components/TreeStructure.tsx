@@ -13,10 +13,24 @@ import {TopConcepts} from './TopConcepts'
 import {Orphans} from './Orphans'
 import {NoConcepts} from './guides'
 
-export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {
+export const TreeStructure = ({
+  concepts,
+  inputComponent,
+  selectConcept,
+}: {
+  concepts: DocumentConcepts
+  inputComponent: Boolean
+  selectConcept: any
+}) => {
   // @ts-expect-error — I think this is the same complier issue as Hierarchy.tsx
   // To investigate.
   const {treeId, treeVisibility} = useContext(TreeContext)
+
+  // const treeId = 'd8d'
+  // const treeVisibility = 'open'
+
+  // console.log("treeId: ", treeId) // d8d
+  // console.log("treeVisibility: ", treeVisibility) // open
 
   if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
 
@@ -29,12 +43,19 @@ export const TreeStructure = ({concepts}: {concepts: DocumentConcepts}) => {
               key={concept?.id + treeId}
               concept={concept}
               treeVisibility={treeVisibility}
+              inputComponent={inputComponent}
+              selectConcept={selectConcept}
             />
           )
         })}
       {concepts.orphans.map((concept: ChildConceptTerm) => {
         return (
-          <Orphans key={concept.id + treeId} concept={concept} treeVisibility={treeVisibility} />
+          <Orphans
+            key={concept.id + treeId}
+            concept={concept}
+            treeVisibility={treeVisibility}
+            inputComponent={inputComponent}
+          />
         )
       })}
     </StyledTree>

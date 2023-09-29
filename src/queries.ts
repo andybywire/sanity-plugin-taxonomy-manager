@@ -58,3 +58,25 @@ export const trunkBuilder = (): string => {
     }
   }`
 }
+
+/**
+ * Input Builder
+ * Accept a branchId parameter, and filter to topConcepts and Orphans in that branch only.
+ * Then call branchBuilder recursively — it will only build terms in the scheme referenced by that concept
+ * - branchBuilder() is called in Hierarchy.tsx
+ */
+export const inputBuilder = (): string => {
+  return `coalesce(*[_id == 'drafts.' + $id][0], *[_id == $id][0]) {
+    _updatedAt,
+    "topConcepts":*[_type == "skosConcept" && conceptId == $branchId]{
+      "id": _id,
+      "level": 0,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      ${branchBuilder()}
+    }, 
+    "orphans": []
+  }`
+}

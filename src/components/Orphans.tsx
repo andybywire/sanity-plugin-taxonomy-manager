@@ -18,9 +18,10 @@ import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 type OrphanProps = {
   concept: ChildConceptTerm
   treeVisibility: string
+  inputComponent: Boolean
 }
 
-export const Orphans = ({concept, treeVisibility}: OrphanProps) => {
+export const Orphans = ({concept, treeVisibility, inputComponent}: OrphanProps) => {
   const document: any = useContext(SchemeContext) || {}
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
@@ -116,7 +117,11 @@ export const Orphans = ({concept, treeVisibility}: OrphanProps) => {
         )}
       </Inline>
       {concept?.childConcepts && concept.childConcepts.length > 0 && (
-        <ChildConcepts concepts={concept.childConcepts} />
+        <ChildConcepts
+          concepts={concept.childConcepts}
+          selectConcept={undefined}
+          inputComponent={inputComponent}
+        />
       )}
     </StyledOrphan>
   )

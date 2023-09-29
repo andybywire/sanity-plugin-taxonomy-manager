@@ -24,9 +24,18 @@ import {SchemeContext} from './TreeView'
 import {TreeContext} from './Hierarchy'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
+import {ConceptSelectLink} from './ConceptSelectLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 
-export const Children = ({concept}: {concept: ChildConceptTerm}) => {
+export const Children = ({
+  concept,
+  selectConcept,
+  inputComponent = false,
+}: {
+  concept: ChildConceptTerm
+  selectConcept: any
+  inputComponent: Boolean
+}) => {
   const document: any = useContext(SchemeContext) || {}
   //@ts-expect-error — This is part of the same complaint as in Hierarchy.tsx
   const {treeVisibility} = useContext(TreeContext) || {}
@@ -69,7 +78,11 @@ export const Children = ({concept}: {concept: ChildConceptTerm}) => {
               <SquareIcon className="spacer" />
             )}
             {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
-            <ConceptDetailLink concept={concept} />
+            {inputComponent ? (
+              <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
+            ) : (
+              <ConceptDetailLink concept={concept} />
+            )}
           </Inline>
           {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
         </Inline>
@@ -160,7 +173,13 @@ export const Children = ({concept}: {concept: ChildConceptTerm}) => {
       {concept?.childConcepts &&
         concept.childConcepts.length > 0 &&
         concept?.level &&
-        concept.level < 5 && <ChildConcepts concepts={concept.childConcepts} />}
+        concept.level < 5 && (
+          <ChildConcepts
+            concepts={concept.childConcepts}
+            selectConcept={selectConcept}
+            inputComponent={inputComponent}
+          />
+        )}
     </StyledChildConcept>
   )
 }
