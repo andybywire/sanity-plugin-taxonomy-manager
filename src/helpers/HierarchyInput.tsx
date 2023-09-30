@@ -40,24 +40,26 @@ export function HierarchyInput(props: any) {
    */
   const handleAction = useCallback(
     (conceptRef: any) => {
-      // if there is not draft document, create one first, then patch the new concept
-      if (!documentId.includes('drafts.')) {
+      // if there is a draft document, patch the new reference and commit the change
+      if (documentId.includes('drafts.')) {
         client
-          .fetch(`*[_id == "${documentId}"]`)
-          .then((res) => {
-            res[0]._id = `drafts.${res[0]._id}`
-            res[0][name] = conceptRef
-            client.create(res[0])
-          })
+          .patch(documentId)
+          .set({[name]: conceptRef})
+          .commit()
           .then(() => setOpen(false))
           .catch((err) => console.error(err))
         return
       }
-      // otherwise, just  patch the selected concept to the draft document
+      // if there is not draft document, fetch the published version and create a new
+      // document with the published document id in the `drafts.` path and the new
+      // reference
       client
-        .patch(documentId)
-        .set({[name]: conceptRef})
-        .commit()
+        .fetch(`*[_id == "${documentId}"][0]`)
+        .then((res) => {
+          res._id = `drafts.${res._id}`
+          res[name] = conceptRef
+          client.create(res)
+        })
         .then(() => setOpen(false))
         .catch((err) => console.error(err))
     },
