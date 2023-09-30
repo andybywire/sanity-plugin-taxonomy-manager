@@ -18,9 +18,22 @@ export function ConceptSelectLink({
 }) {
   // const routerContext = useContext(RouterContext)
   // const {routerPanesState, groupIndex} = usePaneRouter()
+  
+  const {prefLabel, id} = concept ?? {}
 
-  const {prefLabel} = concept ?? {}
+  // const staticDocId = 'drafts.96d97ae3-7238-4372-bdb5-9b1816fe2eb1'
 
+  const conceptRef = {
+    _ref: id,
+    _type: 'reference',
+  }
+
+
+  console.log('concept: ', concept)
+
+  const handleClick = () => {
+    selectConcept(conceptRef)
+  }
   // const openInNewPane = useCallback(() => {
   //   if (!routerContext || !id) {
   //     return
@@ -39,7 +52,7 @@ export function ConceptSelectLink({
   // }, [id, routerContext, routerPanesState, groupIndex])
 
   return (
-    <StyledConceptLink href="#" onClick={() => selectConcept(prefLabel)}>
+    <StyledConceptLink href="#" onClick={handleClick}>
       {prefLabel}
     </StyledConceptLink>
   )

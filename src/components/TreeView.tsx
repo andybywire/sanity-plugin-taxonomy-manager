@@ -41,7 +41,7 @@ export const TreeView = ({
         />
       ) : (
         <Container width={1} style={containerStyle}>
-          {document.displayed?.description && (
+          {document?.displayed?.description && (
             <Box padding={4}>
               <Stack space={4}>
                 <Stack space={2}>
@@ -49,7 +49,7 @@ export const TreeView = ({
                     Description
                   </Text>
                   <Text size={2} muted style={descriptionStyle}>
-                    {document.displayed.description}
+                    {document?.displayed.description}
                   </Text>
                 </Stack>
               </Stack>
