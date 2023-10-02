@@ -1,14 +1,11 @@
-/**
- * Concept Detail Link
- * Renders a link to a concept in the hierarchy tree that opens in a new pane.
- */
-
-// import {useCallback, useContext} from 'react'
-// import {usePaneRouter} from 'sanity/desk'
-// import {RouterContext} from 'sanity/router'
+import {useCallback} from 'react'
 import {ChildConceptTerm} from '../types'
 import {StyledConceptLink} from '../styles'
 
+/**
+ * Concept Select Link
+ * Writes a concept _ref from the hierarchy tree to the current document
+ */
 export function ConceptSelectLink({
   concept,
   selectConcept,
@@ -16,40 +13,15 @@ export function ConceptSelectLink({
   concept: ChildConceptTerm
   selectConcept: any
 }) {
-  // const routerContext = useContext(RouterContext)
-  // const {routerPanesState, groupIndex} = usePaneRouter()
-  
   const {prefLabel, id} = concept ?? {}
 
-  // const staticDocId = 'drafts.96d97ae3-7238-4372-bdb5-9b1816fe2eb1'
-
-  const conceptRef = {
-    _ref: id,
-    _type: 'reference',
-  }
-
-
-  console.log('concept: ', concept)
-
-  const handleClick = () => {
+  const handleClick = useCallback(() => {
+    const conceptRef = {
+      _ref: id,
+      _type: 'reference',
+    }
     selectConcept(conceptRef)
-  }
-  // const openInNewPane = useCallback(() => {
-  //   if (!routerContext || !id) {
-  //     return
-  //   }
-
-  //   const panes = [...routerPanesState]
-  //   panes.splice(groupIndex + 1, groupIndex + 1, [
-  //     {
-  //       id: id,
-  //       params: {type: 'skosConcept'},
-  //     },
-  //   ])
-
-  //   const href = routerContext.resolvePathFromState({panes})
-  //   routerContext.navigateUrl({path: href})
-  // }, [id, routerContext, routerPanesState, groupIndex])
+  }, [id, selectConcept])
 
   return (
     <StyledConceptLink href="#" onClick={handleClick}>
