@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import {createContext, CSSProperties} from 'react'
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
@@ -16,18 +17,14 @@ export const SchemeContext = createContext(null)
 export const TreeView = ({
   document,
   branchId,
-  inputComponent = false,
   selectConcept,
+  inputComponent = false,
 }: {
   document: any
   branchId: string
-  // eslint-disable-next-line react/require-default-props
-  inputComponent?: boolean
   selectConcept: any
+  inputComponent?: boolean
 }) => {
-  // console.log('document: ', document)
-  // console.log('input component: ', inputComponent)
-
   const containerStyle: CSSProperties = {paddingTop: '1.25rem'}
   const descriptionStyle: CSSProperties = {whiteSpace: 'pre-wrap'}
 

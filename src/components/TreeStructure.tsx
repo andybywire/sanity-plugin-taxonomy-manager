@@ -26,12 +26,6 @@ export const TreeStructure = ({
   // To investigate.
   const {treeId, treeVisibility} = useContext(TreeContext)
 
-  // const treeId = 'd8d'
-  // const treeVisibility = 'open'
-
-  // console.log("treeId: ", treeId) // d8d
-  // console.log("treeVisibility: ", treeVisibility) // open
-
   if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
 
   return (

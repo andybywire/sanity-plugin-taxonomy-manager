@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 /**
  *  Hierarchy Component
  * - Provides a frame for global controls and tree structure
@@ -27,20 +28,16 @@ type GlobalVisibility = {
 }
 
 export const Hierarchy = ({
-  inputComponent = false,
   branchId = '',
   selectConcept,
+  inputComponent = false,
 }: {
-  // eslint-disable-next-line react/require-default-props
-  inputComponent?: Boolean
   branchId: string
-  // eslint-disable-next-line react/require-default-props
   selectConcept?: any
+  inputComponent?: Boolean
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
-
-  // console.log('Input Compontent? ', inputComponent)
 
   const createConcept = useCreateConcept(document)
 
@@ -70,9 +67,7 @@ export const Hierarchy = ({
 
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
-      // add `inputcomponent` to context?
       fetch: inputComponent ? inputBuilder() : trunkBuilder(),
-      // fetch: trunkBuilder(),
       listen: `*[_type == "skosConcept" || _id == $id]`,
     },
     {
