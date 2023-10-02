@@ -4,7 +4,7 @@ import {useClient, useFormValue} from 'sanity'
 import {TreeView} from '../components/TreeView'
 
 export function HierarchyInput(props: any) {
-  const {name} = props // name of the field to input a value
+  const {name, title} = props // name of the field to input a value
   const documentId = useFormValue(['_id']) as string // the resource document we're in
 
   const client = useClient({apiVersion: '2021-10-21'})
@@ -74,7 +74,13 @@ export function HierarchyInput(props: any) {
         <Button text="Browse Taxonomy Tree" mode="ghost" onClick={browseHierarchy} />
       </Grid>
       {open && (
-        <Dialog header="Example" id="dialog-example" onClose={handleClose} zOffset={900} width={1}>
+        <Dialog
+          header={title}
+          id="concept-select-dialog"
+          onClose={handleClose}
+          zOffset={900}
+          width={1}
+        >
           <Box padding={10}>
             <TreeView
               document={scheme}
