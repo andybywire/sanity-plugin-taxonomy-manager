@@ -10,7 +10,7 @@ import {AddCircleIcon, SquareIcon, ToggleArrowRightIcon, TrashIcon} from '@sanit
 import {useCreateConcept, useRemoveConcept} from '../hooks'
 import {ChildConceptTerm} from '../types'
 import {StyledOrphan, StyledTreeButton, StyledTreeToggle} from '../styles'
-import {SchemeContext} from './TreeView'
+import {SchemeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'

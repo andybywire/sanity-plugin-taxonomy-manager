@@ -8,7 +8,7 @@
 import {useContext} from 'react'
 import {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 import {StyledTree} from '../styles'
-import {TreeContext} from './Hierarchy'
+import {TreeContext} from '../context'
 import {TopConcepts} from './TopConcepts'
 import {Orphans} from './Orphans'
 import {NoConcepts} from './guides'

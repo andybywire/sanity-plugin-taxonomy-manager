@@ -7,7 +7,7 @@
  * @todo type document, likely via extended SanityDocument type.
  */
 
-import {createContext, useCallback, useContext, useState} from 'react'
+import {useCallback, useContext, useState} from 'react'
 import {Flex, Spinner, Stack, Box, Text, Inline} from '@sanity/ui'
 import {AddCircleIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
@@ -16,11 +16,9 @@ import {useCreateConcept} from '../hooks'
 import {trunkBuilder, inputBuilder} from '../queries'
 import {DocumentConcepts} from '../types'
 import {HierarchyButton} from '../styles'
-import {SchemeContext} from './TreeView'
+import {SchemeContext, TreeContext} from '../context'
 import {TreeStructure} from './TreeStructure'
 import {NewScheme} from './guides'
-
-export const TreeContext = createContext(null)
 
 type GlobalVisibility = {
   treeId: string

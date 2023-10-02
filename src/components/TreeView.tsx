@@ -1,16 +1,15 @@
 /* eslint-disable react/require-default-props */
-import {createContext, CSSProperties} from 'react'
+import {CSSProperties} from 'react'
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
-
-export const SchemeContext = createContext(null)
+import {SchemeContext} from '../context'
 
 /**
  * Tree View Component Wrapper
  * This is the view component for the hierarchy tree. It is the
  * top level of concept scheme views and is passed into Desk
  * structure to render the primary view for taxonomy documents.
- * @todo Extend SanityDocument type to include display properties.
+ * TODO: Extend SanityDocument type to include display properties.
  *       What is the type of the document object returned by the Desk
  *       structure?
  */
