@@ -1,6 +1,7 @@
+/* eslint-disable react/require-default-props */
 import {useCallback} from 'react'
 import {ChildConceptTerm} from '../types'
-import {StyledConceptLink} from '../styles'
+import {StyledConceptLink, StyledConceptTitle} from '../styles'
 
 /**
  * Concept Select Link
@@ -11,7 +12,7 @@ export function ConceptSelectLink({
   selectConcept,
 }: {
   concept: ChildConceptTerm
-  selectConcept: any
+  selectConcept?: any
 }) {
   const {prefLabel, id} = concept ?? {}
 
@@ -24,8 +25,14 @@ export function ConceptSelectLink({
   }, [id, selectConcept])
 
   return (
-    <StyledConceptLink href="#" onClick={handleClick}>
-      {prefLabel}
-    </StyledConceptLink>
+    <>
+      {selectConcept ? (
+        <StyledConceptLink href="#" onClick={handleClick}>
+          {prefLabel}
+        </StyledConceptLink>
+      ) : (
+        <StyledConceptTitle>{prefLabel}</StyledConceptTitle>
+      )}
+    </>
   )
 }

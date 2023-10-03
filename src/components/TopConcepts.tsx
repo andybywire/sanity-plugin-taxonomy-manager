@@ -14,6 +14,7 @@ import {SchemeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
+import {ConceptSelectLink} from './ConceptSelectLink'
 
 type TopConceptsProps = {
   concept: TopConceptTerm
@@ -52,10 +53,13 @@ export const TopConcepts = ({
 
   return (
     <StyledTopConcept className={levelVisibility}>
-      {!inputComponent && (
-        <Inline space={2}>
-          <Inline space={0}>
-            {concept?.childConcepts && concept.childConcepts.length > 0 && (
+      <Inline space={2}>
+        <Inline space={0}>
+          {concept?.childConcepts &&
+            concept.childConcepts.length > 0 &&
+            (inputComponent ? (
+              <SquareIcon className="spacer" />
+            ) : (
               <StyledTreeToggle
                 onClick={handleToggle}
                 type="button"
@@ -63,67 +67,71 @@ export const TopConcepts = ({
               >
                 <ToggleArrowRightIcon />
               </StyledTreeToggle>
-            )}
-            {concept?.childConcepts && concept.childConcepts.length == 0 && (
-              <SquareIcon className="spacer" />
-            )}
-            {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
+            ))}
+          {concept?.childConcepts && concept.childConcepts.length == 0 && (
+            <SquareIcon className="spacer" />
+          )}
+          {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
+          {inputComponent ? (
+            <ConceptSelectLink concept={concept} />
+          ) : (
             <ConceptDetailLink concept={concept} />
-          </Inline>
-          <Text size={1} muted>
-            top concept
-          </Text>
-          {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
-          {document.displayed?.controls && (
-            <Inline space={2}>
-              <Tooltip
-                content={
-                  <Box padding={2} sizing="border">
-                    <Stack padding={1} space={2}>
-                      <Text muted size={1}>
-                        Add a child concept
-                      </Text>
-                    </Stack>
-                  </Box>
-                }
-                fallbackPlacements={['right', 'left']}
-                placement="top"
-              >
-                <StyledTreeButton
-                  onClick={handleAddChild}
-                  type="button"
-                  className="action"
-                  aria-label="Add child a child concept"
-                >
-                  <AddCircleIcon className="add" />
-                </StyledTreeButton>
-              </Tooltip>
-              <Tooltip
-                content={
-                  <Box padding={2} sizing="border">
-                    <Stack padding={1} space={2}>
-                      <Text muted size={1}>
-                        Remove concept from scheme
-                      </Text>
-                    </Stack>
-                  </Box>
-                }
-                fallbackPlacements={['right', 'left']}
-                placement="top"
-              >
-                <StyledTreeButton
-                  onClick={handleRemoveConcept}
-                  type="button"
-                  className="action"
-                  aria-label="Remove concept from scheme"
-                >
-                  <TrashIcon className="remove" />
-                </StyledTreeButton>
-              </Tooltip>
-            </Inline>
           )}
         </Inline>
-      )}
+        <Text size={1} muted>
+          top concept
+        </Text>
+        {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
+        {document.displayed?.controls && (
+          <Inline space={2}>
+            <Tooltip
+              content={
+                <Box padding={2} sizing="border">
+                  <Stack padding={1} space={2}>
+                    <Text muted size={1}>
+                      Add a child concept
+                    </Text>
+                  </Stack>
+                </Box>
+              }
+              fallbackPlacements={['right', 'left']}
+              placement="top"
+            >
+              <StyledTreeButton
+                onClick={handleAddChild}
+                type="button"
+                className="action"
+                aria-label="Add child a child concept"
+              >
+                <AddCircleIcon className="add" />
+              </StyledTreeButton>
+            </Tooltip>
+            <Tooltip
+              content={
+                <Box padding={2} sizing="border">
+                  <Stack padding={1} space={2}>
+                    <Text muted size={1}>
+                      Remove concept from scheme
+                    </Text>
+                  </Stack>
+                </Box>
+              }
+              fallbackPlacements={['right', 'left']}
+              placement="top"
+            >
+              <StyledTreeButton
+                onClick={handleRemoveConcept}
+                type="button"
+                className="action"
+                aria-label="Remove concept from scheme"
+              >
+                <TrashIcon className="remove" />
+              </StyledTreeButton>
+            </Tooltip>
+          </Inline>
+        )}
+      </Inline>
+
       {concept?.childConcepts && concept.childConcepts.length > 0 && (
         <ChildConcepts
           concepts={concept.childConcepts}

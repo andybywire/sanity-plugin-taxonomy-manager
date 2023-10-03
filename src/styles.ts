@@ -155,3 +155,6 @@ export const StyledConceptLink = styled.a`
     text-decoration: underline;
   }
 `
+export const StyledConceptTitle = styled.p`
+  color: ${hues.gray[800].hex};
+`
