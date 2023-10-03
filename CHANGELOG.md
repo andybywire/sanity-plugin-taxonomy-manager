@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
-## [3.1.0-beta.1] - 2023-10-03
+## [3.1.0-beta.2] - 2023-10-03
 
 ### Added
 
@@ -213,8 +213,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.0-beta.1...HEAD
-[3.1.0-beta.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.0-beta.0...v3.1.0-beta.1
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.0-beta.2...HEAD
+[3.1.0-beta.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.0-beta.0...v3.1.0-beta.2
 [3.1.0-beta.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.0.2...v3.1.0-beta.0
 [3.0.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.0.1...v3.0.2
 [3.0.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.0.0...v3.0.1
@@ -294,6 +294,8 @@ is available.
 5. Publish to npm:
   - npm publish 
     (this runs the build steps again)
+  - publish as beta: npm publish --tag beta
+    - format version to: "version": "0.1.12-beta.1"
 6. Publish to Git:
   - git push
   - git push --tags
