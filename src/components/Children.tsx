@@ -85,7 +85,7 @@ export const Children = ({
           </Inline>
           {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
         </Inline>
-        {document.displayed?.controls && concept?.level && concept.level < 5 && (
+        {!inputComponent && document.displayed?.controls && concept?.level && concept.level < 5 && (
           <Inline space={2}>
             <StyledTreeButton
               onClick={handleAddChild}

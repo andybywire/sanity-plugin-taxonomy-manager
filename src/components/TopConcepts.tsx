@@ -82,7 +82,7 @@ export const TopConcepts = ({
           top concept
         </Text>
         {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
-        {document.displayed?.controls && (
+        {!inputComponent && document.displayed?.controls && (
           <Inline space={2}>
             <Tooltip
               content={
