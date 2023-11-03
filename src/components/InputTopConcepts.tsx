@@ -1,7 +1,7 @@
 /**
  * Top Concept Component
  * Renders a list of top concepts for a given schema.
- * @todo consider modularizing add and remove buttons
+ * TODO consider modularizing add and remove buttons
  */
 
 import {useCallback, useState} from 'react'

@@ -5,7 +5,7 @@ import {TreeView} from '../components/TreeView'
 
 /**
  * Hierarchy View Input Component for Reference Fields
- * @todo check for scheme or branch filters — it only works if they're used; alternatively
+ * TODO check for scheme or branch filters — it only works if they're used; alternatively
  * provide optional parameters if a custom filter is used?
  */
 export function HierarchyInput(props: ObjectFieldProps) {
@@ -44,7 +44,7 @@ export function HierarchyInput(props: ObjectFieldProps) {
   /**
    * Term Select Action
    * Writes the selected taxonomy term to the document field
-   * @todo If this is a brand new document, _id is not yet in the content lake and this
+   * TODO If this is a brand new document, _id is not yet in the content lake and this
    * will throw an error. Not a high frequency use case, but consider handling.
    */
   const handleAction = useCallback(

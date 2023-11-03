@@ -1,8 +1,8 @@
 /**
  * Sanity document scheme for SKOS Concept Schemes
- * @todo Add administrative metadata: dc:title, dc:author ... date, last revised, etc.
- * @todo Add support for sorting array lists alphabetically (custom component?)
- * @todo Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links.
+ * TODO Add administrative metadata: dc:title, dc:author ... date, last revised, etc.
+ * TODO Add support for sorting array lists alphabetically (custom component?)
+ * TODO Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links.
  */
 
 import {defineArrayMember, defineField, defineType} from 'sanity'

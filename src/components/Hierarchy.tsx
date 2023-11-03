@@ -4,7 +4,7 @@
  * - Provides a frame for global controls and tree structure
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
- * @todo type document, likely via extended SanityDocument type.
+ * TODO type document, likely via extended SanityDocument type.
  */
 
 import {useCallback, useContext, useState} from 'react'

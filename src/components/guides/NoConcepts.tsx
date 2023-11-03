@@ -1,7 +1,7 @@
 /**
  * No Concepts Guide
  * - Prompts adding concepts to an empty scheme.
- * @todo: Consider adding more instructions, a .gif, or video to this guide.
+ * TODO: Consider adding more instructions, a .gif, or video to this guide.
  */
 
 import {Card, Label, Stack, Text} from '@sanity/ui'

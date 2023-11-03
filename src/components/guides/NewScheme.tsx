@@ -3,7 +3,7 @@
  * - Prompts adding title and description to new concept scheme.
  * - Data must be saved to newly created Concept Scheme documents before
  *  add top concept / add concept buttons will work.
- * @todo: Consider adding more instructions, a .gif, or video to this guide.
+ * TODO: Consider adding more instructions, a .gif, or video to this guide.
  */
 
 import {useCallback, useState} from 'react'

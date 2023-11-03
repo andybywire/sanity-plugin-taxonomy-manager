@@ -1,7 +1,7 @@
 /**
  * Tree Builder
  * Recursive function to build out successive branches of the hierarchy up to five levels deep.
- * @todo: Detect when a 6th level is present and print a message in the UI.
+ * TODO Detect when a 6th level is present and print a message in the UI.
  */
 
 /**
@@ -99,7 +99,7 @@ export const trunkBuilder = (): string => {
  * in that branch only. Then call branchBuilder recursively — it will
  * only build terms in the scheme referenced by that concept.
  * - branchBuilder() and inputBuilder() are called in Hierarchy.tsx
- * @todo vet functionality of orphans
+ * TODO vet functionality of orphans
  */
 export const inputBuilder = (): string => {
   return `

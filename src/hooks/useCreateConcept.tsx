@@ -2,7 +2,7 @@
  * Concept Creation Hook
  * Used for creating concepts and top concepts from the Concept Scheme
  * hierarchy view.
- * @todo type document, likely via extended SanityDocument type.
+ * TODO type document, likely via extended SanityDocument type.
  */
 
 import {useClient} from 'sanity'
