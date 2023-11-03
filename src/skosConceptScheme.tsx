@@ -72,6 +72,7 @@ export default function skosConceptScheme(baseUri?: string) {
         of: [
           defineArrayMember({
             type: 'reference',
+            // weak: true,
             to: [{type: 'skosConcept'}],
           }),
         ],
@@ -87,6 +88,7 @@ export default function skosConceptScheme(baseUri?: string) {
         of: [
           defineArrayMember({
             type: 'reference',
+            // weak: true,
             to: [{type: 'skosConcept'}],
           }),
         ],

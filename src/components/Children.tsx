@@ -23,7 +23,6 @@ import {StyledChildConcept, StyledTreeButton, StyledTreeToggle} from '../styles'
 import {SchemeContext, TreeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
-import {ConceptSelectLink} from './ConceptSelectLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 
 export const Children = ({
@@ -77,15 +76,11 @@ export const Children = ({
               <SquareIcon className="spacer" />
             )}
             {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
-            {inputComponent ? (
-              <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
-            ) : (
-              <ConceptDetailLink concept={concept} />
-            )}
+            <ConceptDetailLink concept={concept} />
           </Inline>
           {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
         </Inline>
-        {!inputComponent && document.displayed?.controls && concept?.level && concept.level < 5 && (
+        {document.displayed?.controls && concept?.level && concept.level < 5 && (
           <Inline space={2}>
             <StyledTreeButton
               onClick={handleAddChild}

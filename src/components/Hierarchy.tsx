@@ -13,7 +13,7 @@ import {AddCircleIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
 import {useListeningQuery} from 'sanity-plugin-utils'
 import {useCreateConcept} from '../hooks'
-import {trunkBuilder, inputBuilder} from '../queries'
+import {trunkBuilder} from '../queries'
 import {DocumentConcepts} from '../types'
 import {HierarchyButton} from '../styles'
 import {SchemeContext, TreeContext} from '../context'
@@ -36,6 +36,8 @@ export const Hierarchy = ({
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
+
+  console.log('document: ', document)
 
   const createConcept = useCreateConcept(document)
 
@@ -65,11 +67,11 @@ export const Hierarchy = ({
 
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
-      fetch: inputComponent ? inputBuilder() : trunkBuilder(),
-      listen: `*[_type == "skosConcept" || _id == $id]`,
+      fetch: trunkBuilder(),
+      listen: `*[_type == "skosConcept" || _id == $id ]`,
     },
     {
-      params: {id: documentId, branchId},
+      params: {id: documentId, draft: `drafts.${documentId}`, branchId}, // draft may not be necessary
     }
   )
   if (loading) {
@@ -100,67 +102,60 @@ export const Hierarchy = ({
     // I suspect this is an error.
     <TreeContext.Provider value={globalVisibility}>
       <Box padding={4}>
-        {inputComponent ? (
+        <>
+          <Stack space={4}>
+            <Stack space={2}>
+              <Text size={1} weight="semibold">
+                Hierarchy Tree
+              </Text>
+              <Text size={1} muted>
+                Hierarchy is determined by the 'Broader' relationships assigned to each concept.
+              </Text>
+            </Stack>
+            <Inline space={4}>
+              {(data.topConcepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
+                .length > 0 ||
+                data.orphans?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
+                  .length > 0) && (
+                <Inline space={2}>
+                  <HierarchyButton type="button" onClick={handleCollapse}>
+                    <Text weight="semibold" muted size={1}>
+                      Collapse
+                    </Text>
+                  </HierarchyButton>
+                  <Text weight="semibold" muted size={1}>
+                    |
+                  </Text>
+                  <HierarchyButton type="button" onClick={handleExpand}>
+                    <Text weight="semibold" muted size={1}>
+                      Expand
+                    </Text>
+                  </HierarchyButton>
+                </Inline>
+              )}
+              {document.displayed?.controls && (
+                <Inline space={4}>
+                  <HierarchyButton type="button" className="add" onClick={createTopConcept}>
+                    <Text weight="semibold" muted size={1}>
+                      <AddCircleIcon /> Add Top Concept
+                    </Text>
+                  </HierarchyButton>
+                  <HierarchyButton type="button" className="add" onClick={createEntryConcept}>
+                    <Text weight="semibold" muted size={1}>
+                      <AddCircleIcon /> Add Concept
+                    </Text>
+                  </HierarchyButton>
+                </Inline>
+              )}
+            </Inline>
+          </Stack>
           <TreeStructure
             concepts={data}
             inputComponent={inputComponent}
             selectConcept={selectConcept}
           />
-        ) : (
-          <>
-            <Stack space={4}>
-              <Stack space={2}>
-                <Text size={1} weight="semibold">
-                  Hierarchy Tree
-                </Text>
-                <Text size={1} muted>
-                  Hierarchy is determined by the 'Broader' relationships assigned to each concept.
-                </Text>
-              </Stack>
-              <Inline space={4}>
-                {(data.topConcepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
-                  .length > 0 ||
-                  data.orphans?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
-                    .length > 0) && (
-                  <Inline space={2}>
-                    <HierarchyButton type="button" onClick={handleCollapse}>
-                      <Text weight="semibold" muted size={1}>
-                        Collapse
-                      </Text>
-                    </HierarchyButton>
-                    <Text weight="semibold" muted size={1}>
-                      |
-                    </Text>
-                    <HierarchyButton type="button" onClick={handleExpand}>
-                      <Text weight="semibold" muted size={1}>
-                        Expand
-                      </Text>
-                    </HierarchyButton>
-                  </Inline>
-                )}
-                {document.displayed?.controls && (
-                  <Inline space={4}>
-                    <HierarchyButton type="button" className="add" onClick={createTopConcept}>
-                      <Text weight="semibold" muted size={1}>
-                        <AddCircleIcon /> Add Top Concept
-                      </Text>
-                    </HierarchyButton>
-                    <HierarchyButton type="button" className="add" onClick={createEntryConcept}>
-                      <Text weight="semibold" muted size={1}>
-                        <AddCircleIcon /> Add Concept
-                      </Text>
-                    </HierarchyButton>
-                  </Inline>
-                )}
-              </Inline>
-            </Stack>
-            <TreeStructure
-              concepts={data}
-              inputComponent={inputComponent}
-              selectConcept={selectConcept}
-            />
-          </>
-        )}
+          <pre>{JSON.stringify(data, false, 2)}</pre>
+        </>
       </Box>
     </TreeContext.Provider>
   )

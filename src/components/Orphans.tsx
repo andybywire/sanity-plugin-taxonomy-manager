@@ -14,14 +14,16 @@ import {SchemeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
+import {ConceptSelectLink} from './ConceptSelectLink'
 
 type OrphanProps = {
   concept: ChildConceptTerm
   treeVisibility: string
   inputComponent: Boolean
+  selectConcept: any
 }
 
-export const Orphans = ({concept, treeVisibility, inputComponent}: OrphanProps) => {
+export const Orphans = ({concept, treeVisibility, inputComponent, selectConcept}: OrphanProps) => {
   const document: any = useContext(SchemeContext) || {}
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
@@ -47,20 +49,28 @@ export const Orphans = ({concept, treeVisibility, inputComponent}: OrphanProps) 
   return (
     <StyledOrphan className={levelVisibility}>
       <Inline space={2}>
-        {concept?.childConcepts && concept.childConcepts.length > 0 && (
-          <StyledTreeToggle
-            onClick={handleToggle}
-            type="button"
-            aria-expanded={levelVisibility == 'open'}
-          >
-            <ToggleArrowRightIcon />
-          </StyledTreeToggle>
-        )}
+        {concept?.childConcepts &&
+          concept.childConcepts.length > 0 &&
+          (inputComponent ? (
+            <SquareIcon className="spacer" />
+          ) : (
+            <StyledTreeToggle
+              onClick={handleToggle}
+              type="button"
+              aria-expanded={levelVisibility == 'open'}
+            >
+              <ToggleArrowRightIcon />
+            </StyledTreeToggle>
+          ))}
         {concept?.childConcepts && concept.childConcepts.length == 0 && (
           <SquareIcon className="spacer" />
         )}
         {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
-        <ConceptDetailLink concept={concept} />
+        {inputComponent ? (
+          <ConceptSelectLink concept={concept} />
+        ) : (
+          <ConceptDetailLink concept={concept} />
+        )}
         {document.displayed?.topConcepts?.length > 0 && (
           <Text size={1} muted>
             orphan
@@ -119,7 +129,7 @@ export const Orphans = ({concept, treeVisibility, inputComponent}: OrphanProps) 
       {concept?.childConcepts && concept.childConcepts.length > 0 && (
         <ChildConcepts
           concepts={concept.childConcepts}
-          selectConcept={undefined}
+          selectConcept={selectConcept}
           inputComponent={inputComponent}
         />
       )}

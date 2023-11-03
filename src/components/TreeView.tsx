@@ -2,6 +2,7 @@
 import {CSSProperties} from 'react'
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
+import InputHierarchy from './InputHierarchy'
 import {SchemeContext} from '../context'
 
 /**
@@ -19,18 +20,19 @@ export const TreeView = ({
   selectConcept,
   inputComponent = false,
 }: {
-  document: any
-  branchId: string
-  selectConcept: any
-  inputComponent?: boolean
+  document: any // contains document.displayed, the applicable skosConceptScheme
+  branchId: string // used to narrow to a branch for the HierarchyInput component
+  selectConcept: any // HierarchyInput component select action
+  inputComponent?: boolean // is this the HierarchyInput component?
 }) => {
   const containerStyle: CSSProperties = {paddingTop: '1.25rem'}
   const descriptionStyle: CSSProperties = {whiteSpace: 'pre-wrap'}
 
   return (
+    // provide document as context for downstream components
     <SchemeContext.Provider value={document}>
       {inputComponent ? (
-        <Hierarchy
+        <InputHierarchy
           inputComponent={inputComponent}
           branchId={branchId}
           selectConcept={selectConcept}

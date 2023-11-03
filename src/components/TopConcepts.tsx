@@ -55,19 +55,15 @@ export const TopConcepts = ({
     <StyledTopConcept className={levelVisibility}>
       <Inline space={2}>
         <Inline space={0}>
-          {concept?.childConcepts &&
-            concept.childConcepts.length > 0 &&
-            (inputComponent ? (
-              <SquareIcon className="spacer" />
-            ) : (
-              <StyledTreeToggle
-                onClick={handleToggle}
-                type="button"
-                aria-expanded={levelVisibility == 'open'}
-              >
-                <ToggleArrowRightIcon />
-              </StyledTreeToggle>
-            ))}
+          {concept?.childConcepts && concept.childConcepts.length > 0 && (
+            <StyledTreeToggle
+              onClick={handleToggle}
+              type="button"
+              aria-expanded={levelVisibility == 'open'}
+            >
+              <ToggleArrowRightIcon />
+            </StyledTreeToggle>
+          )}
           {concept?.childConcepts && concept.childConcepts.length == 0 && (
             <SquareIcon className="spacer" />
           )}
@@ -82,7 +78,7 @@ export const TopConcepts = ({
           top concept
         </Text>
         {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
-        {!inputComponent && document.displayed?.controls && (
+        {document.displayed?.controls && (
           <Inline space={2}>
             <Tooltip
               content={

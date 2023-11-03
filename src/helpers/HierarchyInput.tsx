@@ -1,22 +1,29 @@
 import {Grid, Stack, Button, Dialog, Box} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
-import {useClient, useFormValue} from 'sanity'
+import {ObjectFieldProps, useClient, useFormValue} from 'sanity'
 import {TreeView} from '../components/TreeView'
 
-export function HierarchyInput(props: any) {
+/**
+ * Hierarchy View Input Component for Reference Fields
+ * @todo check for scheme or branch filters — it only works if they're used; alternatively
+ * provide optional parameters if a custom filter is used?
+ */
+export function HierarchyInput(props: ObjectFieldProps) {
   const {name, title} = props // name of the field to input a value
   const documentId = useFormValue(['_id']) as string // the resource document we're in
 
   const client = useClient({apiVersion: '2021-10-21'})
   const [open, setOpen] = useState(false)
-  const [scheme, setScheme] = useState({})
+  const [scheme, setScheme] = useState({}) // the skosConceptScheme document identified by the field filter options
 
   // get the filter options from the `reference` field
+  // TODO: allow optional parameters to be passed into the input for cases where the provided
+  // scheme/branch filters aren't in use.
   const {filter} = props.schemaType.options
-  const filterExec = filter()
-  const {branchId, schemeId} = filterExec.params
+  const filterValues = filter()
+  const {schemeId, branchId = null} = filterValues.params // only schemes using the branchFilter() will have a branchId
 
-  // get the skosConceptScheme identified by the field filter options
+  // get the skosConceptScheme document identified by the field filter options
   useEffect(() => {
     client
       .fetch(`{"displayed": *[schemeId == "${schemeId}"][0]}`)
@@ -35,6 +42,8 @@ export function HierarchyInput(props: any) {
   }, [])
 
   /**
+   * Term Select Action
+   * Writes the selected taxonomy term to the document field
    * @todo If this is a brand new document, _id is not yet in the content lake and this
    * will throw an error. Not a high frequency use case, but consider handling.
    */
@@ -83,9 +92,9 @@ export function HierarchyInput(props: any) {
         >
           <Box padding={10}>
             <TreeView
-              document={scheme}
-              branchId={branchId}
-              inputComponent
+              document={scheme} // the document.displayed _id for the relevant skosConceptScheme
+              branchId={branchId} // the branch identified in branchFilter()
+              inputComponent // boolean
               selectConcept={handleAction}
             />
           </Box>
