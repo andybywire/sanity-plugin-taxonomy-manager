@@ -72,12 +72,12 @@ const inputBranchBuilder = (level = 1): string | void => {
 export const trunkBuilder = (): string => {
   return `*[_id == $id][0] {
     _updatedAt,
-    "topConcepts":*[_id in *[_id == $id][0].topConcepts[]{"ref": "drafts." + _ref}.ref ||
+    "topConcepts": *[_id in *[_id == $id][0].topConcepts[]{"ref": "drafts." + _ref}.ref ||
       (
         _id in *[_id == $id][0].topConcepts[]._ref &&
         !(conceptId in *[_id in *[_id == $id][0].topConcepts[]{"ref": "drafts." + _ref}.ref].conceptId)
       )
-  ]|order(prefLabel){
+      ]|order(prefLabel) {
       "id": _id,
       "level": 0,
       prefLabel,
@@ -86,10 +86,21 @@ export const trunkBuilder = (): string => {
       scopeNote,
       ${branchBuilder()}
     },
-    "orphans": *[
-      _id in coalesce(*[_id == 'drafts.' + $id][0], *[_id == $id][0]).concepts[]._ref &&
-      count((broader[]._ref) [@ in coalesce(*[_id == 'drafts.' + $id][0], *[_id == $id][0]).topConcepts[]._ref]) < 1 &&
-      count((broader[]._ref) [@ in coalesce(*[_id == 'drafts.' + $id][0], *[_id == $id][0]).concepts[]._ref]) < 1
+    "orphans": *[_id in *[_id == $id][0].concepts[]{"ref": "drafts." + _ref}.ref ||
+      (
+        _id in *[_id == $id][0].concepts[]._ref &&
+        !(conceptId in *[_id in *[_id == $id][0].concepts[]{"ref": "drafts." + _ref}.ref].conceptId)
+      ) &&
+      count(
+        (broader[]._ref) [@ in coalesce(
+          *[_id == 'drafts.' + $id][0], 
+          *[_id == $id][0]
+        ).topConcepts[]._ref]) < 1 &&
+      count(
+        (broader[]._ref) [@ in coalesce(
+          *[_id == 'drafts.' + $id][0], 
+          *[_id == $id][0]
+        ).concepts[]._ref]) < 1
     ]|order(prefLabel){
       "id": _id,
       "level": 0,
