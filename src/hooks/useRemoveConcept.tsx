@@ -2,7 +2,7 @@
  * Concept Removal Hook
  * Used for removing concepts and top concepts from the Concept Scheme
  * hierarchy view.
- * TODO type document, likely via extended SanityDocument type.
+ * TODO: type document, likely via extended SanityDocument type.
  */
 
 import {useCallback} from 'react'
@@ -21,10 +21,11 @@ export function useRemoveConcept(document: any) {
   const removeConcept = useCallback(
     (conceptId: string, conceptType: string, prefLabel?: string) => {
       const type = conceptType == 'topConcept' ? 'topConcepts' : 'concepts'
+      console.log('conceptId: ', conceptId)
 
       client
         .patch(documentId)
-        .unset([`${type}[_ref=="${conceptId}"]`])
+        .unset([`${type}[_ref=="${conceptId.replace('drafts.', '')}"]`])
         .commit()
         .then((res) => {
           toast.push({
