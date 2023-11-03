@@ -73,10 +73,12 @@ export function useCreateConcept(document: any) {
               {
                 _ref: skosConcept._id.replace('drafts.', ''),
                 _type: 'reference',
+                _key: randomKey(6),
+                _weak: true,
                 _strengthenOnPublish: {
                   _type: 'skosConcept',
                   weak: true,
-                  template: {id: 'skosConcept'},
+                  template: {id: 'skosConcept', params: 'undefined'},
                 },
               },
             ])

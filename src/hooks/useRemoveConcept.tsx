@@ -21,7 +21,6 @@ export function useRemoveConcept(document: any) {
   const removeConcept = useCallback(
     (conceptId: string, conceptType: string, prefLabel?: string) => {
       const type = conceptType == 'topConcept' ? 'topConcepts' : 'concepts'
-      console.log('conceptId: ', conceptId)
 
       client
         .patch(documentId)

@@ -37,8 +37,6 @@ export const Hierarchy = ({
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
 
-  console.log('document: ', document)
-
   const createConcept = useCreateConcept(document)
 
   const createTopConcept = useCallback(() => {
@@ -93,7 +91,8 @@ export const Hierarchy = ({
       </Box>
     )
   } else if (error) {
-    return <div>error: {error}</div>
+    console.error(error)
+    return <div>Error here</div>
   } else if (!data) {
     return <NewScheme document={document} />
   }
@@ -154,7 +153,6 @@ export const Hierarchy = ({
             inputComponent={inputComponent}
             selectConcept={selectConcept}
           />
-          <pre>{JSON.stringify(data, false, 2)}</pre>
         </>
       </Box>
     </TreeContext.Provider>
