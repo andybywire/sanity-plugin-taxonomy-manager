@@ -52,21 +52,19 @@ export function useCreateConcept(document: any) {
 
       // Ensure concepts are added to a draft of the concept scheme document
       const draftConceptScheme = JSON.parse(JSON.stringify(document.displayed))
+
       if (!draftConceptScheme._id.includes('drafts.')) {
         draftConceptScheme._id = `drafts.${draftConceptScheme._id}`
       }
 
-      // work out the "reference in place" logic
-      // https://www.sanity.io/blog/obvious-features-aren-t-obviously-made#2c38c9f38060
-      // https://github.com/search?q=repo%3Asanity-io%2Fsanity%20_strengthenOnPublish&type=code
-
-      // if (documentId.includes('drafts.')) {
       client
         .transaction()
         // use createIfNotExist here to make sure there's a draft conceptScheme
-        // this may need to be the start of a .then() chain
         .createIfNotExists(draftConceptScheme)
         .create(skosConcept)
+        // patch concept or top concept as a reference in place:
+        // https://www.sanity.io/blog/obvious-features-aren-t-obviously-made#2c38c9f38060
+        // https://github.com/search?q=repo%3Asanity-io%2Fsanity%20_strengthenOnPublish&type=code
         .patch(draftConceptScheme._id, (patch) => {
           if (conceptType == 'topConcept') {
             return patch.setIfMissing({topConcepts: []}).append('topConcepts', [
@@ -114,65 +112,8 @@ export function useCreateConcept(document: any) {
             description: err.message,
           })
         })
-      // return
-      // }
-      // client
-      //   .fetch(`*[_id == "${documentId}"][0]`)
-      //   .then((draftDoc) => {
-      //     draftDoc._id = `drafts.${draftDoc._id}`
-      //     client.create(draftDoc)
-      //     return draftDoc
-      //   })
-      //   .then((draftDoc) => {
-      //     client
-      //       .transaction()
-      //       .create(skosConcept)
-      //       .patch(draftDoc._id, (patch) => {
-      //         if (conceptType == 'topConcept') {
-      //           return patch.setIfMissing({topConcepts: []}).append('topConcepts', [
-      //             {
-      //               _ref: skosConcept._id.replace('drafts.', ''),
-      //               _type: 'reference',
-      //               _strengthenOnPublish: {
-      //                 _type: 'skosConcept',
-      //                 weak: true,
-      //                 template: {id: 'skosConcept'},
-      //               },
-      //             },
-      //           ])
-      //         }
-      //         return patch.setIfMissing({concepts: []}).insert('after', 'concepts[-1]', [
-      //           {
-      //             _ref: skosConcept._id.replace('drafts.', ''),
-      //             _type: 'reference',
-      //             _strengthenOnPublish: {
-      //               _type: 'skosConcept',
-      //               weak: true,
-      //               template: {id: 'skosConcept'},
-      //             },
-      //           },
-      //         ])
-      //       })
-      //       .commit({autoGenerateArrayKeys: true})
-      //       .then((res) => {
-      //         toast.push({
-      //           closable: true,
-      //           status: 'success',
-      //           title: 'Created new concept',
-      //         })
-      //         openInNewPane(skosConcept._id)
-      //       })
-      //       .catch((err) => {
-      //         toast.push({
-      //           closable: true,
-      //           status: 'error',
-      //           title: 'Error creating concept',
-      //           description: err.message,
-      //         })
-      //       })
-      //   })
     },
-    [schemaBaseIri, toast, client, openInNewPane]
+    [document.displayed, client, schemaBaseIri, toast, openInNewPane]
   )
   return createConcept
 }
