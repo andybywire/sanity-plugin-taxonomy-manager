@@ -8,8 +8,8 @@
  */
 
 import {useCallback, useContext, useState} from 'react'
-import {Flex, Spinner, Stack, Box, Text, Inline} from '@sanity/ui'
-import {AddCircleIcon} from '@sanity/icons'
+import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
+import {AddCircleIcon, EditIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
 import {useListeningQuery} from 'sanity-plugin-utils'
 import {useCreateConcept} from '../hooks'
@@ -100,53 +100,63 @@ export const Hierarchy = ({
     // @ts-expect-error — The compiler complains about this being null.
     // I suspect this is an error.
     <TreeContext.Provider value={globalVisibility}>
-      <Box padding={4}>
+      <Box padding={4} paddingTop={2}>
         <>
           <Stack space={4}>
-            <Stack space={2}>
-              <Text size={1} weight="semibold">
-                Hierarchy Tree
-              </Text>
-              <Text size={1} muted>
-                Hierarchy is determined by the 'Broader' relationships assigned to each concept.
-              </Text>
-            </Stack>
-            <Inline space={4}>
-              {(data.topConcepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
-                .length > 0 ||
-                data.orphans?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
-                  .length > 0) && (
-                <Inline space={2}>
-                  <HierarchyButton type="button" onClick={handleCollapse}>
-                    <Text weight="semibold" muted size={1}>
-                      Collapse
-                    </Text>
-                  </HierarchyButton>
-                  <Text weight="semibold" muted size={1}>
-                    |
-                  </Text>
-                  <HierarchyButton type="button" onClick={handleExpand}>
-                    <Text weight="semibold" muted size={1}>
-                      Expand
-                    </Text>
-                  </HierarchyButton>
-                </Inline>
-              )}
-              {document.displayed?.controls && (
-                <Inline space={4}>
-                  <HierarchyButton type="button" className="add" onClick={createTopConcept}>
-                    <Text weight="semibold" muted size={1}>
-                      <AddCircleIcon /> Add Top Concept
-                    </Text>
-                  </HierarchyButton>
-                  <HierarchyButton type="button" className="add" onClick={createEntryConcept}>
-                    <Text weight="semibold" muted size={1}>
-                      <AddCircleIcon /> Add Concept
-                    </Text>
-                  </HierarchyButton>
-                </Inline>
-              )}
-            </Inline>
+            <Card borderBottom paddingBottom={1} display={'flex'} flex={1}>
+              <Flex justify={'space-between'} flex={1}>
+                <Card>
+                  {(data.topConcepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
+                    .length > 0 ||
+                    data.orphans?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
+                      .length > 0) && (
+                    <Inline space={2}>
+                      <HierarchyButton type="button" onClick={handleCollapse}>
+                        <Text weight="semibold" muted size={1}>
+                          Collapse
+                        </Text>
+                      </HierarchyButton>
+                      <Text weight="semibold" muted size={1}>
+                        |
+                      </Text>
+                      <HierarchyButton type="button" onClick={handleExpand}>
+                        <Text weight="semibold" muted size={1}>
+                          Expand
+                        </Text>
+                      </HierarchyButton>
+                    </Inline>
+                  )}
+                </Card>
+                <Card>
+                  {document.displayed?.controls && (
+                    <Inline space={4}>
+                      <HierarchyButton type="button" className="add" onClick={createTopConcept}>
+                        <Text weight="semibold" muted size={1}>
+                          <AddCircleIcon /> Add Top Concept
+                        </Text>
+                      </HierarchyButton>
+                      <HierarchyButton type="button" className="add" onClick={createEntryConcept}>
+                        <Text weight="semibold" muted size={1}>
+                          <AddCircleIcon /> Add Concept
+                        </Text>
+                      </HierarchyButton>
+                    </Inline>
+                  )}
+                  {!document.displayed?.controls && (
+                    <Inline space={2}>
+                      {/* Pick up here: create callback to show edit controls */}
+                      {/* Maybe I remove this as part of the document — will it reset on its own */}
+                      {/* when it's published? that would be ideal. */}
+                      <HierarchyButton type="button" onClick={handleCollapse}>
+                        <Text weight="semibold" muted size={1}>
+                          <EditIcon /> Edit
+                        </Text>
+                      </HierarchyButton>
+                    </Inline>
+                  )}
+                </Card>
+              </Flex>
+            </Card>
           </Stack>
           <TreeStructure
             concepts={data}
