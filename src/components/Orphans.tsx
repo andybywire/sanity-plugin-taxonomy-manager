@@ -10,7 +10,7 @@ import {AddCircleIcon, SquareIcon, ToggleArrowRightIcon, TrashIcon} from '@sanit
 import {useCreateConcept, useRemoveConcept} from '../hooks'
 import {ChildConceptTerm} from '../types'
 import {StyledOrphan, StyledTreeButton, StyledTreeToggle} from '../styles'
-import {SchemeContext} from '../context'
+import {SchemeContext, TreeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
@@ -25,6 +25,8 @@ type OrphanProps = {
 
 export const Orphans = ({concept, treeVisibility, inputComponent, selectConcept}: OrphanProps) => {
   const document: any = useContext(SchemeContext) || {}
+  const {editControls} = useContext(TreeContext) || {editControls: false}
+
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
@@ -76,8 +78,8 @@ export const Orphans = ({concept, treeVisibility, inputComponent, selectConcept}
             orphan
           </Text>
         )}
-        {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
-        {!inputComponent && document.displayed?.controls && (
+        {!editControls && <ConceptDetailDialogue concept={concept} />}
+        {!inputComponent && editControls && (
           <Inline space={2}>
             <Tooltip
               content={

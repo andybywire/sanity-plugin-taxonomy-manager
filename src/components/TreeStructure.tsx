@@ -24,9 +24,10 @@ export const TreeStructure = ({
   inputComponent: Boolean
   selectConcept: any
 }) => {
-  // @ts-expect-error — I think this is the same complier issue as Hierarchy.tsx
-  // To investigate.
-  const {treeId, treeVisibility} = useContext(TreeContext)
+  const {
+    // @ts-expect-error — sort out type
+    globalVisibility: {treeId, treeVisibility},
+  } = useContext(TreeContext) || {}
 
   if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
 

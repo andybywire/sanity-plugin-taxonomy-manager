@@ -55,12 +55,18 @@ export const Hierarchy = ({
     treeVisibility: 'open',
   })
 
+  const [editControls, setEditControls] = useState<Boolean>(false)
+
   const handleExpand = useCallback(() => {
     setGlobalVisibility({treeId: randomKey(3), treeVisibility: 'open'})
   }, [])
 
   const handleCollapse = useCallback(() => {
     setGlobalVisibility({treeId: randomKey(3), treeVisibility: 'closed'})
+  }, [])
+
+  const handleShowEdit = useCallback(() => {
+    setEditControls(true)
   }, [])
 
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
@@ -99,7 +105,7 @@ export const Hierarchy = ({
   return (
     // @ts-expect-error — The compiler complains about this being null.
     // I suspect this is an error.
-    <TreeContext.Provider value={globalVisibility}>
+    <TreeContext.Provider value={{globalVisibility, editControls}}>
       <Box padding={4} paddingTop={2}>
         <>
           <Stack space={4}>
@@ -128,7 +134,7 @@ export const Hierarchy = ({
                   )}
                 </Card>
                 <Card>
-                  {document.displayed?.controls && (
+                  {editControls ? (
                     <Inline space={4}>
                       <HierarchyButton type="button" className="add" onClick={createTopConcept}>
                         <Text weight="semibold" muted size={1}>
@@ -141,13 +147,12 @@ export const Hierarchy = ({
                         </Text>
                       </HierarchyButton>
                     </Inline>
-                  )}
-                  {!document.displayed?.controls && (
+                  ) : (
                     <Inline space={2}>
                       {/* Pick up here: create callback to show edit controls */}
                       {/* Maybe I remove this as part of the document — will it reset on its own */}
                       {/* when it's published? that would be ideal. */}
-                      <HierarchyButton type="button" onClick={handleCollapse}>
+                      <HierarchyButton type="button" onClick={handleShowEdit}>
                         <Text weight="semibold" muted size={1}>
                           <EditIcon /> Edit
                         </Text>

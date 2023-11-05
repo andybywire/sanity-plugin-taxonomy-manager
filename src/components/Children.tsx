@@ -35,8 +35,11 @@ export const Children = ({
   inputComponent: Boolean
 }) => {
   const document: any = useContext(SchemeContext) || {}
-  //@ts-expect-error — This is part of the same complaint as in Hierarchy.tsx
-  const {treeVisibility} = useContext(TreeContext) || {}
+  const {
+    // @ts-expect-error — sort out type
+    globalVisibility: {treeVisibility},
+  } = useContext(TreeContext) || {}
+  const {editControls} = useContext(TreeContext) || {editControls: false}
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
@@ -78,9 +81,9 @@ export const Children = ({
             {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
             <ConceptDetailLink concept={concept} />
           </Inline>
-          {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
+          {!editControls && <ConceptDetailDialogue concept={concept} />}
         </Inline>
-        {document.displayed?.controls && concept?.level && concept.level < 5 && (
+        {editControls && concept?.level && concept.level < 5 && (
           <Inline space={2}>
             <StyledTreeButton
               onClick={handleAddChild}
@@ -101,35 +104,33 @@ export const Children = ({
           </Inline>
         )}
 
-        {document.displayed?.controls &&
-          concept.childConcepts?.length == 0 &&
-          concept.level == 5 && (
-            <Inline space={2}>
-              <Tooltip
-                content={
-                  <Box padding={2} sizing="border">
-                    <Stack padding={1} space={2}>
-                      <Text muted size={1}>
-                        This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels.
-                      </Text>
-                    </Stack>
-                  </Box>
-                }
-                fallbackPlacements={['right', 'left']}
-                placement="top"
-              >
-                <InfoOutlineIcon className="info warning" />
-              </Tooltip>
-              <StyledTreeButton
-                onClick={handleRemoveConcept}
-                type="button"
-                className="action"
-                aria-label="Remove concept from scheme"
-              >
-                <TrashIcon className="remove" />
-              </StyledTreeButton>
-            </Inline>
-          )}
+        {editControls && concept.childConcepts?.length == 0 && concept.level == 5 && (
+          <Inline space={2}>
+            <Tooltip
+              content={
+                <Box padding={2} sizing="border">
+                  <Stack padding={1} space={2}>
+                    <Text muted size={1}>
+                      This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels.
+                    </Text>
+                  </Stack>
+                </Box>
+              }
+              fallbackPlacements={['right', 'left']}
+              placement="top"
+            >
+              <InfoOutlineIcon className="info warning" />
+            </Tooltip>
+            <StyledTreeButton
+              onClick={handleRemoveConcept}
+              type="button"
+              className="action"
+              aria-label="Remove concept from scheme"
+            >
+              <TrashIcon className="remove" />
+            </StyledTreeButton>
+          </Inline>
+        )}
 
         {concept?.childConcepts && concept?.childConcepts?.length > 0 && concept.level == 5 && (
           <Inline space={1}>

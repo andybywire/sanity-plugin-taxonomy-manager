@@ -22,9 +22,19 @@ export function useRemoveConcept(document: any) {
     (conceptId: string, conceptType: string, prefLabel?: string) => {
       const type = conceptType == 'topConcept' ? 'topConcepts' : 'concepts'
 
+      // Ensure concepts are removed from a draft of the concept scheme document
+      const draftConceptScheme = JSON.parse(JSON.stringify(document.displayed))
+
+      if (!draftConceptScheme._id.includes('drafts.')) {
+        draftConceptScheme._id = `drafts.${draftConceptScheme._id}`
+      }
+
       client
-        .patch(documentId)
-        .unset([`${type}[_ref=="${conceptId.replace('drafts.', '')}"]`])
+        .transaction()
+        .createIfNotExists(draftConceptScheme)
+        .patch(draftConceptScheme._id, (patch) =>
+          patch.unset([`${type}[_ref=="${conceptId.replace('drafts.', '')}"]`])
+        )
         .commit()
         .then((res) => {
           toast.push({

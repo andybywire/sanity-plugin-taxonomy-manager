@@ -10,7 +10,7 @@ import {AddCircleIcon, TrashIcon, ToggleArrowRightIcon, SquareIcon} from '@sanit
 import {useCreateConcept, useRemoveConcept} from '../hooks'
 import {TopConceptTerm} from '../types'
 import {StyledTopConcept, StyledTreeToggle, StyledTreeButton} from '../styles'
-import {SchemeContext} from '../context'
+import {SchemeContext, TreeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
@@ -30,6 +30,8 @@ export const TopConcepts = ({
   selectConcept,
 }: TopConceptsProps) => {
   const document: any = useContext(SchemeContext) || {}
+  const {editControls} = useContext(TreeContext) || {editControls: false}
+
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
@@ -77,8 +79,8 @@ export const TopConcepts = ({
         <Text size={1} muted>
           top concept
         </Text>
-        {!document.displayed?.controls && <ConceptDetailDialogue concept={concept} />}
-        {document.displayed?.controls && (
+        {!editControls && <ConceptDetailDialogue concept={concept} />}
+        {editControls && (
           <Inline space={2}>
             <Tooltip
               content={
