@@ -1,3 +1,8 @@
+import {useCallback} from 'react'
+import {set} from 'sanity'
+import {Button, Inline, Stack, useToast} from '@sanity/ui'
+import {randomKey} from '@sanity/util/content'
+
 /**
  * Create Unique Identifier
  * For schemes and concepts created in previous versions of the
@@ -7,12 +12,6 @@
  * - Consider removing once custom input ID scenarios have been
  *   more fleshed out
  */
-
-import {useCallback} from 'react'
-import {set} from 'sanity'
-import {Button, Inline, Stack, useToast} from '@sanity/ui'
-import {randomKey} from '@sanity/util/content'
-
 export const Identifier = (props: any) => {
   const {onChange} = props
   const toast = useToast()

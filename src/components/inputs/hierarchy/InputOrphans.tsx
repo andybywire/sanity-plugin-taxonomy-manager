@@ -1,9 +1,3 @@
-/**
- * Orphan Concept Component
- * Renders a list of orphan concepts for a given schema.
- * TODO consider modularizing add and remove buttons
- */
-
 import {useCallback, useContext, useState} from 'react'
 import {Text, Inline} from '@sanity/ui'
 import {SquareIcon, ToggleArrowRightIcon} from '@sanity/icons'
@@ -14,6 +8,11 @@ import {ChildConcepts} from '../../ChildConcepts'
 import {ConceptDetailDialogue} from '../../ConceptDetailDialogue'
 import {ConceptSelectLink} from '../../ConceptSelectLink'
 
+/**
+ * Orphan Concept Component
+ * Renders a list of orphan concepts for a given schema.
+ * TODO consider modularizing add and remove buttons
+ */
 type OrphanProps = {
   concept: ChildConceptTerm
   treeVisibility: string
@@ -28,8 +27,6 @@ export const InputOrphans = ({
   selectConcept,
 }: OrphanProps) => {
   const document: any = useContext(SchemeContext) || {}
-  // const createConcept = useCreateConcept(document)
-  // const removeConcept = useRemoveConcept(document)
 
   const [levelVisibility, setLevelVisibility] = useState(treeVisibility)
 
@@ -40,14 +37,6 @@ export const InputOrphans = ({
       setLevelVisibility('open')
     }
   }, [levelVisibility])
-
-  // const handleAddChild = useCallback(() => {
-  //   createConcept('concept', concept?.id, concept?.prefLabel)
-  // }, [concept?.id, concept?.prefLabel, createConcept])
-
-  // const handleRemoveConcept = useCallback(() => {
-  //   removeConcept(concept.id, 'concept', concept?.prefLabel)
-  // }, [concept.id, concept?.prefLabel, removeConcept])
 
   return (
     <StyledOrphan className={levelVisibility}>

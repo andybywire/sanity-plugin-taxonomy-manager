@@ -1,9 +1,3 @@
-/**
- * Orphan Concept Component
- * Renders a list of orphan concepts for a given schema.
- * TODO consider modularizing add and remove buttons
- */
-
 import {useCallback, useContext, useState} from 'react'
 import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
 import {AddCircleIcon, SquareIcon, ToggleArrowRightIcon, TrashIcon} from '@sanity/icons'
@@ -23,6 +17,11 @@ type OrphanProps = {
   selectConcept: any
 }
 
+/**
+ * Orphan Concept Component
+ * Renders a list of orphan concepts for a given schema.
+ * TODO: consider modularizing add and remove buttons
+ */
 export const Orphans = ({concept, treeVisibility, inputComponent, selectConcept}: OrphanProps) => {
   const document: any = useContext(SchemeContext) || {}
   const {editControls} = useContext(TreeContext) || {editControls: false}

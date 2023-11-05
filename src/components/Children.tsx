@@ -1,12 +1,3 @@
-/**
- * Child Concept Component
- * Renders a list of child concepts for a given concept.
- * TODO consider modularizing add and remove buttons
- * TODO Add dialogue explaining max depth
- * TODO Improve accessibility of hidden children and max depth disclosures
- * TODO Handle childConcept and level definition checks more elegantly
- */
-
 import {useCallback, useContext, useState} from 'react'
 import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
 import {
@@ -25,6 +16,14 @@ import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 
+/**
+ * Child Concept Component
+ * Renders a list of child concepts for a given concept.
+ * TODO consider modularizing add and remove buttons
+ * TODO Add dialogue explaining max depth
+ * TODO Improve accessibility of hidden children and max depth disclosures
+ * TODO Handle childConcept and level definition checks more elegantly
+ */
 export const Children = ({
   concept,
   selectConcept,

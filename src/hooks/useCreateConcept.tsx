@@ -1,16 +1,15 @@
-/**
- * Concept Creation Hook
- * Used for creating concepts and top concepts from the Concept Scheme
- * hierarchy view.
- * TODO type document, likely via extended SanityDocument type.
- */
-
 import {useClient} from 'sanity'
 import {useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {randomKey} from '@sanity/util/content'
 import {useOpenNewConceptPane} from './useOpenNewConceptPane'
 
+/**
+ * Concept Creation Hook
+ * Used for creating concepts and top concepts from the Concept Scheme
+ * hierarchy view.
+ * TODO: type document, likely via extended SanityDocument type.
+ */
 export function useCreateConcept(document: any) {
   const toast = useToast()
   const client = useClient({apiVersion: '2021-10-21'})

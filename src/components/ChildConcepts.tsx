@@ -1,14 +1,13 @@
-/**
- * Child Concepts
- * This component renders a list of child concepts for a given concept.
- * - provides the <ul> wrapper for each level of nesting
- */
-
 import {ChildConceptTerm} from '../types'
 import {StyledChildConcepts} from '../styles'
 import {Children} from './Children'
 import {InputChildren} from './inputs/hierarchy/InputChildren'
 
+/**
+ * Child Concepts
+ * This component renders a list of child concepts for a given concept.
+ * - provides the <ul> wrapper for each level of nesting
+ */
 export const ChildConcepts = ({
   concepts,
   inputComponent = false,

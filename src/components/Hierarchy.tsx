@@ -1,12 +1,4 @@
 /* eslint-disable react/require-default-props */
-/**
- *  Hierarchy Component
- * - Provides a frame for global controls and tree structure
- * - Fetches the complete tree of concepts in a concept scheme.
- * - Displays the tree in a nested list.
- * TODO type document, likely via extended SanityDocument type.
- */
-
 import {useCallback, useContext, useState, useEffect} from 'react'
 import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
 import {AddCircleIcon, EditIcon} from '@sanity/icons'
@@ -20,6 +12,13 @@ import {SchemeContext, TreeContext} from '../context'
 import {TreeStructure} from './TreeStructure'
 import {NewScheme} from './guides'
 
+/**
+ *  Hierarchy Component
+ * - Provides a frame for global controls and tree structure
+ * - Fetches the complete tree of concepts in a concept scheme.
+ * - Displays the tree in a nested list.
+ * TODO type document, likely via extended SanityDocument type.
+ */
 export const Hierarchy = ({
   branchId = '',
   selectConcept,
@@ -146,9 +145,6 @@ export const Hierarchy = ({
                     </Inline>
                   ) : (
                     <Inline space={2}>
-                      {/* Pick up here: create callback to show edit controls */}
-                      {/* Maybe I remove this as part of the document — will it reset on its own */}
-                      {/* when it's published? that would be ideal. */}
                       <HierarchyButton type="button" onClick={handleShowEdit}>
                         <Text weight="semibold" muted size={1}>
                           <EditIcon /> Edit

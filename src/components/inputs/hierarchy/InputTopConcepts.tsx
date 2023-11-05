@@ -1,9 +1,3 @@
-/**
- * Top Concept Component
- * Renders a list of top concepts for a given schema.
- * TODO consider modularizing add and remove buttons
- */
-
 import {useCallback, useState} from 'react'
 import {Text, Inline} from '@sanity/ui'
 import {ToggleArrowRightIcon, SquareIcon} from '@sanity/icons'
@@ -20,6 +14,11 @@ type TopConceptsProps = {
   selectConcept: any
 }
 
+/**
+ * Top Concept Component
+ * Renders a list of top concepts for a given schema.
+ * TODO: consider modularizing add and remove buttons
+ */
 export const InputTopConcepts = ({
   concept,
   treeVisibility,

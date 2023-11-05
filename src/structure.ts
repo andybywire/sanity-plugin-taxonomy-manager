@@ -1,14 +1,13 @@
+import {TreeView} from './components/TreeView'
+import {EditIcon} from '@sanity/icons'
+import NodeTree from './components/NodeTree'
+
 /**
  * Default Desk Structure for Concept and Concept Scheme
  * Sets defaultDocumentNode. Consider exporting in the future,
  * if there is a use case for mixing taxonomy views in the main
  * desk structure.
  */
-
-import {TreeView} from './components/TreeView'
-import {EditIcon} from '@sanity/icons'
-import NodeTree from './components/NodeTree'
-
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const structure = (S: any) =>
   S.list()

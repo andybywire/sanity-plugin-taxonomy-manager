@@ -1,12 +1,4 @@
 /* eslint-disable react/require-default-props */
-/**
- *  Input Hierarchy Component
- * - Provides a frame for global controls and tree structure
- * - Fetches the complete tree of concepts in a concept scheme.
- * - Displays the tree in a nested list.
- * TODO type document, likely via extended SanityDocument type.
- */
-
 import {useContext} from 'react'
 import {Flex, Spinner, Box, Text} from '@sanity/ui'
 import {useListeningQuery} from 'sanity-plugin-utils'
@@ -16,6 +8,13 @@ import {SchemeContext, TreeContext} from '../../../context'
 import {TreeStructure} from '../../TreeStructure'
 import {NewScheme} from '../../guides'
 
+/**
+ *  Input Hierarchy Component
+ * - Provides a frame for global controls and tree structure
+ * - Fetches the complete tree of concepts in a concept scheme.
+ * - Displays the tree in a nested list.
+ * TODO: type document, likely via extended SanityDocument type.
+ */
 export const InputHierarchy = ({
   branchId = '',
   selectConcept,
@@ -28,7 +27,7 @@ export const InputHierarchy = ({
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
 
-  // likely don't need to listen here
+  // likely don't need to listen here. Consider simplifying.
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
       fetch: inputBuilder(),

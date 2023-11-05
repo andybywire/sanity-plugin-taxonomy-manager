@@ -1,12 +1,11 @@
+import {Card, Label, Stack, Text} from '@sanity/ui'
+import {InlineHelp} from '../../styles'
+
 /**
  * No Concepts Guide
  * - Prompts adding concepts to an empty scheme.
  * TODO: Consider adding more instructions, a .gif, or video to this guide.
  */
-
-import {Card, Label, Stack, Text} from '@sanity/ui'
-import {InlineHelp} from '../../styles'
-
 export const NoConcepts = () => {
   return (
     <InlineHelp>

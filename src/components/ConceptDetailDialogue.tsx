@@ -1,14 +1,13 @@
-/**
- * Information Icon and Dialogue with Concept Details
- * - affords Tree View access to Definition, Examples, and Scope Notes
- * - is rendered only when concept details are present
- */
-
 import {useCallback, useState} from 'react'
 import {Dialog, Box, Text, Stack, Label} from '@sanity/ui'
 import {InfoOutlineIcon} from '@sanity/icons'
 import {StyledTreeButton} from '../styles'
 
+/**
+ * Information Icon and Dialogue with Concept Details
+ * - affords Tree View access to Definition, Examples, and Scope Notes
+ * - is rendered only when concept details are present
+ */
 export const ConceptDetailDialogue = ({concept}: {concept: any}) => {
   const [open, setOpen] = useState(false)
   const onClose = useCallback(() => setOpen(false), [])

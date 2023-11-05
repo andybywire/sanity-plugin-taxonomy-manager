@@ -44,7 +44,7 @@ export function HierarchyInput(props: ObjectFieldProps) {
   /**
    * Term Select Action
    * Writes the selected taxonomy term to the document field
-   * TODO If this is a brand new document, _id is not yet in the content lake and this
+   * TODO: If this is a brand new document, _id is not yet in the content lake and this
    * will throw an error. Not a high frequency use case, but consider handling.
    */
   const handleAction = useCallback(

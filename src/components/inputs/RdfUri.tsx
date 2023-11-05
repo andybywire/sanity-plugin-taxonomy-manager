@@ -1,13 +1,11 @@
-/**
- * SKOS Concept Base URI input component
- * Used for Concept and Concept Scheme URI preview
-
- */
-
 import {useFormValue} from 'sanity'
 import {Stack, Text} from '@sanity/ui'
 import {StringInputProps} from 'sanity'
 
+/**
+ * SKOS Concept Base URI input component
+ * Used for Concept and Concept Scheme URI preview
+ */
 export function RdfUri(props: StringInputProps) {
   const conceptId = useFormValue(['conceptId'])
   const schemeId = useFormValue(['schemeId'])

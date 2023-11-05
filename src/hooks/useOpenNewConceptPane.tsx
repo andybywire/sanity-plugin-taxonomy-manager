@@ -1,11 +1,10 @@
-/**
- * Open in New Pane Link for Concepts
- */
-
 import {useCallback, useContext} from 'react'
 import {usePaneRouter} from 'sanity/desk'
 import {RouterContext} from 'sanity/router'
 
+/**
+ * Open in New Pane Link for Concepts
+ */
 export function useOpenNewConceptPane() {
   const routerContext = useContext(RouterContext)
   const {routerPanesState, groupIndex} = usePaneRouter()
