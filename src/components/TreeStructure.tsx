@@ -24,10 +24,8 @@ export const TreeStructure = ({
   inputComponent: Boolean
   selectConcept: any
 }) => {
-  const {
-    // @ts-expect-error — sort out type
-    globalVisibility: {treeId, treeVisibility},
-  } = useContext(TreeContext) || {}
+  const {globalVisibility: {treeId, treeVisibility} = {treeId: 123, treeVisibility: 'open'}} =
+    useContext(TreeContext) || {}
 
   if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
 

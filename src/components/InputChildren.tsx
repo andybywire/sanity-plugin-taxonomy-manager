@@ -26,8 +26,8 @@ export const InputChildren = ({
   selectConcept: any
   inputComponent: Boolean
 }) => {
-  //@ts-expect-error — This is part of the same complaint as in Hierarchy.tsx
-  const {treeVisibility} = useContext(TreeContext) || {}
+  const {globalVisibility: {treeVisibility} = {treeVisibility: 'open'}} =
+    useContext(TreeContext) || {}
 
   const [levelVisibility, setLevelVisibility] = useState(treeVisibility)
 

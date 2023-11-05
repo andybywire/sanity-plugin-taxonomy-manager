@@ -2,7 +2,7 @@ import {createContext} from 'react'
 
 type TreeContextType = {
   globalVisibility?: {treeId: string; treeVisibility: string}
-  editControls: boolean
+  editControls?: boolean
 }
 
 export const SchemeContext = createContext(null)

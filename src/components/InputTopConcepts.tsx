@@ -11,7 +11,7 @@ import {TopConceptTerm} from '../types'
 import {StyledTopConcept, StyledTreeToggle} from '../styles'
 import {ChildConcepts} from './ChildConcepts'
 // import {ConceptDetailLink} from './ConceptDetailLink'
-import { ConceptSelectLink } from './ConceptSelectLink'
+import {ConceptSelectLink} from './ConceptSelectLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
 
 type TopConceptsProps = {

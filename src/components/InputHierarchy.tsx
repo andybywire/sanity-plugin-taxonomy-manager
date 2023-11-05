@@ -57,14 +57,13 @@ export const InputHierarchy = ({
       </Box>
     )
   } else if (error) {
-    return <div>error: {error}</div>
+    console.warn(error)
+    return <div>error</div>
   } else if (!data) {
     return <NewScheme document={document} />
   }
   return (
-    // @ts-expect-error — The compiler complains about this being null.
-    // I suspect this is an error.
-    <TreeContext.Provider value={{treeId: '123', treeVisibility: 'open'}}>
+    <TreeContext.Provider value={{globalVisibility: {treeId: '123', treeVisibility: 'open'}}}>
       <Box padding={4}>
         <TreeStructure
           concepts={data}
