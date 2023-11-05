@@ -20,11 +20,6 @@ import {SchemeContext, TreeContext} from '../context'
 import {TreeStructure} from './TreeStructure'
 import {NewScheme} from './guides'
 
-type GlobalVisibility = {
-  treeId: string
-  treeVisibility: string
-}
-
 export const Hierarchy = ({
   branchId = '',
   selectConcept,
@@ -50,12 +45,12 @@ export const Hierarchy = ({
   // `randomKey` is used on treeId to initiate a re-rendering of all child
   // elements on expand/collapse and re-initialize any local toggle state
   // that had been set.
-  const [globalVisibility, setGlobalVisibility] = useState<GlobalVisibility>({
+  const [globalVisibility, setGlobalVisibility] = useState({
     treeId: randomKey(3),
     treeVisibility: 'open',
   })
 
-  const [editControls, setEditControls] = useState<Boolean>(false)
+  const [editControls, setEditControls] = useState(false)
 
   useEffect(() => {
     if (!document.displayed._id.includes('drafts.')) setEditControls(false)
@@ -107,8 +102,6 @@ export const Hierarchy = ({
     return <NewScheme document={document} />
   }
   return (
-    // @ts-expect-error — The compiler complains about this being null.
-    // I suspect this is an error.
     <TreeContext.Provider value={{globalVisibility, editControls}}>
       <Box padding={4} paddingTop={2}>
         <>
