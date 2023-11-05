@@ -7,7 +7,7 @@
  * TODO type document, likely via extended SanityDocument type.
  */
 
-import {useCallback, useContext, useState} from 'react'
+import {useCallback, useContext, useState, useEffect} from 'react'
 import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
 import {AddCircleIcon, EditIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
@@ -56,6 +56,10 @@ export const Hierarchy = ({
   })
 
   const [editControls, setEditControls] = useState<Boolean>(false)
+
+  useEffect(() => {
+    if (!document.displayed._id.includes('drafts.')) setEditControls(false)
+  }, [document.displayed._id])
 
   const handleExpand = useCallback(() => {
     setGlobalVisibility({treeId: randomKey(3), treeVisibility: 'open'})
