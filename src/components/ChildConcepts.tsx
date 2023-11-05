@@ -7,7 +7,7 @@
 import {ChildConceptTerm} from '../types'
 import {StyledChildConcepts} from '../styles'
 import {Children} from './Children'
-import {InputChildren} from './InputChildren'
+import {InputChildren} from './inputs/hierarchy/InputChildren'
 
 export const ChildConcepts = ({
   concepts,

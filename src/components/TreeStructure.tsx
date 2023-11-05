@@ -10,9 +10,9 @@ import {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 import {StyledTree} from '../styles'
 import {TreeContext} from '../context'
 import {TopConcepts} from './TopConcepts'
-import {InputTopConcepts} from './InputTopConcepts'
+import {InputTopConcepts} from './inputs/hierarchy/InputTopConcepts'
 import {Orphans} from './Orphans'
-import {InputOrphans} from './InputOrphans'
+import {InputOrphans} from './inputs/hierarchy/InputOrphans'
 import {NoConcepts} from './guides'
 
 export const TreeStructure = ({

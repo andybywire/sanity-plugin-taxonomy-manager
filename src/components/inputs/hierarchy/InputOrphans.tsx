@@ -7,12 +7,12 @@
 import {useCallback, useContext, useState} from 'react'
 import {Text, Inline} from '@sanity/ui'
 import {SquareIcon, ToggleArrowRightIcon} from '@sanity/icons'
-import {ChildConceptTerm} from '../types'
-import {StyledOrphan, StyledTreeToggle} from '../styles'
-import {SchemeContext} from '../context'
-import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailDialogue} from './ConceptDetailDialogue'
-import {ConceptSelectLink} from './ConceptSelectLink'
+import {ChildConceptTerm} from '../../../types'
+import {StyledOrphan, StyledTreeToggle} from '../../../styles'
+import {SchemeContext} from '../../../context'
+import {ChildConcepts} from '../../ChildConcepts'
+import {ConceptDetailDialogue} from '../../ConceptDetailDialogue'
+import {ConceptSelectLink} from '../../ConceptSelectLink'
 
 type OrphanProps = {
   concept: ChildConceptTerm

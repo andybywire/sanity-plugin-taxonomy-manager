@@ -10,12 +10,12 @@
 import {useCallback, useContext, useState} from 'react'
 import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
 import {ErrorOutlineIcon, ToggleArrowRightIcon, SquareIcon} from '@sanity/icons'
-import {ChildConceptTerm} from '../types'
-import {StyledChildConcept, StyledTreeToggle} from '../styles'
-import {TreeContext} from '../context'
-import {ChildConcepts} from './ChildConcepts'
-import {ConceptSelectLink} from './ConceptSelectLink'
-import {ConceptDetailDialogue} from './ConceptDetailDialogue'
+import {ChildConceptTerm} from '../../../types'
+import {StyledChildConcept, StyledTreeToggle} from '../../../styles'
+import {TreeContext} from '../../../context'
+import {ChildConcepts} from '../../ChildConcepts'
+import {ConceptSelectLink} from '../../ConceptSelectLink'
+import {ConceptDetailDialogue} from '../../ConceptDetailDialogue'
 
 export const InputChildren = ({
   concept,

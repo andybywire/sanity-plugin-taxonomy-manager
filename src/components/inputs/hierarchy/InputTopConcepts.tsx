@@ -7,12 +7,11 @@
 import {useCallback, useState} from 'react'
 import {Text, Inline} from '@sanity/ui'
 import {ToggleArrowRightIcon, SquareIcon} from '@sanity/icons'
-import {TopConceptTerm} from '../types'
-import {StyledTopConcept, StyledTreeToggle} from '../styles'
-import {ChildConcepts} from './ChildConcepts'
-// import {ConceptDetailLink} from './ConceptDetailLink'
-import {ConceptSelectLink} from './ConceptSelectLink'
-import {ConceptDetailDialogue} from './ConceptDetailDialogue'
+import {TopConceptTerm} from '../../../types'
+import {StyledTopConcept, StyledTreeToggle} from '../../../styles'
+import {ChildConcepts} from '../../ChildConcepts'
+import {ConceptSelectLink} from '../../ConceptSelectLink'
+import {ConceptDetailDialogue} from '../../ConceptDetailDialogue'
 
 type TopConceptsProps = {
   concept: TopConceptTerm
