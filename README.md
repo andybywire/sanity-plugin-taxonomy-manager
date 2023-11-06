@@ -39,9 +39,6 @@ or
 yarn add sanity-plugin-taxonomy-manager
 ```
 
-### 🚨 Breaking Changes for Concept Fields
-> Version 3 of Sanity Taxonomy Manager includes changes to `baseUri` and `skosConceptScheme` fields that were part of version 1 and early (patch) versions of v2. If you are upgrading to Taxonomy Manager version 3 with concepts created in one of these early versions, [install v2.3.1 first](https://www.npmjs.com/package/sanity-plugin-taxonomy-manager/v/2.3.1): it includes field utilities to help you migrate your terms and schemes to version 3.
-
 ## Configuration
 
 Add the plugin to your [project configuration](https://www.sanity.io/docs/configuration#51515480034b) to add the Taxonomy Manager Tool to your studio workspace.
