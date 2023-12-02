@@ -68,6 +68,11 @@ const inputBranchBuilder = (level = 1): string | void => {
  *   a broader term
  * - filter out concepts that reference other concepts in this scheme
  *   as a broader term
+ * - this query gets more complicated because terms no longer have
+ *   an `inScheme` key, and the `_ref` always points to the _published_
+ *   document.
+ * - this is making this query quite slow. Need to figure out a way to
+ *   speed it up. Consider using `mutator` as in Toscana defaultDocumentNode
  */
 export const trunkBuilder = (): string => {
   return `*[_id == $id][0] {
