@@ -22,10 +22,10 @@ const branchBuilder = (level = 1): string | void => {
     return ''
   }
   return `"childConcepts": *[
-    (_id in *[_id == $id][0].concepts[]{"ref": "drafts." + _ref}.ref ||
+    (_id in $draftConceptIds ||
       (
-        _id in *[_id == $id][0].concepts[]._ref &&
-        !(conceptId in *[_id in *[_id == $id][0].concepts[]{"ref": "drafts." + _ref}.ref].conceptId)
+        _id in $conceptIds &&
+        !(conceptId in $draftConceptIds)
       )
     ) && ^._id in broader[]._ref ]|order(prefLabel){
       "id": _id,
@@ -68,19 +68,14 @@ const inputBranchBuilder = (level = 1): string | void => {
  *   a broader term
  * - filter out concepts that reference other concepts in this scheme
  *   as a broader term
- * - this query gets more complicated because terms no longer have
- *   an `inScheme` key, and the `_ref` always points to the _published_
- *   document.
- * - this is making this query quite slow. Need to figure out a way to
- *   speed it up. Consider using `mutator` as in Toscana defaultDocumentNode
  */
 export const trunkBuilder = (): string => {
   return `*[_id == $id][0] {
     _updatedAt,
-    "topConcepts": *[_id in *[_id == $id][0].topConcepts[]{"ref": "drafts." + _ref}.ref ||
+    "topConcepts": *[_id in $draftTopConceptIds ||
       (
-        _id in *[_id == $id][0].topConcepts[]._ref &&
-        !(conceptId in *[_id in *[_id == $id][0].topConcepts[]{"ref": "drafts." + _ref}.ref].conceptId)
+        _id in $topConceptIds &&
+        !(conceptId in *[_id in $draftTopConceptIds].conceptId)
       )
       ]|order(prefLabel) {
       "id": _id,
@@ -91,10 +86,10 @@ export const trunkBuilder = (): string => {
       scopeNote,
       ${branchBuilder()}
     },
-    "orphans": *[_id in *[_id == $id][0].concepts[]{"ref": "drafts." + _ref}.ref ||
+    "orphans": *[_id in $draftConceptIds ||
       (
-        _id in *[_id == $id][0].concepts[]._ref &&
-        !(conceptId in *[_id in *[_id == $id][0].concepts[]{"ref": "drafts." + _ref}.ref].conceptId)
+        _id in $conceptIds &&
+        !(conceptId in *[_id in $draftConceptIds].conceptId)
       ) &&
       count(
         (broader[]._ref) [@ in coalesce(

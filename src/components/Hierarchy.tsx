@@ -31,6 +31,13 @@ export const Hierarchy = ({
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
 
+  const conceptIds = document.displayed?.concepts?.map((concept: any) => concept?._ref) || []
+  const draftConceptIds =
+    document.displayed?.concepts?.map((concept: any) => `drafts.${concept?._ref}`) || []
+  const topConceptIds = document.displayed?.topConcepts?.map((concept: any) => concept?._ref) || []
+  const draftTopConceptIds =
+    document.displayed?.topConcepts?.map((concept: any) => `drafts.${concept?._ref}`) || []
+
   const createConcept = useCreateConcept(document)
 
   const createTopConcept = useCallback(() => {
@@ -73,7 +80,14 @@ export const Hierarchy = ({
       listen: `*[_type == "skosConcept" || _id == $id ]`,
     },
     {
-      params: {id: documentId, draft: `drafts.${documentId}`, branchId}, // draft may not be necessary
+      params: {
+        id: documentId,
+        branchId,
+        conceptIds,
+        draftConceptIds,
+        topConceptIds,
+        draftTopConceptIds,
+      }, // draft may not be necessary
     }
   )
   if (loading) {
