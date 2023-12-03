@@ -7,14 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.1.1] - 2023-12-03
+
+### Added
+- Add hierarchy input component use instructions to documentation
+
+### Changed
+- Optimized tree view query for speed
+
 ## [3.1.0] - 2023-11-05
 
 ### Added
-
 - Add Hierarchy Input Component support for reference fields using schemeInput() and branchInput() filter helpers
 
 ### Changed
-
 - Tree View edit controls are no longer activated via the Concept Management Controls boolean; these now rely on state. (Boolean to be removed in a future iteration)
 
 ### Fixed
@@ -24,13 +30,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [3.1.0-beta.2] - 2023-10-03
 
 ### Added
-
 - Add informational Top Concept element to Hierarchy Input component
 
 ## [3.1.0-beta.0] - 2023-10-02
 
 ### Added
-
 - Beta release of hierarchical reference input component picker
 
 ## [3.0.2] - 2023-09-13
@@ -227,7 +231,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.0...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.1...HEAD
+[3.1.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.0...v3.1.1
 [3.1.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.0-beta.2...v3.1.0
 [3.1.0-beta.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.0-beta.0...v3.1.0-beta.2
 [3.1.0-beta.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.0.2...v3.1.0-beta.0
