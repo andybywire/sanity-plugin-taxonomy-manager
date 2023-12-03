@@ -308,3 +308,26 @@ defineField({
 ```
 
 ### Tree View Input Component
+The tree view input component allows your authors to view your taxonomy hierarchy and access definitions, examples, and scope notes in context. Use with either the `schemeFilter` or `branchFilter`. 
+
+![Locating the concept/scheme id](_images/hierarchy-input-component.png)
+
+Add the component by importing `HierarchyInput` from the plugin, and including it as a field component:
+
+```js
+import {HierarchyInput} from 'sanity-plugin-taxonomy-manager'
+
+...
+
+defineField({
+    name: 'habitat',
+    title: 'Habitat',
+    type: 'reference',
+    to: {type: 'skosConcept'},
+      options: {
+        filter: () => branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c'}),
+        disableNew: true,
+      },
+      components: {field: HierarchyInput},
+  }),
+```
