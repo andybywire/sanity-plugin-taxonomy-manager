@@ -23,8 +23,8 @@
     ".": {
       "types": "./lib/index.d.ts",
       "source": "./src/index.ts",
-      "require": "./lib/index.js",
       "import": "./lib/index.esm.js",
+      "require": "./lib/index.js",
       "default": "./lib/index.esm.js"
     },
     "./package.json": "./package.json"
@@ -78,6 +78,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
+    "rimraf": "^5.0.5",
     "sanity": "^3.8.3",
     "styled-components": "^5.3.9",
     "typescript": "^5.0.4"
