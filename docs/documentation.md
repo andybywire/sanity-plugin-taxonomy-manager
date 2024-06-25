@@ -179,7 +179,7 @@ When combined with search term and traffic data, type taxonomies help you to dra
 
 **Key Features**
 
-- **Relationships:** Type taxonomies organize concepts in "is-a" relationships: "Nutrition Education" is a type of "Health Eduction," which is a type of "Education." These relationships, when consistently maintained, help users to confidently navigate categories, and can allow algorithms to accurately draw inferences about resources tagged with taxonomy terms.
+- **Relationships:** Type taxonomies organize concepts in "is-a" relationships: "Nutrition Education" is a type of "Health Education," which is a type of "Education." These relationships, when consistently maintained, help users to confidently navigate categories, and can allow algorithms to accurately draw inferences about resources tagged with taxonomy terms.
 - **Adaptability:** Type taxonomies can be tailored to a wide range of specific content collections or subject domains.
 - **Flexibility:** Type taxonomies can be used to add structure to simple domains with only a handful of concepts, or can scale to many thousands of terms.
 
