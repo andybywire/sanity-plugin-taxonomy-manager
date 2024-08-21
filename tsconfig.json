@@ -21,6 +21,6 @@
     "emitDeclarationOnly": true,
     "rootDir": "."
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/structure.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": ["node_modules", "**/*.spec.ts"]
 }
