@@ -88,7 +88,7 @@ export const Hierarchy = ({
         topConceptIds,
         draftTopConceptIds,
       }, // draft may not be necessary
-    }
+    },
   )
   if (loading) {
     return (
