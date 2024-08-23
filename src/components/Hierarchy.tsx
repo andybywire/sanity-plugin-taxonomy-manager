@@ -20,7 +20,6 @@ import {NewScheme} from './guides'
  * TODO type document, likely via extended SanityDocument type.
  */
 export const Hierarchy = ({
-  branchId = '',
   selectConcept,
   inputComponent = false,
 }: {
@@ -30,13 +29,6 @@ export const Hierarchy = ({
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
-
-  const conceptIds = document.displayed?.concepts?.map((concept: any) => concept?._ref) || []
-  const draftConceptIds =
-    document.displayed?.concepts?.map((concept: any) => `drafts.${concept?._ref}`) || []
-  const topConceptIds = document.displayed?.topConcepts?.map((concept: any) => concept?._ref) || []
-  const draftTopConceptIds =
-    document.displayed?.topConcepts?.map((concept: any) => `drafts.${concept?._ref}`) || []
 
   const createConcept = useCreateConcept(document)
 
@@ -82,14 +74,9 @@ export const Hierarchy = ({
     {
       params: {
         id: documentId,
-        branchId,
-        conceptIds,
-        draftConceptIds,
-        topConceptIds,
-        draftTopConceptIds,
-      }, // draft may not be necessary
+      },
     },
-  )
+  ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
   if (loading) {
     return (
       <Box padding={5}>
