@@ -78,7 +78,7 @@
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
     "rimraf": "^5.0.5",
-    "sanity": "^3.8.3",
+    "sanity": "^3.55.0",
     "sanity-plugin-utils": "^1.6.4",
     "styled-components": "^6.1.8",
     "typescript": "^5.0.4"
