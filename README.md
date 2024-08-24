@@ -47,7 +47,7 @@ Add the plugin to your [project configuration](https://www.sanity.io/docs/config
 // sanity.config.js
 
 import {defineConfig} from 'sanity'
-import {deskTool} from 'sanity/desk'
+import {structureTool} from 'sanity/structure'
 import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'
 import {schemaTypes} from './schemas'
 
@@ -57,7 +57,7 @@ export default defineConfig({
   projectId: '<projectId>',
   dataset: 'production',
   plugins: [
-    deskTool(),
+    structureTool(),
     // Include the taxonomy manager plugin
     taxonomyManager({
       // Optional: Set a Base URI to use for new concepts & concept schemes
@@ -76,7 +76,7 @@ The plugin adds `skosConcept` and `skosConceptScheme` document types to your stu
 // sanity.config.js
 
 import {defineConfig} from 'sanity'
-import {deskTool} from 'sanity/desk'
+import {structureTool} from 'sanity/structure'
 import {taxonomyManager} from 'sanity-plugin-taxonomy-manager'
 import {schemaTypes} from './schemas'
 
@@ -86,7 +86,7 @@ export default defineConfig({
   projectId: '<projectId>',
   dataset: 'production',
   plugins: [
-    deskTool({
+    structureTool({
       structure: (S) =>
         S.list()
           .title('Content')
