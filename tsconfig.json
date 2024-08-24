@@ -3,7 +3,7 @@
     "jsx": "preserve",
     "moduleResolution": "node",
     "target": "esnext",
-    "module": "esnext",
+    "module": "preserve",
     "esModuleInterop": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext"],
     "strict": true,
@@ -18,8 +18,8 @@
     "skipLibCheck": true,
     "isolatedModules": true,
     "checkJs": false,
-    "emitDeclarationOnly": true,
-    "rootDir": "."
+    "rootDir": ".",
+    "noEmit": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx"],
   "exclude": [

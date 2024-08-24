@@ -19,19 +19,19 @@
   },
   "license": "MIT",
   "author": "Andy Fitzgerald",
+  "sideEffects": false,
+  "browserslist": "extends @sanity/browserslist-config",
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
       "source": "./src/index.ts",
-      "import": "./lib/index.esm.js",
+      "import": "./lib/index.esm.mjs",
       "require": "./lib/index.js",
-      "default": "./lib/index.esm.js"
+      "default": "./lib/index.esm.mjs"
     },
     "./package.json": "./package.json"
   },
   "main": "./lib/index.js",
   "module": "./lib/index.esm.js",
-  "source": "./src/index.ts",
   "types": "./lib/index.d.ts",
   "files": [
     "lib",
@@ -41,11 +41,11 @@
   ],
   "scripts": {
     "prebuild": "npm run clean && plugin-kit verify-package --silent && pkg-utils",
-    "build": "run-s clean && plugin-kit verify-package --silent && pkg-utils build --strict && pkg-utils --strict",
+    "build": "plugin-kit verify-package --silent && pkg-utils build --strict --check --clean",
     "clean": "rimraf lib",
     "link-watch": "plugin-kit link-watch",
     "lint": "eslint .",
-    "prepublishOnly": "run-s build",
+    "prepublishOnly": "npm run build",
     "watch": "pkg-utils watch --strict",
     "format": "prettier --write --cache --ignore-unknown ."
   },
@@ -61,8 +61,8 @@
     "rxjs": "^7.8.1"
   },
   "devDependencies": {
-    "@sanity/pkg-utils": "^2.2.14",
-    "@sanity/plugin-kit": "^3.1.10",
+    "@sanity/pkg-utils": "^6.10.10",
+    "@sanity/plugin-kit": "^4.0.18",
     "@types/react": "^18.0.35",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
@@ -88,7 +88,7 @@
     "sanity": "^3"
   },
   "engines": {
-    "node": ">=14"
+    "node": ">=18"
   },
   "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager",
   "sanityPlugin": {
