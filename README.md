@@ -109,6 +109,62 @@ export default defineConfig({
 ## Contributing
 Community collaboration is highly encouraged. To make sure your contributions are aligned with project goals and principles, please read the [contributing docs](https://sanitytaxonomymanager.com/#/contributing) before submitting a pull request. 
 
+This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
+with default configuration for build & watch scripts.
+
+See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
+on how to run the plugin with hot-reload in the studio.
+
+<details>
+<summary><H2>Component Diagrams</H2></summary>
+Note here on why these are necessary. If multiple diagrams, put each in its own collapsible header. 
+
+#### Tree View
+Add Description
+
+```mermaid
+graph BT
+    subgraph SchemeContext.Provider
+      direction BT
+      Hierarchy.tsx-->TreeView.tsx
+      subgraph TreeContext.Provider
+        direction BT
+        TreeStructure.tsx-->Hierarchy.tsx        
+        TopConcepts.tsx[
+          TopConcepts.tsx
+          <i style="color: gray; font-size: small">uses SchemeContext</i>
+          <i style="color: gray; font-size: small">uses TreeContext</i>
+        ]-->TreeStructure.tsx
+        Orphans.tsx[
+          Orphans.tsx
+          <i style="color: gray; font-size: small">uses SchemeContext</i>
+          <i style="color: gray; font-size: small">uses TreeContext</i>
+        ]-->TreeStructure.tsx
+
+        %% Sequence below maintains RTL ordering:
+        ConceptDetailLink.tsx-->TopConcepts.tsx
+        ConceptDetailLink.tsx-->Orphans.tsx
+
+        ChildConcepts.tsx-->TopConcepts.tsx
+        ChildConcepts.tsx-->Orphans.tsx
+        Children.tsx-->ChildConcepts.tsx
+
+        ConceptDetailDialogue.tsx-->Orphans.tsx
+        ConceptDetailDialogue.tsx-->TopConcepts.tsx
+
+        ConceptDetailLink.tsx-->Children.tsx
+        ConceptDetailDialogue.tsx-->Children.tsx
+      end
+    end
+```
+
+#### Input Component
+Add Description
+
+Add Mermaid diagram
+
+</details>
+
 ## License
 
 MIT © Andy Fitzgerald
