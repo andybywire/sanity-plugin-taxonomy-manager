@@ -15,8 +15,8 @@ type TopConceptsProps = {
 }
 
 /**
- * Top Concept Component
- * Renders a list of top concepts for a given schema.
+ * Top Concept Input Component
+ * Renders a list of top concepts for a given schema with functionality to add and remove concepts.
  * TODO: consider modularizing add and remove buttons
  */
 export const InputTopConcepts = ({

@@ -10,7 +10,7 @@ import {ConceptSelectLink} from '../../ConceptSelectLink'
 
 /**
  * Orphan Concept Component
- * Renders a list of orphan concepts for a given schema.
+ * Renders a list of orphan concepts for a given schema with functionality to add and remove concepts.
  * TODO consider modularizing add and remove buttons
  */
 type OrphanProps = {
