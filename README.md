@@ -121,7 +121,9 @@ The following diagrams map out the relationships between the components used in 
 > [!TIP]
 > You **do not** need to understand any of this to use the plugin!
 
-#### Tree View
+<Details>
+<Summary><h4>Tree View</h4></Summary>
+
 The [Tree View component](docs/_images/taxonomyManager.png) creates the user interface for interacting with a given taxonomy (SKOS Concept Scheme) visually in the Sanity Structure tool. 
 
 ```mermaid
@@ -160,7 +162,7 @@ graph BT
       end
     end
 ```
-
+</Details>
 ## License
 
 MIT © Andy Fitzgerald
