@@ -109,18 +109,20 @@ export default defineConfig({
 ## Contributing
 Community collaboration is highly encouraged. To make sure your contributions are aligned with project goals and principles, please read the [contributing docs](https://sanitytaxonomymanager.com/#/contributing) before submitting a pull request. 
 
-This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
+- This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
 with default configuration for build & watch scripts.
 
-See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
+- See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
 on how to run the plugin with hot-reload in the studio.
 
-<details>
-<summary><H2>Component Diagrams</H2></summary>
-Note here on why these are necessary. If multiple diagrams, put each in its own collapsible header. 
+### Component Diagrams
+The following diagrams map out the relationships between the components used in this plugin and are intended to help those interested in contributing to the project orient themselves. The Taxonomy Manager tree view is designed to support polyhierarchy, and to provide UI affordances common to other taxonomy management tools, both of which lend some complexity to the component structure. 
+
+> [!TIP]
+> You **do not** need to understand any of this to use the plugin!
 
 #### Tree View
-Add Description
+The [Tree View component](docs/_images/taxonomyManager.png) creates the user interface for interacting with a given taxonomy (SKOS Concept Scheme) visually in the Sanity Structure tool. 
 
 ```mermaid
 graph BT
@@ -141,6 +143,7 @@ graph BT
           <i style="color: gray; font-size: small">uses TreeContext</i>
         ]-->TreeStructure.tsx
 
+
         %% Sequence below maintains RTL ordering:
         ConceptDetailLink.tsx-->TopConcepts.tsx
         ConceptDetailLink.tsx-->Orphans.tsx
@@ -157,13 +160,6 @@ graph BT
       end
     end
 ```
-
-#### Input Component
-Add Description
-
-Add Mermaid diagram
-
-</details>
 
 ## License
 
