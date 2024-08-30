@@ -5,19 +5,22 @@
  * TODO Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links.
  */
 
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineArrayMember, defineField, defineType, FieldDefinition} from 'sanity'
 import {randomKey} from '@sanity/util/content'
 import baseIriField from './modules/baseIriField'
 import {Identifier} from './components/inputs'
 import NodeTree from './components/NodeTree'
 
-export default function skosConceptScheme(baseUri?: string) {
+export default function skosConceptScheme(
+  baseUri?: string,
+  customSchemeFields: FieldDefinition[] = []
+) {
   return defineType({
     name: 'skosConceptScheme',
     title: 'Concept Scheme',
     type: 'document',
     icon: NodeTree,
-    initialValue: async (props, context) => {
+    initialValue: async (_, context) => {
       if (baseUri) return {baseIri: baseUri}
       const {getClient} = context
       const client = getClient({apiVersion: '2021-03-25'})
@@ -96,6 +99,7 @@ export default function skosConceptScheme(baseUri?: string) {
           sortable: false,
         },
       }),
+      ...customSchemeFields,
     ],
     preview: {
       select: {

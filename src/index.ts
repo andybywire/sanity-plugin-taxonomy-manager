@@ -1,4 +1,4 @@
-import {definePlugin} from 'sanity'
+import {definePlugin, FieldDefinition} from 'sanity'
 import {structureTool} from 'sanity/structure'
 import skosConcept from './skosConcept'
 import skosConceptScheme from './skosConceptScheme'
@@ -10,6 +10,8 @@ import NodeTree from './components/NodeTree'
 
 interface Options {
   baseUri?: string
+  customConceptFields?: FieldDefinition[]
+  customSchemeFields?: FieldDefinition[]
 }
 
 /**
@@ -18,16 +20,21 @@ interface Options {
  * BaseURI should follow an IANA http/s scheme and should terminate with either a / or #.
  * @param options - Optional configuration options for the plugin.
  * @param options.baseUri - The base URI to use for SKOS concepts and concept schemes.
+ * @param options.customConceptFields - An array of additional fields to add to the skosConcept type.
+ * @param options.customSchemeFields - An array of additional fields to add to the skosConceptScheme type.
  * @returns A Sanity plugin object.
  */
 const taxonomyManager = definePlugin((options?: Options) => {
-  const {baseUri} = options || {}
+  const {baseUri, customConceptFields, customSchemeFields} = options || {}
 
   return {
     name: 'taxonomyManager',
     options,
     schema: {
-      types: [skosConcept(baseUri), skosConceptScheme(baseUri)],
+      types: [
+        skosConcept(baseUri, customConceptFields),
+        skosConceptScheme(baseUri, customSchemeFields),
+      ],
     },
     plugins: [
       structureTool({

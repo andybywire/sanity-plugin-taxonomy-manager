@@ -9,7 +9,7 @@
  * TODO Abstract broader and related concept filter into reusable function, and/or add in validation to cover wider scenarios.
  */
 
-import {defineType, defineField} from 'sanity'
+import {defineType, defineField, FieldDefinition} from 'sanity'
 import {WarningOutlineIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
 import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
@@ -17,13 +17,13 @@ import {StyledDescription} from './styles'
 import baseIriField from './modules/baseIriField'
 import {Identifier} from './components/inputs'
 
-export default function skosConcept(baseUri?: string) {
+export default function skosConcept(baseUri?: string, customConceptFields: FieldDefinition[] = []) {
   return defineType({
     name: 'skosConcept',
     title: 'Concept',
     type: 'document',
     icon: AiOutlineTags,
-    initialValue: async (props, context) => {
+    initialValue: async (_, context) => {
       if (baseUri)
         return {
           baseIri: baseUri,
@@ -274,6 +274,7 @@ export default function skosConcept(baseUri?: string) {
           },
         ],
       }),
+      ...customConceptFields,
       defineField({
         name: 'historyNote',
         title: 'History Notes',
