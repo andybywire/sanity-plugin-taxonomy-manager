@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.2.0] - 2024-08-29
+
+### Added 
+- Support for custom fields for SKOS Concepts
+- Support for custom fields for SKOS Concept Schemes
+- Documentation for adding custom fields
+
 ## [3.1.5] - 2024-08-24
 
 ### Chore
@@ -251,7 +258,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.5...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.0...HEAD
+[3.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.5...3.2.0
 [3.1.5]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.4...3.1.5
 [3.1.4]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.3...3.1.4
 [3.1.3]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.2...3.1.3
