@@ -1,6 +1,5 @@
 # Sanity Taxonomy Manager
 
-
 ![NPM Version](https://img.shields.io/npm/v/sanity-plugin-taxonomy-manager?style=flat-square)
 ![License](https://img.shields.io/npm/l/sanity-plugin-taxonomy-manager?style=flat-square)
 
@@ -11,19 +10,20 @@
 The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. -->
 
 | ![taxonomy manager plugin screenshot](docs/_images/taxonomyManager.png) |
-| --- |
+| ----------------------------------------------------------------------- |
 
 ## Documentation
 
 For full documentation, visit [sanitytaxonomymanager.com](https://sanitytaxonomymanager.com).
 
 ## Features
+
 <!-- make this more concise -->
+
 - Adds two document types to your Sanity schema which are used to generate [SKOS](https://www.w3.org/TR/skos-primer/) compliant concepts and taxonomies: `skosConcept` and `skosConceptScheme`
 - Includes reference filter helpers to allow you to easily include a specific taxonomy, or particular branch of a taxonomy in your Sanity documents
 - Encourages taxonomy and thesaurus design best practices by enforcing [disjunction between Broader and Related relationships](https://www.w3.org/TR/skos-reference/#L2422) and [disjunction between Preferred and Alternate/Hidden labels](https://www.w3.org/TR/skos-reference/#L1567)
-- Standards compliant architecture means that taxonomy terms and structures can be migrated to standards compliant standalone tools when you need higher level taxonomy and knowledge graph support. 
-
+- Standards compliant architecture means that taxonomy terms and structures can be migrated to standards compliant standalone tools when you need higher level taxonomy and knowledge graph support.
 
 ## Installation
 
@@ -62,6 +62,16 @@ export default defineConfig({
     taxonomyManager({
       // Optional: Set a Base URI to use for new concepts & concept schemes
       baseUri: 'https://example.com/',
+      // Optional: Use `customConceptFields` and `customSchemeFields` keys to add custom fields to Concept or Concept Scheme document types
+      customConceptFields: [
+        {
+          name: 'sameAs',
+          title: 'Same As',
+          type: 'url',
+          description:
+            'Specify a fully qualified IRI that identifies the same concept in another vocabulary',
+        },
+      ],
     }),
   ],
   schema: {
@@ -96,9 +106,7 @@ export default defineConfig({
             ),
           ]),
     }),
-    taxonomyManager({
-      baseUri: 'https://example.com/',
-    }),
+    taxonomyManager(),
   ],
   schema: {
     types: schemaTypes,
@@ -107,16 +115,18 @@ export default defineConfig({
 ```
 
 ## Contributing
-Community collaboration is highly encouraged. To make sure your contributions are aligned with project goals and principles, please read the [contributing docs](https://sanitytaxonomymanager.com/#/contributing) before submitting a pull request. 
+
+Community collaboration is highly encouraged. To make sure your contributions are aligned with project goals and principles, please read the [contributing docs](https://sanitytaxonomymanager.com/#/contributing) before submitting a pull request.
 
 - This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-with default configuration for build & watch scripts.
+  with default configuration for build & watch scripts.
 
 - See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-on how to run the plugin with hot-reload in the studio.
+  on how to run the plugin with hot-reload in the studio.
 
 ### Component Diagrams
-The following diagrams map out the relationships between the components used in this plugin and are intended to help those interested in contributing to the project orient themselves. The Taxonomy Manager tree view is designed to support polyhierarchy, and to provide UI affordances common to other taxonomy management tools, both of which lend some complexity to the component structure. 
+
+The following diagrams map out the relationships between the components used in this plugin and are intended to help those interested in contributing to the project orient themselves. The Taxonomy Manager tree view is designed to support polyhierarchy, and to provide UI affordances common to other taxonomy management tools, both of which lend some complexity to the component structure.
 
 > [!TIP]
 > You **do not** need to understand any of this to use the plugin!
@@ -124,7 +134,7 @@ The following diagrams map out the relationships between the components used in 
 <Details>
 <Summary><h4>Tree View</h4></Summary>
 
-The [Tree View component](docs/_images/taxonomyManager.png) creates the user interface for interacting with a given taxonomy (SKOS Concept Scheme) visually in the Sanity Structure tool. 
+The [Tree View component](docs/_images/taxonomyManager.png) creates the user interface for interacting with a given taxonomy (SKOS Concept Scheme) visually in the Sanity Structure tool.
 
 ```mermaid
 graph BT
@@ -133,7 +143,7 @@ graph BT
       Hierarchy.tsx-->TreeView.tsx
       subgraph TreeContext.Provider
         direction BT
-        TreeStructure.tsx-->Hierarchy.tsx        
+        TreeStructure.tsx-->Hierarchy.tsx
         TopConcepts.tsx[
           TopConcepts.tsx
           <i style="color: gray; font-size: small">uses SchemeContext</i>
@@ -162,6 +172,7 @@ graph BT
       end
     end
 ```
+
 </Details>
 
 ## License
