@@ -39,7 +39,7 @@ export const InputHierarchy = ({
     },
     {
       params: {id: documentId, branchId},
-    },
+    }
   ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
   if (loading) {
     return (

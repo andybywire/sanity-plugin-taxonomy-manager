@@ -88,7 +88,7 @@ export const Hierarchy = ({
         topConceptIds,
         draftTopConceptIds,
       }, // draft may not be necessary
-    },
+    }
   ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
   if (loading) {
     return (
