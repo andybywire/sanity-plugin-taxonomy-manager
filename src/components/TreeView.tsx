@@ -10,6 +10,9 @@ import {SchemeContext} from '../context'
  * This is the view component for the hierarchy tree. It is the
  * top level of concept scheme views and is passed into Desk
  * structure to render the primary view for taxonomy documents.
+ * @param inputComponent - Specifies whether the component is Studio
+ *    input component, which will hide tree view controls and chrome.
+ *
  * TODO: Extend SanityDocument type to include display properties.
  *       What is the type of the document object returned by the Desk
  *       structure?
@@ -23,7 +26,7 @@ export const TreeView = ({
   document: any // contains document.displayed, the applicable skosConceptScheme
   branchId: string // used to narrow to a branch for the HierarchyInput component
   selectConcept: any // HierarchyInput component select action
-  inputComponent?: boolean // is this the HierarchyInput component?
+  inputComponent?: boolean
 }) => {
   const containerStyle: CSSProperties = {paddingTop: '1.25rem'}
   const descriptionStyle: CSSProperties = {whiteSpace: 'pre-wrap'}

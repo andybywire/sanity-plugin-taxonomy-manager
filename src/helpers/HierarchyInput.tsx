@@ -94,7 +94,7 @@ export function HierarchyInput(props: ObjectFieldProps) {
             <TreeView
               document={scheme} // the document.displayed _id for the relevant skosConceptScheme
               branchId={branchId} // the branch identified in branchFilter()
-              inputComponent // boolean
+              inputComponent
               selectConcept={handleAction}
             />
           </Box>

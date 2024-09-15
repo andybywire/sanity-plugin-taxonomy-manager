@@ -1,7 +1,6 @@
 import {ChildConceptTerm} from '../types'
 import {StyledChildConcepts} from '../styles'
 import {Children} from './Children'
-import {InputChildren} from './inputs/hierarchy/InputChildren'
 
 /**
  * Child Concepts
@@ -20,16 +19,6 @@ export const ChildConcepts = ({
   return (
     <StyledChildConcepts>
       {concepts.map((concept: any) => {
-        if (inputComponent) {
-          return (
-            <InputChildren
-              key={concept.id}
-              concept={concept}
-              selectConcept={selectConcept}
-              inputComponent={inputComponent}
-            />
-          )
-        }
         return (
           <Children
             key={concept.id}

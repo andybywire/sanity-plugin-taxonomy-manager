@@ -13,16 +13,20 @@ import {NewScheme} from '../../guides'
  * - Provides a frame for global controls and tree structure
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
+ *
+ * @param inputComponent - Specifies whether the component is a Studio
+ *   input component. Set in HierarchyInput and passed through TreeView
+ *
  * TODO: type document, likely via extended SanityDocument type.
  */
 export const InputHierarchy = ({
   branchId = '',
   selectConcept,
-  inputComponent = false,
+  inputComponent,
 }: {
   branchId: string
   selectConcept?: any
-  inputComponent?: Boolean
+  inputComponent: Boolean
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id

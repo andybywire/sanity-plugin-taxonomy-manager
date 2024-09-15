@@ -15,6 +15,7 @@ import {SchemeContext, TreeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailLink} from './ConceptDetailLink'
 import {ConceptDetailDialogue} from './ConceptDetailDialogue'
+import {ConceptSelectLink} from './ConceptSelectLink'
 
 /**
  * Child Concept Component
@@ -78,7 +79,11 @@ export const Children = ({
               <SquareIcon className="spacer" />
             )}
             {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
-            <ConceptDetailLink concept={concept} />
+            {inputComponent ? (
+              <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
+            ) : (
+              <ConceptDetailLink concept={concept} />
+            )}
           </Inline>
           {!editControls && <ConceptDetailDialogue concept={concept} />}
         </Inline>
