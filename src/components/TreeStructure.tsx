@@ -5,7 +5,6 @@ import {TreeContext} from '../context'
 import {TopConcepts} from './TopConcepts'
 import {InputTopConcepts} from './inputs/hierarchy/InputTopConcepts'
 import {Orphans} from './Orphans'
-import {InputOrphans} from './inputs/hierarchy/InputOrphans'
 import {NoConcepts} from './guides'
 
 /**
@@ -54,17 +53,6 @@ export const TreeStructure = ({
           )
         })}
       {concepts.orphans.map((concept: ChildConceptTerm) => {
-        if (inputComponent) {
-          return (
-            <InputOrphans
-              key={concept.id + treeId}
-              concept={concept}
-              treeVisibility={treeVisibility}
-              inputComponent={inputComponent}
-              selectConcept={selectConcept}
-            />
-          )
-        }
         return (
           <Orphans
             key={concept.id + treeId}

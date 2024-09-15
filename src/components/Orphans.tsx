@@ -68,7 +68,7 @@ export const Orphans = ({concept, treeVisibility, inputComponent, selectConcept}
         )}
         {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
         {inputComponent ? (
-          <ConceptSelectLink concept={concept} />
+          <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
         ) : (
           <ConceptDetailLink concept={concept} />
         )}
