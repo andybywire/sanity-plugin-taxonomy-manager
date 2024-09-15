@@ -77,5 +77,3 @@ export const InputHierarchy = ({
     </TreeContext.Provider>
   )
 }
-
-export default InputHierarchy
