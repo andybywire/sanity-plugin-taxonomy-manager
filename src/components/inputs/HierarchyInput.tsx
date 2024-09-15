@@ -1,7 +1,7 @@
 import {Grid, Stack, Button, Dialog, Box} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
 import {ObjectFieldProps, useClient, useFormValue} from 'sanity'
-import {TreeView} from '../components/TreeView'
+import {TreeView} from '../../components/TreeView'
 
 /**
  * Hierarchy View Input Component for Reference Fields
