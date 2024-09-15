@@ -2,11 +2,11 @@
 import {useContext} from 'react'
 import {Flex, Spinner, Box, Text} from '@sanity/ui'
 import {useListeningQuery} from 'sanity-plugin-utils'
-import {inputBuilder} from '../../../queries'
-import {DocumentConcepts} from '../../../types'
-import {SchemeContext, TreeContext} from '../../../context'
-import {TreeStructure} from '../../TreeStructure'
-import {NewScheme} from '../../guides'
+import {inputBuilder} from '../../queries'
+import {DocumentConcepts} from '../../types'
+import {SchemeContext, TreeContext} from '../../context'
+import {TreeStructure} from '../TreeStructure'
+import {NewScheme} from '../guides'
 
 /**
  *  Input Hierarchy Component

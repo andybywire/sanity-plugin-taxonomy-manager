@@ -2,7 +2,7 @@
 import {CSSProperties} from 'react'
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import Hierarchy from './Hierarchy'
-import InputHierarchy from './inputs/hierarchy/InputHierarchy'
+import InputHierarchy from './inputs/InputHierarchy'
 import {SchemeContext} from '../context'
 
 /**
