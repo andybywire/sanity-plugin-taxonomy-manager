@@ -6,9 +6,9 @@ import {ChildConceptTerm} from '../types'
 import {StyledOrphan, StyledTreeButton, StyledTreeToggle} from '../styles'
 import {SchemeContext, TreeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailLink} from '../interactions/ConceptDetailLink'
-import {ConceptDetailDialogue} from '../interactions/ConceptDetailDialogue'
-import {ConceptSelectLink} from '../interactions/ConceptSelectLink'
+import {ConceptDetailLink} from './interactions/ConceptDetailLink'
+import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
+import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 
 type OrphanProps = {
   concept: ChildConceptTerm

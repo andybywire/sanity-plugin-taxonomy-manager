@@ -1,7 +1,7 @@
 import {useCallback, useState} from 'react'
 import {Dialog, Box, Text, Stack, Label} from '@sanity/ui'
 import {InfoOutlineIcon} from '@sanity/icons'
-import {StyledTreeButton} from '../styles'
+import {StyledTreeButton} from '../../styles'
 
 /**
  * Information Icon and Dialogue with Concept Details

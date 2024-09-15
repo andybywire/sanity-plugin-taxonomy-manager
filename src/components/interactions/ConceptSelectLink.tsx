@@ -1,7 +1,7 @@
 /* eslint-disable react/require-default-props */
 import {useCallback} from 'react'
-import {ChildConceptTerm} from '../types'
-import {StyledConceptLink, StyledConceptTitle} from '../styles'
+import {ChildConceptTerm} from '../../types'
+import {StyledConceptLink, StyledConceptTitle} from '../../styles'
 
 /**
  * Concept Select Link
