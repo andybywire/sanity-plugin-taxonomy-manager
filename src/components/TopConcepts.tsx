@@ -18,7 +18,7 @@ type TopConceptsProps = {
 }
 
 /**
- * Top Concept Component
+ * #### Top Concept Component
  * Renders a list of top concepts for a given schema.
  */
 export const TopConcepts = ({

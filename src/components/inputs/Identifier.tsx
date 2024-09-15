@@ -4,13 +4,11 @@ import {Button, Inline, Stack, useToast} from '@sanity/ui'
 import {randomKey} from '@sanity/util/content'
 
 /**
- * Create Unique Identifier
+ * #### Create Unique Identifier
  * For schemes and concepts created in previous versions of the
  * plugin.
  * - Input is only visible if no identifier has been assigned
  * - Input disappears once an ID is generated
- * - Consider removing once custom input ID scenarios have been
- *   more fleshed out
  */
 export const Identifier = (props: any) => {
   const {onChange} = props

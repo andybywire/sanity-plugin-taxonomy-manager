@@ -9,15 +9,12 @@ import {TreeStructure} from '../TreeStructure'
 import {NewScheme} from '../guides'
 
 /**
- *  Input Hierarchy Component
+ * #### Input Hierarchy Component
  * - Provides a frame for global controls and tree structure
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
- *
  * @param inputComponent - Specifies whether the component is a Studio
  *   input component. Set in HierarchyInput and passed through TreeView
- *
- * TODO: type document, likely via extended SanityDocument type.
  */
 export const InputHierarchy = ({
   branchId = '',
@@ -30,8 +27,6 @@ export const InputHierarchy = ({
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
-
-  // likely don't need to listen here. Consider simplifying.
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
       fetch: inputBuilder(),

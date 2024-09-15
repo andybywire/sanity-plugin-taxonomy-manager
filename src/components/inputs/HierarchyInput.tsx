@@ -5,8 +5,6 @@ import {TreeView} from '../../components/TreeView'
 
 /**
  * Hierarchy View Input Component for Reference Fields
- * TODO check for scheme or branch filters — it only works if they're used; alternatively
- * provide optional parameters if a custom filter is used?
  */
 export function HierarchyInput(props: ObjectFieldProps) {
   const {name, title} = props // name of the field to input a value
@@ -17,8 +15,6 @@ export function HierarchyInput(props: ObjectFieldProps) {
   const [scheme, setScheme] = useState({}) // the skosConceptScheme document identified by the field filter options
 
   // get the filter options from the `reference` field
-  // TODO: allow optional parameters to be passed into the input for cases where the provided
-  // scheme/branch filters aren't in use.
   const {filter} = props.schemaType.options
   const filterValues = filter()
   const {schemeId, branchId = null} = filterValues.params // only schemes using the branchFilter() will have a branchId
@@ -42,10 +38,8 @@ export function HierarchyInput(props: ObjectFieldProps) {
   }, [])
 
   /**
-   * Term Select Action
+   * #### Term Select Action
    * Writes the selected taxonomy term to the document field
-   * TODO: If this is a brand new document, _id is not yet in the content lake and this
-   * will throw an error. Not a high frequency use case, but consider handling.
    */
   const handleAction = useCallback(
     (conceptRef: any) => {

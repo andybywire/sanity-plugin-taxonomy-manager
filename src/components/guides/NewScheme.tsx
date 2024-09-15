@@ -6,11 +6,10 @@ import {InlineHelp} from '../../styles'
 import {SanityDocument} from 'sanity'
 
 /**
- * New Concept Scheme Guide
+ * #### New Concept Scheme Guide
  * - Prompts adding title and description to new concept scheme.
  * - Data must be saved to newly created Concept Scheme documents before
  *  add top concept / add concept buttons will work.
- * TODO: Consider adding more instructions, a .gif, or video to this guide.
  */
 export const NewScheme = ({document}: {document: SanityDocument}) => {
   const [open, setOpen] = useState(false)

@@ -7,7 +7,7 @@ import {Orphans} from './Orphans'
 import {NoConcepts} from './guides'
 
 /**
- * Tree View
+ * #### Tree View
  * - Fetches the complete tree of concepts in a concept scheme, stemming
  *   from Top Concepts or Orphans
  * - Displays the tree in a nested list.

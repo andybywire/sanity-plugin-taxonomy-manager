@@ -5,7 +5,7 @@ import {ChildConceptTerm} from '../../types'
 import {StyledConceptLink} from '../../styles'
 
 /**
- * Concept Detail Link
+ * #### Concept Detail Link
  * Renders a link to a concept in the hierarchy tree that opens in a new pane.
  */
 export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {

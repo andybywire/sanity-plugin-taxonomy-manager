@@ -1,16 +1,12 @@
-/**
- * Sanity document scheme for SKOS Concept Schemes
- * TODO Add administrative metadata: dc:title, dc:author ... date, last revised, etc.
- * TODO Add support for sorting array lists alphabetically (custom component?)
- * TODO Consider adding informational lists to this view (via custom input component): number of terms, list of terms, links.
- */
-
 import {defineArrayMember, defineField, defineType, FieldDefinition} from 'sanity'
 import {randomKey} from '@sanity/util/content'
 import baseIriField from './modules/baseIriField'
 import {Identifier} from './components/inputs'
 import NodeTree from './components/NodeTree'
 
+/**
+ * Sanity document scheme for SKOS Concept Schemes
+ */
 export default function skosConceptScheme(
   baseUri?: string,
   customSchemeFields: FieldDefinition[] = []
@@ -75,7 +71,6 @@ export default function skosConceptScheme(
         of: [
           defineArrayMember({
             type: 'reference',
-            // weak: true,
             to: [{type: 'skosConcept'}],
           }),
         ],
@@ -91,7 +86,6 @@ export default function skosConceptScheme(
         of: [
           defineArrayMember({
             type: 'reference',
-            // weak: true,
             to: [{type: 'skosConcept'}],
           }),
         ],

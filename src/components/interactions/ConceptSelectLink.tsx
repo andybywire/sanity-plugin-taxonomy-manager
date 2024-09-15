@@ -4,7 +4,7 @@ import {ChildConceptTerm} from '../../types'
 import {StyledConceptLink, StyledConceptTitle} from '../../styles'
 
 /**
- * Concept Select Link
+ * #### Concept Select Link
  * Writes a concept _ref from the hierarchy tree to the current document
  */
 export function ConceptSelectLink({

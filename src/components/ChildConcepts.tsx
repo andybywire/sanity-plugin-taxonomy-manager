@@ -3,7 +3,7 @@ import {StyledChildConcepts} from '../styles'
 import {Children} from './Children'
 
 /**
- * Child Concepts
+ * #### Child Concepts
  * This component renders a list of child concepts for a given concept.
  * - provides the <ul> wrapper for each level of nesting
  */

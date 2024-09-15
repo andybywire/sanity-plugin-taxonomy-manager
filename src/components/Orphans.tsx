@@ -18,7 +18,7 @@ type OrphanProps = {
 }
 
 /**
- * Orphan Concept Component
+ * #### Orphan Concept Component
  * Renders a list of orphan concepts for a given schema.
  */
 export const Orphans = ({concept, treeVisibility, inputComponent, selectConcept}: OrphanProps) => {

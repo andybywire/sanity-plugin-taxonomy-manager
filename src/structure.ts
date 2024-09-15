@@ -3,7 +3,7 @@ import {EditIcon} from '@sanity/icons'
 import NodeTree from './components/NodeTree'
 
 /**
- * Default Desk Structure for Concept and Concept Scheme
+ * #### Default Desk Structure for Concept and Concept Scheme
  * Sets defaultDocumentNode. Consider exporting in the future,
  * if there is a use case for mixing taxonomy views in the main
  * desk structure.
@@ -29,10 +29,7 @@ export const defaultDocumentNode = (S: any, {schemaType}: {schemaType: any}) => 
         S.view.form().icon(EditIcon),
       ])
     case 'skosConcept':
-      return S.document().views([
-        S.view.form().icon(EditIcon),
-        // TODO: add in DocumentsPane view of concepts in use.
-      ])
+      return S.document().views([S.view.form().icon(EditIcon)])
     default:
       S.view.form()
   }

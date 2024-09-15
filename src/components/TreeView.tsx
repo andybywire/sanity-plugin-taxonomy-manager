@@ -6,16 +6,12 @@ import {InputHierarchy} from './inputs'
 import {SchemeContext} from '../context'
 
 /**
- * Tree View Component Wrapper
+ * #### Tree View Component Wrapper
  * This is the view component for the hierarchy tree. It is the
  * top level of concept scheme views and is passed into Desk
  * structure to render the primary view for taxonomy documents.
  * @param inputComponent - Specifies whether the component is Studio
  *    input component, which will hide tree view controls and chrome.
- *
- * TODO: Extend SanityDocument type to include display properties.
- *       What is the type of the document object returned by the Desk
- *       structure?
  */
 export const TreeView = ({
   document,

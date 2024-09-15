@@ -18,11 +18,8 @@ import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 
 /**
- * Child Concept Component
+ * #### Child Concept Component
  * Renders a list of child concepts for a given concept.
- * TODO Add dialogue explaining max depth
- * TODO Improve accessibility of hidden children and max depth disclosures
- * TODO Handle childConcept and level definition checks more elegantly
  */
 export const Children = ({
   concept,

@@ -13,11 +13,10 @@ import {TreeStructure} from './TreeStructure'
 import {NewScheme} from './guides'
 
 /**
- *  Hierarchy Component
+ * #### Hierarchy Component
  * - Provides a frame for global controls and tree structure
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
- * TODO type document, likely via extended SanityDocument type.
  */
 export const Hierarchy = ({
   branchId = '',
@@ -87,7 +86,7 @@ export const Hierarchy = ({
         draftConceptIds,
         topConceptIds,
         draftTopConceptIds,
-      }, // draft may not be necessary
+      },
     }
   ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
   if (loading) {
