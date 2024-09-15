@@ -3,7 +3,6 @@ import {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 import {StyledTree} from '../styles'
 import {TreeContext} from '../context'
 import {TopConcepts} from './TopConcepts'
-import {InputTopConcepts} from './inputs/hierarchy/InputTopConcepts'
 import {Orphans} from './Orphans'
 import {NoConcepts} from './guides'
 
@@ -31,17 +30,6 @@ export const TreeStructure = ({
     <StyledTree>
       {concepts.topConcepts &&
         concepts.topConcepts.map((concept: TopConceptTerm) => {
-          if (inputComponent) {
-            return (
-              <InputTopConcepts
-                key={concept?.id + treeId}
-                concept={concept}
-                treeVisibility={treeVisibility}
-                inputComponent={inputComponent}
-                selectConcept={selectConcept}
-              />
-            )
-          }
           return (
             <TopConcepts
               key={concept?.id + treeId}
