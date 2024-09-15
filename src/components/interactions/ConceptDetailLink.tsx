@@ -1,5 +1,5 @@
 import {useCallback, useContext} from 'react'
-import {usePaneRouter} from 'sanity/desk'
+import {usePaneRouter} from 'sanity/structure'
 import {RouterContext} from 'sanity/router'
 import {ChildConceptTerm} from '../../types'
 import {StyledConceptLink} from '../../styles'
