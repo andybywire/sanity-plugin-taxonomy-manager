@@ -20,7 +20,6 @@ type OrphanProps = {
 /**
  * Orphan Concept Component
  * Renders a list of orphan concepts for a given schema.
- * TODO: consider modularizing add and remove buttons
  */
 export const Orphans = ({concept, treeVisibility, inputComponent, selectConcept}: OrphanProps) => {
   const document: any = useContext(SchemeContext) || {}

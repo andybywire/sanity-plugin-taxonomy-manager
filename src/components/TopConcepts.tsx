@@ -20,7 +20,6 @@ type TopConceptsProps = {
 /**
  * Top Concept Component
  * Renders a list of top concepts for a given schema.
- * TODO: consider modularizing add and remove buttons
  */
 export const TopConcepts = ({
   concept,
