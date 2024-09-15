@@ -6,9 +6,9 @@ import {TopConceptTerm} from '../types'
 import {StyledTopConcept, StyledTreeToggle, StyledTreeButton} from '../styles'
 import {SchemeContext, TreeContext} from '../context'
 import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailLink} from './ConceptDetailLink'
-import {ConceptDetailDialogue} from './ConceptDetailDialogue'
-import {ConceptSelectLink} from './ConceptSelectLink'
+import {ConceptDetailLink} from '../intreactions/ConceptDetailLink'
+import {ConceptDetailDialogue} from '../intreactions/ConceptDetailDialogue'
+import {ConceptSelectLink} from '../intreactions/ConceptSelectLink'
 
 type TopConceptsProps = {
   concept: TopConceptTerm
