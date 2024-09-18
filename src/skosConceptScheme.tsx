@@ -3,6 +3,7 @@ import {randomKey} from '@sanity/util/content'
 import baseIriField from './modules/baseIriField'
 import {Identifier} from './components/inputs'
 import NodeTree from './components/NodeTree'
+import {ManagementControls} from './components/inputs'
 
 /**
  * Sanity document scheme for SKOS Concept Schemes
@@ -46,9 +47,16 @@ export default function skosConceptScheme(
       defineField({
         name: 'controls',
         title: 'Concept Management Controls',
-        description: 'Show concept management controls in hierarchy view',
+        deprecated: {
+          reason:
+            'This field was used for a previous version of the plugin and is no longer needed. Remove the value to hide this field.',
+        },
         type: 'boolean',
-        initialValue: true,
+        readOnly: true,
+        hidden: ({document}) => document?.controls === undefined,
+        components: {
+          input: ManagementControls,
+        },
       }),
       ...baseIriField,
       defineField({
