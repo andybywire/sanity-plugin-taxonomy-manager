@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.2.2] - 2024-09-18
+
+### Chore 
+- Remove concept management controls boolean (not needed since v.2)
+- Add custom input component to prevent current users from encountering a schema error
+
 ## [3.2.1] - 2024-09-15
 
 ### Chore 
@@ -265,7 +271,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.1...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.2...HEAD
+[3.2.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.1...3.2.2
 [3.2.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.0...3.2.1
 [3.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.5...3.2.0
 [3.1.5]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.4...3.1.5
