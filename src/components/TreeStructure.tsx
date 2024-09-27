@@ -1,4 +1,4 @@
-import {useContext} from 'react'
+import {useContext, useEffect} from 'react'
 import {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 import {StyledTree} from '../styles'
 import {TreeContext} from '../context'
@@ -28,8 +28,11 @@ export const TreeStructure = ({
     },
   } = useContext(TreeContext) || {}
 
+  useEffect(() => {
+    if (concepts.topConcepts.length === 0 && concepts.orphans.length === 0) setEditControls(true)
+  }, [concepts.topConcepts, concepts.orphans, setEditControls])
+
   if (concepts.topConcepts.length === 0 && concepts.orphans.length === 0) {
-    setEditControls(true)
     return <NoConcepts />
   }
 
