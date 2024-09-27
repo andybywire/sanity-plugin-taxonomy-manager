@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.2.3] - 2024-09-27
+
+### Added
+- Add "done" control to close scheme concept editing controls
+
+### Fix
+- Debug new scheme creation guides
+- Fix concept editing controls icon hover color
+
+### Chore
+- Update packages
+
 ## [3.2.2] - 2024-09-18
 
 ### Chore 
@@ -271,7 +283,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.2...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.3...HEAD
+[3.2.3]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.2...v3.2.3
 [3.2.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.1...v3.2.2
 [3.2.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.0...v3.2.1
 [3.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.1.5...v3.2.0
