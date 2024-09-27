@@ -1,7 +1,7 @@
 /* eslint-disable react/require-default-props */
 import {useCallback, useContext, useState, useEffect} from 'react'
 import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
-import {AddCircleIcon, EditIcon} from '@sanity/icons'
+import {AddCircleIcon, EditIcon, CheckmarkCircleIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
 import {useListeningQuery} from 'sanity-plugin-utils'
 import {useCreateConcept} from '../hooks'
@@ -73,6 +73,10 @@ export const Hierarchy = ({
     setEditControls(true)
   }, [])
 
+  const handleHideEdit = useCallback(() => {
+    setEditControls(false)
+  }, [])
+
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
       fetch: trunkBuilder(),
@@ -125,7 +129,7 @@ export const Hierarchy = ({
                     .length > 0 ||
                     data.orphans?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
                       .length > 0) && (
-                    <Inline space={2}>
+                    <Inline space={1}>
                       <HierarchyButton type="button" onClick={handleCollapse}>
                         <Text weight="semibold" muted size={1}>
                           Collapse
@@ -144,7 +148,7 @@ export const Hierarchy = ({
                 </Card>
                 <Card>
                   {editControls ? (
-                    <Inline space={4}>
+                    <Inline space={1}>
                       <HierarchyButton type="button" className="add" onClick={createTopConcept}>
                         <Text weight="semibold" muted size={1}>
                           <AddCircleIcon /> Add Top Concept
@@ -153,6 +157,11 @@ export const Hierarchy = ({
                       <HierarchyButton type="button" className="add" onClick={createEntryConcept}>
                         <Text weight="semibold" muted size={1}>
                           <AddCircleIcon /> Add Concept
+                        </Text>
+                      </HierarchyButton>
+                      <HierarchyButton type="button" onClick={handleHideEdit}>
+                        <Text weight="semibold" muted size={1}>
+                          <CheckmarkCircleIcon /> Done
                         </Text>
                       </HierarchyButton>
                     </Inline>
