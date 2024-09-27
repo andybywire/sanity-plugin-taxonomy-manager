@@ -59,7 +59,8 @@ export const HierarchyButton = styled.button`
   }
   &.add:hover {
     background-color: ${hues.green[500].hex};
-    span {
+    span,
+    svg {
       color: white;
     }
   }
