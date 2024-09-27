@@ -21,11 +21,17 @@ export const TreeStructure = ({
   inputComponent: Boolean
   selectConcept: any
 }) => {
-  const {globalVisibility: {treeId, treeVisibility} = {treeId: 123, treeVisibility: 'open'}} =
-    useContext(TreeContext) || {}
+  const {
+    globalVisibility: {treeId, treeVisibility} = {treeId: 123, treeVisibility: 'open'},
+    setEditControls = () => {
+      console.warn('setEditControls not defined')
+    },
+  } = useContext(TreeContext) || {}
 
-  // Need to open the controls if there are no concepts
-  if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
+  if (concepts.topConcepts.length === 0 && concepts.orphans.length === 0) {
+    setEditControls(true)
+    return <NoConcepts />
+  }
 
   return (
     <StyledTree>
