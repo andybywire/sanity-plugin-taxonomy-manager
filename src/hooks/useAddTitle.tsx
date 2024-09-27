@@ -22,7 +22,6 @@ export function useAddTitle() {
         _id: `drafts.${documentId}`,
         _type: 'skosConceptScheme',
         schemeId: schemeId,
-        controls: true,
         baseIri: schemaBaseIri,
         title: titleValue,
         description: descriptionValue ? descriptionValue : '',
@@ -30,7 +29,7 @@ export function useAddTitle() {
 
       client
         .createIfNotExists(doc)
-        .then((res) => {
+        .then((_) => {
           if (descriptionValue) {
             return toast.push({
               closable: true,
