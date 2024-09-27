@@ -118,7 +118,7 @@ export const Hierarchy = ({
     return <NewScheme document={document} />
   }
   return (
-    <TreeContext.Provider value={{globalVisibility, editControls}}>
+    <TreeContext.Provider value={{globalVisibility}}>
       <Box padding={4} paddingTop={2}>
         <>
           <Stack space={4}>

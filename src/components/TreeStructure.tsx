@@ -24,6 +24,7 @@ export const TreeStructure = ({
   const {globalVisibility: {treeId, treeVisibility} = {treeId: 123, treeVisibility: 'open'}} =
     useContext(TreeContext) || {}
 
+  // Need to open the controls if there are no concepts
   if (concepts.topConcepts === null && concepts.orphans.length === 0) return <NoConcepts />
 
   return (
