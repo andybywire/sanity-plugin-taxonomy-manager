@@ -1,0 +1,110 @@
+import {Grid, Stack, Button, Dialog, Box} from '@sanity/ui'
+import {useState, useEffect, useCallback} from 'react'
+import {ArrayFieldProps, useClient, useFormValue} from 'sanity'
+import {TreeView} from '../TreeView'
+
+/**
+ * Hierarchy View Input Component for Array Fields
+ */
+export function ArrayHierarchyInput(props: ArrayFieldProps) {
+  const {name, title} = props // name of the field to input a value
+  const documentId = useFormValue(['_id']) as string // the resource document we're in
+
+  const client = useClient({apiVersion: '2021-10-21'})
+  const [open, setOpen] = useState(false)
+  const [scheme, setScheme] = useState({}) // the skosConceptScheme document identified by the field filter options
+
+  // get the filter options from the `reference` field
+  // TO DO: will need to check for more than one option, and bail with a notification if more than one is detected. Also check for none.
+  const {filter} = props.schemaType.of[0].options
+  const filterValues = filter()
+  const {schemeId, branchId = null} = filterValues.params // only schemes using the branchFilter() will have a branchId
+
+  // get the skosConceptScheme document identified by the field filter options
+  useEffect(() => {
+    client
+      .fetch(`{"displayed": *[schemeId == "${schemeId}"][0]}`)
+      .then((res) => {
+        setScheme(res)
+      })
+      .catch((err) => console.warn(err))
+  }, [client, schemeId])
+
+  const browseHierarchy = useCallback(() => {
+    setOpen(true)
+  }, [])
+
+  const handleClose = useCallback(() => {
+    setOpen(false)
+  }, [])
+
+  /**
+   * #### Term Select Action
+   * Writes the selected taxonomy term to the array field
+   */
+  const handleAction = useCallback(
+    (conceptRef: any) => {
+      // if there is a draft document, patch the new reference and commit the change
+      // To Do: check if the ref is already in the field, if not, do not add;
+      // provide a toast message that tht entry is already in the field.
+      if (documentId.includes('drafts.')) {
+        client
+          .patch(documentId)
+          .setIfMissing({[name]: []})
+          .append(name, [conceptRef])
+          .commit({autoGenerateArrayKeys: true})
+          .then(() => setOpen(false))
+          .catch((err) => console.error(err))
+        return
+      }
+      // if there is not draft document, fetch the published version and create a new
+      // document with the published document id in the `drafts.` path and the new
+      // reference
+      client
+        .fetch(`*[_id == "${documentId}"][0]`)
+        .then((res) => {
+          res._id = `drafts.${res._id}`
+          client.create(res)
+        })
+        .then(() => {
+          client
+            .patch(`drafts.${documentId}`)
+            .setIfMissing({[name]: []})
+            .append(name, [conceptRef])
+            .commit({autoGenerateArrayKeys: true})
+            .then(() => setOpen(false))
+            .catch((err) => console.error(err))
+        })
+        .catch((err) => console.error(err))
+    },
+    [client, documentId, name]
+  )
+
+  return (
+    <Stack space={3}>
+      {props.renderDefault(props)}
+
+      <Grid columns={1} gap={3}>
+        <Button text="Browse Taxonomy Tree" mode="ghost" onClick={browseHierarchy} />
+      </Grid>
+      {open && (
+        <Dialog
+          header={title}
+          id="concept-select-dialog"
+          onClose={handleClose}
+          zOffset={900}
+          width={1}
+        >
+          <Box padding={10}>
+            <TreeView
+              document={scheme} // the document.displayed _id for the relevant skosConceptScheme
+              branchId={branchId} // the branch identified in branchFilter()
+              inputComponent
+              selectConcept={handleAction}
+            />
+          </Box>
+        </Dialog>
+      )}
+    </Stack>
+  )
+}

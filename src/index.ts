@@ -4,7 +4,7 @@ import skosConcept from './skosConcept'
 import skosConceptScheme from './skosConceptScheme'
 import TreeView from './components/TreeView'
 import {schemeFilter, branchFilter} from './helpers'
-import {HierarchyInput} from './components/inputs'
+import {HierarchyInput, ArrayHierarchyInput} from './components/inputs'
 
 import {defaultDocumentNode, structure} from './structure'
 import NodeTree from './components/NodeTree'
@@ -48,4 +48,4 @@ const taxonomyManager = definePlugin((options?: Options) => {
   }
 })
 
-export {taxonomyManager, TreeView, schemeFilter, branchFilter, HierarchyInput}
+export {taxonomyManager, TreeView, schemeFilter, branchFilter, HierarchyInput, ArrayHierarchyInput}
