@@ -1,4 +1,4 @@
-import {Grid, Stack, Button, Dialog, Box} from '@sanity/ui'
+import {Grid, Stack, Button, Dialog, Box, Card, Label, Text} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
 import {ArrayFieldProps, useClient, useFormValue} from 'sanity'
 import {TreeView} from '../TreeView'
@@ -15,7 +15,6 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
   const [scheme, setScheme] = useState({}) // the skosConceptScheme document identified by the field filter options
 
   // get the filter options from the `reference` field
-  // TO DO: will need to check for more than one option, and bail with a notification if more than one is detected. Also check for none.
   const {filter} = props.schemaType.of[0].options
   const filterValues = filter()
   const {schemeId, branchId = null} = filterValues.params // only schemes using the branchFilter() will have a branchId
@@ -47,6 +46,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
       // if there is a draft document, patch the new reference and commit the change
       // To Do: check if the ref is already in the field, if not, do not add;
       // provide a toast message that tht entry is already in the field.
+      // To Do: New documents are not yet in "draft" state. Do I need to address this? (I.e. is this ever the _first_ field one fills out?)
       if (documentId.includes('drafts.')) {
         client
           .patch(documentId)
@@ -57,7 +57,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
           .catch((err) => console.error(err))
         return
       }
-      // if there is not draft document, fetch the published version and create a new
+      // if there is not a draft document, fetch the published version and create a new
       // document with the published document id in the `drafts.` path and the new
       // reference
       client
@@ -79,6 +79,28 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
     },
     [client, documentId, name]
   )
+
+  // Check to see if array uses more than one schema and bail with a notification if more than one is detected.
+  if (props.schemaType.of.length > 1) {
+    return (
+      <Stack space={3}>
+        {props.renderDefault(props)}
+        <Card padding={[3]} radius={2} shadow={1} tone="caution">
+          <Stack space={4}>
+            <Stack space={2}>
+              <Label size={2}>Input Component Not Supported for Multi-Schema Arrays</Label>
+              <Text size={1}>
+                The Sanity Taxonomy Manager Hierarchy Input Component is not designed to support
+                array inputs with more than one schema type. Please see the{' '}
+                <a href="https://sanitytaxonomymanager.com">Taxonomy Manager docs</a> for more
+                information.
+              </Text>
+            </Stack>
+          </Stack>
+        </Card>
+      </Stack>
+    )
+  }
 
   return (
     <Stack space={3}>
