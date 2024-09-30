@@ -1,4 +1,4 @@
-import {Grid, Stack, Button, Dialog, Box, Card, Label, Text} from '@sanity/ui'
+import {Grid, Stack, Button, Dialog, Box, Card, Label, Text, useToast} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
 import {ArrayFieldProps, useClient, useFormValue} from 'sanity'
 import {TreeView} from '../TreeView'
@@ -7,7 +7,7 @@ import {TreeView} from '../TreeView'
  * Hierarchy View Input Component for Array Fields
  */
 export function ArrayHierarchyInput(props: ArrayFieldProps) {
-  const {name, title} = props // name of the field to input a value
+  const {name, title, value = []} = props // name of the field to input a value
   const documentId = useFormValue(['_id']) as string // the resource document we're in
 
   const client = useClient({apiVersion: '2021-10-21'})
@@ -18,6 +18,8 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
   const {filter} = props.schemaType.of[0].options
   const filterValues = filter()
   const {schemeId, branchId = null} = filterValues.params // only schemes using the branchFilter() will have a branchId
+
+  const toast = useToast()
 
   // get the skosConceptScheme document identified by the field filter options
   useEffect(() => {
@@ -43,10 +45,20 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
    */
   const handleAction = useCallback(
     (conceptRef: any) => {
+      // If the ref of the selected term is already in the field close the dialog
+      // and provide a toast message that tht entry is already in the field.
+      if (value && value.map((item: any) => item._ref).includes(conceptRef._ref)) {
+        setOpen(false)
+        toast.push({
+          status: 'warning',
+          title: 'Taxonomy Term Not Added',
+          description: 'The selected concept is already included in this field.',
+          duration: 5000,
+          closable: true,
+        })
+        return
+      }
       // if there is a draft document, patch the new reference and commit the change
-      // To Do: check if the ref is already in the field, if not, do not add;
-      // provide a toast message that tht entry is already in the field.
-      // To Do: New documents are not yet in "draft" state. Do I need to address this? (I.e. is this ever the _first_ field one fills out?)
       if (documentId.includes('drafts.')) {
         client
           .patch(documentId)
@@ -77,7 +89,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
         })
         .catch((err) => console.error(err))
     },
-    [client, documentId, name]
+    [client, documentId, name, value, toast]
   )
 
   // Check to see if array uses more than one schema and bail with a notification if more than one is detected.
