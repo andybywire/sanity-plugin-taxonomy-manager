@@ -160,8 +160,8 @@ Whether your taxonomy is large or small, attention to design best practices can 
 
     Identify what your taxonomy needs to accomplish. I recommend creating or adopting taxonomies _for_ a purpose, as opposed to _of_ a topic. Cross references, navigation, search support, personalization, or something else entirely: knowing what you need your taxonomy to accomplish will help you understand when you have enough coverage of your subject domain.
 
-        > [!TIP]
-        > [Domain modeling](https://www.andyfitzgeraldconsulting.com/writing/domain-modeling/) can help you understand how the concepts in your subject domain relate, and where a taxonomy may help intelligently connect them.
+    > [!TIP]
+    > [Domain modeling](https://www.andyfitzgeraldconsulting.com/writing/domain-modeling/) can help you understand how the concepts in your subject domain relate, and where a taxonomy may help intelligently connect them.
 
 2.  #### Audit Your Content
 
@@ -171,48 +171,48 @@ Whether your taxonomy is large or small, attention to design best practices can 
 
     Is there a free taxonomy that you can use or adapt to meet your goals? If so, start there. If not—especially if you don't realistically have the resources in-house—consider buying a published taxonomy if there's on that meets your needs. The research, iteration, and support paid resources provide may be well worth the cost. Build when you need to: for smaller taxonomies, those just beginning to use classification, or very specific domains, this may be the right option.
 
-        > [!TIP]
-        > The [Basic Register of Thesauri, Ontologies & Classifications](https://bartoc.org/about) (BARTOC) lets you search, compare, and access details about thousands of vocabularies in multiple languages, many of them available for free use. It's a great place to start a taxonomy search.
+    > [!TIP]
+    > The [Basic Register of Thesauri, Ontologies & Classifications](https://bartoc.org/about) (BARTOC) lets you search, compare, and access details about thousands of vocabularies in multiple languages, many of them available for free use. It's a great place to start a taxonomy search.
 
 4.  #### Identify & Define Concepts
 
     Though we commonly think of taxonomies as hierarchies of terms, each of these "terms" is ultimately a label for a concept in your subject domain. Identifying the **concepts** you need to organize can help you focus on what you need to organize before getting mired in the organizational and usability details of what labels those things will have. Candidate concepts can be found in your content audit and other business resources, in your user research, and through discussions with stakeholders. Look for concepts that represent classes of things (as opposed to individual instances), and which have significance in your content, to your users, and to your organization.
 
-        Once you've identified concepts, give them a preferred label and a brief definition based on the evidence you've collected. Clear definitions help ensure that when you test and vet terms and relationships with stakeholders and subject matter experts you're all talking about the same idea.
+    Once you've identified concepts, give them a preferred label and a brief definition based on the evidence you've collected. Clear definitions help ensure that when you test and vet terms and relationships with stakeholders and subject matter experts you're all talking about the same idea.
 
-        > [!TIP]
-        > Evidence for taxonomy term definitions and relationships is called "warrant" in the literature. See [ANSI/NISO Z39-19-2005 (2010)](https://groups.niso.org/higherlogic/ws/public/download/12591/z39-19-2005r2010.pdf) "5.3.5 Using Warrant to Select Terms" for a concise overview.
+    > [!TIP]
+    > Evidence for taxonomy term definitions and relationships is called "warrant" in the literature. See [ANSI/NISO Z39-19-2005 (2010)](https://groups.niso.org/higherlogic/ws/public/download/12591/z39-19-2005r2010.pdf) "5.3.5 Using Warrant to Select Terms" for a concise overview.
 
 5.  #### Create Relationships
 
     Once you have enumerated and defined the concepts your taxonomy needs to organize, it's time to create relationships between then. Hierarchies based on parent-child "Broader Concept" relationships are perhaps the most common, and will likely be the primary kinds of connections you make in Type<!-- TODO: Link to Type example, once created --> and Topic <!-- TODO: Link to Topic example, once created -->taxonomies.
 
-        ![Sanity taxonomy manager view showing highlighted plus sign inside of a circle icon next to a top term, and a tool tip with the text, "Add a child concept"](_images/add-child.png)
+    ![Sanity taxonomy manager view showing highlighted plus sign inside of a circle icon next to a top term, and a tool tip with the text, "Add a child concept"](_images/add-child.png)
 
-        Faceted<!-- TODO: Link to Type example, once created --> taxonomies also commonly use a shallow set of parent concepts (the facets) with allowed facet values as their children.
+    Faceted<!-- TODO: Link to Type example, once created --> taxonomies also commonly use a shallow set of parent concepts (the facets) with allowed facet values as their children.
 
-        Don't assume, however, that your taxonomy will necessarily be a tree. Create relationships based on the goals you established in step one. A set of well defined and controlled terms in a simple flat list can be incredibly useful in some contexts. "Related Concept" relationships are also a powerful way to create nuanced relationships between terms in order to achieve well defined outcomes.
+    Don't assume, however, that your taxonomy will necessarily be a tree. Create relationships based on the goals you established in step one. A set of well defined and controlled terms in a simple flat list can be incredibly useful in some contexts. "Related Concept" relationships are also a powerful way to create nuanced relationships between terms in order to achieve well defined outcomes.
 
-        > [!NOTE]
-        > Concepts cannot be related by both "Broader" and "Related" relationships. This is to help avoid the inference of unintended relationships between concepts at different levels of the hierarchy. See [SKOS Primer: 2.3.2 Associative Relationships](https://www.w3.org/TR/skos-primer/#secassociative) for details.
+    > [!NOTE]
+    > Concepts cannot be related by both "Broader" and "Related" relationships. This is to help avoid the inference of unintended relationships between concepts at different levels of the hierarchy. See [SKOS Primer: 2.3.2 Associative Relationships](https://www.w3.org/TR/skos-primer/#secassociative) for details.
 
 6.  #### Review, Test, and Revise
 
     Ideally, you should plan to review goals, audits, concepts, and relationships with stakeholders and subject matter experts as you go. At the very least, it is important to review your draft taxonomy with them to make sure you haven't missed anything from their point of view, and to ensure that your vision of the domain aligns with theirs.
 
-        It is also important to test your draft taxonomy with future users: both those who will tag content, and those who will use the taxonomy to find content by browsing or search. Which tests to perform will depend on how your taxonomy will be used and what outcomes it is intended to achieve. Card sorting (usually closed sorting at this phase), tree testing, A/B testing, and prototype usability testing are all testing methods to consider. Be sure to do this early enough in your project that you leave time to revise based on what you learn and integrate changes.
+    It is also important to test your draft taxonomy with future users: both those who will tag content, and those who will use the taxonomy to find content by browsing or search. Which tests to perform will depend on how your taxonomy will be used and what outcomes it is intended to achieve. Card sorting (usually closed sorting at this phase), tree testing, A/B testing, and prototype usability testing are all testing methods to consider. Be sure to do this early enough in your project that you leave time to revise based on what you learn and integrate changes.
 
 7.  #### Tag Content
 
     Depending on the volume of content you need to tag, you may opt for automated or manual approaches. Natural language processing (NLP) tools&mdash;and yes, generative AI&mdash;can be used to automate the tagging process. Even the best of tools are not error free, so it is important for a human with background on the project and the taxonomy to review tags prior to unleashing them on your users.
 
-        Manual tagging can be a good option if you have a small content collection, an army of interns, or are tagging new content as you go. Don't assume that your taggers or writers will intuitively know how to correctly tag content in a way that achieves the goals you've envisioned. Training should include background on what the purposes the taxonomy serves, an orientation to the structure of the taxonomy and concept definitions, and practice applying tags to different types of content.
+    Manual tagging can be a good option if you have a small content collection, an army of interns, or are tagging new content as you go. Don't assume that your taggers or writers will intuitively know how to correctly tag content in a way that achieves the goals you've envisioned. Training should include background on what the purposes the taxonomy serves, an orientation to the structure of the taxonomy and concept definitions, and practice applying tags to different types of content.
 
 8.  #### Establish Governance
 
     Taxonomies are never finished. Rather, they are living systems that grow and evolve with the business. The goal of governance is to create a repeatable, accountable, visible, and predictable process for managing taxonomy changes.
 
-        Successful taxonomy governance establishes long-term ownership and responsibility for taxonomies, responds to feedback from taxonomy users, and assures the sustainable evolution of taxonomies in response to changes in user and system needs. Governance activities include periodic review of taxonomy performance and responding to suggestions, requests, and problems raised by taxonomy users.
+    Successful taxonomy governance establishes long-term ownership and responsibility for taxonomies, responds to feedback from taxonomy users, and assures the sustainable evolution of taxonomies in response to changes in user and system needs. Governance activities include periodic review of taxonomy performance and responding to suggestions, requests, and problems raised by taxonomy users.
 
 <!-- Merge this once I have at least two here -->
 
@@ -376,7 +376,7 @@ The tree view input component allows your authors to view your taxonomy hierarch
 
 ![Locating the concept/scheme id](_images/hierarchy-input-component.png)
 
-Add the component by importing `HierarchyInput` from the plugin, and including it as a field component:
+Add the component to a `reference` filed by importing `HierarchyInput` from the plugin, and including it as a `field` component:
 
 ```js
 import {HierarchyInput} from 'sanity-plugin-taxonomy-manager'
@@ -395,3 +395,32 @@ defineField({
       components: {field: HierarchyInput},
   }),
 ```
+
+To include the input component for an `array` input, import `ArrayHierarchyInput` and include it as a `field` component for your array. 
+
+```js
+import {ArrayHierarchyInput} from 'sanity-plugin-taxonomy-manager'
+
+...
+
+    defineField({
+      name: 'Habitats',
+      title: 'Habitats',
+      description: 'Array input component with scheme filter (scheme ids)',
+      validation: rule => rule.max(3),
+      type: 'array',
+      of:[
+        {
+          type: 'reference',
+          to: {type: 'skosConcept'},
+          options: {
+            filter: () => branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c'}),
+            disableNew: true,
+          },
+        },
+      ],
+      components: {field: ArrayHierarchyInput},
+    }),
+```
+
+The component currently supports arrays from a single reference taxonomy, for which you can use either the scheme or branch filter helpers.
