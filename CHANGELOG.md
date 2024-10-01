@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.2.4] - 2024-09-30
+
+### Added
+- Hierarchical input component for array fields
+- Array input component documentation
+
+### Fix
+- Documentation formatting bug
+
 ## [3.2.3] - 2024-09-27
 
 ### Added
