@@ -21,7 +21,12 @@ const branchBuilder = (level = 1): string | void => {
     return ''
   }
   return `"childConcepts": *[
-    (_id in $draftConceptIds ||
+    (
+      (
+        _id in $draftConceptIds &&
+        !(conceptId in *[_id in $conceptIds].conceptId)
+      ) 
+      ||
       (
         _id in $conceptIds &&
         !(conceptId in $draftConceptIds)
@@ -67,14 +72,20 @@ const inputBranchBuilder = (level = 1): string | void => {
  *   a broader term
  * - filter out concepts that reference other concepts in this scheme
  *   as a broader term
+ *
+ * Used in Hierarchy.tsx
  */
 export const trunkBuilder = (): string => {
   return `*[_id == $id][0] {
     _updatedAt,
-    "topConcepts": *[_id in $draftTopConceptIds ||
+    "topConcepts": *[
       (
-        _id in $topConceptIds &&
-        !(conceptId in *[_id in $draftTopConceptIds].conceptId)
+        _id in $draftTopConceptIds &&
+        !(conceptId in *[_id in $topConceptIds].conceptId)
+      )
+      ||
+      (
+        _id in $topConceptIds
       )
       ]|order(prefLabel) {
       "id": _id,
@@ -85,11 +96,15 @@ export const trunkBuilder = (): string => {
       scopeNote,
       ${branchBuilder()}
     },
-    "orphans": *[_id in $draftConceptIds ||
+    "orphans": *[
+      ((
+        _id in $draftConceptIds &&
+        !(conceptId in *[_id in $conceptIds].conceptId)
+      )
+      ||
       (
-        _id in $conceptIds &&
-        !(conceptId in *[_id in $draftConceptIds].conceptId)
-      ) &&
+        _id in $conceptIds
+      )) &&
       count(
         (broader[]._ref) [@ in coalesce(
           *[_id == 'drafts.' + $id][0], 
