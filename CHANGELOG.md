@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.2.5] - 2024-11-02
+
+### Fix
+- Fix term double-entry in tree view when there are unsaved edits
+
 ## [3.2.4] - 2024-09-30
 
 ### Added
@@ -292,7 +297,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.4...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.5...HEAD
+[3.2.5]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.4...v3.2.5
 [3.2.4]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.3...v3.2.4
 [3.2.3]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.2...v3.2.3
 [3.2.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.1...v3.2.2
