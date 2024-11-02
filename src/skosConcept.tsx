@@ -40,7 +40,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         name: 'prefLabel',
         title: 'Preferred Label',
         type: 'string',
-        description: 'The preferred lexical label for this concept.',
+        description: 'The preferred lexical label for this concept. test.',
         validation: (Rule) =>
           Rule.required().custom((prefLabel, context) => {
             const {getClient} = context

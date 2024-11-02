@@ -33,9 +33,6 @@ export default [
         </div>
       </StyledDescription>
     ),
-    options: {
-      collapsible: true,
-    },
     components: {
       input: RdfUri as any,
     },
