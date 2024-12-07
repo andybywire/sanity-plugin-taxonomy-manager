@@ -35,7 +35,7 @@ export default function skosConceptScheme(
         title: 'Title',
         type: 'string',
         description:
-          'Taxonomy schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong on many (or no) concept schemes, and you may create as many (or few) concept schemes as you like',
+          'Taxonomy schemes group concepts into defined sets, such as thesauri, classification schemes, or facets. Concepts may belong to many (or no) concept schemes, and you may create as many (or few) concept schemes as you like',
       }),
       defineField({
         name: 'description',
