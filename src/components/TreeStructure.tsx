@@ -29,10 +29,21 @@ export const TreeStructure = ({
   } = useContext(TreeContext) || {}
 
   useEffect(() => {
-    if (concepts.topConcepts.length === 0 && concepts.orphans.length === 0) setEditControls(true)
+    if (
+      concepts?.topConcepts &&
+      concepts.topConcepts.length === 0 &&
+      concepts?.orphans &&
+      concepts.orphans.length === 0
+    )
+      setEditControls(true)
   }, [concepts.topConcepts, concepts.orphans, setEditControls])
 
-  if (concepts.topConcepts.length === 0 && concepts.orphans.length === 0) {
+  if (
+    concepts?.topConcepts &&
+    concepts.topConcepts.length === 0 &&
+    concepts?.orphans &&
+    concepts.orphans.length === 0
+  ) {
     return <NoConcepts />
   }
 
