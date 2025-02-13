@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.2.7] - 2025-02-12
+
+### Fix
+- Fix `.length` detection bug that was causing the ArrayHierarachicalInput component to crash with flat schemes
+
 ## [3.2.6] - 2024-12-07
 
 ### Fix
@@ -302,7 +307,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.6...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.7...HEAD
+[3.2.7]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.6...v3.2.7
 [3.2.6]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.5...v3.2.6
 [3.2.5]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.4...v3.2.5
 [3.2.4]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.3...v3.2.4
