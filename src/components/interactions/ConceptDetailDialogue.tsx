@@ -2,6 +2,7 @@ import {useCallback, useState} from 'react'
 import {Dialog, Box, Text, Stack, Label} from '@sanity/ui'
 import {InfoOutlineIcon} from '@sanity/icons'
 import {StyledTreeButton} from '../../styles'
+import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 
 /**
  * #### Information Icon and Dialogue with Concept Details
@@ -13,12 +14,14 @@ export const ConceptDetailDialogue = ({concept}: {concept: any}) => {
   const onClose = useCallback(() => setOpen(false), [])
   const onOpen = useCallback(() => setOpen(true), [])
 
+  const linkColor = useLinkColorScheme()
+
   if (!concept || (!concept.definition && !concept.example && !concept.scopeNote)) return null
 
   return (
     <>
       <StyledTreeButton className="action" aria-label="info" onClick={onOpen} type="button">
-        <InfoOutlineIcon className="info" />
+        <InfoOutlineIcon className="info" style={{color: linkColor}} />
       </StyledTreeButton>
 
       {open && (

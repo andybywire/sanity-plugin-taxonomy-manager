@@ -3,6 +3,7 @@ import {usePaneRouter} from 'sanity/structure'
 import {RouterContext} from 'sanity/router'
 import {ChildConceptTerm} from '../../types'
 import {StyledConceptLink} from '../../styles'
+import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 
 /**
  * #### Concept Detail Link
@@ -11,6 +12,8 @@ import {StyledConceptLink} from '../../styles'
 export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   const routerContext = useContext(RouterContext)
   const {routerPanesState, groupIndex} = usePaneRouter()
+
+  const linkColor = useLinkColorScheme()
 
   const {id, prefLabel} = concept ?? {}
 
@@ -32,7 +35,7 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   }, [id, routerContext, routerPanesState, groupIndex])
 
   return (
-    <StyledConceptLink href="#" onClick={openInNewPane}>
+    <StyledConceptLink href="#" onClick={openInNewPane} style={{color: linkColor}}>
       {prefLabel}
     </StyledConceptLink>
   )

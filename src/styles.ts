@@ -71,7 +71,6 @@ export const StyledTreeButton = styled.button`
   padding: 0.2rem 0 0;
   cursor: pointer;
   svg {
-    color: ${hues.gray[800].hex};
     border-radius: 3px;
     transition: all 0.1s ease-in-out;
   }
@@ -84,7 +83,7 @@ export const StyledTreeButton = styled.button`
     height: 1.2rem;
     width: 1.2rem;
     &:hover {
-      color: ${hues.gray[100].hex};
+      color: ${hues.gray[100].hex} !important;
     }
     &.info:hover {
       background-color: ${hues.blue[500].hex};
@@ -150,12 +149,9 @@ export const StyledChildConcept = styled.li`
   }
 `
 export const StyledConceptLink = styled.a`
-  color: ${hues.gray[800].hex};
   text-decoration: none;
   &:hover {
     text-decoration: underline;
   }
 `
-export const StyledConceptTitle = styled.p`
-  color: ${hues.gray[800].hex};
-`
+export const StyledConceptTitle = styled.p``

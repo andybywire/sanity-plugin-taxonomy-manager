@@ -272,7 +272,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         type: 'text',
         description: (
           <StyledDescription>
-            <summary>Significant changes to the meaning of the form of this concept.</summary>
+            <summary>Significant changes to the meaning or the form of this concept.</summary>
             <div>
               <kbd>
                 Example: person with disabilities
