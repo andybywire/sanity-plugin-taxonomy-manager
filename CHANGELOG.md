@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.2.9] - 2025-03-13
+
+### Fix
+- Add dark mode support for hierarchy input component
+
 ## [3.2.8] - 2025-03-11
 
 ### Fix
@@ -313,7 +318,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.8...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.9...HEAD
+[3.2.9]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.8...v3.2.9
 [3.2.8]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.7...v3.2.8
 [3.2.7]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.6...v3.2.7
 [3.2.6]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.5...v3.2.6
