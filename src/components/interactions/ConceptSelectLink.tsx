@@ -2,6 +2,7 @@
 import {useCallback} from 'react'
 import {ChildConceptTerm} from '../../types'
 import {StyledConceptLink, StyledConceptTitle} from '../../styles'
+import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 
 /**
  * #### Concept Select Link
@@ -16,6 +17,8 @@ export function ConceptSelectLink({
 }) {
   const {prefLabel, id} = concept ?? {}
 
+  const linkColor = useLinkColorScheme()
+
   const handleClick = useCallback(() => {
     const conceptRef = {
       _ref: id,
@@ -27,7 +30,7 @@ export function ConceptSelectLink({
   return (
     <>
       {selectConcept ? (
-        <StyledConceptLink href="#" onClick={handleClick}>
+        <StyledConceptLink href="#" onClick={handleClick} style={{color: linkColor}}>
           {prefLabel}
         </StyledConceptLink>
       ) : (
