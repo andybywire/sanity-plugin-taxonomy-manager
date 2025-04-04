@@ -4,22 +4,44 @@ import {ArrayFieldProps, useClient, useFormValue} from 'sanity'
 import {TreeView} from '../TreeView'
 
 /**
- * Hierarchy View Input Component for Array Fields
+ * Hierarchy View Input Component
+ *
+ * This component allows Studio users to browse and select taxonomy
+ * terms from a hierarchical tree structure. It is designed to be
+ * used as an input for taxonomy array fields in Sanity Studio.
+ *
+ * Hierarchy view must be used in conjunction with the Taxonomy Manager
+ * plugin `schemeFilter` or `branchFilter` options.
+ *
  */
 export function ArrayHierarchyInput(props: ArrayFieldProps) {
   const {name, title, value = []} = props // name of the field to input a value
   const documentId = useFormValue(['_id']) as string // the resource document we're in
-
   const client = useClient({apiVersion: '2021-10-21'})
+
   const [open, setOpen] = useState(false)
   const [scheme, setScheme] = useState({}) // the skosConceptScheme document identified by the field filter options
+  const [filterValues, setFilterValues] = useState<any>(null) // State to store resolved filter values
 
   // get the filter options from the `reference` field
+  const {schemeId, branchId = null} = filterValues?.params || {} // use filterValues if available, otherwise fallback to default
+
   const {filter} = props.schemaType.of[0].options
-  const filterValues = filter()
-  const {schemeId, branchId = null} = filterValues.params // only schemes using the branchFilter() will have a branchId
 
   const toast = useToast()
+
+  // Fetch filter values asynchronously
+  useEffect(() => {
+    async function fetchFilterValues() {
+      try {
+        const resolvedFilterValues = await filter({getClient: () => client})
+        setFilterValues(resolvedFilterValues) // Store the resolved filter values in state
+      } catch (error) {
+        console.error('Error fetching filter values: ', error)
+      }
+    }
+    fetchFilterValues()
+  }, [filter, client])
 
   // get the skosConceptScheme document identified by the field filter options
   useEffect(() => {
@@ -91,6 +113,18 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
     },
     [client, documentId, name, value, toast]
   )
+
+  // If the schemeId is not found, raise an error and return a caution message
+  if (!schemeId) {
+    console.error(
+      'No schemeId found in filter options. Ensure the filter function is correctly set up.'
+    )
+    return (
+      <Card padding={[3]} radius={2} shadow={1} tone="caution">
+        <Text size={1}>Error: No schemeId found in filter options.</Text>
+      </Card>
+    )
+  }
 
   // Check to see if array uses more than one schema and bail with a notification if more than one is detected.
   if (props.schemaType.of.length > 1) {
