@@ -49,19 +49,15 @@ export const Orphans = ({concept, treeVisibility, inputComponent, selectConcept}
   return (
     <StyledOrphan className={levelVisibility}>
       <Inline space={2}>
-        {concept?.childConcepts &&
-          concept.childConcepts.length > 0 &&
-          (inputComponent ? (
-            <SquareIcon className="spacer" />
-          ) : (
-            <StyledTreeToggle
-              onClick={handleToggle}
-              type="button"
-              aria-expanded={levelVisibility == 'open'}
-            >
-              <ToggleArrowRightIcon />
-            </StyledTreeToggle>
-          ))}
+        {concept?.childConcepts && concept.childConcepts.length > 0 && (
+          <StyledTreeToggle
+            onClick={handleToggle}
+            type="button"
+            aria-expanded={levelVisibility == 'open'}
+          >
+            <ToggleArrowRightIcon />
+          </StyledTreeToggle>
+        )}
         {concept?.childConcepts && concept.childConcepts.length == 0 && (
           <SquareIcon className="spacer" />
         )}
