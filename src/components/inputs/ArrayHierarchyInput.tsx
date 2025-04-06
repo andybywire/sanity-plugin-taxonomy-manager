@@ -80,7 +80,8 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
         })
         return
       }
-      // if there is a draft document, patch the new reference and commit the change
+      // if there is a draft document, patch the new reference and
+      // commit the change
       if (documentId.includes('drafts.')) {
         client
           .patch(documentId)
@@ -91,9 +92,9 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
           .catch((err) => console.error(err))
         return
       }
-      // if there is not a draft document, fetch the published version and create a new
-      // document with the published document id in the `drafts.` path and the new
-      // reference
+      // if there is not a draft document, fetch the published
+      // version and create a new document with the published
+      // document id in the `drafts.` path and the new reference
       client
         .fetch(`*[_id == "${documentId}"][0]`)
         .then((res) => {
