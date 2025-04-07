@@ -5,21 +5,47 @@ import {TreeView} from '../../components/TreeView'
 
 /**
  * Hierarchy View Input Component for Reference Fields
+ *
+ * This component allows Studio users to browse and select taxonomy
+ * terms from a hierarchical tree structure. It is designed to be
+ * used as an input for taxonomy reference fields in Sanity Studio.
+ *
+ * Hierarchy view must be used in conjunction with the Taxonomy Manager
+ * plugin `schemeFilter` or `branchFilter` options.
  */
 export function HierarchyInput(props: ObjectFieldProps) {
   const {name, title} = props // name of the field to input a value
-  const documentId = useFormValue(['_id']) as string // the resource document we're in
-
+  const documentId = useFormValue(['_id']) as string
+  // the resource document we're in
   const client = useClient({apiVersion: '2021-10-21'})
+
   const [open, setOpen] = useState(false)
-  const [scheme, setScheme] = useState({}) // the skosConceptScheme document identified by the field filter options
+  const [scheme, setScheme] = useState({})
+  // the skosConceptScheme document identified by the field filter options
+  const [filterValues, setFilterValues] = useState<any>(null)
+  // State to store resolved filter values
 
-  // get the filter options from the `reference` field
+  const {schemeId, branchId = null} = filterValues?.params || {}
+  // use filterValues if available, otherwise fallback to default
+
   const {filter} = props.schemaType.options
-  const filterValues = filter()
-  const {schemeId, branchId = null} = filterValues.params // only schemes using the branchFilter() will have a branchId
 
-  // get the skosConceptScheme document identified by the field filter options
+  // Fetch filter values from `reference` field filter asynchronously
+  useEffect(() => {
+    async function fetchFilterValues() {
+      try {
+        const resolvedFilterValues = await filter({getClient: () => client})
+        setFilterValues(resolvedFilterValues)
+        // Store the resolved filter values in state
+      } catch (error) {
+        console.error('Error fetching filter values: ', error)
+      }
+    }
+    fetchFilterValues()
+  }, [filter, client])
+
+  // get the skosConceptScheme document identified by the field
+  // filter options
   useEffect(() => {
     client
       .fetch(`{"displayed": *[schemeId == "${schemeId}"][0]}`)
@@ -43,7 +69,8 @@ export function HierarchyInput(props: ObjectFieldProps) {
    */
   const handleAction = useCallback(
     (conceptRef: any) => {
-      // if there is a draft document, patch the new reference and commit the change
+      // if there is a draft document, patch the new reference and
+      // commit the change
       if (documentId.includes('drafts.')) {
         client
           .patch(documentId)
@@ -53,9 +80,9 @@ export function HierarchyInput(props: ObjectFieldProps) {
           .catch((err) => console.error(err))
         return
       }
-      // if there is not draft document, fetch the published version and create a new
-      // document with the published document id in the `drafts.` path and the new
-      // reference
+      // if there is not a draft document, fetch the published
+      // version and create a new document with the published
+      // document id in the `drafts.` path and the new reference
       client
         .fetch(`*[_id == "${documentId}"][0]`)
         .then((res) => {
