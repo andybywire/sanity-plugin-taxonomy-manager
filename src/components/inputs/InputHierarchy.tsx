@@ -1,6 +1,6 @@
 /* eslint-disable react/require-default-props */
 import {useContext} from 'react'
-import {Flex, Spinner, Box, Text} from '@sanity/ui'
+import {Flex, Spinner, Box, Text, Card} from '@sanity/ui'
 import {useListeningQuery} from 'sanity-plugin-utils'
 import {inputBuilder} from '../../queries'
 import {DocumentConcepts} from '../../types'
@@ -56,7 +56,15 @@ export const InputHierarchy = ({
     )
   } else if (error) {
     console.warn(error)
-    return <div>error</div>
+    return (
+      <Box padding={4}>
+        <Card padding={[3]} radius={2} shadow={1} tone="caution">
+          <Text size={1}>
+            There was a problem loading terms. Please check the scheme configuration and try again.
+          </Text>
+        </Card>
+      </Box>
+    )
   } else if (!data) {
     return <NewScheme document={document} />
   }
