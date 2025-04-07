@@ -14,6 +14,25 @@ type BranchFilterResult = {
  * @param schemeId - The unique six character concept identifier for the Concept Scheme to which you wish to filter.
  * @param branchId - The unique six character concept identifier of a branch. Child concepts will be returned.
  * @returns A reference type filter for the child concepts of the designated branch in the selected Concept Scheme
+ * @example
+ * ```ts
+ * import { branchFilter } from 'sanity-plugin-taxonomy-manager'
+ * ...
+ * {
+ *   name: 'test',
+ *   type: 'array',
+ *   of: [
+ *     {
+ *       type: 'reference',
+ *       to: {type: 'skosConcept'},
+ *       options: {
+ *         filter: branchFilter({schemeId: 'a1b2c3', branchId: 'd4e5f6'}),
+ *         disableNew: true,
+ *       },
+ *     },
+ *   ],
+ * }
+ * ```
  */
 export const branchFilter = (
   options: BranchOptions

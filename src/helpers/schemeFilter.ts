@@ -29,7 +29,7 @@ type SchemeFilterResult = {
  *       type: 'reference',
  *       to: {type: 'skosConcept'},
  *       options: {
- *         filter: schemeFilter({schemeId: 'b6f990'}),
+ *         filter: schemeFilter({schemeId: 'a1b2c3'}),
  *         disableNew: true,
  *       },
  *     },
