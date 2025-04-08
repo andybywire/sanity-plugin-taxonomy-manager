@@ -1,4 +1,16 @@
-import {Grid, Stack, Button, Dialog, Box, Card, Label, Text, useToast} from '@sanity/ui'
+import {
+  Grid,
+  Stack,
+  Button,
+  Dialog,
+  Box,
+  Card,
+  Label,
+  Text,
+  useToast,
+  Flex,
+  Spinner,
+} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
 import {ArrayFieldProps, useClient, useFormValue} from 'sanity'
 import {TreeView} from '../TreeView'
@@ -20,6 +32,8 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
   // the resource document we're in
   const client = useClient({apiVersion: '2021-10-21'})
 
+  const [schemeLoading, setSchemeLoading] = useState(true)
+  const [valuesLoading, setValuesLoading] = useState(true)
   const [open, setOpen] = useState(false)
   const [scheme, setScheme] = useState({})
   // the skosConceptScheme document identified by the field filter options
@@ -40,6 +54,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
         const resolvedFilterValues = await filter({getClient: () => client})
         setFilterValues(resolvedFilterValues)
         // Store the resolved filter values in state
+        setValuesLoading(false)
       } catch (error) {
         console.error('Error fetching filter values: ', error)
       }
@@ -53,7 +68,10 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
     client
       .fetch(`{"displayed": *[schemeId == "${schemeId}"][0]}`)
       .then((res) => {
-        setScheme(res)
+        if (res?.displayed) {
+          setScheme(res)
+          setSchemeLoading(false)
+        }
       })
       .catch((err) => console.warn(err))
   }, [client, schemeId])
@@ -140,8 +158,25 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
         </Card>
       </Stack>
     )
+  } else if (schemeLoading || valuesLoading) {
+    return (
+      <Box padding={5}>
+        <Flex
+          align="center"
+          direction="column"
+          gap={5}
+          height="fill"
+          justify="center"
+          style={{paddingTop: '1rem'}}
+        >
+          <Spinner muted />
+          <Text muted size={1}>
+            Loading input component…
+          </Text>
+        </Flex>
+      </Box>
+    )
   }
-
   return (
     <Stack space={3}>
       {props.renderDefault(props)}
