@@ -138,8 +138,42 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
     [client, documentId, name, value, toast]
   )
 
+  // Check to be sure a filter is present
+  if (!props.schemaType.of[0].options?.filter) {
+    return (
+      <Stack space={3}>
+        {props.renderDefault(props)}
+        <Box padding={4}>
+          <Card padding={[3]} radius={2} shadow={1} tone="caution">
+            <Text size={1}>
+              The <code>ArrayHierarchyInput()</code> component must be used with an accompanying{' '}
+              <code>schemeFilter()</code> or <code>branchFilter()</code>. Please add an appropriate
+              filter to the configuration for the {title} field.
+            </Text>
+          </Card>
+        </Box>
+      </Stack>
+    )
+  }
+  // ... and that it is a scheme or branch filter and configured correctly
+  else if (props.schemaType.of[0].options.filter.length == 0) {
+    return (
+      <Stack space={3}>
+        {props.renderDefault(props)}
+        <Box padding={4}>
+          <Card padding={[3]} radius={2} shadow={1} tone="caution">
+            <Text size={1}>
+              There was a problem loading your filter settings. Please check the{' '}
+              <code>schemeFilter()</code> or <code>branchFilter()</code> configuration for the{' '}
+              {title} field.
+            </Text>
+          </Card>
+        </Box>
+      </Stack>
+    )
+  }
   // Check to see if array uses more than one schema and bail with a notification if more than one is detected.
-  if (props.schemaType.of.length > 1) {
+  else if (props.schemaType.of.length > 1) {
     return (
       <Stack space={3}>
         {props.renderDefault(props)}

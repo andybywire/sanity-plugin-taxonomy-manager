@@ -1,4 +1,4 @@
-import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex} from '@sanity/ui'
+import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
 import {ObjectFieldProps, Reference, useClient, useFormValue} from 'sanity'
 import {TreeView} from '../TreeView'
@@ -102,7 +102,40 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
     [client, documentId, name]
   )
 
-  if (schemeLoading || valuesLoading) {
+  // Check to be sure a filter is present
+  if (!props.schemaType.options?.filter) {
+    return (
+      <Stack space={3}>
+        {props.renderDefault(props)}
+        <Box padding={4}>
+          <Card padding={[3]} radius={2} shadow={1} tone="caution">
+            <Text size={1}>
+              The <code>ReferenceHierarchyInput()</code> component must be used with an accompanying{' '}
+              <code>schemeFilter()</code> or <code>branchFilter()</code>. Please add an appropriate
+              filter to the configuration for the {title} field.
+            </Text>
+          </Card>
+        </Box>
+      </Stack>
+    )
+  }
+  // ... and that it is a scheme or branch filter and configured correctly
+  else if (props.schemaType.options.filter.length == 0) {
+    return (
+      <Stack space={3}>
+        {props.renderDefault(props)}
+        <Box padding={4}>
+          <Card padding={[3]} radius={2} shadow={1} tone="caution">
+            <Text size={1}>
+              There was a problem loading your filter settings. Please check the{' '}
+              <code>schemeFilter()</code> or <code>branchFilter()</code> configuration for the{' '}
+              {title} field.
+            </Text>
+          </Card>
+        </Box>
+      </Stack>
+    )
+  } else if (schemeLoading || valuesLoading) {
     return (
       <Box padding={5}>
         <Flex
