@@ -1,6 +1,6 @@
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
-import {ObjectFieldProps, useClient, useFormValue} from 'sanity'
+import {ObjectFieldProps, Reference, useClient, useFormValue} from 'sanity'
 import {TreeView} from '../TreeView'
 
 /**
@@ -13,7 +13,7 @@ import {TreeView} from '../TreeView'
  * Hierarchy view must be used in conjunction with the Taxonomy Manager
  * plugin `schemeFilter` or `branchFilter` options.
  */
-export function ReferenceHierarchyInput(props: ObjectFieldProps) {
+export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
   const {name, title} = props // name of the field to input a value
   const documentId = useFormValue(['_id']) as string
   // the resource document we're in
