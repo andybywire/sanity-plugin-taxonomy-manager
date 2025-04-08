@@ -343,7 +343,7 @@ defineField({
     type: 'reference',
     to: {type: 'skosConcept'},
     options: {
-      filter: () => schemeFilter({schemeId: 'f3deba'}),
+      filter: schemeFilter({schemeId: 'f3deba'}),
       disableNew: true,
     },
   }),
@@ -364,7 +364,7 @@ defineField({
     type: 'reference',
     to: {type: 'skosConcept'},
     options: {
-      filter: () => branchFilter({schemeId: 'f3deba', branchId: '25f826'}),
+      filter: branchFilter({schemeId: 'f3deba', branchId: '25f826'}),
       disableNew: true,
     },
   }),
@@ -376,10 +376,10 @@ The tree view input component allows your authors to view your taxonomy hierarch
 
 ![Locating the concept/scheme id](_images/hierarchy-input-component.png)
 
-Add the component to a `reference` filed by importing `HierarchyInput` from the plugin, and including it as a `field` component:
+Add the component to a `reference` filed by importing `ReferenceHierarchyInput` from the plugin, and including it as a `field` component:
 
 ```js
-import {HierarchyInput} from 'sanity-plugin-taxonomy-manager'
+import {ReferenceHierarchyInput} from 'sanity-plugin-taxonomy-manager'
 
 ...
 
@@ -389,10 +389,10 @@ defineField({
     type: 'reference',
     to: {type: 'skosConcept'},
       options: {
-        filter: () => branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c'}),
+        filter: branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c'}),
         disableNew: true,
       },
-      components: {field: HierarchyInput},
+      components: {field: ReferenceHierarchyInput},
   }),
 ```
 
@@ -414,7 +414,7 @@ import {ArrayHierarchyInput} from 'sanity-plugin-taxonomy-manager'
           type: 'reference',
           to: {type: 'skosConcept'},
           options: {
-            filter: () => branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c'}),
+            filter: branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c'}),
             disableNew: true,
           },
         },

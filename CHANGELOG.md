@@ -5,7 +5,34 @@ All notable changes to this project will be documented in this file.
 The format of this document is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+<!-- 
+### feat: a new feature for the user
+### fix: a bug fix for the user
+### chore: changes that aren't a fix or feature and don't modify src or test files
+### docs: changes to the documentation
+### style: formatting changes that do not affect the meaning of the code
+### test: adding or refactoring tests 
+-->
+
 <!-- ## [unreleased] -->
+
+## [3.3.0] - 2025-04-08
+
+### Fix
+- fix a bug in filter resolution that was preventing the execution of field-level copy and paste actions
+
+### Feature
+- simplify filter helper configurations
+- improve Studio configuration messaging
+
+### Chore
+- improve error checking
+
+### Docs
+- update filter helper and input component documentation
+- add input component structure documentation (Mermaid)
+- improve inline (ts.doc) documentation
+- add ts.doc configuration examples
 
 ## [3.2.9] - 2025-03-13
 
@@ -318,7 +345,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.9...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.0...HEAD
+[3.3.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.9...v3.3.0
 [3.2.9]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.8...v3.2.9
 [3.2.8]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.7...v3.2.8
 [3.2.7]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.6...v3.2.7

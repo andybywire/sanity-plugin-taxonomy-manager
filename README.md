@@ -175,6 +175,50 @@ graph BT
 
 </Details>
 
+<Details>
+<Summary><h4>Input Components</h4></Summary>
+
+The [ReferenceHierarchyInput and ArrayHierarchyInput components](https://sanitytaxonomymanager.com/#/?id=tree-view-input-component) afford a field-level hierarchical browse and selection experience for taxonomy terms. Both components draw on filter options supplied by the `schemeFilter` and `branchFilter` helper functions.
+
+```mermaid
+graph BT
+    subgraph Input Components
+      direction BT
+      TreeView.tsx-->ArrayHierarchyInput.tsx[
+        ArrayHierarchyInput.tsx
+        <i style="color: gray; font-size: small">requires schemeFilter</i>
+        <i style="color: gray; font-size: small">or branchFilter helper</i>
+        ]
+      TreeView.tsx-->ReferenceHierarchyInput.tsx[
+        ReferenceHierarchyInput.tsx
+        <i style="color: gray; font-size: small">requires schemeFilter</i>
+        <i style="color: gray; font-size: small">or branchFilter helper</i>
+      ]
+      subgraph SchemeContext.Provider
+        InputHierarchy.tsx-->TreeView.tsx
+        subgraph TreeContext.Provider
+          direction BT
+          TreeStructure.tsx-->InputHierarchy.tsx
+          TopConcepts.tsx[
+            TopConcepts.tsx
+            <i style="color: gray; font-size: small">uses SchemeContext</i>
+            <i style="color: gray; font-size: small">uses TreeContext</i>
+          ]-->TreeStructure.tsx
+          Orphans.tsx[
+            Orphans.tsx
+            <i style="color: gray; font-size: small">uses SchemeContext</i>
+            <i style="color: gray; font-size: small">uses TreeContext</i>
+          ]-->TreeStructure.tsx
+          ChildConcepts.tsx-->TopConcepts.tsx
+          ChildConcepts.tsx-->Orphans.tsx
+          Children.tsx-->ChildConcepts.tsx
+        end
+      end
+    end
+```
+
+</Details>
+
 ## License
 
 MIT © Andy Fitzgerald
