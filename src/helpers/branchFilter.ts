@@ -47,8 +47,8 @@ export const branchFilter = (
     throw new Error('Invalid or missing branchId: branch Id must be a string')
   }
 
-  return async ({getClient}) => {
-    const client = getClient({apiVersion: '2023-01-01'})
+  return async (props) => {
+    const client = props?.getClient({apiVersion: '2023-01-01'})
     if (!client) {
       throw new Error('Client not available')
     }

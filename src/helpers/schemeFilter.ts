@@ -46,8 +46,8 @@ export const schemeFilter = (
     throw new Error('Invalid or missing schemeId: scheme Id must be a string')
   }
 
-  return async ({getClient}) => {
-    const client = getClient({apiVersion: '2023-01-01'})
+  return async (props) => {
+    const client = props?.getClient({apiVersion: '2023-01-01'})
     if (!client) {
       throw new Error('Client not available')
     }
@@ -61,8 +61,8 @@ export const schemeFilter = (
     // schemeId is included in params for use by the ArrayHierarchyInput component
     return {
       filter: `!(_id in path("drafts.**"))
-              && _id in $concepts
-              || _id in topConcepts`,
+              && (_id in $concepts
+              || _id in $topConcepts)`,
       params: {concepts, topConcepts, schemeId},
     }
   }
