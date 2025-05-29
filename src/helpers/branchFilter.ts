@@ -57,20 +57,19 @@ export const branchFilter = (
     const {concepts} = await client.fetch(
       `{      
         "concepts": *[
-          _id in *[_type=="skosConceptScheme" && 
-                    schemeId == "${schemeId}"].concepts[]._ref
-          && "${branchId}" in broader[]->conceptId
-          || "${branchId}" in broader[]->broader[]->conceptId
-          || "${branchId}" in broader[]->broader[]->broader[]->conceptId
-          || "${branchId}" in broader[]->broader[]->broader[]->broader[]->conceptId
-          || "${branchId}" in broader[]->broader[]->broader[]->broader[]->broader[]->conceptId
+          _id in *[_type=="skosConceptScheme" && schemeId == $schemeId].concepts[]._ref
+            && ($branchId in broader[]->conceptId
+              || $branchId in broader[]->broader[]->conceptId
+              || $branchId in broader[]->broader[]->broader[]->conceptId
+              || $branchId in broader[]->broader[]->broader[]->broader[]->conceptId
+              || $branchId in broader[]->broader[]->broader[]->broader[]->broader[]->conceptId)
           ]._id
-      }`
+      }`,
+      {schemeId, branchId}
     )
     // schemeId is included in params for use by the ArrayHierarchyInput component
     return {
-      filter: `!(_id in path("drafts.**")) 
-                && _id in $concepts`,
+      filter: `!(_id in path("drafts.**")) && _id in $concepts`,
       params: {concepts, schemeId, branchId},
     }
   }
