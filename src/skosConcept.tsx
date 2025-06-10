@@ -44,13 +44,13 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         validation: (Rule) =>
           Rule.required().custom((prefLabel, context) => {
             const {getClient} = context
-            const client = getClient({apiVersion: '2025-06-10'})
+            const client = getClient({apiVersion: '2025-06-10'}).withConfig({perspective: 'raw'})
             return client
               .fetch(
                 `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**") || _id in path("versions.**"))][0]._id`
               )
               .then((conceptId) => {
-                if (conceptId && conceptId !== context.document?._id.replace('drafts.', '')) {
+                if (conceptId && !context.document?._id.includes(conceptId)) {
                   return 'Preferred Label must be unique.'
                 }
                 return true
