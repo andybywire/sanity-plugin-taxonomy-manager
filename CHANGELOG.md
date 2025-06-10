@@ -16,7 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
-## [3.3.1] - 2025-06-10
+## [3.3.3] - 2025-06-10
+
+### Fix
+- update `prefLabel` query to use raw perspective
+
+## [3.3.2] - 2025-06-10
 
 ### Fix
 - update `prefLabel` validation to support Releases for taxonomy schemes
@@ -355,7 +360,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.2...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.3...HEAD
+[3.3.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.2...v3.3.3
 [3.3.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.1...v3.3.2
 [3.3.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.0...v3.3.1
 [3.3.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.2.9...v3.3.0
