@@ -47,7 +47,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
             const client = getClient({apiVersion: '2022-12-14'})
             return client
               .fetch(
-                `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**"))][0]._id`
+                `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**") || _id in path("versions.**"))][0]._id`
               )
               .then((conceptId) => {
                 if (conceptId && conceptId !== context.document?._id.replace('drafts.', '')) {
