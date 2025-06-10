@@ -44,7 +44,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         validation: (Rule) =>
           Rule.required().custom((prefLabel, context) => {
             const {getClient} = context
-            const client = getClient({apiVersion: '2022-12-14'})
+            const client = getClient({apiVersion: '2025-06-10'})
             return client
               .fetch(
                 `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**") || _id in path("versions.**"))][0]._id`
