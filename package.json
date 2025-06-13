@@ -52,6 +52,7 @@
   "dependencies": {
     "@sanity/color": "^3.0.0",
     "@sanity/icons": "^3.4.0",
+    "@sanity/id-utils": "^1.0.0",
     "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/ui": "^2.8.9",
     "@sanity/util": "^3.34.0",
