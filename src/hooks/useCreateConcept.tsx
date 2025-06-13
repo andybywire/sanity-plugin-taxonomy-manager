@@ -3,6 +3,23 @@ import {useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {randomKey} from '@sanity/util/content'
 import {useOpenNewConceptPane} from './useOpenNewConceptPane'
+import {
+  getDraftId,
+  getVersionId,
+  getVersionNameFromId,
+  isVersionId,
+  DocumentId,
+  getPublishedId,
+} from '@sanity/id-utils'
+
+/**
+ * #### WIP
+ * Added support for Concept and Top Concept creation. These are
+ * added to the scheme arrays as expected. They are not being added
+ * to the tree view yet. Add child term is also working correctly,
+ * but not being added to the tree view.
+ * Remove terms is not working at all.
+ */
 
 /**
  * #### Concept Creation Hook
@@ -11,34 +28,54 @@ import {useOpenNewConceptPane} from './useOpenNewConceptPane'
  */
 export function useCreateConcept(document: any) {
   const toast = useToast()
-  const client = useClient({apiVersion: '2021-10-21'})
+  const client = useClient({apiVersion: '2025-02-19'})
   const openInNewPane = useOpenNewConceptPane()
 
   const schemaBaseIri = document.displayed.baseIri // schema baseIri
 
-  // conceptId here is the broader term. Re-label this for clarity.
+  // conceptId represents the broader term, if it exists.
   const createConcept = useCallback(
     (conceptType: string, conceptId?: string, prefLabel?: string) => {
+      // can I get rid of prefLabel? ---------^
+
+      // Determine if we're in a release context
+      const isInRelease = isVersionId(document.displayed._id)
+      const releaseName = isInRelease ? getVersionNameFromId(document.displayed._id) : undefined
+
+      // Generate appropriate IDs based on context
+      const newConceptId = isInRelease
+        ? getVersionId(DocumentId(randomKey()), releaseName as string)
+        : getDraftId(DocumentId(randomKey()))
+
       let skosConcept: any
       if (conceptId) {
+        // Handle broader concept reference
+        const broaderId = isInRelease
+          ? getVersionId(DocumentId(conceptId), releaseName as string)
+          : getDraftId(DocumentId(conceptId))
+
         skosConcept = {
-          _id: `drafts.${randomKey()}`,
+          _id: newConceptId,
           _type: 'skosConcept',
           conceptId: `${randomKey(6)}`,
           prefLabel: '',
           baseIri: schemaBaseIri,
           broader: [
-            conceptId && {
+            broaderId && {
               _key: randomKey(6),
-              _ref: conceptId,
+              _ref: getPublishedId(broaderId),
               _type: 'reference',
+              _strengthenOnPublish: {
+                type: 'skosConcept',
+                template: {id: 'skosConcept'},
+              },
             },
           ],
           related: [],
         }
       } else {
         skosConcept = {
-          _id: `drafts.${randomKey()}`,
+          _id: newConceptId,
           _type: 'skosConcept',
           conceptId: `${randomKey(6)}`,
           prefLabel: '',
@@ -48,47 +85,42 @@ export function useCreateConcept(document: any) {
         }
       }
 
-      // Ensure concepts are added to a draft of the concept scheme document
+      // Handle concept scheme document
       const draftConceptScheme = JSON.parse(JSON.stringify(document.displayed))
+      const schemeId = isInRelease
+        ? getVersionId(draftConceptScheme._id, releaseName!)
+        : getDraftId(draftConceptScheme._id)
 
-      if (!draftConceptScheme._id.includes('drafts.')) {
-        draftConceptScheme._id = `drafts.${draftConceptScheme._id}`
-      }
+      // if (!draftConceptScheme._id.includes('drafts.')) {
+      //   draftConceptScheme._id = `drafts.${draftConceptScheme._id}`
+      // }
 
       client
         .transaction()
-        // use createIfNotExist here to make sure there's a draft conceptScheme
-        .createIfNotExists(draftConceptScheme)
+        .createIfNotExists({...draftConceptScheme, _id: schemeId})
         .create(skosConcept)
-        // patch concept or top concept as a reference in place:
-        // https://www.sanity.io/blog/obvious-features-aren-t-obviously-made#2c38c9f38060
-        // https://github.com/search?q=repo%3Asanity-io%2Fsanity%20_strengthenOnPublish&type=code
-        .patch(draftConceptScheme._id, (patch) => {
+        .patch(schemeId, (patch) => {
           if (conceptType == 'topConcept') {
             return patch.setIfMissing({topConcepts: []}).append('topConcepts', [
               {
-                _ref: skosConcept._id.replace('drafts.', ''),
+                _ref: getPublishedId(newConceptId),
                 _type: 'reference',
                 _key: randomKey(6),
-                _weak: true,
                 _strengthenOnPublish: {
-                  _type: 'skosConcept',
-                  weak: true,
-                  template: {id: 'skosConcept', params: 'undefined'},
+                  type: 'skosConcept',
+                  template: {id: 'skosConcept'},
                 },
               },
             ])
           }
           return patch.setIfMissing({concepts: []}).insert('after', 'concepts[-1]', [
             {
-              _ref: skosConcept._id.replace('drafts.', ''),
+              _ref: getPublishedId(newConceptId),
               _type: 'reference',
               _key: randomKey(6),
-              _weak: true,
               _strengthenOnPublish: {
-                _type: 'skosConcept',
-                weak: undefined,
-                template: {id: 'skosConcept', params: 'undefined'},
+                type: 'skosConcept',
+                template: {id: 'skosConcept'},
               },
             },
           ])
@@ -100,7 +132,7 @@ export function useCreateConcept(document: any) {
             status: 'success',
             title: 'Created new concept',
           })
-          openInNewPane(skosConcept._id)
+          openInNewPane(newConceptId)
         })
         .catch((err) => {
           toast.push({
