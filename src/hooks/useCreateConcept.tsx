@@ -4,11 +4,11 @@ import {useCallback} from 'react'
 import {randomKey} from '@sanity/util/content'
 import {useOpenNewConceptPane} from './useOpenNewConceptPane'
 import {
+  DocumentId,
   getDraftId,
   getVersionId,
   getVersionNameFromId,
   isVersionId,
-  DocumentId,
   getPublishedId,
 } from '@sanity/id-utils'
 

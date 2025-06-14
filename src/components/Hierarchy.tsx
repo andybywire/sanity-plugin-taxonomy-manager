@@ -11,6 +11,14 @@ import {HierarchyButton} from '../styles'
 import {SchemeContext, TreeContext} from '../context'
 import {TreeStructure} from './TreeStructure'
 import {NewScheme} from './guides'
+import {
+  DocumentId,
+  getDraftId,
+  getVersionId,
+  getVersionNameFromId,
+  isVersionId,
+  getPublishedId,
+} from '@sanity/id-utils'
 
 /**
  * #### Hierarchy Component
@@ -29,6 +37,13 @@ export const Hierarchy = ({
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
+
+  /**
+   * Need to account for release versions below
+   * I may be able to simplify this a lot, now that Top Concept is
+   * not represented at the _term_ level, but at the _scheme_ level.
+   *
+   */
 
   const conceptIds = document.displayed?.concepts?.map((concept: any) => concept?._ref) || []
   const draftConceptIds =
