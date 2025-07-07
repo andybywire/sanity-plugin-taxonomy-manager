@@ -1,0 +1,222 @@
+# Sanity Taxonomy Manager Plugin Development Rules
+
+## Project Overview
+This is a Sanity Studio plugin for creating and managing SKOS-compliant taxonomies, thesauri, and classification schemes. The plugin provides document types, input components, and management tools for taxonomy creation and maintenance.
+
+## Alignment with Sanity Best Practices Guidelines
+
+### Basic schema types
+**NOTE: These will need to be iterated for the current project. Once schema types comply with these recommendations, remove this note**
+- ALWAYS use the `defineType`, `defineField`, and `defineArrayMember` helper functions
+- ALWAYS write schema types to their own files and export a named `const` that matches the filename
+- ONLY use a `name` attribute in fields unless the `title` needs to be something other than a title-case version of the `name`
+- ANY `string` field type with an `options.list` array with fewer than 5 options must use `options.layout: "radio"`
+- ANY `image` field must include `options.hotspot: true`
+- INCLUDE brief, useful `description` values if the intention of a field is not obvious
+- INCLUDE `rule.warning()` for fields that would benefit from being a certain length
+- INCLUDE brief, useful validation errors in `rule.required().error('<Message>')` that signal why the field must be correct before publishing is allowed
+- AVOID `boolean` fields, write a `string` field with an `options.list` configuration
+- NEVER write single `reference` type fields, always write an `array` of references
+- CONSIDER the order of fields, from most important and relevant first, to least often used last
+
+### Schema type with custom input components
+**NOTE: These will need to be iterated for the current project. Once custom imput components comply with these recommendations, remove this note**
+- If a schema type has input components, they should be colocated with the schema type file. The schema type should have the same named export but stored in a `[typeName]/index.ts` file:
+
+```ts
+// ./src/schemaTypes/seoType/index.ts
+
+import {defineField, defineType} from 'sanity'
+
+import seoInput from './seoInput'
+
+export const seoType = defineType({
+  name: 'seo',
+  title: 'SEO',
+  type: 'object',
+  components: { input: seoInput }
+  // ...
+})
+```
+
+### No anonymous reusable schema types
+- ANY schema type that benefits from being reused in multiple document types should be registered as its own custom schema type.
+
+```ts
+// ./src/schemaTypes/blockContentType.ts
+
+import {defineField, defineType} from 'sanity'
+
+export const blockContentType = defineType({
+  name: 'blockContent',
+  title: 'Block content',
+  type: 'array',
+  of: [defineField({name: 'block',type: 'block'})],
+})
+```
+
+### Decorating schema types
+Every `document` and `object` schema type should:
+- Have an `icon` property from `@sanity/icons`
+- Have a customized `preview` property that shows rich contextual details about the document
+- Use `groups` when the schema type has more than a few fields to collate related fields and only show the most important group by default. These `groups` should use the icon property as well.
+- Use `fieldsets` with `options: {columns: 2}` if related fields could be grouped visually together, such as `startDate` and `endDate`
+
+
+## Writing GROQ queries
+**NOTE: These will need to be iterated for the current project. Once GROQ queries comply with these recommendations, remove this note**
+- ALWAYS use SCREAMING_SNAKE_CASE for variable names, for example POSTS_QUERY
+- ALWAYS write queries to their own variables, never as a parameter in a function
+- ALWAYS import the `defineQuery` function to wrap query strings from the `groq` or `next-sanity` package
+- ALWAYS write every required attribute in a projection when writing a query
+- ALWAYS put each segement of a filter, and each attribute on its own line
+- ALWAYS use parameters for variables in a query
+- NEVER insert dynamic values using string interpolation
+
+
+### TypeScript
+- Leverage Sanity's type generation tools where possible
+- Use `@sanity/types` for base types
+- Create specific interfaces for plugin-specific functionality
+- Avoid `any` types - use specific interfaces or `unknown`
+
+## Component Development
+
+### React Patterns
+- Use functional components with hooks
+- Use Sanity UI components (`@sanity/ui`) for consistency
+- Follow React hooks best practices
+- Implement proper error boundaries and loading states
+- Ensure accessibility compliance
+
+### Sanity Plugin Patterns
+- Use `useClient()` for Sanity client operations
+- Use `useListeningQuery()` for real-time data updates
+- Use `randomKey()` from `@sanity/util/content`
+- Use proper document ID handling with `@sanity/id-utils`
+
+### Input Components
+- Colocate custom input components with their schema types when possible
+- Use proper prop types and TypeScript interfaces
+- Handle content releases correctly
+- Provide meaningful error states and loading indicators
+
+## Testing Guidelines
+
+### Test Structure
+- Write tests for all public functions and components
+- Use descriptive test names that explain behavior
+- Mock Sanity client calls appropriately
+- Test both success and error scenarios
+- Use Vitest and React Testing Library
+
+### Testing Patterns
+```typescript
+describe('ComponentName', () => {
+  it('should render correctly with valid props', () => {
+    // Test implementation
+  })
+  
+  it('should handle user interactions', async () => {
+    // Test implementation
+  })
+})
+```
+
+## Code Organization
+
+### File Structure
+- Group related functionality in modules
+- Use descriptive file and function names
+- Consider Sanity's colocation patterns for schema types and input components
+- Keep components focused and single-purpose
+
+### Import/Export Patterns
+- Use named exports for components and utilities
+- Use default exports for schema definitions
+- Group imports: external libraries, internal modules, types
+- Use barrel exports (index.ts) for clean imports
+
+## Project settings and data
+
+- ALWAYS check if there is a way to interact with a project via the CLI before writing custom scripts `npx sanity --help`
+
+## Error Handling
+
+### Error Patterns
+- Use try-catch blocks for async operations
+- Provide meaningful error messages
+- Use toast notifications for user feedback
+- Log errors appropriately for debugging
+- Handle edge cases gracefully
+
+## Performance Considerations
+
+### React Performance
+- Use `React.memo()` for expensive components
+- Use `useCallback()` and `useMemo()` appropriately
+- Avoid unnecessary re-renders
+- Optimize list rendering with proper keys
+
+### Sanity Performance
+- Optimize GROQ queries with proper indexing
+- Use `useListeningQuery()` efficiently
+- Cache query results when appropriate
+- Minimize client calls
+
+## Documentation Standards
+
+### Code Comments
+- Use JSDoc comments for all public functions and components
+- Include parameter and return type documentation
+- Provide usage examples for complex functions
+- Document any non-obvious business logic
+
+## Content Releases Support
+
+### Implementation Requirements
+- Use `@sanity/id-utils` for proper ID handling
+- Support draft, published, and versioned documents
+- Handle version ID generation correctly
+- Test all content release scenarios
+- Document content releases behavior
+
+## Accessibility
+
+### Requirements
+- Use semantic HTML elements
+- Include proper ARIA labels and roles
+- Ensure keyboard navigation works
+- Provide screen reader support
+- Test with accessibility tools
+
+## Code Review Checklist
+
+Before submitting code, ensure:
+- [ ] TypeScript strict mode passes
+- [ ] ESLint passes with current rules
+- [ ] All new functions have JSDoc comments
+- [ ] Components have proper prop types
+- [ ] Error handling is implemented
+- [ ] Accessibility requirements are met
+- [ ] Tests are written for new functionality
+- [ ] Performance considerations are addressed
+- [ ] Content releases support is tested
+- [ ] SKOS compliance is maintained where applicable
+
+## Learning Resources
+
+### Sanity Documentation
+- [Sanity Plugin Development](https://www.sanity.io/docs/plugins)
+- [Sanity Schema Types](https://www.sanity.io/docs/schema-types)
+- [Sanity UI Components](https://www.sanity.io/ui)
+- [Sanity Studio Guidelines](https://www.sanity.io/docs/studio-development)
+
+### React & TypeScript
+- [React Hooks Documentation](https://react.dev/reference/react)
+- [TypeScript Handbook](https://www.typescriptlang.org/docs/)
+- [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+
+---
+
+*These rules align with Sanity's Studio development guidelines while acknowledging plugin-specific requirements and SKOS compliance needs.* 
