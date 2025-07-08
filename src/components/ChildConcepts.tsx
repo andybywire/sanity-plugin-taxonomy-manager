@@ -1,5 +1,6 @@
-import {ChildConceptTerm} from '../types'
 import {StyledChildConcepts} from '../styles'
+import type {ChildConceptTerm} from '../types'
+
 import {Children} from './Children'
 
 /**
@@ -14,7 +15,7 @@ export const ChildConcepts = ({
 }: {
   concepts: ChildConceptTerm[]
   selectConcept: any
-  inputComponent: Boolean
+  inputComponent: boolean
 }) => {
   return (
     <StyledChildConcepts>

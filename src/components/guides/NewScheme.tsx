@@ -1,9 +1,10 @@
-import {useCallback, useState} from 'react'
-import {Card, Label, Stack, Text, Button, Dialog, Box, TextArea, TextInput} from '@sanity/ui'
 import {AddIcon} from '@sanity/icons'
+import {Card, Label, Stack, Text, Button, Dialog, Box, TextArea, TextInput} from '@sanity/ui'
+import {useCallback, useState} from 'react'
+import type {SanityDocument} from 'sanity'
+
 import {useAddTitle} from '../../hooks'
 import {InlineHelp} from '../../styles'
-import {SanityDocument} from 'sanity'
 
 /**
  * #### New Concept Scheme Guide

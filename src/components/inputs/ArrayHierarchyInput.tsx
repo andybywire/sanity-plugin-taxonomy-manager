@@ -12,7 +12,9 @@ import {
   Spinner,
 } from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
-import {ArrayFieldProps, useClient, useFormValue} from 'sanity'
+import type {ArrayFieldProps} from 'sanity'
+import {useClient, useFormValue} from 'sanity'
+
 import {TreeView} from '../TreeView'
 
 /**
@@ -92,7 +94,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
     (conceptRef: any) => {
       // If the ref of the selected term is already in the field close the dialog
       // and provide a toast message that tht entry is already in the field.
-      if (value && value.map((item: any) => item._ref).includes(conceptRef._ref)) {
+      if (value?.map((item: any) => item._ref).includes(conceptRef._ref)) {
         setOpen(false)
         toast.push({
           status: 'warning',
@@ -156,7 +158,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
     )
   }
   // ... and that it is a scheme or branch filter and configured correctly
-  else if (props.schemaType.of[0].options.filter.length == 0) {
+  else if (props.schemaType.of[0].options?.filter?.length === 0) {
     return (
       <Stack space={3}>
         {props.renderDefault(props)}

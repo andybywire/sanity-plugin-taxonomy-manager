@@ -1,6 +1,6 @@
 import {useCallback, useContext} from 'react'
-import {usePaneRouter} from 'sanity/structure'
 import {RouterContext} from 'sanity/router'
+import {usePaneRouter} from 'sanity/structure'
 
 /**
  * Open in New Pane Link for Concepts

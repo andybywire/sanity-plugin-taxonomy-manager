@@ -1,19 +1,21 @@
-import {useCallback, useContext, useState} from 'react'
-import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
 import {AddCircleIcon, SquareIcon, ToggleArrowRightIcon, TrashIcon} from '@sanity/icons'
-import {useCreateConcept, useRemoveConcept} from '../hooks'
-import {ChildConceptTerm} from '../types'
-import {StyledOrphan, StyledTreeButton, StyledTreeToggle} from '../styles'
+import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
+import {useCallback, useContext, useState} from 'react'
+
 import {SchemeContext, TreeContext} from '../context'
+import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {StyledOrphan, StyledTreeButton, StyledTreeToggle} from '../styles'
+import type {ChildConceptTerm} from '../types'
+
 import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
+import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 
 type OrphanProps = {
   concept: ChildConceptTerm
   treeVisibility: string
-  inputComponent: Boolean
+  inputComponent: boolean
   selectConcept: any
 }
 

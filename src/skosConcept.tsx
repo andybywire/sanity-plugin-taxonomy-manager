@@ -1,10 +1,12 @@
-import {defineType, defineField, FieldDefinition} from 'sanity'
 import {WarningOutlineIcon} from '@sanity/icons'
 import {randomKey} from '@sanity/util/content'
 import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
-import {StyledDescription} from './styles'
-import baseIriField from './modules/baseIriField'
+import {defineType, defineField} from 'sanity'
+import type {FieldDefinition} from 'sanity'
+
 import {Identifier} from './components/inputs'
+import baseIriField from './modules/baseIriField'
+import {StyledDescription} from './styles'
 
 /**
  * Sanity document scheme for SKOS Taxonomy Concepts

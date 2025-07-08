@@ -1,9 +1,10 @@
-import {defineArrayMember, defineField, defineType, FieldDefinition} from 'sanity'
 import {randomKey} from '@sanity/util/content'
-import baseIriField from './modules/baseIriField'
-import {Identifier} from './components/inputs'
+import type {FieldDefinition} from 'sanity'
+import {defineArrayMember, defineField, defineType} from 'sanity'
+
+import {Identifier, ManagementControls} from './components/inputs'
 import NodeTree from './components/NodeTree'
-import {ManagementControls} from './components/inputs'
+import baseIriField from './modules/baseIriField'
 
 /**
  * Sanity document scheme for SKOS Concept Schemes

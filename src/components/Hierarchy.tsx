@@ -1,24 +1,19 @@
 /* eslint-disable react/require-default-props */
-import {useCallback, useContext, useState, useEffect} from 'react'
-import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
 import {AddCircleIcon, EditIcon, CheckmarkCircleIcon} from '@sanity/icons'
+// Removed unused imports from @sanity/id-utils
+import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
 import {randomKey} from '@sanity/util/content'
+import {useCallback, useContext, useState, useEffect} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
+
+import {SchemeContext, TreeContext} from '../context'
 import {useCreateConcept} from '../hooks'
 import {trunkBuilder} from '../queries'
-import {DocumentConcepts} from '../types'
 import {HierarchyButton} from '../styles'
-import {SchemeContext, TreeContext} from '../context'
-import {TreeStructure} from './TreeStructure'
+import type {DocumentConcepts} from '../types'
+
 import {NewScheme} from './guides'
-import {
-  DocumentId,
-  getDraftId,
-  getVersionId,
-  getVersionNameFromId,
-  isVersionId,
-  getPublishedId,
-} from '@sanity/id-utils'
+import {TreeStructure} from './TreeStructure'
 
 /**
  * #### Hierarchy Component
@@ -33,7 +28,7 @@ export const Hierarchy = ({
 }: {
   branchId: string
   selectConcept?: any
-  inputComponent?: Boolean
+  inputComponent?: boolean
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id

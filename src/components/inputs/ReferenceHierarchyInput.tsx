@@ -1,6 +1,8 @@
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
-import {ObjectFieldProps, Reference, useClient, useFormValue} from 'sanity'
+import type {ObjectFieldProps, Reference} from 'sanity'
+import {useClient, useFormValue} from 'sanity'
+
 import {TreeView} from '../TreeView'
 
 /**

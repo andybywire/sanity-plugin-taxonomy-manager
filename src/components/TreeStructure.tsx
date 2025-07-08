@@ -1,10 +1,12 @@
 import {useContext, useEffect} from 'react'
-import {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
-import {StyledTree} from '../styles'
+
 import {TreeContext} from '../context'
-import {TopConcepts} from './TopConcepts'
-import {Orphans} from './Orphans'
+import {StyledTree} from '../styles'
+import type {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
+
 import {NoConcepts} from './guides'
+import {Orphans} from './Orphans'
+import {TopConcepts} from './TopConcepts'
 
 /**
  * #### Tree View
@@ -18,7 +20,7 @@ export const TreeStructure = ({
   selectConcept,
 }: {
   concepts: DocumentConcepts
-  inputComponent: Boolean
+  inputComponent: boolean
   selectConcept: any
 }) => {
   const {
@@ -29,38 +31,25 @@ export const TreeStructure = ({
   } = useContext(TreeContext) || {}
 
   useEffect(() => {
-    if (
-      concepts?.topConcepts &&
-      concepts.topConcepts.length === 0 &&
-      concepts?.orphans &&
-      concepts.orphans.length === 0
-    )
+    if (concepts?.topConcepts?.length === 0 && concepts?.orphans?.length === 0)
       setEditControls(true)
   }, [concepts.topConcepts, concepts.orphans, setEditControls])
 
-  if (
-    concepts?.topConcepts &&
-    concepts.topConcepts.length === 0 &&
-    concepts?.orphans &&
-    concepts.orphans.length === 0
-  ) {
+  if (concepts?.topConcepts?.length === 0 && concepts?.orphans?.length === 0) {
     return <NoConcepts />
   }
 
   return (
     <StyledTree>
-      {concepts.topConcepts &&
-        concepts.topConcepts.map((concept: TopConceptTerm) => {
-          return (
-            <TopConcepts
-              key={concept?.id + treeId}
-              concept={concept}
-              treeVisibility={treeVisibility}
-              inputComponent={inputComponent}
-              selectConcept={selectConcept}
-            />
-          )
-        })}
+      {concepts.topConcepts?.map((concept: TopConceptTerm) => (
+        <TopConcepts
+          key={concept?.id + treeId}
+          concept={concept}
+          treeVisibility={treeVisibility}
+          inputComponent={inputComponent}
+          selectConcept={selectConcept}
+        />
+      ))}
       {concepts.orphans.map((concept: ChildConceptTerm) => {
         return (
           <Orphans

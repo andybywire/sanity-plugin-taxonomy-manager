@@ -1,6 +1,7 @@
-import {TreeView} from './components/TreeView'
 import {EditIcon} from '@sanity/icons'
+
 import NodeTree from './components/NodeTree'
+import {TreeView} from './components/TreeView'
 
 /**
  * #### Default Desk Structure for Concept and Concept Scheme

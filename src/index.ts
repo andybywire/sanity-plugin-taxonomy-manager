@@ -1,13 +1,14 @@
-import {definePlugin, FieldDefinition} from 'sanity'
+import type {FieldDefinition} from 'sanity'
+import {definePlugin} from 'sanity'
 import {structureTool} from 'sanity/structure'
-import skosConcept from './skosConcept'
-import skosConceptScheme from './skosConceptScheme'
+
+import {ReferenceHierarchyInput, ArrayHierarchyInput} from './components/inputs'
+import NodeTree from './components/NodeTree'
 import TreeView from './components/TreeView'
 import {schemeFilter, branchFilter} from './helpers'
-import {ReferenceHierarchyInput, ArrayHierarchyInput} from './components/inputs'
-
+import skosConcept from './skosConcept'
+import skosConceptScheme from './skosConceptScheme'
 import {defaultDocumentNode, structure} from './structure'
-import NodeTree from './components/NodeTree'
 
 interface Options {
   baseUri?: string

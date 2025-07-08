@@ -1,8 +1,3 @@
-import {useClient} from 'sanity'
-import {useToast} from '@sanity/ui'
-import {useCallback} from 'react'
-import {randomKey} from '@sanity/util/content'
-import {useOpenNewConceptPane} from './useOpenNewConceptPane'
 import {
   DocumentId,
   getDraftId,
@@ -11,6 +6,12 @@ import {
   isVersionId,
   getPublishedId,
 } from '@sanity/id-utils'
+import {useToast} from '@sanity/ui'
+import {randomKey} from '@sanity/util/content'
+import {useCallback} from 'react'
+import {useClient} from 'sanity'
+
+import {useOpenNewConceptPane} from './useOpenNewConceptPane'
 
 /**
  * #### WIP
@@ -35,8 +36,8 @@ export function useCreateConcept(document: any) {
 
   // conceptId represents the broader term, if it exists.
   const createConcept = useCallback(
-    (conceptType: string, conceptId?: string, prefLabel?: string) => {
-      // can I get rid of prefLabel? ---------^
+    (conceptType: string, conceptId?: string, _prefLabel?: string) => {
+      // prefLabel parameter is currently unused but kept for future use
 
       // Determine if we're in a release context
       const isInRelease = isVersionId(document.displayed._id)
@@ -126,7 +127,7 @@ export function useCreateConcept(document: any) {
           ])
         })
         .commit({autoGenerateArrayKeys: true})
-        .then((res) => {
+        .then((_res) => {
           toast.push({
             closable: true,
             status: 'success',

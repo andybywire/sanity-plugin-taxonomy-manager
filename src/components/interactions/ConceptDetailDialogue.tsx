@@ -1,8 +1,9 @@
-import {useCallback, useState} from 'react'
-import {Dialog, Box, Text, Stack, Label} from '@sanity/ui'
 import {InfoOutlineIcon} from '@sanity/icons'
-import {StyledTreeButton} from '../../styles'
+import {Dialog, Box, Text, Stack, Label} from '@sanity/ui'
+import {useCallback, useState} from 'react'
+
 import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
+import {StyledTreeButton} from '../../styles'
 
 /**
  * #### Information Icon and Dialogue with Concept Details

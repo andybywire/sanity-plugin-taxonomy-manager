@@ -1,7 +1,7 @@
-import {useCallback} from 'react'
-import {set} from 'sanity'
 import {Button, Inline, Stack, useToast} from '@sanity/ui'
 import {randomKey} from '@sanity/util/content'
+import {useCallback} from 'react'
+import {set} from 'sanity'
 
 /**
  * #### Create Unique Identifier

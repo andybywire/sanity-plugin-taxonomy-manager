@@ -1,12 +1,13 @@
 /* eslint-disable react/require-default-props */
-import {useContext} from 'react'
 import {Flex, Spinner, Box, Text, Card} from '@sanity/ui'
+import {useContext} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
-import {inputBuilder} from '../../queries'
-import {DocumentConcepts} from '../../types'
+
 import {SchemeContext, TreeContext} from '../../context'
-import {TreeStructure} from '../TreeStructure'
+import {inputBuilder} from '../../queries'
+import type {DocumentConcepts} from '../../types'
 import {NewScheme} from '../guides'
+import {TreeStructure} from '../TreeStructure'
 
 /**
  * #### Input Hierarchy Component
@@ -23,7 +24,7 @@ export const InputHierarchy = ({
 }: {
   branchId: string
   selectConcept?: any
-  inputComponent: Boolean
+  inputComponent: boolean
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id

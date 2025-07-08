@@ -1,9 +1,11 @@
 /* eslint-disable react/require-default-props */
-import {CSSProperties} from 'react'
 import {Box, Container, Stack, Text} from '@sanity/ui'
+import type {CSSProperties} from 'react'
+
+import {SchemeContext} from '../context'
+
 import Hierarchy from './Hierarchy'
 import {InputHierarchy} from './inputs'
-import {SchemeContext} from '../context'
 
 /**
  * #### Tree View Component Wrapper

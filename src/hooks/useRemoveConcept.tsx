@@ -1,6 +1,6 @@
+import {useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {useClient} from 'sanity'
-import {useToast} from '@sanity/ui'
 
 /**
  * #### Concept Removal Hook
@@ -30,7 +30,7 @@ export function useRemoveConcept(document: any) {
           patch.unset([`${type}[_ref=="${conceptId.replace('drafts.', '')}"]`])
         )
         .commit()
-        .then((res) => {
+        .then((_res) => {
           toast.push({
             closable: true,
             status: 'success',

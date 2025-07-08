@@ -1,6 +1,6 @@
+import {Button, Inline, Stack, useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {unset} from 'sanity'
-import {Button, Inline, Stack, useToast} from '@sanity/ui'
 
 /**
  * #### Input Component for Deprecated Management Controls Field

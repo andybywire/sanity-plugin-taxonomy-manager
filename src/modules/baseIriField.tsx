@@ -1,6 +1,7 @@
 import {defineField} from 'sanity'
-import {StyledDescription} from '../styles'
+
 import {RdfUri} from '../components/inputs'
+import {StyledDescription} from '../styles'
 
 /**
  * #### Base Universal Resource Identifier object for Sanity Taxonomy Manager

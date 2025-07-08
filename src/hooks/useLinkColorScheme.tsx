@@ -1,5 +1,5 @@
-import {useColorSchemeValue} from 'sanity'
 import {hues} from '@sanity/color'
+import {useColorSchemeValue} from 'sanity'
 
 export function useLinkColorScheme() {
   const colorScheme = useColorSchemeValue()

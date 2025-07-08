@@ -1,5 +1,3 @@
-import {useCallback, useContext, useState} from 'react'
-import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
 import {
   ErrorOutlineIcon,
   InfoOutlineIcon,
@@ -8,13 +6,17 @@ import {
   ToggleArrowRightIcon,
   SquareIcon,
 } from '@sanity/icons'
-import {useCreateConcept, useRemoveConcept} from '../hooks'
-import {ChildConceptTerm} from '../types'
-import {StyledChildConcept, StyledTreeButton, StyledTreeToggle} from '../styles'
+import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
+import {useCallback, useContext, useState} from 'react'
+
 import {SchemeContext, TreeContext} from '../context'
+import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {StyledChildConcept, StyledTreeButton, StyledTreeToggle} from '../styles'
+import type {ChildConceptTerm} from '../types'
+
 import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
+import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 
 /**
@@ -28,7 +30,7 @@ export const Children = ({
 }: {
   concept: ChildConceptTerm
   selectConcept: any
-  inputComponent: Boolean
+  inputComponent: boolean
 }) => {
   const document: any = useContext(SchemeContext) || {}
   const {

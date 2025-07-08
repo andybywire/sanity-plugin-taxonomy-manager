@@ -1,6 +1,6 @@
+import {useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {useClient} from 'sanity'
-import {useToast} from '@sanity/ui'
 
 /**
  * #### Add Title and Description to New Concept Scheme

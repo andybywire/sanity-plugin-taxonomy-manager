@@ -1,19 +1,21 @@
-import {useCallback, useContext, useState} from 'react'
-import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
 import {AddCircleIcon, TrashIcon, ToggleArrowRightIcon, SquareIcon} from '@sanity/icons'
-import {useCreateConcept, useRemoveConcept} from '../hooks'
-import {TopConceptTerm} from '../types'
-import {StyledTopConcept, StyledTreeToggle, StyledTreeButton} from '../styles'
+import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
+import {useCallback, useContext, useState} from 'react'
+
 import {SchemeContext, TreeContext} from '../context'
+import {useCreateConcept, useRemoveConcept} from '../hooks'
+import {StyledTopConcept, StyledTreeToggle, StyledTreeButton} from '../styles'
+import type {TopConceptTerm} from '../types'
+
 import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
+import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 
 type TopConceptsProps = {
   concept: TopConceptTerm
   treeVisibility: string
-  inputComponent: Boolean
+  inputComponent: boolean
   selectConcept: any
 }
 

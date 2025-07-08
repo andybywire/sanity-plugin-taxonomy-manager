@@ -1,6 +1,6 @@
-import {useFormValue} from 'sanity'
 import {Stack, Text} from '@sanity/ui'
-import {StringInputProps} from 'sanity'
+import {useFormValue} from 'sanity'
+import type {StringInputProps} from 'sanity'
 
 /**
  * #### SKOS Concept Base URI input component

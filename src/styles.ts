@@ -1,5 +1,5 @@
-import styled from 'styled-components'
 import {hues} from '@sanity/color'
+import styled from 'styled-components'
 
 export const StyledDescription = styled.details`
   summary {
