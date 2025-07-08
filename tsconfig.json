@@ -21,13 +21,11 @@
     "rootDir": ".",
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.test.ts", "src/**/*.test.tsx", "vitest.config.ts"],
   "exclude": [
     "node_modules", 
     "**/*.spec.ts",
     "./src/**/__fixtures__",
-    "./src/**/__mocks__",
-    "./src/**/*.test.ts",
-    "./src/**/*.test.tsx"
+    "./src/**/__mocks__"
   ]
 }
