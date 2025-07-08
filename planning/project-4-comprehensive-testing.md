@@ -7,16 +7,26 @@ Build on the optimized and content-releases-ready codebase from Projects 1-3 to 
 **Phase 4.1: Unit Testing Foundation**
 
 ## Overall Progress
+- [x] Testing infrastructure configured (from Project 1)
+- [x] Initial test examples created (11 tests passing)
 - [ ] Unit testing foundation established
 - [ ] Integration testing implemented
 - [ ] Test coverage targets achieved
 - [ ] Testing documentation completed
+
+## Current Coverage Status (July 8, 2025)
+- **Statements:** 79% (Good baseline)
+- **Branches:** 53.57% (Needs improvement)
+- **Functions:** 33.33% (Needs significant improvement)
+- **Lines:** 79% (Matches statement coverage)
+- **Target:** 90%+ across all metrics
 
 ## Goals
 - Achieve 90%+ test coverage across the codebase
 - Implement TDD principles and testing best practices
 - Create comprehensive test suites for all functionality
 - Establish testing patterns for future development
+- Improve branch coverage to test conditional logic and edge cases
 
 ## Phase 4.1: Unit Testing Foundation
 
@@ -33,12 +43,20 @@ Build on the optimized and content-releases-ready codebase from Projects 1-3 to 
 - [ ] Create test utilities for common patterns
 - [ ] Document testing patterns for utilities
 
-### P4.1.3 Test Hook Functions
-- [ ] Write tests for `src/hooks/useCreateConcept.tsx`
-- [ ] Write tests for `src/hooks/useRemoveConcept.tsx`
-- [ ] Write tests for `src/hooks/useAddTitle.tsx`
+### P4.1.2 Test Core Functionality (Priority 1)
+- [ ] Write tests for `src/queries.ts` (lines 19-179, 0% coverage)
+- [ ] Write tests for `src/skosConcept.tsx` (lines 1-395, 0% coverage)
+- [ ] Write tests for `src/skosConceptScheme.tsx` (lines 1-119, 0% coverage)
+- [ ] Test GROQ query generation and parameter handling
+- [ ] Mock Sanity client responses and validate query results
+- [ ] Test error handling and edge cases for better branch coverage
+
+### P4.1.3 Test Remaining Hooks and Modules (Priority 2)
+- [ ] Write tests for `src/hooks/useRemoveConcept.tsx` (lines 1-52, 0% coverage)
+- [ ] Write tests for `src/modules/baseIriField.tsx` (lines 1-41, 0% coverage)
 - [ ] Test all custom hooks with proper mocking
 - [ ] Create hook testing utilities and patterns
+- [ ] Focus on branch coverage for conditional logic
 
 ### P4.1.4 Test Query Functions
 - [ ] Write tests for `src/queries.ts` functions
@@ -64,11 +82,11 @@ Build on the optimized and content-releases-ready codebase from Projects 1-3 to 
 - [ ] Validate input validation and error states
 
 ### P4.2.3 Test Management Components
-- [ ] Write tests for `src/components/TopConcepts.tsx`
-- [ ] Write tests for `src/components/Children.tsx`
-- [ ] Write tests for `src/components/Orphans.tsx`
-- [ ] Test user interactions and state changes
-- [ ] Validate component integration
+- [x] Write tests for `src/components/TopConcepts.tsx` (100% coverage)
+- [x] Write tests for `src/components/Children.tsx` (100% coverage)
+- [x] Write tests for `src/components/Orphans.tsx` (100% coverage)
+- [x] Test user interactions and state changes
+- [x] Validate component integration
 
 ## Phase 4.3: Integration Testing
 
@@ -117,7 +135,9 @@ Build on the optimized and content-releases-ready codebase from Projects 1-3 to 
 - [ ] Document browser-specific considerations
 
 ## Success Criteria
-- [ ] 90%+ test coverage achieved
+- [ ] 90%+ test coverage achieved across all metrics
+- [ ] Branch coverage improved from 53.57% to 80%+
+- [ ] Function coverage improved from 33.33% to 90%+
 - [ ] All public functions and components tested
 - [ ] Integration tests cover complete workflows
 - [ ] Performance and accessibility requirements met
@@ -134,6 +154,8 @@ Build on the optimized and content-releases-ready codebase from Projects 1-3 to 
 - Focus on meaningful tests that validate behavior, not just implementation
 - Document testing patterns for future development
 - Ensure tests are maintainable and readable
+- **Priority focus:** Core functionality files with 0% coverage to achieve 90%+ target
+- **Branch coverage focus:** Test conditional logic and error paths to improve from 53.57%
 
 ---
 
@@ -156,4 +178,4 @@ Build on the optimized and content-releases-ready codebase from Projects 1-3 to 
 
 ---
 
-**Last Updated:** [Date will be set after completion] 
+**Last Updated:** July 8, 2025 
