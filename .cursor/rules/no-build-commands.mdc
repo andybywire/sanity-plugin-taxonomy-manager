@@ -1,6 +1,5 @@
 ---
 description: Prevent AI from running build and dev server commands like npm run build, npm run dev, yarn dev, etc. Apply when discussing testing, building, running servers, or validation of features.
-globs: 
 alwaysApply: false
 ---
 

@@ -27,7 +27,7 @@ After completing each phase of implementation:
 - Update the planning document to mark completed tasks as done
 - Move detailed completion notes to the bottom of the document
 - Update the "Current Phase" and "Overall Progress" sections
-- Update the "Last Updated" timestamp using `npm run date` which will give you today's date
+- Update the "Last Updated" timestamp using `date` which will give you today's date
 
 ## Task Documentation
 

@@ -1,3 +1,8 @@
+---
+description: Project specific rules for building and iterating plugins for the Sanity ecosystem
+alwaysApply: false
+---
+
 # Sanity Taxonomy Manager Plugin Development Rules
 
 ## Project Overview

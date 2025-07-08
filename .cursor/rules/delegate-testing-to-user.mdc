@@ -1,6 +1,5 @@
 ---
 description: Delegate testing, validation, verification, and feature checking to the user instead of AI trying to test itself. Apply when discussing testing, validation, checking if features work, or verifying functionality.
-globs: 
 alwaysApply: false
 ---
 
