@@ -47,3 +47,44 @@ Through many years and many roles, I have learned that I do my best work  by foc
 - Stay humble
 
 As this is a collaborative project, I am of course open to &mdash; and will keep an open mind about &mdash; others' collaboration styles. These values give you a sense of where I'm coming from, however, and, if you're looking for a set of values to build on yourself, these aren't a bad place to start. 
+
+## Development Setup
+
+### Prerequisites
+- Node.js 18+ and npm/yarn
+- Git
+
+### Quick Start
+1. Clone and install dependencies
+2. Run tests to verify setup
+3. Start development server
+
+### Code Quality
+- TypeScript strict mode enabled
+- ESLint with React and accessibility rules
+- Pre-commit hooks (if configured)
+
+### Testing
+- Vitest for unit and component tests
+- React Testing Library for component testing
+- Sanity client mocking patterns established
+
+## Development Guide
+
+### Project Structure
+- `src/components/` - React components
+- `src/helpers/` - Utility functions
+- `src/hooks/` - Custom React hooks
+- `src/test/` - Test setup and utilities
+
+### Testing
+- Tests alongside source files (`.test.ts`/`.test.tsx`)
+- Component tests with React Testing Library
+- Utility tests with Vitest
+- Sanity ecosystem mocking in `src/test/setup.ts`
+
+### Development Workflow
+- Feature branches from main
+- Tests must pass before merge
+- Follow TypeScript strict mode
+- Use established component patterns
