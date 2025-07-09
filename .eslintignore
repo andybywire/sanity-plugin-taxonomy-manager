@@ -3,3 +3,4 @@ node_modules/
 dist/
 lib/
 coverage/
+v2-incompatible.js
