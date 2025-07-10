@@ -9,7 +9,6 @@ import {TreeView} from './components/TreeView'
  * if there is a use case for mixing taxonomy views in the main
  * desk structure.
  */
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export const structure = (S: any) =>
   S.list()
     .title('Taxonomy Manager')
@@ -20,7 +19,6 @@ export const structure = (S: any) =>
 
 // set default document node here — so that if users want concepts
 // and schemes elsewhere in desk, they'll get the right views.
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types, consistent-return
 export const defaultDocumentNode = (S: any, {schemaType}: {schemaType: any}) => {
   // Conditionally return a different configuration based on the schema type
   switch (schemaType) {

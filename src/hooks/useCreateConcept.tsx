@@ -15,7 +15,8 @@ import {useOpenNewConceptPane} from './useOpenNewConceptPane'
 
 /**
  * #### WIP
- * Added support for Concept and Top Concept creation. These are
+ * Added Content Releases / Perspective support for Concept
+ * and Top Concept creation. These are
  * added to the scheme arrays as expected. They are not being added
  * to the tree view yet. Add child term is also working correctly,
  * but not being added to the tree view.

@@ -6,6 +6,17 @@ Build on the optimized and content-releases-ready codebase from Projects 1-3 to 
 ## Current Phase
 **Phase 4.1: Unit Testing Foundation**
 
+## Notes
+### Steps to improve testing coverage
+- Test more functions - Start with the most important ones
+- Focus on public APIs - Functions that other code depends on
+- Test utility functions - They're usually easy to test
+- Test React components - Even basic rendering tests help
+### Priority Order:
+- Utility functions (src/helpers/, src/queries.ts) - Easy to test
+- Custom hooks (src/hooks/) - Important for functionality
+- React components (src/components/) - User-facing functionality
+
 ## Overall Progress
 - [x] Testing infrastructure configured (from Project 1)
 - [x] Initial test examples created (11 tests passing)
