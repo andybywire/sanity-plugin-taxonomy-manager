@@ -1,11 +1,43 @@
 /* eslint-disable react/require-default-props */
+import type {SanityDocument} from '@sanity/client'
+import {isVersionId, getVersionNameFromId, type DocumentId} from '@sanity/id-utils'
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import type {CSSProperties} from 'react'
 
-import {SchemeContext} from '../context'
+import {ReleaseContext, SchemeContext} from '../context'
 
-import Hierarchy from './Hierarchy'
+import {Hierarchy} from './Hierarchy'
 import {InputHierarchy} from './inputs'
+
+// Define the specific document structure we expect
+interface ConceptSchemeDocument extends SanityDocument {
+  displayed: {
+    _id: string
+    _type: 'skosConceptScheme'
+    title?: string
+    description?: string
+    baseIri?: string
+    schemeId?: string
+    topConcepts?: Array<{
+      _key: string
+      _ref: string
+      _type: 'reference'
+    }>
+    concepts?: Array<{
+      _key: string
+      _ref: string
+      _type: 'reference'
+    }>
+  }
+}
+
+// Define the component props interface
+interface TreeViewProps {
+  document: ConceptSchemeDocument
+  branchId: string
+  selectConcept: (conceptId: string) => void
+  inputComponent?: boolean
+}
 
 /**
  * #### Tree View Component Wrapper
@@ -20,43 +52,54 @@ export const TreeView = ({
   branchId,
   selectConcept,
   inputComponent = false,
-}: {
-  document: any // contains document.displayed, the applicable skosConceptScheme
-  branchId: string // used to narrow to a branch for the HierarchyInput component
-  selectConcept: any // HierarchyInput component select action
-  inputComponent?: boolean
-}) => {
+}: TreeViewProps) => {
   const containerStyle: CSSProperties = {paddingTop: '1.25rem'}
   const descriptionStyle: CSSProperties = {whiteSpace: 'pre-wrap'}
+
+  // Calculate release context
+  const documentId = document.displayed._id
+  const isInRelease = isVersionId(documentId as DocumentId)
+  const releaseName = isInRelease
+    ? getVersionNameFromId(documentId as DocumentId & {__type__: 'versionId'})
+    : undefined
+
+  const releaseContext = {
+    isInRelease,
+    releaseName,
+    documentId,
+    versionId: isInRelease ? documentId : undefined,
+  }
 
   return (
     // provide document as context for downstream components
     <SchemeContext.Provider value={document}>
-      {inputComponent ? (
-        <InputHierarchy
-          inputComponent={inputComponent}
-          branchId={branchId}
-          selectConcept={selectConcept}
-        />
-      ) : (
-        <Container width={1} style={containerStyle}>
-          {document?.displayed?.description && (
-            <Box padding={4}>
-              <Stack space={4}>
-                <Stack space={2}>
-                  <Text size={1} weight="semibold">
-                    Description
-                  </Text>
-                  <Text size={2} muted style={descriptionStyle}>
-                    {document?.displayed.description}
-                  </Text>
+      <ReleaseContext.Provider value={releaseContext}>
+        {inputComponent ? (
+          <InputHierarchy
+            inputComponent={inputComponent}
+            branchId={branchId}
+            selectConcept={selectConcept}
+          />
+        ) : (
+          <Container width={1} style={containerStyle}>
+            {document?.displayed?.description && (
+              <Box padding={4}>
+                <Stack space={4}>
+                  <Stack space={2}>
+                    <Text size={1} weight="semibold">
+                      Description
+                    </Text>
+                    <Text size={2} muted style={descriptionStyle}>
+                      {document?.displayed.description}
+                    </Text>
+                  </Stack>
                 </Stack>
-              </Stack>
-            </Box>
-          )}
-          <Hierarchy inputComponent={inputComponent} branchId={branchId} />
-        </Container>
-      )}
+              </Box>
+            )}
+            <Hierarchy inputComponent={inputComponent} branchId={branchId} />
+          </Container>
+        )}
+      </ReleaseContext.Provider>
     </SchemeContext.Provider>
   )
 }

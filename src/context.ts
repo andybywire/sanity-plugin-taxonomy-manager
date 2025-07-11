@@ -13,7 +13,7 @@ export type ReleaseContextType = {
   versionId?: string
 }
 
-export const SchemeContext = createContext(null)
+export const SchemeContext = createContext<any>(null)
 export const TreeContext = createContext<TreeContextType>({editControls: false})
 export const ReleaseContext = createContext<ReleaseContextType>({
   isInRelease: false,
