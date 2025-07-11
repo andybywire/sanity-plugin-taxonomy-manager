@@ -64,4 +64,29 @@ describe('TreeView', () => {
       documentId: 'abc123',
     })
   })
+
+  it('should provide ReleaseContext with correct values for versioned document', () => {
+    const document = {
+      _id: 'abc123',
+      _rev: 'rev123',
+      _type: 'skosConceptScheme' as const,
+      _createdAt: '2024-01-01T00:00:00Z',
+      _updatedAt: '2024-01-01T00:00:00Z',
+      displayed: {
+        _id: 'versions.r2024-01-15.abc123',
+        _type: 'skosConceptScheme' as const,
+        title: 'Test Scheme',
+      },
+    }
+
+    // eslint-disable-next-line react/jsx-no-bind
+    render(<TreeView document={document} branchId="" selectConcept={() => undefined} />)
+
+    expect(capturedContext).toEqual({
+      isInRelease: true,
+      releaseName: 'r2024-01-15',
+      documentId: 'versions.r2024-01-15.abc123',
+      versionId: 'versions.r2024-01-15.abc123',
+    })
+  })
 })
