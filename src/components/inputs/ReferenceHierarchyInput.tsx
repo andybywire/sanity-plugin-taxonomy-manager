@@ -173,7 +173,7 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
         >
           <Box padding={10}>
             <TreeView
-              document={scheme} // the document.displayed _id for the relevant skosConceptScheme
+              document={scheme as any} // the document.displayed _id for the relevant skosConceptScheme
               branchId={branchId} // the branch identified in branchFilter()
               inputComponent
               selectConcept={handleAction}

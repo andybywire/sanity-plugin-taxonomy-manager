@@ -1,12 +1,12 @@
 /* eslint-disable react/require-default-props */
-import {AddCircleIcon, EditIcon, CheckmarkCircleIcon} from '@sanity/icons'
+import {AddCircleIcon} from '@sanity/icons'
 // Removed unused imports from @sanity/id-utils
 import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
 import {randomKey} from '@sanity/util/content'
-import {useCallback, useContext, useState, useEffect} from 'react'
+import {useCallback, useContext, useState} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
-import {SchemeContext, TreeContext} from '../context'
+import {SchemeContext, TreeContext, ReleaseContext} from '../context'
 import {useCreateConcept} from '../hooks'
 import {trunkBuilder} from '../queries'
 import {HierarchyButton} from '../styles'
@@ -14,30 +14,38 @@ import type {DocumentConcepts} from '../types'
 
 import {NewScheme} from './guides'
 import {TreeStructure} from './TreeStructure'
+import type {TreeViewProps} from './TreeView'
 
 /**
  * #### Hierarchy Component
  * - Provides a frame for global controls and tree structure
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
+ * - Displays controls to add concepts or top concepts when in draft mode or release mode.
+ *
+ * @param branchId - The branch ID to fetch concepts from.
+ * @param selectConcept - The function to call when a concept is selected.
+ * @param inputComponent - Whether this is an input component.
  */
 export const Hierarchy = ({
   branchId = '',
   selectConcept,
   inputComponent = false,
-}: {
-  branchId: string
-  selectConcept?: any
-  inputComponent?: boolean
-}) => {
+}: TreeViewProps) => {
   const document: any = useContext(SchemeContext) || {}
   const documentId = document.displayed?._id
+  const releaseContext = useContext(ReleaseContext)
+
+  console.log('document id', documentId) // this is grabbing the document with the release version
 
   /**
    * Need to account for release versions below
    * I may be able to simplify this a lot, now that Top Concept is
    * not represented at the _term_ level, but at the _scheme_ level.
-   *
+   * 🚨 this is where the next issue is — I'm constructing these lists and passing them in (this is
+   * where the version stuff is getting lost)
+   * - reformulate this to be based on the document ID
+   * - look into GROQ functions
    */
 
   const conceptIds = document.displayed?.concepts?.map((concept: any) => concept?._ref) || []
@@ -65,11 +73,8 @@ export const Hierarchy = ({
     treeVisibility: 'open',
   })
 
-  const [editControls, setEditControls] = useState(false)
-
-  useEffect(() => {
-    if (!document.displayed._id.includes('drafts.')) setEditControls(false)
-  }, [document.displayed._id])
+  // Determine if we should show edit controls based on perspective
+  const isEditable = releaseContext !== 'published'
 
   const handleExpand = useCallback(() => {
     setGlobalVisibility({treeId: randomKey(3), treeVisibility: 'open'})
@@ -77,14 +82,6 @@ export const Hierarchy = ({
 
   const handleCollapse = useCallback(() => {
     setGlobalVisibility({treeId: randomKey(3), treeVisibility: 'closed'})
-  }, [])
-
-  const handleShowEdit = useCallback(() => {
-    setEditControls(true)
-  }, [])
-
-  const handleHideEdit = useCallback(() => {
-    setEditControls(false)
   }, [])
 
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
@@ -128,7 +125,7 @@ export const Hierarchy = ({
     return <NewScheme document={document} />
   }
   return (
-    <TreeContext.Provider value={{globalVisibility, editControls, setEditControls}}>
+    <TreeContext.Provider value={{globalVisibility}}>
       <Box padding={4} paddingTop={2}>
         <>
           <Stack space={4}>
@@ -157,7 +154,7 @@ export const Hierarchy = ({
                   )}
                 </Card>
                 <Card>
-                  {editControls ? (
+                  {isEditable && (
                     <Inline space={1}>
                       <HierarchyButton type="button" className="add" onClick={createTopConcept}>
                         <Text weight="semibold" muted size={1}>
@@ -167,19 +164,6 @@ export const Hierarchy = ({
                       <HierarchyButton type="button" className="add" onClick={createEntryConcept}>
                         <Text weight="semibold" muted size={1}>
                           <AddCircleIcon /> Add Concept
-                        </Text>
-                      </HierarchyButton>
-                      <HierarchyButton type="button" onClick={handleHideEdit}>
-                        <Text weight="semibold" muted size={1}>
-                          <CheckmarkCircleIcon /> Done
-                        </Text>
-                      </HierarchyButton>
-                    </Inline>
-                  ) : (
-                    <Inline space={2}>
-                      <HierarchyButton type="button" onClick={handleShowEdit}>
-                        <Text weight="semibold" muted size={1}>
-                          <EditIcon /> Edit
                         </Text>
                       </HierarchyButton>
                     </Inline>

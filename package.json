@@ -92,7 +92,7 @@
     "react-dom": "^18.2.0",
     "react-is": "^18.2.0",
     "rimraf": "^5.0.5",
-    "sanity": "^3.62.3",
+    "sanity": "^3.99.0",
     "sanity-plugin-utils": "^1.6.5",
     "styled-components": "^6.1.8",
     "typescript": "^5.0.4",

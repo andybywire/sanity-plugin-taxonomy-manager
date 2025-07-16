@@ -7,6 +7,7 @@ type TreeContextType = {
 }
 
 export type ReleaseContextType = {
+  isPublished?: boolean
   isInRelease: boolean
   releaseName?: string
   documentId: string
@@ -15,7 +16,8 @@ export type ReleaseContextType = {
 
 export const SchemeContext = createContext<any>(null)
 export const TreeContext = createContext<TreeContextType>({editControls: false})
-export const ReleaseContext = createContext<ReleaseContextType>({
-  isInRelease: false,
-  documentId: '',
-})
+// export const ReleaseContext = createContext<ReleaseContextType>({
+//   isInRelease: false,
+//   documentId: '',
+// })
+export const ReleaseContext = createContext<any>(undefined)
