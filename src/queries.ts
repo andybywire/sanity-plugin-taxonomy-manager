@@ -17,23 +17,24 @@
  *   of this child in their .broader[] array.
  */
 const branchBuilder = (level = 1): string | void => {
+  let reference = '^.^.concepts[]._ref'
+  let i = 1
+  while (level > i) {
+    reference = `^.${reference}`
+    i++
+  }
   if (level > 6) {
     return ''
   }
   return `"childConcepts": *[
-    (
-      (
-        _id in $draftConceptIds &&
-        !(conceptId in *[_id in $conceptIds].conceptId)
-      ) 
-      ||
-      (
-        _id in $conceptIds &&
-        !(conceptId in $draftConceptIds)
-      )
-    ) && ^._id in broader[]._ref ]|order(prefLabel){
+                            _id in ${reference}  
+                            && ^._id in broader[]._ref
+                            ]|order(prefLabel)
+     {
       "id": _id,
       "level": ${level},
+      "conceptIdList": ^.^.conceptIdList,
+      "secondconceptIdList": ^.^.concepts[]._ref,
       prefLabel,
       definition,
       example,
@@ -78,53 +79,40 @@ const inputBranchBuilder = (level = 1): string | void => {
 export const trunkBuilder = (): string => {
   return `*[_id == $id][0] {
     _updatedAt,
-    "topConcepts": *[
-      (
-        _id in $draftTopConceptIds &&
-        !(conceptId in *[_id in $topConceptIds].conceptId)
-      )
-      ||
-      (
-        _id in $topConceptIds
-      )
-      ]|order(prefLabel) {
+    "topConcepts": topConcepts[]->|order(prefLabel) {
       "id": _id,
       "level": 0,
+      "conceptIdList": ^.concepts[]._ref,
+      // "conceptIdList": [
+      //     "79a6db61-d567-4a4e-ac2b-78e0e5685e94",
+      //     "33f49760-68c1-4962-a06c-1ea6a6b2bcb6",
+      //     "490805ed-b0f2-4bc0-8860-f3e81742e63f",
+      //     "ae88308d-aaea-40d4-b50b-0697035d7877"
+      // ],
       prefLabel,
       definition,
       example,
       scopeNote,
       ${branchBuilder()}
     },
-    "orphans": *[
-      ((
-        _id in $draftConceptIds &&
-        !(conceptId in *[_id in $conceptIds].conceptId)
-      )
-      ||
-      (
-        _id in $conceptIds
-      )) &&
-      count(
-        (broader[]._ref) [@ in coalesce(
-          *[_id == 'drafts.' + $id][0], 
-          *[_id == $id][0]
-        ).topConcepts[]._ref]) < 1 &&
-      count(
-        (broader[]._ref) [@ in coalesce(
-          *[_id == 'drafts.' + $id][0], 
-          *[_id == $id][0]
-        ).concepts[]._ref]) < 1
-    ]|order(prefLabel){
-      "id": _id,
-      "level": 0,
-      prefLabel,
-      definition,
-      example,
-      scopeNote,
-      ${branchBuilder()}
-    }
-  }`
+    "orphans": concepts[]->|order(prefLabel) {         // change name to concepts
+        "id": _id,
+        "level": 0,
+        "isOrphan": !array::intersects(broader[]._ref, ^.concepts[]._ref),
+        "conceptIdList": ^.concepts[]._ref,
+        // "conceptIdList": [
+        //     "79a6db61-d567-4a4e-ac2b-78e0e5685e94",
+        //     "33f49760-68c1-4962-a06c-1ea6a6b2bcb6",
+        //     "490805ed-b0f2-4bc0-8860-f3e81742e63f",
+        //     "ae88308d-aaea-40d4-b50b-0697035d7877"
+        // ],
+        prefLabel,
+        definition,
+        example,
+        scopeNote,
+        ${branchBuilder()}
+      }
+    }`
 }
 
 /**
