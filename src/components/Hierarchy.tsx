@@ -1,8 +1,8 @@
-/* eslint-disable react/require-default-props */
 import {AddCircleIcon} from '@sanity/icons'
-// Removed unused imports from @sanity/id-utils
+import type {DocumentId} from '@sanity/id-utils'
+import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
-import {randomKey} from '@sanity/util/content'
+import {uuid} from '@sanity/uuid'
 import {useCallback, useContext, useState} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
@@ -14,7 +14,7 @@ import type {DocumentConcepts} from '../types'
 
 import {NewScheme} from './guides'
 import {TreeStructure} from './TreeStructure'
-import type {TreeViewProps} from './TreeView'
+import type {ConceptSchemeDocument, TreeViewProps} from './TreeView'
 
 /**
  * #### Hierarchy Component
@@ -22,66 +22,39 @@ import type {TreeViewProps} from './TreeView'
  * - Fetches the complete tree of concepts in a concept scheme.
  * - Displays the tree in a nested list.
  * - Displays controls to add concepts or top concepts when in draft mode or release mode.
- *
- * @param branchId - The branch ID to fetch concepts from.
- * @param selectConcept - The function to call when a concept is selected.
  * @param inputComponent - Whether this is an input component.
+ * @param branchId - Input component: The branch ID to fetch concepts from.
+ * @param selectConcept - Input component: The function to call when a concept is selected.
  */
 export const Hierarchy = ({
+  inputComponent = false,
   branchId = '',
   selectConcept,
-  inputComponent = false,
 }: TreeViewProps) => {
-  const document: any = useContext(SchemeContext) || {}
-  const documentId = document.displayed?._id
-  const releaseContext = useContext(ReleaseContext)
-
-  console.log('document id', documentId) // this is grabbing the document with the release version
-
-  /**
-   * Need to account for release versions below
-   * I may be able to simplify this a lot, now that Top Concept is
-   * not represented at the _term_ level, but at the _scheme_ level.
-   * 🚨 this is where the next issue is — I'm constructing these lists and passing them in (this is
-   * where the version stuff is getting lost)
-   * - reformulate this to be based on the document ID
-   * - look into GROQ functions
-   */
-
-  const conceptIds = document.displayed?.concepts?.map((concept: any) => concept?._ref) || []
-  const draftConceptIds =
-    document.displayed?.concepts?.map((concept: any) => `drafts.${concept?._ref}`) || []
-  const topConceptIds = document.displayed?.topConcepts?.map((concept: any) => concept?._ref) || []
-  const draftTopConceptIds =
-    document.displayed?.topConcepts?.map((concept: any) => `drafts.${concept?._ref}`) || []
+  const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
+  const documentId = getPublishedId(document.displayed?._id as DocumentId)
+  const releaseContext: string = useContext(ReleaseContext) as string
 
   const createConcept = useCreateConcept(document)
-
   const createTopConcept = useCallback(() => {
     createConcept('topConcept')
   }, [createConcept])
-
   const createEntryConcept = useCallback(() => {
     createConcept('concept')
   }, [createConcept])
 
-  // `randomKey` is used on treeId to initiate a re-rendering of all child
+  // `uuid()` is used on treeId to initiate a re-rendering of all child
   // elements on expand/collapse and re-initialize any local toggle state
   // that had been set.
   const [globalVisibility, setGlobalVisibility] = useState({
-    treeId: randomKey(3),
+    treeId: uuid(),
     treeVisibility: 'open',
   })
-
-  // Determine if we should show edit controls based on perspective
-  const isEditable = releaseContext !== 'published'
-
   const handleExpand = useCallback(() => {
-    setGlobalVisibility({treeId: randomKey(3), treeVisibility: 'open'})
+    setGlobalVisibility({treeId: uuid(), treeVisibility: 'open'})
   }, [])
-
   const handleCollapse = useCallback(() => {
-    setGlobalVisibility({treeId: randomKey(3), treeVisibility: 'closed'})
+    setGlobalVisibility({treeId: uuid(), treeVisibility: 'closed'})
   }, [])
 
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
@@ -93,10 +66,9 @@ export const Hierarchy = ({
       params: {
         id: documentId,
         branchId,
-        conceptIds,
-        draftConceptIds,
-        topConceptIds,
-        draftTopConceptIds,
+      },
+      options: {
+        perspective: [releaseContext],
       },
     }
   ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
@@ -154,7 +126,7 @@ export const Hierarchy = ({
                   )}
                 </Card>
                 <Card>
-                  {isEditable && (
+                  {releaseContext !== 'published' && (
                     <Inline space={1}>
                       <HierarchyButton type="button" className="add" onClick={createTopConcept}>
                         <Text weight="semibold" muted size={1}>
