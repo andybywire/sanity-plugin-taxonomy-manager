@@ -2,6 +2,7 @@ export interface ChildConceptTerm {
   prefLabel: string
   id: string
   level?: number
+  isOrphan?: boolean
   childConcepts?: ChildConceptTerm[]
 }
 
@@ -13,7 +14,7 @@ export interface TopConceptTerm {
 
 export interface DocumentConcepts {
   topConcepts: TopConceptTerm[]
-  orphans: ChildConceptTerm[]
+  concepts: ChildConceptTerm[]
 }
 
 export interface PrefLabelValue {

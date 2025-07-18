@@ -121,7 +121,7 @@ export const StyledTopConcept = styled.li`
     display: none;
   }
 `
-export const StyledOrphan = styled.li`
+export const StyledConcept = styled.li`
   padding-top: 0.5rem;
   font-weight: normal;
   margin-top: 1rem;
