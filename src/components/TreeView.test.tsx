@@ -1,92 +1,172 @@
-import {render} from '@testing-library/react'
-import {useContext, type ReactNode} from 'react'
-import {describe, it, expect, vi, beforeEach} from 'vitest'
-
-import {ReleaseContext, type ReleaseContextType} from '../context'
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react/require-default-props */
+import {render, screen} from '@testing-library/react'
+import type {ReactNode} from 'react'
+import {describe, it, expect, vi} from 'vitest'
 
 import {TreeView} from './TreeView'
 
-// Create a test component that captures the context
-let capturedContext: ReleaseContextType | null = null
-
-const ContextCapture = () => {
-  const context = useContext(ReleaseContext)
-  capturedContext = context
-  return <div data-testid="context-capture" />
-}
-
 // Mock Sanity UI components
 vi.mock('@sanity/ui', () => ({
-  // eslint-disable-next-line react/require-default-props
   Container: ({children}: {children?: ReactNode}) => <div data-testid="container">{children}</div>,
-  // eslint-disable-next-line react/require-default-props
   Box: ({children}: {children?: ReactNode}) => <div data-testid="box">{children}</div>,
-  // eslint-disable-next-line react/require-default-props
   Stack: ({children}: {children?: ReactNode}) => <div data-testid="stack">{children}</div>,
-  // eslint-disable-next-line react/require-default-props
   Text: ({children}: {children?: ReactNode}) => <span data-testid="text">{children}</span>,
 }))
 
-// Mock child components to render our context capture
+// Mock usePerspective hook
+vi.mock('sanity', () => ({
+  usePerspective: () => ({selectedPerspectiveName: 'published'}),
+}))
+
+// Mock child components
 vi.mock('./Hierarchy', () => ({
-  Hierarchy: () => <ContextCapture />,
-  default: () => <ContextCapture />,
+  Hierarchy: ({inputComponent, branchId}: {inputComponent: boolean; branchId: string}) => (
+    <div data-testid="hierarchy" data-input-component={inputComponent} data-branch-id={branchId}>
+      Hierarchy Component
+    </div>
+  ),
 }))
 
 vi.mock('./inputs', () => ({
-  InputHierarchy: () => <ContextCapture />,
+  InputHierarchy: ({
+    inputComponent,
+    branchId,
+    selectConcept,
+  }: {
+    inputComponent: boolean
+    branchId: string
+    selectConcept?: (conceptId: string) => void
+  }) => (
+    <div
+      data-testid="input-hierarchy"
+      data-input-component={inputComponent}
+      data-branch-id={branchId}
+      data-has-select-concept={!!selectConcept}
+    >
+      Input Hierarchy Component
+    </div>
+  ),
 }))
 
 describe('TreeView', () => {
-  beforeEach(() => {
-    capturedContext = null
-  })
-
-  it('should provide ReleaseContext with correct values for published document', () => {
-    const document = {
+  const mockDocument = {
+    _id: 'abc123',
+    _rev: 'rev123',
+    _type: 'skosConceptScheme' as const,
+    _createdAt: '2024-01-01T00:00:00Z',
+    _updatedAt: '2024-01-01T00:00:00Z',
+    displayed: {
       _id: 'abc123',
-      _rev: 'rev123',
       _type: 'skosConceptScheme' as const,
-      _createdAt: '2024-01-01T00:00:00Z',
-      _updatedAt: '2024-01-01T00:00:00Z',
-      displayed: {
-        _id: 'abc123',
-        _type: 'skosConceptScheme' as const,
-        title: 'Test Scheme',
-      },
-    }
+      title: 'Test Scheme',
+      description: 'Test description',
+    },
+  }
 
-    // eslint-disable-next-line react/jsx-no-bind
-    render(<TreeView document={document} branchId="" selectConcept={() => undefined} />)
+  describe('Component Mode Outcomes', () => {
+    it('should render InputHierarchy when inputComponent is true', () => {
+      render(
+        <TreeView
+          document={mockDocument}
+          branchId="test-branch"
+          inputComponent
+          selectConcept={() => undefined}
+        />
+      )
 
-    expect(capturedContext).toEqual({
-      isInRelease: false,
-      documentId: 'abc123',
+      // Should render InputHierarchy component
+      expect(screen.getByTestId('input-hierarchy')).toBeInTheDocument()
+
+      // Should NOT render the full view container
+      expect(screen.queryByTestId('container')).not.toBeInTheDocument()
+
+      // Should NOT render description section
+      expect(screen.queryByText('Description')).not.toBeInTheDocument()
+      expect(screen.queryByText('Test description')).not.toBeInTheDocument()
+
+      // Should NOT render Hierarchy component
+      expect(screen.queryByTestId('hierarchy')).not.toBeInTheDocument()
     })
-  })
 
-  it('should provide ReleaseContext with correct values for versioned document', () => {
-    const document = {
-      _id: 'abc123',
-      _rev: 'rev123',
-      _type: 'skosConceptScheme' as const,
-      _createdAt: '2024-01-01T00:00:00Z',
-      _updatedAt: '2024-01-01T00:00:00Z',
-      displayed: {
-        _id: 'versions.r2024-01-15.abc123',
-        _type: 'skosConceptScheme' as const,
-        title: 'Test Scheme',
-      },
-    }
+    it('should render full view with description and Hierarchy when inputComponent is false', () => {
+      render(
+        <TreeView
+          document={mockDocument}
+          branchId="test-branch"
+          inputComponent={false}
+          selectConcept={() => undefined}
+        />
+      )
 
-    // eslint-disable-next-line react/jsx-no-bind
-    render(<TreeView document={document} branchId="" selectConcept={() => undefined} />)
+      // Should render the full view container
+      expect(screen.getByTestId('container')).toBeInTheDocument()
 
-    expect(capturedContext).toEqual({
-      isInRelease: true,
-      releaseName: 'r2024-01-15',
-      documentId: 'versions.r2024-01-15.abc123',
-      versionId: 'versions.r2024-01-15.abc123',
+      // Should render description section
+      expect(screen.getByText('Description')).toBeInTheDocument()
+      expect(screen.getByText('Test description')).toBeInTheDocument()
+
+      // Should render Hierarchy component
+      expect(screen.getByTestId('hierarchy')).toBeInTheDocument()
+
+      // Should NOT render InputHierarchy component
+      expect(screen.queryByTestId('input-hierarchy')).not.toBeInTheDocument()
+    })
+
+    it('should render full view by default when inputComponent is not specified', () => {
+      render(
+        <TreeView document={mockDocument} branchId="test-branch" selectConcept={() => undefined} />
+      )
+
+      // Should render the full view container (default behavior)
+      expect(screen.getByTestId('container')).toBeInTheDocument()
+
+      // Should render description section
+      expect(screen.getByText('Description')).toBeInTheDocument()
+      expect(screen.getByText('Test description')).toBeInTheDocument()
+
+      // Should render Hierarchy component
+      expect(screen.getByTestId('hierarchy')).toBeInTheDocument()
+
+      // Should NOT render InputHierarchy component
+      expect(screen.queryByTestId('input-hierarchy')).not.toBeInTheDocument()
+    })
+
+    it('should pass correct props to InputHierarchy when in input mode', () => {
+      const mockSelectConcept = vi.fn()
+
+      render(
+        <TreeView
+          document={mockDocument}
+          branchId="test-branch"
+          inputComponent
+          selectConcept={mockSelectConcept}
+        />
+      )
+
+      const inputHierarchy = screen.getByTestId('input-hierarchy')
+
+      // Should pass correct props to InputHierarchy
+      expect(inputHierarchy).toHaveAttribute('data-input-component', 'true')
+      expect(inputHierarchy).toHaveAttribute('data-branch-id', 'test-branch')
+      expect(inputHierarchy).toHaveAttribute('data-has-select-concept', 'true')
+    })
+
+    it('should pass correct props to Hierarchy when in full view mode', () => {
+      render(
+        <TreeView
+          document={mockDocument}
+          branchId="test-branch"
+          inputComponent={false}
+          selectConcept={() => undefined}
+        />
+      )
+
+      const hierarchy = screen.getByTestId('hierarchy')
+
+      // Should pass correct props to Hierarchy
+      expect(hierarchy).toHaveAttribute('data-input-component', 'false')
+      expect(hierarchy).toHaveAttribute('data-branch-id', 'test-branch')
     })
   })
 })
