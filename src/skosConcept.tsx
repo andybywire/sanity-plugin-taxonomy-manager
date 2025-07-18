@@ -1,5 +1,5 @@
 import {WarningOutlineIcon} from '@sanity/icons'
-import {randomKey} from '@sanity/util/content'
+import {uuid} from '@sanity/uuid'
 import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
 import type {FieldDefinition} from 'sanity'
@@ -202,7 +202,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'Identifier',
         description: 'This concept does not yet have a unique identifier.',
         type: 'string',
-        initialValue: () => `${randomKey(6)}`,
+        initialValue: () => `${uuid()}`,
         hidden: ({document}) => !!document?.conceptId,
         readOnly: ({document}) => !!document?.conceptId,
         components: {

@@ -1,5 +1,5 @@
 import {Button, Inline, Stack, useToast} from '@sanity/ui'
-import {randomKey} from '@sanity/util/content'
+import {uuid} from '@sanity/uuid'
 import {useCallback} from 'react'
 import {set} from 'sanity'
 
@@ -15,7 +15,7 @@ export const Identifier = (props: any) => {
   const toast = useToast()
 
   const handleChange = useCallback(() => {
-    onChange(set(randomKey(6)))
+    onChange(set(uuid()))
     toast.push({
       status: 'success',
       title: 'Identifier created.',

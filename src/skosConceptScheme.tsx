@@ -1,4 +1,4 @@
-import {randomKey} from '@sanity/util/content'
+import {uuid} from '@sanity/uuid'
 import type {FieldDefinition} from 'sanity'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
@@ -65,7 +65,7 @@ export default function skosConceptScheme(
         title: 'Identifier',
         description: 'This scheme does not yet have a unique identifier.',
         type: 'string',
-        initialValue: () => `${randomKey(6)}`,
+        initialValue: () => `${uuid()}`,
         hidden: ({document}) => !!document?.schemeId,
         readOnly: ({document}) => !!document?.schemeId,
         components: {

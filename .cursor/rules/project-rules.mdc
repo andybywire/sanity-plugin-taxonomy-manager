@@ -97,7 +97,6 @@ Every `document` and `object` schema type should:
 ### Sanity Plugin Patterns
 - Use `useClient()` for Sanity client operations
 - Use `useListeningQuery()` for real-time data updates
-- Use `randomKey()` from `@sanity/util/content`
 - Use proper document ID handling with `@sanity/id-utils`
 
 ### Input Components

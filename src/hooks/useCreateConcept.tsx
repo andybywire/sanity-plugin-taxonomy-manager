@@ -7,7 +7,7 @@ import {
   getPublishedId,
 } from '@sanity/id-utils'
 import {useToast} from '@sanity/ui'
-import {randomKey} from '@sanity/util/content'
+import {uuid} from '@sanity/uuid'
 import {useCallback} from 'react'
 import {useClient} from 'sanity'
 
@@ -46,8 +46,8 @@ export function useCreateConcept(document: any) {
 
       // Generate appropriate IDs based on context
       const newConceptId = isInRelease
-        ? getVersionId(DocumentId(randomKey()), releaseName as string)
-        : getDraftId(DocumentId(randomKey()))
+        ? getVersionId(DocumentId(uuid()), releaseName as string)
+        : getDraftId(DocumentId(uuid()))
 
       let skosConcept: any
       if (conceptId) {
@@ -59,12 +59,12 @@ export function useCreateConcept(document: any) {
         skosConcept = {
           _id: newConceptId,
           _type: 'skosConcept',
-          conceptId: `${randomKey(6)}`,
+          conceptId: `${uuid()}`,
           prefLabel: '',
           baseIri: schemaBaseIri,
           broader: [
             broaderId && {
-              _key: randomKey(6),
+              _key: uuid(),
               _ref: getPublishedId(broaderId),
               _type: 'reference',
               _strengthenOnPublish: {
@@ -79,7 +79,7 @@ export function useCreateConcept(document: any) {
         skosConcept = {
           _id: newConceptId,
           _type: 'skosConcept',
-          conceptId: `${randomKey(6)}`,
+          conceptId: `${uuid()}`,
           prefLabel: '',
           baseIri: schemaBaseIri,
           broader: [],
@@ -107,7 +107,7 @@ export function useCreateConcept(document: any) {
               {
                 _ref: getPublishedId(newConceptId),
                 _type: 'reference',
-                _key: randomKey(6),
+                _key: uuid(),
                 _strengthenOnPublish: {
                   type: 'skosConcept',
                   template: {id: 'skosConcept'},
@@ -119,7 +119,7 @@ export function useCreateConcept(document: any) {
             {
               _ref: getPublishedId(newConceptId),
               _type: 'reference',
-              _key: randomKey(6),
+              _key: uuid(),
               _strengthenOnPublish: {
                 type: 'skosConcept',
                 template: {id: 'skosConcept'},
