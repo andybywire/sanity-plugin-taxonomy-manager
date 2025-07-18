@@ -1,24 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {render, screen} from '@testing-library/react'
 import {describe, it, expect, vi} from 'vitest'
 
 import {ReleaseContext, SchemeContext} from '../context'
 
 import {Hierarchy} from './Hierarchy'
-
-/**
- * # Test Cases
- * - When in published mode, I should not see add top concept and add concept buttons. ✅
- * - When in published mode, I should see the published, read-only version of the taxonomy so that I can understand its current in-use state. 🚚
- *     -> move this to an integration test
- * - When in draft mode, I should see add top concept and add concept buttons. ✅
- * - When in draft mode, I should see published concepts and draft concepts. 🚚
- *     -> move this to an integration test
- * - When in draft mode, when I add a top concept I should see the concept added to the hierarchy tree. 🚚
- *     -> move this to a test of the add (top) concept button
- * - When in a specific release, I should see add top concept and add concept buttons. ✅
- * - When in a specific release, I should see published concepts and concepts unique to that release.
- * - When in a specific release, when I edit a concept I should see those edits reflected in that release only.
- */
+import type {ConceptSchemeDocument} from './TreeView'
 
 // Mock child components
 vi.mock('./TreeStructure', () => ({
@@ -77,7 +64,7 @@ describe('Hierarchy', () => {
     }
 
     render(
-      <SchemeContext.Provider value={document}>
+      <SchemeContext.Provider value={document as ConceptSchemeDocument}>
         <ReleaseContext.Provider
           value={{
             isInRelease: false,
@@ -104,7 +91,7 @@ describe('Hierarchy', () => {
     }
 
     render(
-      <SchemeContext.Provider value={document}>
+      <SchemeContext.Provider value={document as ConceptSchemeDocument}>
         <ReleaseContext.Provider
           value={{
             isInRelease: true,
@@ -133,7 +120,7 @@ describe('Hierarchy', () => {
     }
 
     render(
-      <SchemeContext.Provider value={document}>
+      <SchemeContext.Provider value={document as ConceptSchemeDocument}>
         <ReleaseContext.Provider value="published">
           <Hierarchy branchId="" />
         </ReleaseContext.Provider>
