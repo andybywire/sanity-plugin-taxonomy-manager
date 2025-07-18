@@ -2,7 +2,6 @@
 import type {SanityDocument} from '@sanity/client'
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import type {CSSProperties} from 'react'
-import type {PerspectiveContextValue} from 'sanity'
 import {usePerspective} from 'sanity'
 
 import {ReleaseContext, SchemeContext} from '../context'
@@ -11,7 +10,7 @@ import {Hierarchy} from './Hierarchy'
 import {InputHierarchy} from './inputs'
 
 // Define the specific document structure we expect
-interface ConceptSchemeDocument extends SanityDocument {
+export interface ConceptSchemeDocument extends SanityDocument {
   displayed: {
     _id: string
     _type: 'skosConceptScheme'
@@ -31,7 +30,6 @@ interface ConceptSchemeDocument extends SanityDocument {
     }>
   }
 }
-
 // Define the component props interface
 export interface TreeViewProps {
   document?: ConceptSchemeDocument
@@ -59,11 +57,11 @@ export const TreeView = ({
   const containerStyle: CSSProperties = {paddingTop: '1.25rem'}
   const descriptionStyle: CSSProperties = {whiteSpace: 'pre-wrap'}
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-  const {selectedPerspectiveName} = usePerspective() as PerspectiveContextValue
+  const {selectedPerspectiveName} = usePerspective()
   return (
-    <SchemeContext.Provider value={document}>
+    <SchemeContext.Provider value={document || ({} as ConceptSchemeDocument)}>
       {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
-      <ReleaseContext.Provider value={selectedPerspectiveName ?? 'drafts'}>
+      <ReleaseContext.Provider value={selectedPerspectiveName}>
         {inputComponent ? (
           <InputHierarchy
             inputComponent={inputComponent}

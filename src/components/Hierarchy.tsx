@@ -68,7 +68,7 @@ export const Hierarchy = ({
         branchId,
       },
       options: {
-        perspective: [releaseContext],
+        perspective: releaseContext === undefined ? 'drafts' : [releaseContext],
       },
     }
   ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
