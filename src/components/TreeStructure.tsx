@@ -4,8 +4,8 @@ import {TreeContext} from '../context'
 import {StyledTree} from '../styles'
 import type {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 
+import {Concepts} from './Concepts'
 import {NoConcepts} from './guides'
-import {Orphans} from './Orphans'
 import {TopConcepts} from './TopConcepts'
 
 /**
@@ -21,7 +21,7 @@ export const TreeStructure = ({
 }: {
   concepts: DocumentConcepts
   inputComponent: boolean
-  selectConcept: any
+  selectConcept: (conceptId: string) => void
 }) => {
   const {
     globalVisibility: {treeId, treeVisibility} = {treeId: 123, treeVisibility: 'open'},
@@ -31,11 +31,11 @@ export const TreeStructure = ({
   } = useContext(TreeContext) || {}
 
   useEffect(() => {
-    if (concepts?.topConcepts?.length === 0 && concepts?.orphans?.length === 0)
+    if (concepts?.topConcepts?.length === 0 && concepts?.concepts?.length === 0)
       setEditControls(true)
-  }, [concepts.topConcepts, concepts.orphans, setEditControls])
+  }, [concepts.topConcepts, concepts.concepts, setEditControls])
 
-  if (concepts?.topConcepts?.length === 0 && concepts?.orphans?.length === 0) {
+  if (concepts?.topConcepts?.length === 0 && concepts?.concepts?.length === 0) {
     return <NoConcepts />
   }
 
@@ -50,17 +50,19 @@ export const TreeStructure = ({
           selectConcept={selectConcept}
         />
       ))}
-      {concepts.orphans.map((concept: ChildConceptTerm) => {
-        return (
-          <Orphans
-            key={concept.id + treeId}
-            concept={concept}
-            treeVisibility={treeVisibility}
-            inputComponent={inputComponent}
-            selectConcept={selectConcept}
-          />
-        )
-      })}
+      {concepts.concepts
+        ?.filter((concept: ChildConceptTerm) => concept?.isOrphan)
+        .map((concept: ChildConceptTerm) => {
+          return (
+            <Concepts
+              key={concept.id + treeId}
+              concept={concept}
+              treeVisibility={treeVisibility}
+              inputComponent={inputComponent}
+              selectConcept={selectConcept}
+            />
+          )
+        })}
     </StyledTree>
   )
 }

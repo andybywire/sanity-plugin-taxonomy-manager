@@ -106,7 +106,7 @@ export const Hierarchy = ({
                 <Card>
                   {(data.topConcepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
                     .length > 0 ||
-                    data.orphans?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
+                    data.concepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
                       .length > 0) && (
                     <Inline space={1}>
                       <HierarchyButton type="button" onClick={handleCollapse}>
@@ -147,7 +147,7 @@ export const Hierarchy = ({
           <TreeStructure
             concepts={data}
             inputComponent={inputComponent}
-            selectConcept={selectConcept}
+            selectConcept={selectConcept || (() => undefined)}
           />
         </>
       </Box>
