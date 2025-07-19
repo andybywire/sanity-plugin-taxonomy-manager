@@ -31,3 +31,33 @@ export interface ConceptDetailLinkProps {
     level?: number
   }
 }
+
+export interface SkosConceptReference {
+  _key: string
+  _ref: string
+  _type: 'reference'
+  _strengthenOnPublish: {
+    type: 'skosConcept'
+    template: {id: 'skosConcept'}
+  }
+  _weak?: boolean
+}
+
+export interface SkosConceptDocument {
+  _id: string
+  _type: 'skosConcept'
+  conceptId: string
+  prefLabel: string
+  baseIri: string | undefined
+  broader: SkosConceptReference[]
+  related: SkosConceptReference[]
+  // Optional fields from the schema
+  definition?: string
+  example?: string
+  scopeNote?: string
+  altLabel?: string[]
+  hiddenLabel?: string[]
+  historyNote?: string
+  editorialNote?: string
+  changeNote?: string
+}

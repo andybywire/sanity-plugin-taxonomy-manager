@@ -2,7 +2,7 @@ import {AddCircleIcon} from '@sanity/icons'
 import type {DocumentId} from '@sanity/id-utils'
 import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
-import {uuid} from '@sanity/uuid'
+import {nanoid} from 'nanoid'
 import {useCallback, useContext, useState} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
@@ -47,14 +47,14 @@ export const Hierarchy = ({
   // elements on expand/collapse and re-initialize any local toggle state
   // that had been set.
   const [globalVisibility, setGlobalVisibility] = useState({
-    treeId: uuid(),
+    treeId: nanoid(6),
     treeVisibility: 'open',
   })
   const handleExpand = useCallback(() => {
-    setGlobalVisibility({treeId: uuid(), treeVisibility: 'open'})
+    setGlobalVisibility({treeId: nanoid(6), treeVisibility: 'open'})
   }, [])
   const handleCollapse = useCallback(() => {
-    setGlobalVisibility({treeId: uuid(), treeVisibility: 'closed'})
+    setGlobalVisibility({treeId: nanoid(6), treeVisibility: 'closed'})
   }, [])
 
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
