@@ -1,3 +1,5 @@
+import type {SanityDocument} from 'sanity'
+
 export interface ChildConceptTerm {
   prefLabel: string
   id: string
@@ -60,4 +62,32 @@ export interface SkosConceptDocument {
   historyNote?: string
   editorialNote?: string
   changeNote?: string
+}
+
+export interface ConceptSchemeDocument extends SanityDocument {
+  displayed: {
+    _id: string
+    _type: 'skosConceptScheme'
+    title?: string
+    description?: string
+    baseIri?: string
+    schemeId?: string
+    topConcepts?: Array<{
+      _key: string
+      _ref: string
+      _type: 'reference'
+    }>
+    concepts?: Array<{
+      _key: string
+      _ref: string
+      _type: 'reference'
+    }>
+  }
+}
+
+export interface TreeViewProps {
+  document?: ConceptSchemeDocument
+  branchId: string
+  selectConcept?: (conceptId: string) => void
+  inputComponent?: boolean
 }

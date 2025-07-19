@@ -10,11 +10,10 @@ import {SchemeContext, TreeContext, ReleaseContext} from '../context'
 import {useCreateConcept} from '../hooks'
 import {trunkBuilder} from '../queries'
 import {HierarchyButton} from '../styles'
-import type {DocumentConcepts} from '../types'
+import type {DocumentConcepts, ConceptSchemeDocument, TreeViewProps} from '../types'
 
 import {NewScheme} from './guides'
 import {TreeStructure} from './TreeStructure'
-import type {ConceptSchemeDocument, TreeViewProps} from './TreeView'
 
 /**
  * #### Hierarchy Component
@@ -43,7 +42,7 @@ export const Hierarchy = ({
     createConcept('concept')
   }, [createConcept])
 
-  // `uuid()` is used on treeId to initiate a re-rendering of all child
+  // short IDs are used on treeId to initiate a re-rendering of all child
   // elements on expand/collapse and re-initialize any local toggle state
   // that had been set.
   const [globalVisibility, setGlobalVisibility] = useState({

@@ -1,42 +1,13 @@
 /* eslint-disable react/require-default-props */
-import type {SanityDocument} from '@sanity/client'
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import type {CSSProperties} from 'react'
 import {usePerspective} from 'sanity'
 
 import {ReleaseContext, SchemeContext} from '../context'
+import type {ConceptSchemeDocument, TreeViewProps} from '../types'
 
 import {Hierarchy} from './Hierarchy'
 import {InputHierarchy} from './inputs'
-
-// Define the specific document structure we expect
-export interface ConceptSchemeDocument extends SanityDocument {
-  displayed: {
-    _id: string
-    _type: 'skosConceptScheme'
-    title?: string
-    description?: string
-    baseIri?: string
-    schemeId?: string
-    topConcepts?: Array<{
-      _key: string
-      _ref: string
-      _type: 'reference'
-    }>
-    concepts?: Array<{
-      _key: string
-      _ref: string
-      _type: 'reference'
-    }>
-  }
-}
-// Define the component props interface
-export interface TreeViewProps {
-  document?: ConceptSchemeDocument
-  branchId: string
-  selectConcept?: (conceptId: string) => void
-  inputComponent?: boolean
-}
 
 /**
  * #### Tree View Component Wrapper
