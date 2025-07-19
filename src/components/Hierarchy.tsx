@@ -30,7 +30,8 @@ export const Hierarchy = ({
   branchId = '',
   selectConcept,
 }: TreeViewProps) => {
-  const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const document: ConceptSchemeDocument = useContext(SchemeContext)
   const documentId = getPublishedId(document.displayed?._id as DocumentId)
   const releaseContext: string = useContext(ReleaseContext) as string
 
