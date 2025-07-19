@@ -5,8 +5,8 @@ import {Children} from './Children'
 
 /**
  * #### Child Concepts
- * This component renders a list of child concepts for a given concept.
- * - provides the <ul> wrapper for each level of nesting
+ * Lenders a list of child concepts for a given concept
+ * with a `<ul>` wrapper for each level of nesting
  */
 export const ChildConcepts = ({
   concepts,
@@ -14,12 +14,12 @@ export const ChildConcepts = ({
   selectConcept,
 }: {
   concepts: ChildConceptTerm[]
-  selectConcept: any
+  selectConcept: (conceptId: string) => void
   inputComponent: boolean
 }) => {
   return (
     <StyledChildConcepts>
-      {concepts.map((concept: any) => {
+      {concepts.map((concept: ChildConceptTerm) => {
         return (
           <Children
             key={concept.id}
