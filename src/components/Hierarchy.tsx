@@ -17,10 +17,8 @@ import {TreeStructure} from './TreeStructure'
 
 /**
  * #### Hierarchy Component
- * - Provides a frame for global controls and tree structure
- * - Fetches the complete tree of concepts in a concept scheme.
- * - Displays the tree in a nested list.
- * - Displays controls to add concepts or top concepts when in draft mode or release mode.
+ * Provides a frame for global controls and tree structure and displays
+ * controls to add concepts or top concepts when in draft mode or release mode.
  * @param inputComponent - Whether this is an input component.
  * @param branchId - Input component: The branch ID to fetch concepts from.
  * @param selectConcept - Input component: The function to call when a concept is selected.
@@ -43,6 +41,7 @@ export const Hierarchy = ({
     createConcept('concept')
   }, [createConcept])
 
+  // Expand & Collapse Controls
   // short IDs are used on treeId to initiate a re-rendering of all child
   // elements on expand/collapse and re-initialize any local toggle state
   // that had been set.
