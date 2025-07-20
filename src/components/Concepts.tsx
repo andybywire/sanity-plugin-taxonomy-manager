@@ -2,16 +2,15 @@ import {AddCircleIcon, SquareIcon, ToggleArrowRightIcon, TrashIcon} from '@sanit
 import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
-import {SchemeContext, TreeContext} from '../context'
+import {ReleaseContext, SchemeContext} from '../context'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
 import {StyledConcept, StyledTreeButton, StyledTreeToggle} from '../styles'
-import type {ChildConceptTerm} from '../types'
+import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
+// import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
-import type {ConceptSchemeDocument} from './TreeView'
 
 type ConceptProps = {
   concept: ChildConceptTerm
@@ -31,7 +30,7 @@ export const Concepts = ({
   selectConcept,
 }: ConceptProps) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
-  const {editControls} = useContext(TreeContext) || {editControls: false}
+  const releaseContext: string = useContext(ReleaseContext) as string
 
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
@@ -80,10 +79,12 @@ export const Concepts = ({
             orphan
           </Text>
         )}
-        {!editControls && <ConceptDetailDialogue concept={concept} />}
-        {!inputComponent && editControls && (
+        {/* 👇 Used for input components. Work back in when I work on that. */}
+        {/* {!editControls && <ConceptDetailDialogue concept={concept} />} */}
+        {!inputComponent && releaseContext !== 'published' && (
           <Inline space={2}>
             <Tooltip
+              delay={{open: 750}}
               content={
                 <Box padding={2} sizing="border">
                   <Stack padding={1} space={2}>
@@ -106,6 +107,7 @@ export const Concepts = ({
               </StyledTreeButton>
             </Tooltip>
             <Tooltip
+              delay={{open: 750}}
               content={
                 <Box padding={2} sizing="border">
                   <Stack padding={1} space={2}>

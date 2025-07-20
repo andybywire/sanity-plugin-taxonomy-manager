@@ -9,13 +9,13 @@ import {
 import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
-import {SchemeContext, TreeContext} from '../context'
+import {ReleaseContext, SchemeContext, TreeContext} from '../context'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
 import {StyledChildConcept, StyledTreeButton, StyledTreeToggle} from '../styles'
-import type {ChildConceptTerm} from '../types'
+import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
+// import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 
@@ -29,15 +29,16 @@ export const Children = ({
   inputComponent = false,
 }: {
   concept: ChildConceptTerm
-  selectConcept: any
+  selectConcept: (conceptId: string) => void
   inputComponent: boolean
 }) => {
-  const document: any = useContext(SchemeContext) || {}
+  const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
+  const releaseContext: string = useContext(ReleaseContext) as string
   const {
     // @ts-expect-error — sort out type
     globalVisibility: {treeVisibility},
   } = useContext(TreeContext) || {}
-  const {editControls} = useContext(TreeContext) || {editControls: false}
+  // const {editControls} = useContext(TreeContext) || {editControls: false}
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
@@ -83,56 +84,89 @@ export const Children = ({
               <ConceptDetailLink concept={concept} />
             )}
           </Inline>
-          {!editControls && <ConceptDetailDialogue concept={concept} />}
+          {/* 👇 Used for input components. Work back in when I work on that. */}
+          {/* {!editControls && <ConceptDetailDialogue concept={concept} />} */}
         </Inline>
-        {editControls && concept?.level && concept.level < 5 && (
-          <Inline space={2}>
-            <StyledTreeButton
-              onClick={handleAddChild}
-              type="button"
-              className="action"
-              aria-label="Add child a child concept"
-            >
-              <AddCircleIcon className="add" />
-            </StyledTreeButton>
-            <StyledTreeButton
-              onClick={handleRemoveConcept}
-              type="button"
-              className="action"
-              aria-label="Remove concept from scheme"
-            >
-              <TrashIcon className="remove" />
-            </StyledTreeButton>
-          </Inline>
-        )}
-
-        {editControls && concept.childConcepts?.length == 0 && concept.level == 5 && (
-          <Inline space={2}>
-            <Tooltip
-              content={
-                <Box padding={2} sizing="border">
-                  <Stack padding={1} space={2}>
+        {!inputComponent &&
+          releaseContext !== 'published' &&
+          concept?.level &&
+          concept.level < 5 && (
+            <Inline space={2}>
+              <Tooltip
+                delay={{open: 750}}
+                content={
+                  <Box padding={1} sizing="content">
                     <Text muted size={1}>
-                      This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels.
+                      Add a child concept below this concept
                     </Text>
-                  </Stack>
-                </Box>
-              }
-              fallbackPlacements={['right', 'left']}
-              placement="top"
-            >
-              <InfoOutlineIcon className="info warning" />
-            </Tooltip>
-            <StyledTreeButton
-              onClick={handleRemoveConcept}
-              type="button"
-              className="action"
-              aria-label="Remove concept from scheme"
-            >
-              <TrashIcon className="remove" />
-            </StyledTreeButton>
-          </Inline>
-        )}
+                  </Box>
+                }
+                fallbackPlacements={['right', 'left']}
+                placement="top"
+              >
+                <StyledTreeButton
+                  onClick={handleAddChild}
+                  type="button"
+                  className="action"
+                  aria-label="Add child a child concept"
+                >
+                  <AddCircleIcon className="add" />
+                </StyledTreeButton>
+              </Tooltip>
+              <Tooltip
+                delay={{open: 750}}
+                content={
+                  <Box padding={1} sizing="content">
+                    <Text muted size={1}>
+                      Remove this concept from this scheme
+                    </Text>
+                  </Box>
+                }
+                fallbackPlacements={['right', 'left']}
+                placement="top"
+              >
+                <StyledTreeButton
+                  onClick={handleRemoveConcept}
+                  type="button"
+                  className="action"
+                  aria-label="Remove concept from scheme"
+                >
+                  <TrashIcon className="remove" />
+                </StyledTreeButton>
+              </Tooltip>
+            </Inline>
+          )}
+
+        {!inputComponent &&
+          releaseContext !== 'published' &&
+          concept.childConcepts?.length == 0 &&
+          concept.level == 5 && (
+            <Inline space={2}>
+              <Tooltip
+                content={
+                  <Box padding={2} sizing="border">
+                    <Stack padding={1} space={2}>
+                      <Text muted size={1}>
+                        This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels.
+                      </Text>
+                    </Stack>
+                  </Box>
+                }
+                fallbackPlacements={['right', 'left']}
+                placement="top"
+              >
+                <InfoOutlineIcon className="info warning" />
+              </Tooltip>
+              <StyledTreeButton
+                onClick={handleRemoveConcept}
+                type="button"
+                className="action"
+                aria-label="Remove concept from scheme"
+              >
+                <TrashIcon className="remove" />
+              </StyledTreeButton>
+            </Inline>
+          )}
 
         {concept?.childConcepts && concept?.childConcepts?.length > 0 && concept.level == 5 && (
           <Inline space={1}>
@@ -154,7 +188,7 @@ export const Children = ({
             >
               <ErrorOutlineIcon className="info error" />
             </Tooltip>
-            {document.displayed?.controls && (
+            {!inputComponent && releaseContext !== 'published' && (
               <StyledTreeButton
                 onClick={handleRemoveConcept}
                 type="button"

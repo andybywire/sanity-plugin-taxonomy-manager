@@ -1,14 +1,14 @@
 import {AddCircleIcon, TrashIcon, ToggleArrowRightIcon, SquareIcon} from '@sanity/icons'
-import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
+import {Text, Inline, Tooltip, Box} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
-import {SchemeContext, TreeContext} from '../context'
+import {ReleaseContext, SchemeContext} from '../context'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
 import {StyledTopConcept, StyledTreeToggle, StyledTreeButton} from '../styles'
-import type {TopConceptTerm} from '../types'
+import type {ConceptSchemeDocument, TopConceptTerm} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
-import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
+// import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 
@@ -16,7 +16,7 @@ type TopConceptsProps = {
   concept: TopConceptTerm
   treeVisibility: string
   inputComponent: boolean
-  selectConcept: any
+  selectConcept: (conceptId: string) => void
 }
 
 /**
@@ -29,8 +29,8 @@ export const TopConcepts = ({
   inputComponent,
   selectConcept,
 }: TopConceptsProps) => {
-  const document: any = useContext(SchemeContext) || {}
-  const {editControls} = useContext(TreeContext) || {editControls: false}
+  const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
+  const releaseContext: string = useContext(ReleaseContext) as string
 
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
@@ -79,17 +79,17 @@ export const TopConcepts = ({
         <Text size={1} muted>
           top concept
         </Text>
-        {!editControls && <ConceptDetailDialogue concept={concept} />}
-        {editControls && (
+        {/* 👇 Used for input components. Work back in when I work on that. */}
+        {/* {!editControls && <ConceptDetailDialogue concept={concept} />} */}
+        {!inputComponent && releaseContext !== 'published' && (
           <Inline space={2}>
             <Tooltip
+              delay={{open: 750}}
               content={
-                <Box padding={2} sizing="border">
-                  <Stack padding={1} space={2}>
-                    <Text muted size={1}>
-                      Add a child concept
-                    </Text>
-                  </Stack>
+                <Box padding={1} sizing="content">
+                  <Text muted size={1}>
+                    Add a child concept below this concept
+                  </Text>
                 </Box>
               }
               fallbackPlacements={['right', 'left']}
@@ -105,13 +105,12 @@ export const TopConcepts = ({
               </StyledTreeButton>
             </Tooltip>
             <Tooltip
+              delay={{open: 750}}
               content={
-                <Box padding={2} sizing="border">
-                  <Stack padding={1} space={2}>
-                    <Text muted size={1}>
-                      Remove concept from scheme
-                    </Text>
-                  </Stack>
+                <Box padding={1} sizing="content">
+                  <Text muted size={1}>
+                    Remove this concept from this scheme
+                  </Text>
                 </Box>
               }
               fallbackPlacements={['right', 'left']}
@@ -129,7 +128,6 @@ export const TopConcepts = ({
           </Inline>
         )}
       </Inline>
-
       {concept?.childConcepts && concept.childConcepts.length > 0 && (
         <ChildConcepts
           concepts={concept.childConcepts}
