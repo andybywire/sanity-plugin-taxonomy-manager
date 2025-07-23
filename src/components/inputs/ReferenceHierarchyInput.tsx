@@ -1,14 +1,32 @@
+/* eslint-disable no-console */
+import {isVersionId} from '@sanity/id-utils'
+import type {DocumentId} from '@sanity/id-utils'
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
-import type {ObjectFieldProps, Reference} from 'sanity'
-import {useClient, useFormValue} from 'sanity'
+import type {ObjectFieldProps, ObjectOptions, Reference} from 'sanity'
+import {isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
 
+import type {ConceptSchemeDocument} from '../../types'
 import {TreeView} from '../TreeView'
 
+type ReferenceOptions = ObjectOptions & {
+  filter: ({getClient}: {getClient: () => ReturnType<typeof useClient>}) => Promise<{
+    filter: string
+    params: {
+      concepts: string[]
+      topConcepts?: string[]
+      schemeId: string
+      branchId?: string
+    }
+  }>
+}
+
+// Extract the return type of the filter function
+type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
+
 /**
- * Hierarchy View Input Component for Reference Fields
- *
- * This component allows Studio users to browse and select taxonomy
+ * #### Hierarchy View Input Component for Reference Fields
+ * Allows Studio users to browse and select taxonomy
  * terms from a hierarchical tree structure. It is designed to be
  * used as an input for taxonomy reference fields in Sanity Studio.
  *
@@ -16,25 +34,34 @@ import {TreeView} from '../TreeView'
  * plugin `schemeFilter` or `branchFilter` options.
  */
 export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
-  const {name, title} = props // name of the field to input a value
+  const client = useClient({apiVersion: '2025-02-19'})
+
+  // the resource document in which the input component appears:
   const documentId = useFormValue(['_id']) as string
-  // the resource document we're in
-  const client = useClient({apiVersion: '2021-10-21'})
+  // name of the field to input a value
+  const {name, title} = props
+
+  // Get release and draft status of the document
+  const isInRelease = isVersionId(documentId as DocumentId)
+  const isDraft = isDraftId(documentId as DocumentId)
+  // Selected Perspective is also used in the Tree view component. Consider tidying.
+  const {selectedPerspectiveName} = usePerspective()
 
   const [schemeLoading, setSchemeLoading] = useState(true)
   const [valuesLoading, setValuesLoading] = useState(true)
   const [open, setOpen] = useState(false)
+
+  // the skosConceptScheme document identified by the field filter options:
   const [scheme, setScheme] = useState({})
-  // the skosConceptScheme document identified by the field filter options
-  const [filterValues, setFilterValues] = useState<any>(null)
-  // State to store resolved filter values
+  // State to store resolved filter values:
+  const [filterValues, setFilterValues] = useState<FilterResult | undefined>()
 
+  // use filterValues if available, otherwise fallback to default:
   const {schemeId, branchId = null} = filterValues?.params || {}
-  // use filterValues if available, otherwise fallback to default
 
-  const {filter} = props.schemaType.options
+  const {filter} = props.schemaType.options as ReferenceOptions
 
-  // Fetch filter values from `reference` field filter asynchronously
+  // Fetch filter values from `reference` field filter asynchronously.
   useEffect(() => {
     async function fetchFilterValues() {
       try {
@@ -46,15 +73,15 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
         console.error('Error fetching filter values: ', error)
       }
     }
-    fetchFilterValues()
+    fetchFilterValues().catch((error) => console.error('Error fetching filter values: ', error))
   }, [filter, client])
 
-  // get the skosConceptScheme document identified by the field
-  // filter options
+  // get the skosConceptScheme document identified by the field filter options
   useEffect(() => {
+    if (!schemeId) return
     client
       .fetch(`{"displayed": *[schemeId == "${schemeId}"][0]}`)
-      .then((res) => {
+      .then((res: {displayed?: ConceptSchemeDocument['displayed']}) => {
         if (res?.displayed) {
           setScheme(res)
           setSchemeLoading(false)
@@ -76,13 +103,17 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
    * Writes the selected taxonomy term to the document field
    */
   const handleAction = useCallback(
-    (conceptRef: any) => {
+    // (conceptRef: {_ref: string; _type: 'reference'}) => {
+    (conceptId: string) => {
+      const conceptRef = {_ref: conceptId, _type: 'reference' as const}
+
       // if there is a draft document, patch the new reference and
       // commit the change
-      if (documentId.includes('drafts.')) {
+      if (isDraft || isInRelease) {
+        console.log('in draft or release')
         client
           .patch(documentId)
-          .set({[name]: conceptRef})
+          .set({[name]: conceptRef._ref})
           .commit()
           .then(() => setOpen(false))
           .catch((err) => console.error(err))
@@ -93,19 +124,19 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
       // document id in the `drafts.` path and the new reference
       client
         .fetch(`*[_id == "${documentId}"][0]`)
-        .then((res) => {
+        .then((res: ConceptSchemeDocument) => {
           res._id = `drafts.${res._id}`
-          res[name] = conceptRef
-          client.create(res)
+          res[name] = conceptRef._ref
+          client.create(res).catch((error) => console.error('Error creating draft: ', error))
         })
         .then(() => setOpen(false))
         .catch((err) => console.error(err))
     },
-    [client, documentId, name]
+    [client, documentId, isDraft, isInRelease, name]
   )
 
   // Check to be sure a filter is present
-  if (!props.schemaType.options?.filter) {
+  if (!(props.schemaType.options as ReferenceOptions)?.filter) {
     return (
       <Stack space={3}>
         {props.renderDefault(props)}
@@ -122,7 +153,7 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
     )
   }
   // ... and that it is a scheme or branch filter and configured correctly
-  else if (props.schemaType.options.filter.length == 0) {
+  else if ((props.schemaType.options as ReferenceOptions)?.filter.length === 0) {
     return (
       <Stack space={3}>
         {props.renderDefault(props)}
@@ -161,7 +192,12 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
       {props.renderDefault(props)}
 
       <Grid columns={1} gap={3}>
-        <Button text="Browse Taxonomy Tree" mode="ghost" onClick={browseHierarchy} />
+        <Button
+          disabled={selectedPerspectiveName === 'published'}
+          text="Browse Taxonomy Tree"
+          mode="ghost"
+          onClick={browseHierarchy}
+        />
       </Grid>
       {open && (
         <Dialog
@@ -173,8 +209,9 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
         >
           <Box padding={10}>
             <TreeView
-              document={scheme as any} // the document.displayed _id for the relevant skosConceptScheme
-              branchId={branchId} // the branch identified in branchFilter()
+              document={scheme as ConceptSchemeDocument}
+              // @ts-expect-error - TODO: work out this type issue.
+              branchId={branchId}
               inputComponent
               selectConcept={handleAction}
             />
