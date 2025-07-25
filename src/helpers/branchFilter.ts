@@ -54,7 +54,8 @@ export const branchFilter = (
     }
 
     // Fetch concepts for the given schemeId and branchId
-    const {concepts} = await client.fetch(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const {concepts} = (await client.fetch(
       `{      
         "concepts": *[
           _id in *[_type=="skosConceptScheme" && schemeId == $schemeId].concepts[]._ref
@@ -66,10 +67,10 @@ export const branchFilter = (
           ]._id
       }`,
       {schemeId, branchId}
-    )
+    )) as {concepts: string[]}
     // schemeId is included in params for use by the ArrayHierarchyInput component
     return {
-      filter: `!(_id in path("drafts.**")) && _id in $concepts`,
+      filter: `_id in $concepts`,
       params: {concepts, schemeId, branchId},
     }
   }
