@@ -23,6 +23,7 @@ const branchBuilder = (level = 1): string | void => {
      {
       "id": _id,
       "level": ${level},
+      _originalId,
       prefLabel,
       definition,
       example,
@@ -51,6 +52,7 @@ export const trunkBuilder = (): string => {
     "topConcepts": topConcepts[]->|order(prefLabel) {
       "id": _id,
       "level": 0,
+      _originalId,
       prefLabel,
       definition,
       example,
@@ -68,6 +70,7 @@ export const trunkBuilder = (): string => {
             )
           ),
         true),
+      _originalId,
       prefLabel,
       definition,
       example,
@@ -94,6 +97,7 @@ export const inputBuilder = (): string => {
       "topConcepts":*[_type == "skosConcept" && conceptId == $branchId]{
         "id": _id,
         "level": 0,
+        _originalId,
         prefLabel,
         definition,
         example,
@@ -107,6 +111,7 @@ export const inputBuilder = (): string => {
       "topConcepts":topConcepts[]->|order(prefLabel){
         "id": _id,
         "level": 0,
+        _originalId,
         prefLabel,
         definition,
         example,
@@ -124,6 +129,7 @@ export const inputBuilder = (): string => {
               )
             ), 
           true),
+        _originalId,
         prefLabel,
         definition,
         example,

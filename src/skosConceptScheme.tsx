@@ -23,7 +23,7 @@ export default function skosConceptScheme(
       const {getClient} = context
       const client = getClient({apiVersion: '2021-03-25'})
       const baseIri =
-        (await client.fetch(`
+        (await client.fetch<string | null>(`
         *[(_type == 'skosConcept' || _type == 'skosConceptScheme') && defined(baseIri)]| order(_createdAt desc)[0].baseIri
       `)) ?? undefined
       return {
@@ -108,7 +108,7 @@ export default function skosConceptScheme(
       select: {
         title: 'title',
       },
-      prepare({title}) {
+      prepare({title}: {title: string}) {
         return {
           title: title,
           media: NodeTree,

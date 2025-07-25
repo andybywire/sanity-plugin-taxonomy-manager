@@ -3,6 +3,7 @@ import type {SanityDocument} from 'sanity'
 export interface ChildConceptTerm {
   prefLabel: string
   id: string
+  _originalId?: string
   level?: number
   isOrphan?: boolean
   childConcepts?: ChildConceptTerm[]
@@ -11,6 +12,7 @@ export interface ChildConceptTerm {
 export interface TopConceptTerm {
   prefLabel: string
   id: string
+  _originalId?: string
   childConcepts?: ChildConceptTerm[]
 }
 
@@ -88,6 +90,6 @@ export interface ConceptSchemeDocument extends SanityDocument {
 export interface TreeViewProps {
   document?: ConceptSchemeDocument
   branchId: string
-  selectConcept?: (conceptId: {_ref: string; _type: 'reference'}) => void
+  selectConcept?: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
   inputComponent?: boolean
 }

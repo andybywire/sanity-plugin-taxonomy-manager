@@ -102,7 +102,26 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
    * Writes the selected taxonomy term to the document field
    */
   const handleAction = useCallback(
-    (conceptId: {_ref: string; _type: 'reference'}) => {
+    (conceptId: {
+      _ref: string
+      _type: 'reference'
+      _originalId?: string
+      _strengthenOnPublish?: {type: 'skosConcept'; template: {id: 'skosConcept'}}
+      _weak?: boolean
+    }) => {
+      if (
+        isDraftId(conceptId?._originalId as DocumentId) ||
+        isVersionId(conceptId?._originalId as DocumentId)
+      ) {
+        conceptId._strengthenOnPublish = {
+          type: 'skosConcept',
+          template: {id: 'skosConcept'},
+        }
+        conceptId._weak = true
+      }
+
+      delete conceptId._originalId
+
       // if there is a draft document, patch the new reference and
       // commit the change
       if (isDraft || isInRelease) {

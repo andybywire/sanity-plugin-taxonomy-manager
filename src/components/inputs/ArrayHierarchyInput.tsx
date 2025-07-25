@@ -49,7 +49,6 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
 
   // the resource document in which the input component appears:
   const documentId = useFormValue(['_id']) as string
-
   // name of the field to input a value:
   const {name, title, value = []} = props
 
@@ -71,7 +70,6 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
   // use filterValues if available, otherwise fallback to default:
   const {schemeId, branchId = null} = filterValues?.params || {}
 
-  // const {filter} = props.schemaType.of[0].options
   const {filter} = props.schemaType.of[0].options as ReferenceOptions
 
   const toast = useToast()
@@ -119,7 +117,26 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
    */
   const handleAction =
     // useCallback(
-    (conceptId: {_ref: string; _type: 'reference'}) => {
+    (conceptId: {
+      _ref: string
+      _type: 'reference'
+      _originalId?: string
+      _strengthenOnPublish?: {type: 'skosConcept'; template: {id: 'skosConcept'}}
+      _weak?: boolean
+    }) => {
+      if (
+        isDraftId(conceptId?._originalId as string) ||
+        isVersionId(conceptId?._originalId as string)
+      ) {
+        conceptId._strengthenOnPublish = {
+          type: 'skosConcept',
+          template: {id: 'skosConcept'},
+        }
+        conceptId._weak = true
+      }
+
+      delete conceptId._originalId
+
       // If the ref of the selected term is already in the field close the dialog
       // and provide a toast message that tht entry is already in the field.
       if (value?.map((item: any) => item._ref).includes(conceptId._ref)) {

@@ -16,7 +16,7 @@ export function ConceptSelectLink({
   concept: ChildConceptTerm
   selectConcept?: any
 }) {
-  const {prefLabel, id} = concept ?? {}
+  const {prefLabel, id, _originalId} = concept ?? {}
 
   const linkColor = useLinkColorScheme()
 
@@ -24,9 +24,10 @@ export function ConceptSelectLink({
     const conceptRef = {
       _ref: id,
       _type: 'reference',
+      _originalId,
     }
     selectConcept(conceptRef)
-  }, [id, selectConcept])
+  }, [id, _originalId, selectConcept])
 
   return (
     <>

@@ -20,7 +20,7 @@ export const TreeStructure = ({
 }: {
   concepts: DocumentConcepts
   inputComponent: boolean
-  selectConcept: (conceptId: {_ref: string; _type: 'reference'}) => void
+  selectConcept: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
 }) => {
   const {globalVisibility: {treeId, treeVisibility} = {treeId: 123, treeVisibility: 'open'}} =
     useContext(TreeContext) || {}
