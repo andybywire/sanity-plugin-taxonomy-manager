@@ -47,21 +47,21 @@ export const schemeFilter = (
   }
 
   return async (props) => {
-    const client = props?.getClient({apiVersion: '2023-01-01'})
+    const client = props?.getClient({apiVersion: '2025-02-19'})
     if (!client) {
       throw new Error('Client not available')
     }
     // Fetch concepts and topConcepts for the given schemeId
-    const {concepts, topConcepts} = await client.fetch(
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    const {concepts, topConcepts} = (await client.fetch(
       `{
       "concepts": *[_type=="skosConceptScheme" && schemeId == "${schemeId}"].concepts[]._ref,
       "topConcepts": *[_type=="skosConceptScheme" && schemeId == "${schemeId}"].topConcepts[]._ref
     }`
-    )
+    )) as {concepts: string[]; topConcepts: string[]}
     // schemeId is included in params for use by the ArrayHierarchyInput component
     return {
-      filter: `!(_id in path("drafts.**"))
-              && (_id in $concepts
+      filter: `(_id in $concepts
               || _id in $topConcepts)`,
       params: {concepts, topConcepts, schemeId},
     }
