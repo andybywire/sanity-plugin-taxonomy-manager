@@ -115,8 +115,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
    * #### Term Select Action
    * Writes the selected taxonomy term to the array field
    */
-  const handleAction =
-    // useCallback(
+  const handleAction = useCallback(
     (conceptId: {
       _ref: string
       _type: 'reference'
@@ -181,10 +180,9 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
             .catch((err) => console.error(err))
         })
         .catch((err) => console.error(err))
-    }
-  // ,
-  //   [client, documentId, name, value, toast]
-  // )
+    },
+    [value, isDraft, isInRelease, client, documentId, toast, name]
+  )
 
   // Check to be sure a filter is present
   if (!(props.schemaType.of[0].options as ReferenceOptions)?.filter) {

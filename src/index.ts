@@ -1,10 +1,11 @@
 import type {FieldDefinition} from 'sanity'
 import {definePlugin} from 'sanity'
+// eslint-disable-next-line import/no-unresolved
 import {structureTool} from 'sanity/structure'
 
 import {ReferenceHierarchyInput, ArrayHierarchyInput} from './components/inputs'
 import NodeTree from './components/NodeTree'
-import TreeView from './components/TreeView'
+import {TreeView} from './components/TreeView'
 import {schemeFilter, branchFilter} from './helpers'
 import skosConcept from './skosConcept'
 import skosConceptScheme from './skosConceptScheme'
