@@ -1,6 +1,6 @@
 import {createContext} from 'react'
 
-import type {ConceptSchemeDocument} from './components/TreeView'
+import type {ConceptSchemeDocument} from './types'
 
 type TreeContextType = {
   globalVisibility?: {treeId: string; treeVisibility: string}

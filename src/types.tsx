@@ -88,6 +88,6 @@ export interface ConceptSchemeDocument extends SanityDocument {
 export interface TreeViewProps {
   document?: ConceptSchemeDocument
   branchId: string
-  selectConcept?: (conceptId: string) => void
+  selectConcept?: (conceptId: {_ref: string; _type: 'reference'}) => void
   inputComponent?: boolean
 }

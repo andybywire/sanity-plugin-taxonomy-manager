@@ -14,7 +14,7 @@ export const ChildConcepts = ({
   selectConcept,
 }: {
   concepts: ChildConceptTerm[]
-  selectConcept: (conceptId: string) => void
+  selectConcept: (conceptId: {_ref: string; _type: 'reference'}) => void
   inputComponent: boolean
 }) => {
   return (

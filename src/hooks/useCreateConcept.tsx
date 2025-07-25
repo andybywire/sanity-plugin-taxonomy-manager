@@ -13,15 +13,14 @@ import {nanoid} from 'nanoid'
 import {useCallback} from 'react'
 import {useClient} from 'sanity'
 
-import type {ConceptSchemeDocument} from '../components/TreeView'
-import type {SkosConceptDocument, SkosConceptReference} from '../types'
+import type {SkosConceptDocument, SkosConceptReference, ConceptSchemeDocument} from '../types'
 
 import {useOpenNewConceptPane} from './useOpenNewConceptPane'
 
 /**
  * #### Concept Creation Hook
- * Used for creating concepts and top concepts from the Concept Scheme
- * hierarchy view.
+ * Used for creating concepts and top concepts from the
+ * Concept Scheme hierarchy view.
  */
 export function useCreateConcept(document: ConceptSchemeDocument) {
   const toast = useToast()

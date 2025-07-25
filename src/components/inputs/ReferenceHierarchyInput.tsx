@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import {isVersionId} from '@sanity/id-utils'
 import type {DocumentId} from '@sanity/id-utils'
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
@@ -103,17 +102,13 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
    * Writes the selected taxonomy term to the document field
    */
   const handleAction = useCallback(
-    // (conceptRef: {_ref: string; _type: 'reference'}) => {
-    (conceptId: string) => {
-      const conceptRef = {_ref: conceptId, _type: 'reference' as const}
-
+    (conceptId: {_ref: string; _type: 'reference'}) => {
       // if there is a draft document, patch the new reference and
       // commit the change
       if (isDraft || isInRelease) {
-        console.log('in draft or release')
         client
           .patch(documentId)
-          .set({[name]: conceptRef._ref})
+          .set({[name]: conceptId})
           .commit()
           .then(() => setOpen(false))
           .catch((err) => console.error(err))
@@ -126,7 +121,7 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
         .fetch(`*[_id == "${documentId}"][0]`)
         .then((res: ConceptSchemeDocument) => {
           res._id = `drafts.${res._id}`
-          res[name] = conceptRef._ref
+          res[name] = conceptId
           client.create(res).catch((error) => console.error('Error creating draft: ', error))
         })
         .then(() => setOpen(false))

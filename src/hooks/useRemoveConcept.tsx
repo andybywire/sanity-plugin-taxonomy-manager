@@ -1,34 +1,51 @@
+import {
+  DocumentId,
+  getDraftId,
+  getVersionId,
+  getVersionNameFromId,
+  isVersionId,
+  type VersionId,
+} from '@sanity/id-utils'
 import {useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {useClient} from 'sanity'
 
+import type {ConceptSchemeDocument} from '../types'
+
 /**
  * #### Concept Removal Hook
- * Used for removing concepts and top concepts from the Concept Scheme
- * hierarchy view.
+ * Used for removing concepts and top concepts from
+ * the Concept Scheme hierarchy view.
  */
-export function useRemoveConcept(document: any) {
+export function useRemoveConcept(document: ConceptSchemeDocument) {
   const toast = useToast()
-  const client = useClient({apiVersion: '2021-10-21'})
+  const client = useClient({apiVersion: '2025-02-19'})
 
   // conceptId is the id of the concept to be removed
   const removeConcept = useCallback(
     (conceptId: string, conceptType: string, prefLabel?: string) => {
       const type = conceptType == 'topConcept' ? 'topConcepts' : 'concepts'
 
-      // Ensure concepts are removed from a draft of the concept scheme document
-      const draftConceptScheme = JSON.parse(JSON.stringify(document.displayed))
+      const isInRelease = isVersionId(document.displayed._id as DocumentId)
+      const releaseName = isInRelease
+        ? getVersionNameFromId(document.displayed._id as VersionId)
+        : undefined
 
-      if (!draftConceptScheme._id.includes('drafts.')) {
-        draftConceptScheme._id = `drafts.${draftConceptScheme._id}`
-      }
+      const schemeId = isInRelease
+        ? getVersionId(DocumentId(document.displayed._id), releaseName as string)
+        : getDraftId(DocumentId(document.displayed._id))
+
+      // Ensure concepts are removed from a draft of the concept scheme document
+      // const draftConceptScheme = JSON.parse(JSON.stringify(document.displayed))
+
+      // if (!draftConceptScheme._id.includes('drafts.')) {
+      //   draftConceptScheme._id = `drafts.${draftConceptScheme._id}`
+      // }
 
       client
         .transaction()
-        .createIfNotExists(draftConceptScheme)
-        .patch(draftConceptScheme._id, (patch) =>
-          patch.unset([`${type}[_ref=="${conceptId.replace('drafts.', '')}"]`])
-        )
+        .createIfNotExists({...document.displayed, _id: schemeId})
+        .patch(schemeId, (patch) => patch.unset([`${type}[_ref=="${conceptId}"]`]))
         .commit()
         .then((_res) => {
           toast.push({
@@ -42,7 +59,7 @@ export function useRemoveConcept(document: any) {
             closable: true,
             status: 'error',
             title: 'Error removing concept',
-            description: err.message,
+            description: err instanceof Error ? err.message : 'Unknown error occurred',
           })
         })
     },

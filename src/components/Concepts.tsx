@@ -8,7 +8,7 @@ import {StyledConcept, StyledTreeButton, StyledTreeToggle} from '../styles'
 import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
-// import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
+import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 
@@ -16,7 +16,7 @@ type ConceptProps = {
   concept: ChildConceptTerm
   treeVisibility: string
   inputComponent: boolean
-  selectConcept: (conceptId: string) => void
+  selectConcept: (conceptId: {_ref: string; _type: 'reference'}) => void
 }
 
 /**
@@ -79,8 +79,7 @@ export const Concepts = ({
             orphan
           </Text>
         )}
-        {/* 👇 Used for input components. Work back in when I work on that. */}
-        {/* {!editControls && <ConceptDetailDialogue concept={concept} />} */}
+        {inputComponent && <ConceptDetailDialogue concept={concept} />}
         {!inputComponent && releaseContext !== 'published' && (
           <Inline space={2}>
             <Tooltip

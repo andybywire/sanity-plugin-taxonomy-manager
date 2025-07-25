@@ -1,11 +1,13 @@
 /* eslint-disable react/require-default-props */
+import type {DocumentId} from '@sanity/id-utils'
+import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Box, Text, Card} from '@sanity/ui'
 import {useContext} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
-import {SchemeContext, TreeContext} from '../../context'
+import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
 import {inputBuilder} from '../../queries'
-import type {DocumentConcepts} from '../../types'
+import type {ConceptSchemeDocument, DocumentConcepts, TreeViewProps} from '../../types'
 import {NewScheme} from '../guides'
 import {TreeStructure} from '../TreeStructure'
 
@@ -17,17 +19,10 @@ import {TreeStructure} from '../TreeStructure'
  * @param inputComponent - Specifies whether the component is a Studio
  *   input component. Set in HierarchyInput and passed through TreeView
  */
-export const InputHierarchy = ({
-  branchId = '',
-  selectConcept,
-  inputComponent,
-}: {
-  branchId: string
-  selectConcept?: any
-  inputComponent: boolean
-}) => {
-  const document: any = useContext(SchemeContext) || {}
-  const documentId = document.displayed?._id
+export const InputHierarchy = ({branchId = '', selectConcept, inputComponent}: TreeViewProps) => {
+  const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
+  const documentId = getPublishedId(document.displayed?._id as DocumentId)
+  const releaseContext: string = useContext(ReleaseContext) as string
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
       fetch: inputBuilder(),
@@ -35,6 +30,9 @@ export const InputHierarchy = ({
     },
     {
       params: {id: documentId, branchId},
+      options: {
+        perspective: releaseContext === undefined ? 'drafts' : [releaseContext],
+      },
     }
   ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
   if (loading) {
@@ -74,8 +72,8 @@ export const InputHierarchy = ({
       <Box padding={4}>
         <TreeStructure
           concepts={data}
-          inputComponent={inputComponent}
-          selectConcept={selectConcept}
+          inputComponent={inputComponent || false}
+          selectConcept={selectConcept || (() => undefined)}
         />
       </Box>
     </TreeContext.Provider>

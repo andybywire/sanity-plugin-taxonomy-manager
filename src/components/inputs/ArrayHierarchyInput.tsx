@@ -1,3 +1,4 @@
+import type {DocumentId} from '@sanity/id-utils'
 import {
   Grid,
   Stack,
@@ -12,15 +13,30 @@ import {
   Spinner,
 } from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
-import type {ArrayFieldProps} from 'sanity'
-import {useClient, useFormValue} from 'sanity'
+import type {ArrayFieldProps, ObjectOptions} from 'sanity'
+import {useClient, useFormValue, isVersionId, isDraftId, usePerspective} from 'sanity'
 
+import type {ConceptSchemeDocument} from '../../types'
 import {TreeView} from '../TreeView'
 
+type ReferenceOptions = ObjectOptions & {
+  filter: ({getClient}: {getClient: () => ReturnType<typeof useClient>}) => Promise<{
+    filter: string
+    params: {
+      concepts: string[]
+      topConcepts?: string[]
+      schemeId: string
+      branchId?: string
+    }
+  }>
+}
+
+// Extract the return type of the filter function
+type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
+
 /**
- * Hierarchy View Input Component
- *
- * This component allows Studio users to browse and select taxonomy
+ * #### Hierarchy View Input Component
+ * Allows Studio users to browse and select taxonomy
  * terms from a hierarchical tree structure. It is designed to be
  * used as an input for taxonomy array fields in Sanity Studio.
  *
@@ -29,23 +45,34 @@ import {TreeView} from '../TreeView'
  *
  */
 export function ArrayHierarchyInput(props: ArrayFieldProps) {
-  const {name, title, value = []} = props // name of the field to input a value
+  const client = useClient({apiVersion: '2025-02-19'})
+
+  // the resource document in which the input component appears:
   const documentId = useFormValue(['_id']) as string
-  // the resource document we're in
-  const client = useClient({apiVersion: '2021-10-21'})
+
+  // name of the field to input a value:
+  const {name, title, value = []} = props
+
+  // Get release and draft status of the document
+  const isInRelease = isVersionId(documentId as DocumentId)
+  const isDraft = isDraftId(documentId as DocumentId)
+  // Selected Perspective is also used in the Tree view component. Consider tidying.
+  const {selectedPerspectiveName} = usePerspective()
 
   const [schemeLoading, setSchemeLoading] = useState(true)
   const [valuesLoading, setValuesLoading] = useState(true)
   const [open, setOpen] = useState(false)
+
+  // the skosConceptScheme document identified by the field filter options:
   const [scheme, setScheme] = useState({})
-  // the skosConceptScheme document identified by the field filter options
-  const [filterValues, setFilterValues] = useState<any>(null)
-  // State to store resolved filter values
+  // State to store resolved filter values:
+  const [filterValues, setFilterValues] = useState<FilterResult | undefined>()
 
-  // get the filter options from the `reference` field
-  const {schemeId, branchId = null} = filterValues?.params || {} // use filterValues if available, otherwise fallback to default
+  // use filterValues if available, otherwise fallback to default:
+  const {schemeId, branchId = null} = filterValues?.params || {}
 
-  const {filter} = props.schemaType.of[0].options
+  // const {filter} = props.schemaType.of[0].options
+  const {filter} = props.schemaType.of[0].options as ReferenceOptions
 
   const toast = useToast()
 
@@ -61,15 +88,15 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
         console.error('Error fetching filter values: ', error)
       }
     }
-    fetchFilterValues()
+    fetchFilterValues().catch((error) => console.error('Error fetching filter values: ', error))
   }, [filter, client])
 
-  // get the skosConceptScheme document identified by the field
-  // filter options
+  // get the skosConceptScheme document identified by the field filter options
   useEffect(() => {
+    if (!schemeId) return
     client
       .fetch(`{"displayed": *[schemeId == "${schemeId}"][0]}`)
-      .then((res) => {
+      .then((res: {displayed?: ConceptSchemeDocument['displayed']}) => {
         if (res?.displayed) {
           setScheme(res)
           setSchemeLoading(false)
@@ -90,11 +117,12 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
    * #### Term Select Action
    * Writes the selected taxonomy term to the array field
    */
-  const handleAction = useCallback(
-    (conceptRef: any) => {
+  const handleAction =
+    // useCallback(
+    (conceptId: {_ref: string; _type: 'reference'}) => {
       // If the ref of the selected term is already in the field close the dialog
       // and provide a toast message that tht entry is already in the field.
-      if (value?.map((item: any) => item._ref).includes(conceptRef._ref)) {
+      if (value?.map((item: any) => item._ref).includes(conceptId._ref)) {
         setOpen(false)
         toast.push({
           status: 'warning',
@@ -107,11 +135,11 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
       }
       // if there is a draft document, patch the new reference and
       // commit the change
-      if (documentId.includes('drafts.')) {
+      if (isDraft || isInRelease) {
         client
           .patch(documentId)
           .setIfMissing({[name]: []})
-          .append(name, [conceptRef])
+          .append(name, [conceptId])
           .commit({autoGenerateArrayKeys: true})
           .then(() => setOpen(false))
           .catch((err) => console.error(err))
@@ -122,26 +150,27 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
       // document id in the `drafts.` path and the new reference
       client
         .fetch(`*[_id == "${documentId}"][0]`)
-        .then((res) => {
+        .then((res: ConceptSchemeDocument) => {
           res._id = `drafts.${res._id}`
-          client.create(res)
+          client.create(res).catch((error) => console.error('Error creating draft: ', error))
         })
         .then(() => {
           client
             .patch(`drafts.${documentId}`)
             .setIfMissing({[name]: []})
-            .append(name, [conceptRef])
+            .append(name, [conceptId])
             .commit({autoGenerateArrayKeys: true})
             .then(() => setOpen(false))
             .catch((err) => console.error(err))
         })
         .catch((err) => console.error(err))
-    },
-    [client, documentId, name, value, toast]
-  )
+    }
+  // ,
+  //   [client, documentId, name, value, toast]
+  // )
 
   // Check to be sure a filter is present
-  if (!props.schemaType.of[0].options?.filter) {
+  if (!(props.schemaType.of[0].options as ReferenceOptions)?.filter) {
     return (
       <Stack space={3}>
         {props.renderDefault(props)}
@@ -158,7 +187,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
     )
   }
   // ... and that it is a scheme or branch filter and configured correctly
-  else if (props.schemaType.of[0].options?.filter?.length === 0) {
+  else if ((props.schemaType.of[0].options as ReferenceOptions)?.filter?.length === 0) {
     return (
       <Stack space={3}>
         {props.renderDefault(props)}
@@ -218,7 +247,12 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
       {props.renderDefault(props)}
 
       <Grid columns={1} gap={3}>
-        <Button text="Browse Taxonomy Tree" mode="ghost" onClick={browseHierarchy} />
+        <Button
+          disabled={selectedPerspectiveName === 'published'}
+          text="Browse Taxonomy Tree"
+          mode="ghost"
+          onClick={browseHierarchy}
+        />
       </Grid>
       {open && (
         <Dialog
@@ -230,8 +264,9 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
         >
           <Box padding={10}>
             <TreeView
-              document={scheme as any} // the document.displayed _id for the relevant skosConceptScheme
-              branchId={branchId} // the branch identified in branchFilter()
+              document={scheme as ConceptSchemeDocument}
+              // @ts-expect-error - TODO: work out this type issue.
+              branchId={branchId}
               inputComponent
               selectConcept={handleAction}
             />
