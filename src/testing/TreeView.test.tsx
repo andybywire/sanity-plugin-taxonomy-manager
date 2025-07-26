@@ -4,7 +4,7 @@ import {render, screen} from '@testing-library/react'
 import type {ReactNode} from 'react'
 import {describe, it, expect, vi} from 'vitest'
 
-import {TreeView} from './TreeView'
+import {TreeView} from '../components/TreeView'
 
 // Mock Sanity UI components
 vi.mock('@sanity/ui', () => ({

@@ -1,6 +1,6 @@
 import {describe, it, expect, vi, beforeEach} from 'vitest'
 
-import {branchFilter} from './branchFilter'
+import {branchFilter} from '../helpers/branchFilter'
 
 describe('branchFilter', () => {
   const mockGetClient = vi.fn()

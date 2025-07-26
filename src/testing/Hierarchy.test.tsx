@@ -2,10 +2,9 @@
 import {render, screen} from '@testing-library/react'
 import {describe, it, expect, vi} from 'vitest'
 
+import {Hierarchy} from '../components/Hierarchy'
 import {ReleaseContext, SchemeContext} from '../context'
 import type {ConceptSchemeDocument} from '../types'
-
-import {Hierarchy} from './Hierarchy'
 
 // Mock child components
 vi.mock('./TreeStructure', () => ({

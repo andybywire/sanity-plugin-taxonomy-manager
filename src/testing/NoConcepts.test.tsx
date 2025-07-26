@@ -1,7 +1,7 @@
 import {render, screen} from '@testing-library/react'
 import {describe, expect, it} from 'vitest'
 
-import {NoConcepts} from './NoConcepts'
+import {NoConcepts} from '../components/guides/NoConcepts'
 
 describe('NoConcepts', () => {
   it('should render the component with correct content', () => {

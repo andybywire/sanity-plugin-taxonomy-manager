@@ -1,6 +1,6 @@
 import {describe, it, expect} from 'vitest'
 
-import {ReleaseContext, type ReleaseContextType} from './context'
+import {ReleaseContext, type ReleaseContextType} from '../context'
 
 describe('ReleaseContext', () => {
   it('should be a valid React context', () => {
