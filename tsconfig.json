@@ -21,7 +21,7 @@
     "rootDir": ".",
     "noEmit": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.testing.ts", "src/**/*.testing.tsx", "vitest.config.ts", "package.config.ts"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "package.config.ts"],
   "exclude": [
     "node_modules", 
     "**/*.spec.ts",
