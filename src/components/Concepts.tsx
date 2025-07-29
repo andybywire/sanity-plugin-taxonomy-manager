@@ -1,5 +1,5 @@
 import {AddCircleIcon, SquareIcon, ToggleArrowRightIcon, TrashIcon} from '@sanity/icons'
-import {Text, Inline, Tooltip, Box, Stack} from '@sanity/ui'
+import {Text, Inline, Tooltip, Box} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext} from '../context'
@@ -85,12 +85,10 @@ export const Concepts = ({
             <Tooltip
               delay={{open: 750}}
               content={
-                <Box padding={2} sizing="border">
-                  <Stack padding={1} space={2}>
-                    <Text muted size={1}>
-                      Add a child concept
-                    </Text>
-                  </Stack>
+                <Box padding={1} sizing="content">
+                  <Text muted size={1}>
+                    Add a child concept below this concept
+                  </Text>
                 </Box>
               }
               fallbackPlacements={['right', 'left']}
@@ -100,7 +98,7 @@ export const Concepts = ({
                 onClick={handleAddChild}
                 type="button"
                 className="action"
-                aria-label="Add child a child concept"
+                aria-label="Add a child concept below this concept"
               >
                 <AddCircleIcon className="add" />
               </StyledTreeButton>
@@ -108,12 +106,10 @@ export const Concepts = ({
             <Tooltip
               delay={{open: 750}}
               content={
-                <Box padding={2} sizing="border">
-                  <Stack padding={1} space={2}>
-                    <Text muted size={1}>
-                      Remove concept from scheme
-                    </Text>
-                  </Stack>
+                <Box padding={1} sizing="content">
+                  <Text muted size={1}>
+                    Remove this concept from this scheme
+                  </Text>
                 </Box>
               }
               fallbackPlacements={['right', 'left']}
@@ -123,7 +119,7 @@ export const Concepts = ({
                 onClick={handleRemoveConcept}
                 type="button"
                 className="action"
-                aria-label="Remove concept from scheme"
+                aria-label="Remove this concept from this scheme"
               >
                 <TrashIcon className="remove" />
               </StyledTreeButton>
