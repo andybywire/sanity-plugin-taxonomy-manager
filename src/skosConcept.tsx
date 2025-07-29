@@ -66,10 +66,12 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
             const client = getClient({apiVersion: '2025-06-10'}).withConfig({perspective: 'raw'})
             return client
               .fetch(
-                `*[_type == "skosConcept" && prefLabel == "${prefLabel}" && !(_id in path("drafts.**") || _id in path("versions.**"))][0]._id`
+                `*[_type == "skosConcept" && prefLabel == "${
+                  prefLabel as string
+                }" && !(_id in path("drafts.**") || _id in path("versions.**"))][0]._id`
               )
               .then((conceptId) => {
-                if (conceptId && !context.document?._id.includes(conceptId)) {
+                if (conceptId && !context.document?._id.includes(conceptId as string)) {
                   return 'Preferred Label must be unique.'
                 }
                 return true
