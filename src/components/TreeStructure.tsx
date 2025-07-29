@@ -25,7 +25,7 @@ export const TreeStructure = ({
   const {globalVisibility: {treeId, treeVisibility} = {treeId: 123, treeVisibility: 'open'}} =
     useContext(TreeContext) || {}
 
-  if (concepts?.topConcepts?.length === 0 && concepts?.concepts?.length === 0) {
+  if (!concepts?.topConcepts?.length && !concepts?.concepts?.length) {
     return <NoConcepts />
   }
 

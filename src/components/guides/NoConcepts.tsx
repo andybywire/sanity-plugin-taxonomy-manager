@@ -14,8 +14,8 @@ export const NoConcepts = () => {
           <Label size={4}>No Concepts</Label>
           <Text size={2}>
             There are not yet any concepts assigned to this scheme. To create a multi-level
-            hierarchy with specific entry points, create Top Concepts first, then add children to
-            them. To create a flat list of concepts, create Entry Concepts directly.
+            hierarchy with specific entry points, create Top Concepts first, then add child concepts
+            to them. To create a flat list of concepts, create Concepts directly.
           </Text>
         </Stack>
       </Card>
