@@ -1,12 +1,29 @@
 import {WarningOutlineIcon} from '@sanity/icons'
+import {DocumentId, getPublishedId} from '@sanity/id-utils'
 import {uuid} from '@sanity/uuid'
 import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
-import type {FieldDefinition} from 'sanity'
+import type {FieldDefinition, SanityDocument} from 'sanity'
 
 import {Identifier} from './components/inputs'
 import baseIriField from './modules/baseIriField'
 import {StyledDescription} from './styles'
+
+const conceptFilter = ({document}: {document: SanityDocument}) => {
+  const publishedId = getPublishedId(DocumentId(document._id))
+  return {
+    filter: '!(_id in $broader || _id in $related || _id == $self)',
+    params: {
+      self: publishedId,
+      broader: Array.isArray(document?.broader)
+        ? document.broader.map(({_ref}: {_ref: string}) => _ref)
+        : [],
+      related: Array.isArray(document?.related)
+        ? document.related.map(({_ref}: {_ref: string}) => _ref)
+        : [],
+    },
+  }
+}
 
 /**
  * Sanity document scheme for SKOS Taxonomy Concepts
@@ -229,18 +246,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
             type: 'reference',
             to: {type: 'skosConcept'},
             options: {
-              filter: ({document}: {document: any}) => {
-                return {
-                  // Broader filter only performs document-level validation for broader-transitive/related disjunction.
-                  filter:
-                    '!(_id in $broader || _id in $related || _id in path("drafts.**") || _id == $self)',
-                  params: {
-                    self: document._id.replace('drafts.', ''),
-                    broader: document.broader.map(({_ref}: {_ref: any}) => _ref),
-                    related: document.related.map(({_ref}: {_ref: any}) => _ref),
-                  },
-                }
-              },
+              filter: conceptFilter,
             },
           },
         ],
@@ -264,6 +270,9 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
           {
             type: 'reference',
             to: [{type: 'skosConcept'}],
+            options: {
+              filter: conceptFilter,
+            },
           },
         ],
       }),
