@@ -38,7 +38,6 @@ export const Children = ({
     // @ts-expect-error — sort out type
     globalVisibility: {treeVisibility},
   } = useContext(TreeContext) || {}
-  // const {editControls} = useContext(TreeContext) || {editControls: false}
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
