@@ -58,7 +58,7 @@ export const Hierarchy = ({
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
       fetch: trunkBuilder(),
-      listen: `*[_type == "skosConcept" || _id == $id ]`,
+      listen: `*[_type == "skosConcept" || _type == "skosConceptScheme" ]`,
     },
     {
       params: {
