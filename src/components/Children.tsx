@@ -106,7 +106,7 @@ export const Children = ({
                   onClick={handleAddChild}
                   type="button"
                   className="action"
-                  aria-label="Add child a child concept"
+                  aria-label="Add a child concept below this concept"
                 >
                   <AddCircleIcon className="add" />
                 </StyledTreeButton>
@@ -127,7 +127,7 @@ export const Children = ({
                   onClick={handleRemoveConcept}
                   type="button"
                   className="action"
-                  aria-label="Remove concept from scheme"
+                  aria-label="Remove this concept from this scheme"
                 >
                   <TrashIcon className="remove" />
                 </StyledTreeButton>
