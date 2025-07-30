@@ -40,9 +40,9 @@ export interface SkosConceptReference {
   _key: string
   _ref: string
   _type: 'reference'
-  _strengthenOnPublish: {
+  _strengthenOnPublish?: {
     type: 'skosConcept'
-    template: {id: 'skosConcept'}
+    template?: {id: 'skosConcept'}
   }
   _weak?: boolean
 }

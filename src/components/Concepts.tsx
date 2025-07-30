@@ -46,8 +46,8 @@ export const Concepts = ({
   }, [levelVisibility])
 
   const handleAddChild = useCallback(() => {
-    createConcept('concept', concept?.id, concept?.prefLabel)
-  }, [concept?.id, concept?.prefLabel, createConcept])
+    createConcept('concept', concept)
+  }, [concept, createConcept])
 
   const handleRemoveConcept = useCallback(() => {
     removeConcept(concept.id, 'concept', concept?.prefLabel)

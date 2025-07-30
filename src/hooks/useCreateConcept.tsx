@@ -11,7 +11,7 @@ import {useToast} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
 import {nanoid} from 'nanoid'
 import {useCallback} from 'react'
-import {useClient} from 'sanity'
+import {isPublishedId, useClient} from 'sanity'
 
 import type {SkosConceptDocument, SkosConceptReference, ConceptSchemeDocument} from '../types'
 
@@ -30,25 +30,35 @@ export function useCreateConcept(document: ConceptSchemeDocument) {
   const schemaBaseIri = document.displayed.baseIri
 
   const createConcept = useCallback(
-    (conceptType: string, conceptId?: string, _prefLabel?: string) => {
-      // prefLabel parameter is currently unused but kept for future use
-
+    (
+      conceptType: 'topConcept' | 'concept',
+      concept?: {
+        id: string
+        _originalId?: string
+      }
+    ) => {
+      // destructure IDs and rename for this context
+      const {id: broaderConceptId, _originalId: broaderConceptOriginalId = ''} = concept || {}
+      // check if the skosConceptScheme is in a release
       const isInRelease = isVersionId(document.displayed._id as DocumentId)
+      // if so, get the release name
       const releaseName = isInRelease
         ? getVersionNameFromId(document.displayed._id as VersionId)
         : undefined
 
-      // Generate appropriate IDs based on context
-      const newConceptId = isInRelease
-        ? getVersionId(DocumentId(uuid()), releaseName as string)
-        : getDraftId(DocumentId(uuid()))
-
+      // create a scheme ID based on context
       const schemeId = isInRelease
         ? getVersionId(DocumentId(document.displayed._id), releaseName as string)
         : getDraftId(DocumentId(document.displayed._id))
 
+      // Generate the appropriate concept ID based on context
+      const newConceptId = isInRelease
+        ? getVersionId(DocumentId(uuid()), releaseName as string)
+        : getDraftId(DocumentId(uuid()))
+
+      // create the new skosConcept document
       const skosConcept: SkosConceptDocument = {
-        _id: newConceptId,
+        _id: newConceptId, // either a draft ID or a release ID
         _type: 'skosConcept',
         conceptId: `${nanoid(6)}`,
         prefLabel: '',
@@ -57,23 +67,23 @@ export function useCreateConcept(document: ConceptSchemeDocument) {
         related: [],
       }
 
-      if (conceptId) {
-        // Handle broader concept reference
-        // conceptId represents the broader term, if it exists.
-        // TODO: rename this for clarity when I work on tree view
-        const broaderId = isInRelease
-          ? getVersionId(DocumentId(conceptId), releaseName as string)
-          : getDraftId(DocumentId(conceptId))
-
+      // if a broader concept ID is provided, add it to the skosConcept
+      if (broaderConceptId) {
+        // check if the broader concept is published
+        const isPublished = isPublishedId(DocumentId(broaderConceptOriginalId))
+        // add broader as _strengthenOnPublish if it's not published
         skosConcept.broader = [
-          broaderId && {
+          {
             _key: uuid(),
-            _ref: getPublishedId(broaderId),
+            _ref: getPublishedId(DocumentId(broaderConceptId)),
             _type: 'reference',
-            _strengthenOnPublish: {
-              type: 'skosConcept',
-              template: {id: 'skosConcept'},
-            },
+            _weak: !isPublished,
+            _strengthenOnPublish: isPublished
+              ? undefined
+              : {
+                  type: 'skosConcept',
+                  template: {id: 'skosConcept'},
+                },
           },
         ]
       }
@@ -94,7 +104,7 @@ export function useCreateConcept(document: ConceptSchemeDocument) {
         .createIfNotExists({...document.displayed, _id: schemeId})
         .create(skosConcept)
         .patch(schemeId, (patch) => {
-          if (conceptType == 'topConcept') {
+          if (conceptType === 'topConcept') {
             return patch
               .setIfMissing({topConcepts: []})
               .append('topConcepts', [skosConceptReference])
