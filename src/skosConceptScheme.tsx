@@ -1,4 +1,4 @@
-import {uuid} from '@sanity/uuid'
+import {nanoid} from 'nanoid'
 import type {FieldDefinition} from 'sanity'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
@@ -65,7 +65,7 @@ export default function skosConceptScheme(
         title: 'Identifier',
         description: 'This scheme does not yet have a unique identifier.',
         type: 'string',
-        initialValue: () => `${uuid()}`,
+        initialValue: () => `${nanoid(6)}`,
         hidden: ({document}) => !!document?.schemeId,
         readOnly: ({document}) => !!document?.schemeId,
         components: {
