@@ -141,13 +141,12 @@ export const Children = ({
           concept.level == 5 && (
             <Inline space={2}>
               <Tooltip
+                delay={{open: 750}}
                 content={
-                  <Box padding={2} sizing="border">
-                    <Stack padding={1} space={2}>
-                      <Text muted size={1}>
-                        This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels.
-                      </Text>
-                    </Stack>
+                  <Box padding={1} sizing="content">
+                    <Text muted size={1}>
+                      This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels.
+                    </Text>
                   </Box>
                 }
                 fallbackPlacements={['right', 'left']}
@@ -155,14 +154,27 @@ export const Children = ({
               >
                 <InfoOutlineIcon className="info warning" />
               </Tooltip>
-              <StyledTreeButton
-                onClick={handleRemoveConcept}
-                type="button"
-                className="action"
-                aria-label="Remove concept from scheme"
+              <Tooltip
+                delay={{open: 750}}
+                content={
+                  <Box padding={1} sizing="content">
+                    <Text muted size={1}>
+                      Remove this concept from this scheme
+                    </Text>
+                  </Box>
+                }
+                fallbackPlacements={['right', 'left']}
+                placement="top"
               >
-                <TrashIcon className="remove" />
-              </StyledTreeButton>
+                <StyledTreeButton
+                  onClick={handleRemoveConcept}
+                  type="button"
+                  className="action"
+                  aria-label="Remove concept from scheme"
+                >
+                  <TrashIcon className="remove" />
+                </StyledTreeButton>
+              </Tooltip>
             </Inline>
           )}
 
@@ -170,13 +182,13 @@ export const Children = ({
           <Inline space={1}>
             <Tooltip
               content={
-                <Box padding={2} sizing="border">
-                  <Stack padding={1} space={2}>
+                <Box padding={1} sizing="content">
+                  <Stack padding={0} space={2}>
                     <Text muted size={1}>
                       This concept has unlisted child concepts.
                     </Text>
                     <Text muted size={1}>
-                      The maximum hierarchy depth is 5 levels.
+                      The maximum validated hierarchy depth is 5 levels.
                     </Text>
                   </Stack>
                 </Box>
@@ -187,14 +199,27 @@ export const Children = ({
               <ErrorOutlineIcon className="info error" />
             </Tooltip>
             {!inputComponent && releaseContext !== 'published' && (
-              <StyledTreeButton
-                onClick={handleRemoveConcept}
-                type="button"
-                className="action"
-                aria-label="Remove concept from scheme"
+              <Tooltip
+                delay={{open: 750}}
+                content={
+                  <Box padding={1} sizing="content">
+                    <Text muted size={1}>
+                      Remove this concept from this scheme
+                    </Text>
+                  </Box>
+                }
+                fallbackPlacements={['right', 'left']}
+                placement="top"
               >
-                <TrashIcon className="remove" />
-              </StyledTreeButton>
+                <StyledTreeButton
+                  onClick={handleRemoveConcept}
+                  type="button"
+                  className="action"
+                  aria-label="Remove concept from scheme"
+                >
+                  <TrashIcon className="remove" />
+                </StyledTreeButton>
+              </Tooltip>
             )}
           </Inline>
         )}
