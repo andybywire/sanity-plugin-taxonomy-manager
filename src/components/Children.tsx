@@ -6,7 +6,7 @@ import {
   ToggleArrowRightIcon,
   SquareIcon,
 } from '@sanity/icons'
-import {Inline, Tooltip, Box, Stack, Text} from '@sanity/ui'
+import {Inline, Tooltip, Box, Text} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
@@ -181,16 +181,13 @@ export const Children = ({
         {concept?.childConcepts && concept?.childConcepts?.length > 0 && concept.level == 5 && (
           <Inline space={1}>
             <Tooltip
+              delay={{open: 750}}
               content={
                 <Box padding={1} sizing="content">
-                  <Stack padding={0} space={2}>
-                    <Text muted size={1}>
-                      This concept has unlisted child concepts.
-                    </Text>
-                    <Text muted size={1}>
-                      The maximum validated hierarchy depth is 5 levels.
-                    </Text>
-                  </Stack>
+                  <Text muted size={1}>
+                    This concept has unlisted child concepts. The maximum validated hierarchy depth
+                    is 5 levels.
+                  </Text>
                 </Box>
               }
               fallbackPlacements={['right', 'left']}

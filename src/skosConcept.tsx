@@ -6,7 +6,7 @@ import {defineType, defineField} from 'sanity'
 import type {FieldDefinition, SanityDocument} from 'sanity'
 
 import {Identifier} from './components/inputs'
-import baseIriField from './modules/baseIriField'
+import baseIriField from './helpers/baseIriField'
 import {StyledDescription} from './styles'
 
 const conceptFilter = ({document}: {document: SanityDocument}) => {

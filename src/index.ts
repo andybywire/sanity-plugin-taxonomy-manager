@@ -4,7 +4,7 @@ import {definePlugin} from 'sanity'
 import {structureTool} from 'sanity/structure'
 
 import {ReferenceHierarchyInput, ArrayHierarchyInput} from './components/inputs'
-import NodeTree from './components/NodeTree'
+import NodeTree from './static/NodeTree'
 import {TreeView} from './components/TreeView'
 import {schemeFilter, branchFilter} from './helpers'
 import skosConcept from './skosConcept'

@@ -1,6 +1,6 @@
 import {EditIcon} from '@sanity/icons'
 
-import NodeTree from './components/NodeTree'
+import NodeTree from './static/NodeTree'
 import {TreeView} from './components/TreeView'
 
 /**

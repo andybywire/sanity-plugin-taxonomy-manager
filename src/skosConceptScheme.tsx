@@ -3,8 +3,8 @@ import type {FieldDefinition} from 'sanity'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
 import {Identifier, ManagementControls} from './components/inputs'
-import NodeTree from './components/NodeTree'
-import baseIriField from './modules/baseIriField'
+import baseIriField from './helpers/baseIriField'
+import NodeTree from './static/NodeTree'
 
 /**
  * Sanity document scheme for SKOS Concept Schemes
