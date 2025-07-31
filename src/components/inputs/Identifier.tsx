@@ -1,7 +1,8 @@
 import {Button, Inline, Stack, useToast} from '@sanity/ui'
-import {uuid} from '@sanity/uuid'
+import {nanoid} from 'nanoid'
 import {useCallback} from 'react'
 import {set} from 'sanity'
+import type {StringInputProps} from 'sanity'
 
 /**
  * #### Create Unique Identifier
@@ -10,12 +11,12 @@ import {set} from 'sanity'
  * - Input is only visible if no identifier has been assigned
  * - Input disappears once an ID is generated
  */
-export const Identifier = (props: any) => {
+export const Identifier = (props: StringInputProps) => {
   const {onChange} = props
   const toast = useToast()
 
   const handleChange = useCallback(() => {
-    onChange(set(uuid()))
+    onChange(set(nanoid(6)))
     toast.push({
       status: 'success',
       title: 'Identifier created.',
