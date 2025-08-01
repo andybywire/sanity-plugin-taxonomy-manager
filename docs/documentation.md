@@ -139,6 +139,11 @@ The `customConceptFields` and `customSchemeFields` keys allow you to specify add
 
 Custom fields will appear on all Concept and Concept Scheme documents accordingly. 
 
+### 📺 Taxonomy Set-up & Use Demo
+A presentation on managing standards-based taxonomies in Sanity Studio and purposefully integrating tagging to support discovery, findability, and search for content collections. Delivered Apr 4, 2025 as part of Sanity's "Showcase" series. 
+
+<iframe width="640" height="360" src="https://www.youtube.com/embed/kkFRFtFSNeQ?si=H95eGKl69qr_jOCF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
 ## Taxonomy Design
 
 Taxonomies come in a variety of shapes and sizes, ranging from huge hierarchies of thousands of terms, to small trees or lists of a handful of important concepts. While larger taxonomies can take teams of experts years to build, the "[open-world assumption](https://en.wikipedia.org/wiki/Open-world_assumption)" on which standards-based taxonomies are built means that small, purposeful taxonomies of well defined terms can also deliver value and form a solid foundation for future work.
