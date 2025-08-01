@@ -8,7 +8,6 @@ import {useListeningQuery} from 'sanity-plugin-utils'
 import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
 import {inputBuilder} from '../../queries'
 import type {ConceptSchemeDocument, DocumentConcepts, TreeViewProps} from '../../types'
-import {NewScheme} from '../guides'
 import {TreeStructure} from '../TreeStructure'
 
 /**
@@ -65,7 +64,16 @@ export const InputHierarchy = ({branchId = '', selectConcept, inputComponent}: T
       </Box>
     )
   } else if (!data) {
-    return <NewScheme document={document} />
+    return (
+      <Box padding={4}>
+        <Card padding={[3]} radius={2} shadow={1} tone="caution">
+          <Text size={1}>
+            This configuration does not have any terms associated with it. Please check the scheme
+            and branch supplied and try again.
+          </Text>
+        </Card>
+      </Box>
+    )
   }
   return (
     <TreeContext.Provider value={{globalVisibility: {treeId: '123', treeVisibility: 'open'}}}>
