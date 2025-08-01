@@ -16,6 +16,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [3.4.0] - 2025-08-01
+
+### Feature
+- Add full support for Content Releases for taxonomies and hierarchy input components
+- Improve child concept tooltips
+- Improve No Concepts messaging and display logic
+- Correct ARIA labels
+
+### Chore
+- Update listening query to be more efficient & responsive
+- Add usePerspective() hook to streamline TreeView & Hierarchy
+- Remove deprecated "edit" controls
+- Update lint settings
+- Tidy and restructure repo
+- Improve typing
+
+### Fix
+- Remove "New Scheme" guide from hierarchy input component 
+
+
 ## [3.3.3] - 2025-06-10
 
 ### Fix
@@ -360,7 +380,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.3...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.4.0...HEAD
+[3.4.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.3...v3.4.0
 [3.3.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.2...v3.3.3
 [3.3.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.1...v3.3.2
 [3.3.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.0...v3.3.1
