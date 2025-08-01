@@ -139,7 +139,7 @@ The `customConceptFields` and `customSchemeFields` keys allow you to specify add
 
 Custom fields will appear on all Concept and Concept Scheme documents accordingly. 
 
-### 📺 Taxonomy Set-up & Use Demo
+### 📺 Sanity Showcase Demo
 A presentation on managing standards-based taxonomies in Sanity Studio and purposefully integrating tagging to support discovery, findability, and search for content collections. Delivered Apr 4, 2025 as part of Sanity's "Showcase" series. 
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/kkFRFtFSNeQ?si=H95eGKl69qr_jOCF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
