@@ -1,3 +1,5 @@
+import type {useClient} from 'sanity'
+
 type BranchOptions = {
   schemeId: string
   branchId: string
@@ -36,7 +38,11 @@ type BranchFilterResult = {
  */
 export const branchFilter = (
   options: BranchOptions
-): (({getClient}: {getClient: Function}) => Promise<BranchFilterResult>) => {
+): (({
+  getClient,
+}: {
+  getClient: (clientOptions: {apiVersion: string}) => ReturnType<typeof useClient>
+}) => Promise<BranchFilterResult>) => {
   const {schemeId, branchId = null} = options || {}
 
   if (!schemeId || typeof schemeId !== 'string') {
@@ -54,7 +60,7 @@ export const branchFilter = (
     }
 
     // Fetch concepts for the given schemeId and branchId
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-type-assertion
     const {concepts} = (await client.fetch(
       `{      
         "concepts": *[

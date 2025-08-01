@@ -1,3 +1,5 @@
+import type {useClient} from 'sanity'
+
 type SchemeOptions = {
   schemeId: string
 }
@@ -39,9 +41,14 @@ type SchemeFilterResult = {
  */
 export const schemeFilter = (
   options: SchemeOptions
-): (({getClient}: {getClient: Function}) => Promise<SchemeFilterResult>) => {
+): (({
+  getClient,
+}: {
+  getClient: (clientOptions: {apiVersion: string}) => ReturnType<typeof useClient>
+}) => Promise<SchemeFilterResult>) => {
   // Get and validate the schemeId from options
   const {schemeId} = options || {}
+
   if (!schemeId || typeof schemeId !== 'string') {
     throw new Error('Invalid or missing schemeId: scheme Id must be a string')
   }
@@ -52,7 +59,7 @@ export const schemeFilter = (
       throw new Error('Client not available')
     }
     // Fetch concepts and topConcepts for the given schemeId
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-type-assertion
     const {concepts, topConcepts} = (await client.fetch(
       `{
       "concepts": *[_type=="skosConceptScheme" && schemeId == "${schemeId}"].concepts[]._ref,
