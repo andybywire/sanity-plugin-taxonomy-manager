@@ -16,6 +16,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [4.0.0] - 2025-09-16
+
+### Chore
+- Require Node.js 20 instead of Node.js 18, in keeping with Sanity Studio requirements (hence the major version step)
+- Upgrade to React 19, with 18 still allowed as a peer dependency
+
 ## [3.4.0] - 2025-08-01
 
 ### Feature
@@ -380,7 +386,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.4.0...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.0...HEAD
+[4.0.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.4.3...v4.0.0
 [3.4.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.3...v3.4.0
 [3.3.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.2...v3.3.3
 [3.3.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.1...v3.3.2
