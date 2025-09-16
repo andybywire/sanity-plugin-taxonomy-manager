@@ -12,7 +12,7 @@ export function RdfUri(props: StringInputProps) {
   return (
     <Stack space={2}>
       {props.renderDefault(props)}
-      <Text muted size={1} onResize={undefined} onResizeCapture={undefined}>
+      <Text muted size={1}>
         <>
           <strong>RDF URI: </strong>
           {props.value ? props.value : '[base URI not defined] '}
