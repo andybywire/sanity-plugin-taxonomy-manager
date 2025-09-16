@@ -66,7 +66,7 @@
   },
   "devDependencies": {
     "@sanity/pkg-utils": "^6.10.10",
-    "@sanity/plugin-kit": "^4.0.18",
+    "@sanity/plugin-kit": "^4.0.19",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -103,7 +103,7 @@
     "sanity": "^4.2.0"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager",
   "sanityPlugin": {
@@ -111,7 +111,8 @@
       "dependencies": false,
       "studioConfig": false,
       "eslintImports": false,
-      "tsc": false
+      "tsc": false,
+      "nodeEngine": false
     }
   }
 }
