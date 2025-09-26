@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [4.0.2] - 2025-09-26
+
+### Chore
+- Improve React 19 peer dependency declarations
+
 ## [4.0.1] - 2025-09-25
 
 ### Fix
@@ -391,7 +396,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.1...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.2...HEAD
+[4.0.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.0...v4.0.1
 [4.0.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.4.3...v4.0.0
 [3.4.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v3.3.3...v3.4.0
