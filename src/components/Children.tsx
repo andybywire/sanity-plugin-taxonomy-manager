@@ -29,7 +29,11 @@ export const Children = ({
   inputComponent = false,
 }: {
   concept: ChildConceptTerm
-  selectConcept: (conceptId: {_ref: string; _type: 'reference'}) => void
+  selectConcept: (conceptId: {
+    _ref: string
+    _type: 'reference'
+    _originalId: string | undefined
+  }) => void
   inputComponent: boolean
 }) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)

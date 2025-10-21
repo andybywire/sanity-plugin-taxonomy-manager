@@ -16,7 +16,11 @@ type ConceptProps = {
   concept: ChildConceptTerm
   treeVisibility: string
   inputComponent: boolean
-  selectConcept: (conceptId: {_ref: string; _type: 'reference'}) => void
+  selectConcept: (conceptId: {
+    _ref: string
+    _type: 'reference'
+    _originalId: string | undefined
+  }) => void
 }
 
 /**
