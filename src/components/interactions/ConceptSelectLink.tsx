@@ -5,6 +5,11 @@ import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import {StyledConceptLink, StyledConceptTitle} from '../../styles'
 import type {ChildConceptTerm} from '../../types'
 
+function truncateLabel(label: string, maxLength = 45): string {
+  if (!label) return ''
+  return label.length > maxLength ? `${label.slice(0, maxLength).trimEnd()}…` : label
+}
+
 /**
  * #### Concept Select Link
  * Writes a concept _ref from the hierarchy tree to the current document
@@ -35,14 +40,21 @@ export function ConceptSelectLink({
     selectConcept(conceptRef)
   }, [id, _originalId, selectConcept])
 
+  const truncatedLabel = truncateLabel(prefLabel)
+
   return (
     <>
       {selectConcept ? (
-        <StyledConceptLink href="#" onClick={handleClick} style={{color: linkColor}}>
-          {prefLabel}
+        <StyledConceptLink
+          href="#"
+          onClick={handleClick}
+          style={{color: linkColor}}
+          title={prefLabel}
+        >
+          {truncatedLabel}
         </StyledConceptLink>
       ) : (
-        <StyledConceptTitle>{prefLabel}</StyledConceptTitle>
+        <StyledConceptTitle>{truncatedLabel}</StyledConceptTitle>
       )}
     </>
   )
