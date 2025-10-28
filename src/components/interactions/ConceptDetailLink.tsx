@@ -1,5 +1,7 @@
 import {useCallback, useContext} from 'react'
+// eslint-disable-next-line import/no-unresolved
 import {RouterContext} from 'sanity/router'
+// eslint-disable-next-line import/no-unresolved
 import {usePaneRouter} from 'sanity/structure'
 
 import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
