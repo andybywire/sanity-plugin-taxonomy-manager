@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [4.0.4] - 2025-11-01
+
+### Feature
+- Add truncation and native tooltip to conceptScheme treeView for very long prefLabels to prevent wrapping and misalignment
+
 ## [4.0.3] - 2025-10-21
 
 ### Feature
@@ -404,7 +409,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.3...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.4...HEAD
+[4.0.4]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.3...v4.0.4
 [4.0.3]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.2...v4.0.3
 [4.0.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.1...v4.0.2
 [4.0.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.0...v4.0.1
