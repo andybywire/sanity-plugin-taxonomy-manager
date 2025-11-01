@@ -4,6 +4,7 @@ import {RouterContext} from 'sanity/router'
 // eslint-disable-next-line import/no-unresolved
 import {usePaneRouter} from 'sanity/structure'
 
+import {truncateLabel} from '../../helpers'
 import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import {StyledConceptLink} from '../../styles'
 import type {ChildConceptTerm} from '../../types'
@@ -38,8 +39,13 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   }, [id, routerContext, routerPanesState, groupIndex])
 
   return (
-    <StyledConceptLink href="#" onClick={openInNewPane} style={{color: linkColor}}>
-      {prefLabel}
+    <StyledConceptLink
+      href="#"
+      onClick={openInNewPane}
+      style={{color: linkColor}}
+      title={prefLabel}
+    >
+      {truncateLabel(prefLabel)}
     </StyledConceptLink>
   )
 }

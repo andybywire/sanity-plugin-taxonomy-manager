@@ -1,14 +1,10 @@
 /* eslint-disable react/require-default-props */
 import {useCallback} from 'react'
 
+import {truncateLabel} from '../../helpers'
 import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import {StyledConceptLink, StyledConceptTitle} from '../../styles'
 import type {ChildConceptTerm} from '../../types'
-
-function truncateLabel(label: string, maxLength = 45): string {
-  if (!label) return ''
-  return label.length > maxLength ? `${label.slice(0, maxLength).trimEnd()}…` : label
-}
 
 /**
  * #### Concept Select Link
