@@ -1,8 +1,9 @@
-import {EditIcon} from '@sanity/icons'
+import {EditIcon, DocumentsIcon} from '@sanity/icons'
 import type {StructureBuilder, ListBuilder, DefaultDocumentNodeResolver} from 'sanity/structure'
 
 import {TreeView} from './components/TreeView'
 import NodeTree from './static/NodeTree'
+import {ConceptUsageView} from './views/ConceptUsageView'
 
 /**
  * #### Default Desk Structure for Concept and Concept Scheme
@@ -27,6 +28,15 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}
       return S.document().views([
         S.view.component(TreeView).title('Tree View').icon(NodeTree),
         S.view.form().icon(EditIcon),
+      ])
+    case 'skosConcept':
+      return S.document().views([
+        S.view.form().icon(EditIcon),
+        S.view
+          .component(ConceptUsageView)
+          .title('Usage')
+          .icon(DocumentsIcon)
+          .options({mode: 'tagged'}),
       ])
     default:
       return S.document().views([S.view.form().icon(EditIcon)])
