@@ -39,6 +39,16 @@
     "@typescript-eslint/no-floating-promises": "warn",
     "@typescript-eslint/ban-types": "warn",
     "@typescript-eslint/no-var-requires": "warn",
+    "import/no-unresolved": [
+      "error",
+      {
+        "ignore": [
+          "sanity/structure",
+          "sanity/router",
+          "@sanity/util/paths"
+        ]
+      }
+    ],
     "import/order": [
       "error",
       {
