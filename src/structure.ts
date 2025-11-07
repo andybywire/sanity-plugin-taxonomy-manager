@@ -32,11 +32,7 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}
     case 'skosConcept':
       return S.document().views([
         S.view.form().icon(EditIcon),
-        S.view
-          .component(ConceptUsageView)
-          .title('Usage')
-          .icon(DocumentsIcon)
-          .options({mode: 'tagged'}),
+        S.view.component(ConceptUsageView).title('Tagged Resources').icon(DocumentsIcon),
       ])
     default:
       return S.document().views([S.view.form().icon(EditIcon)])
