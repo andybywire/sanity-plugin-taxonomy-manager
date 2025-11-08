@@ -1,7 +1,7 @@
 import {Flex, Spinner, Stack, Box, Card, Inline, Text, Button} from '@sanity/ui'
 import {fromString as pathFromString} from '@sanity/util/paths'
 import {useCallback} from 'react'
-import {Preview, useSchema, usePerspective} from 'sanity'
+import {Preview, useSchema, usePerspective, getPublishedId} from 'sanity'
 import type {SanityDocument} from 'sanity'
 import type {UserViewComponent} from 'sanity/structure'
 import {usePaneRouter} from 'sanity/structure'
@@ -22,8 +22,11 @@ export const ConceptUsageView: UserViewComponent<Record<string, never>> = ({
   const {routerPanesState, groupIndex, handleEditReference} = usePaneRouter()
   const schema = useSchema()
 
-  const rawId = (document.displayed as {_id?: string})?._id ?? ''
-  const refId = rawId.replace(/^drafts\./, '')
+  const refId = getPublishedId((document.displayed as {_id?: string})?._id ?? '')
+
+  // const rawId = (document.displayed as {_id?: string})?._id ?? ''
+  // const pubId = rawId.replace(/^drafts\./, '')
+  // const refId = pubId.replace(/^[^.]*\.[^.]*\./, '')
 
   const handleClick = useCallback(
     (id: string, type: string) => {
@@ -85,6 +88,7 @@ export const ConceptUsageView: UserViewComponent<Record<string, never>> = ({
   if (!data?.length) {
     return (
       <Stack padding={4} space={5}>
+        {refId}
         <Feedback>This concept is not currently in use</Feedback>
       </Stack>
     )
