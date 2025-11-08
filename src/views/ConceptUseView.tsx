@@ -76,7 +76,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
   if (error) {
     return (
       <Stack padding={4} space={5}>
-        <Feedback tone={'caution'}>There was en error fetching usage data</Feedback>
+        <Feedback tone={'caution'}>There was en error fetching use data</Feedback>
       </Stack>
     )
   }

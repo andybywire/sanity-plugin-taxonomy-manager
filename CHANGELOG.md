@@ -16,6 +16,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [4.1.0] - 2025-11-08
+
+### Feature
+- Add Concept Use view to SKOS Concept document to show the number of resources tagged with a particular concept and list links to tagged documents
+
 ## [4.0.4] - 2025-11-01
 
 ### Feature
@@ -409,7 +414,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.4...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.1.0...HEAD
+[4.1.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.4...v4.1.0
 [4.0.4]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.3...v4.0.4
 [4.0.3]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.2...v4.0.3
 [4.0.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.1...v4.0.2
