@@ -24,10 +24,6 @@ export const ConceptUsageView: UserViewComponent<Record<string, never>> = ({
 
   const refId = getPublishedId((document.displayed as {_id?: string})?._id ?? '')
 
-  // const rawId = (document.displayed as {_id?: string})?._id ?? ''
-  // const pubId = rawId.replace(/^drafts\./, '')
-  // const refId = pubId.replace(/^[^.]*\.[^.]*\./, '')
-
   const handleClick = useCallback(
     (id: string, type: string) => {
       const childParams = routerPanesState[groupIndex + 1]?.[0].params || {}
@@ -88,7 +84,6 @@ export const ConceptUsageView: UserViewComponent<Record<string, never>> = ({
   if (!data?.length) {
     return (
       <Stack padding={4} space={5}>
-        {refId}
         <Feedback>This concept is not currently in use</Feedback>
       </Stack>
     )
