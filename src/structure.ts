@@ -3,7 +3,7 @@ import type {StructureBuilder, ListBuilder, DefaultDocumentNodeResolver} from 's
 
 import {TreeView} from './components/TreeView'
 import NodeTree from './static/NodeTree'
-import {ConceptUsageView} from './views/ConceptUsageView'
+import {ConceptUseView} from './views/ConceptUseView'
 
 /**
  * #### Default Desk Structure for Concept and Concept Scheme
@@ -32,7 +32,7 @@ export const defaultDocumentNode: DefaultDocumentNodeResolver = (S, {schemaType}
     case 'skosConcept':
       return S.document().views([
         S.view.form().icon(EditIcon),
-        S.view.component(ConceptUsageView).title('Tagged Resources').icon(DocumentsIcon),
+        S.view.component(ConceptUseView).title('Tagged Resources').icon(DocumentsIcon),
       ])
     default:
       return S.document().views([S.view.form().icon(EditIcon)])

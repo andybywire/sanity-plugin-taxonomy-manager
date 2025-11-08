@@ -13,7 +13,7 @@ interface TagReference {
   title: string
 }
 
-export const ConceptUsageView: UserViewComponent<Record<string, never>> = ({
+export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
   document,
 }: {
   document: {displayed: {_id?: string}}
