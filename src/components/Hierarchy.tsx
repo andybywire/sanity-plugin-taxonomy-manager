@@ -96,7 +96,7 @@ export const Hierarchy = ({
   }
   return (
     <TreeContext.Provider value={{globalVisibility}}>
-      <Box padding={4} paddingTop={2}>
+      <Box padding={4}>
         <>
           <Stack space={4}>
             <Card borderBottom paddingBottom={1} display={'flex'} flex={1}>

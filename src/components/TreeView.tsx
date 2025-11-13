@@ -1,6 +1,5 @@
 /* eslint-disable react/require-default-props */
 import {Box, Container, Stack, Text} from '@sanity/ui'
-import type {CSSProperties} from 'react'
 import {usePerspective} from 'sanity'
 
 import {ReleaseContext, SchemeContext} from '../context'
@@ -25,13 +24,9 @@ export const TreeView = ({
   inputComponent = false,
   selectConcept,
 }: TreeViewProps) => {
-  const containerStyle: CSSProperties = {paddingTop: '1.25rem'}
-  const descriptionStyle: CSSProperties = {whiteSpace: 'pre-wrap'}
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
   const {selectedPerspectiveName} = usePerspective()
   return (
     <SchemeContext.Provider value={document || ({} as ConceptSchemeDocument)}>
-      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */}
       <ReleaseContext.Provider value={selectedPerspectiveName}>
         {inputComponent ? (
           <InputHierarchy
@@ -40,15 +35,15 @@ export const TreeView = ({
             selectConcept={selectConcept}
           />
         ) : (
-          <Container width={1} style={containerStyle}>
+          <Container width={1}>
             {document?.displayed?.description && (
-              <Box padding={4}>
+              <Box padding={4} paddingTop={6}>
                 <Stack space={4}>
                   <Stack space={2}>
                     <Text size={1} weight="semibold">
                       Description
                     </Text>
-                    <Text size={2} muted style={descriptionStyle}>
+                    <Text size={2} muted>
                       {document?.displayed.description}
                     </Text>
                   </Stack>
