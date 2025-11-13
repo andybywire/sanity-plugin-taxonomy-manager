@@ -1,16 +1,17 @@
 import {AddCircleIcon, TrashIcon, ToggleArrowRightIcon, SquareIcon} from '@sanity/icons'
-import {Text, Inline, Tooltip, Box} from '@sanity/ui'
+import {Text, Inline, Tooltip, Box, Button} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext} from '../context'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
-import {StyledTopConcept, StyledTreeToggle, StyledTreeButton} from '../styles'
+// import {StyledTopConcept} from '../styles'
 import type {ConceptSchemeDocument, TopConceptTerm} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
+import styles from './TopConcepts.module.css'
 
 type TopConceptsProps = {
   concept: TopConceptTerm
@@ -54,17 +55,17 @@ export const TopConcepts = ({
   }, [concept?.id, concept?.prefLabel, removeConcept])
 
   return (
-    <StyledTopConcept className={levelVisibility}>
+    // <StyledTopConcept className={levelVisibility}>
+    <li className={[levelVisibility, styles.topConcept].join(' ')}>
       <Inline space={2}>
         <Inline space={0}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
-            <StyledTreeToggle
-              onClick={handleToggle}
-              type="button"
+            <Button
+              icon={ToggleArrowRightIcon}
+              mode={'bleed'}
               aria-expanded={levelVisibility == 'open'}
-            >
-              <ToggleArrowRightIcon />
-            </StyledTreeToggle>
+              onClick={handleToggle}
+            />
           )}
           {concept?.childConcepts && concept.childConcepts.length == 0 && (
             <SquareIcon className="spacer" />
@@ -81,7 +82,7 @@ export const TopConcepts = ({
         </Text>
         {inputComponent && <ConceptDetailDialogue concept={concept} />}
         {!inputComponent && releaseContext !== 'published' && (
-          <Inline space={2}>
+          <Inline>
             <Tooltip
               delay={{open: 750}}
               content={
@@ -94,14 +95,13 @@ export const TopConcepts = ({
               fallbackPlacements={['right', 'left']}
               placement="top"
             >
-              <StyledTreeButton
+              <Button
+                icon={AddCircleIcon}
+                mode={'bleed'}
                 onClick={handleAddChild}
-                type="button"
-                className="action"
+                tone={'positive'}
                 aria-label="Add child a child concept"
-              >
-                <AddCircleIcon className="add" />
-              </StyledTreeButton>
+              />
             </Tooltip>
             <Tooltip
               delay={{open: 750}}
@@ -115,14 +115,13 @@ export const TopConcepts = ({
               fallbackPlacements={['right', 'left']}
               placement="top"
             >
-              <StyledTreeButton
+              <Button
+                icon={TrashIcon}
+                mode={'bleed'}
                 onClick={handleRemoveConcept}
-                type="button"
-                className="action"
-                aria-label="Remove concept from scheme"
-              >
-                <TrashIcon className="remove" />
-              </StyledTreeButton>
+                tone={'critical'}
+                aria-label="Add child a child concept"
+              />
             </Tooltip>
           </Inline>
         )}
@@ -132,8 +131,9 @@ export const TopConcepts = ({
           concepts={concept.childConcepts}
           selectConcept={selectConcept}
           inputComponent={inputComponent}
+          childVisibility={levelVisibility}
         />
       )}
-    </StyledTopConcept>
+    </li>
   )
 }

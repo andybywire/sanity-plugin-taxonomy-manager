@@ -1,0 +1,15 @@
+li.topConcept {
+  font-weight: bold;
+  margin-top: 1rem;
+  .untitled {
+    color: var(--color-gray-400);
+    font-weight: normal;
+  }
+  button[aria-expanded='true'] svg {
+    rotate: 90deg;
+  }
+  /* this needs to be added to the child */
+  /* &.closed ul {
+    display: none;
+  } */
+}

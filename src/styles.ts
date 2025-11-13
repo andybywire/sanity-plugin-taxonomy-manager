@@ -18,24 +18,24 @@ export const InlineHelp = styled.div`
 `
 
 export const StyledTree = styled.ul`
-  list-style: none;
+  /* list-style: none;
   padding-left: 0;
-  margin-block-start: 0;
+  margin-block-start: 0; */
   li svg.info {
     height: 1.2rem;
     width: 1.2rem;
-    color: ${hues.gray[800].hex};
+    color: var(--color-gray-800);
     border-radius: 3px;
     transition: all 0.1s ease-in-out;
     &.warning:hover {
-      color: ${hues.gray[100].hex};
-      background-color: ${hues.yellow[500].hex};
+      color: var(--color-gray-100);
+      background-color: var(--color-yellow-500);
     }
     &.error {
-      color: ${hues.red[500].hex};
+      color: var(--color-red-500);
       &:hover {
-        color: ${hues.gray[100].hex};
-        background-color: ${hues.red[500].hex};
+        color: var(--color-gray-100);
+        background-color: var(--color-red-500);
       }
     }
   }
@@ -45,26 +45,26 @@ export const StyledTree = styled.ul`
     visibility: hidden;
   }
 `
-export const HierarchyButton = styled.button`
-  background: none;
-  border: none;
-  padding: 0.5rem;
-  border-radius: 3px;
-  cursor: pointer;
-  svg {
-    padding-right: 0.25rem;
-  }
-  &:hover {
-    background-color: ${hues.gray[50].hex};
-  }
-  &.add:hover {
-    background-color: ${hues.green[500].hex};
-    span,
-    svg {
-      color: white;
-    }
-  }
-`
+// export const HierarchyButton = styled.button`
+//   background: none;
+//   border: none;
+//   padding: 0.5rem;
+//   border-radius: 3px;
+//   cursor: pointer;
+//   svg {
+//     padding-right: 0.25rem;
+//   }
+//   &:hover {
+//     background-color: ${hues.gray[50].hex};
+//   }
+//   &.add:hover {
+//     background-color: ${hues.green[500].hex};
+//     span,
+//     svg {
+//       color: white;
+//     }
+//   }
+// `
 export const StyledTreeButton = styled.button`
   background: none;
   border: none;
@@ -96,6 +96,8 @@ export const StyledTreeButton = styled.button`
     }
   }
 `
+
+// SEE TopConcepts.tsx — Button
 export const StyledTreeToggle = styled.button`
   background: none;
   border: none;
@@ -107,34 +109,34 @@ export const StyledTreeToggle = styled.button`
   }
 `
 
-export const StyledTopConcept = styled.li`
-  font-weight: bold;
-  margin-top: 1rem;
-  .untitled {
-    color: ${hues.gray[400].hex};
-    font-weight: normal;
-  }
-  button[aria-expanded='true'] svg {
-    rotate: 90deg;
-  }
-  &.closed ul {
-    display: none;
-  }
-`
-export const StyledConcept = styled.li`
-  padding-top: 0.5rem;
-  font-weight: normal;
-  margin-top: 1rem;
-  .untitled {
-    color: ${hues.gray[400].hex};
-  }
-  button[aria-expanded='true'] svg {
-    rotate: 90deg;
-  }
-  &.closed ul {
-    display: none;
-  }
-`
+// export const StyledTopConcept = styled.li`
+//   font-weight: bold;
+//   margin-top: 1rem;
+//   .untitled {
+//     color: ${hues.gray[400].hex};
+//     font-weight: normal;
+//   }
+//   button[aria-expanded='true'] svg {
+//     rotate: 90deg;
+//   }
+//   &.closed ul {
+//     display: none;
+//   }
+// `
+// export const StyledConcept = styled.li`
+//   padding-top: 0.5rem;
+//   font-weight: normal;
+//   margin-top: 1rem;
+//   .untitled {
+//     color: ${hues.gray[400].hex};
+//   }
+//   button[aria-expanded='true'] svg {
+//     rotate: 90deg;
+//   }
+//   &.closed ul {
+//     display: none;
+//   }
+// `
 export const StyledChildConcepts = styled.ul`
   list-style: none;
 `

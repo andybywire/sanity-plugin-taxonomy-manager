@@ -12,6 +12,7 @@ export const ChildConcepts = ({
   concepts,
   inputComponent = false,
   selectConcept,
+  childVisibility,
 }: {
   concepts: ChildConceptTerm[]
   selectConcept: (conceptId: {
@@ -20,9 +21,11 @@ export const ChildConcepts = ({
     _originalId: string | undefined
   }) => void
   inputComponent: boolean
+  childVisibility: string // retype to 'open' | 'closed
 }) => {
   return (
-    <StyledChildConcepts>
+    // use childVisibility to toggle visibility--this is the UL
+    <StyledChildConcepts style={childVisibility == 'open' ? {display: 'block'} : {display: 'none'}}>
       {concepts.map((concept: ChildConceptTerm) => {
         return (
           <Children

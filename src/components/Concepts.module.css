@@ -1,0 +1,11 @@
+li.concept {
+  padding-top: 0.5rem;
+  font-weight: normal;
+  margin-top: 1rem;
+  .untitled {
+    color: var(--color-gray-400);
+  }
+  button[aria-expanded='true'] svg {
+    rotate: 90deg;
+  }
+}
