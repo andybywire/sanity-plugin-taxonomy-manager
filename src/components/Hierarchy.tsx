@@ -1,7 +1,7 @@
 import {AddCircleIcon} from '@sanity/icons'
 import type {DocumentId} from '@sanity/id-utils'
 import {getPublishedId} from '@sanity/id-utils'
-import {Flex, Spinner, Stack, Box, Text, Inline, Card} from '@sanity/ui'
+import {Flex, Spinner, Stack, Box, Text, Inline, Card, Button} from '@sanity/ui'
 import {nanoid} from 'nanoid'
 import {useCallback, useContext, useState} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
@@ -9,7 +9,6 @@ import {useListeningQuery} from 'sanity-plugin-utils'
 import {SchemeContext, TreeContext, ReleaseContext} from '../context'
 import {useCreateConcept} from '../hooks'
 import {trunkBuilder} from '../queries'
-import {HierarchyButton} from '../styles'
 import type {DocumentConcepts, ConceptSchemeDocument, TreeViewProps} from '../types'
 
 import {NewScheme} from './guides'
@@ -72,15 +71,8 @@ export const Hierarchy = ({
   ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
   if (loading) {
     return (
-      <Box padding={5}>
-        <Flex
-          align="center"
-          direction="column"
-          gap={5}
-          height="fill"
-          justify="center"
-          style={{paddingTop: '1rem'}}
-        >
+      <Box padding={4} paddingTop={6}>
+        <Flex align="center" direction="column" gap={5} height="fill" justify="center">
           <Spinner muted />
           <Text muted size={1}>
             Loading hierarchy…
@@ -107,35 +99,38 @@ export const Hierarchy = ({
                     data.concepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
                       .length > 0) && (
                     <Inline space={1}>
-                      <HierarchyButton type="button" onClick={handleCollapse}>
-                        <Text weight="semibold" muted size={1}>
-                          Collapse
-                        </Text>
-                      </HierarchyButton>
+                      <Button
+                        text={'Collapse'}
+                        paddingY={2}
+                        mode={'bleed'}
+                        onClick={handleCollapse}
+                      />
                       <Text weight="semibold" muted size={1}>
                         |
                       </Text>
-                      <HierarchyButton type="button" onClick={handleExpand}>
-                        <Text weight="semibold" muted size={1}>
-                          Expand
-                        </Text>
-                      </HierarchyButton>
+                      <Button text={'Expand'} paddingY={2} mode={'bleed'} onClick={handleExpand} />
                     </Inline>
                   )}
                 </Card>
                 <Card>
                   {releaseContext !== 'published' && (
                     <Inline space={1}>
-                      <HierarchyButton type="button" className="add" onClick={createTopConcept}>
-                        <Text weight="semibold" muted size={1}>
-                          <AddCircleIcon /> Add Top Concept
-                        </Text>
-                      </HierarchyButton>
-                      <HierarchyButton type="button" className="add" onClick={createEntryConcept}>
-                        <Text weight="semibold" muted size={1}>
-                          <AddCircleIcon /> Add Concept
-                        </Text>
-                      </HierarchyButton>
+                      <Button
+                        text={'Add Top Concept'}
+                        icon={AddCircleIcon}
+                        mode={'bleed'}
+                        tone={'positive'}
+                        paddingY={2}
+                        onClick={createTopConcept}
+                      />
+                      <Button
+                        text={'Add Concept'}
+                        icon={AddCircleIcon}
+                        mode={'bleed'}
+                        tone={'positive'}
+                        paddingY={2}
+                        onClick={createEntryConcept}
+                      />
                     </Inline>
                   )}
                 </Card>
