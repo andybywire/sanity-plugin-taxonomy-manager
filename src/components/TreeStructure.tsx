@@ -1,12 +1,13 @@
 import {useContext} from 'react'
 
 import {TreeContext} from '../context'
-import {StyledTree} from '../styles'
+// import {StyledTree} from '../styles'
 import type {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 
 import {Concepts} from './Concepts'
 import {NoConcepts} from './guides'
 import {TopConcepts} from './TopConcepts'
+import styles from './TreeStructure.module.css'
 
 /**
  * #### Tree View
@@ -30,7 +31,7 @@ export const TreeStructure = ({
   }
 
   return (
-    <StyledTree>
+    <ul className={styles.treeStructure}>
       {concepts.topConcepts?.map((concept: TopConceptTerm) => (
         <TopConcepts
           key={`${concept?.id}+${treeId}`}
@@ -53,6 +54,6 @@ export const TreeStructure = ({
             />
           )
         })}
-    </StyledTree>
+    </ul>
   )
 }
