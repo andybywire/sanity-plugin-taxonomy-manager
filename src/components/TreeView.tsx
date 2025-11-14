@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 import {Box, Container, Stack, Text} from '@sanity/ui'
 import {usePerspective} from 'sanity'
 
