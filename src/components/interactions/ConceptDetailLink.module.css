@@ -1,0 +1,6 @@
+a.conceptLink {
+  text-decoration: none;
+  &:hover {
+    text-decoration: underline;
+  }
+}

@@ -3,8 +3,9 @@ import {useCallback} from 'react'
 
 import {truncateLabel} from '../../helpers'
 import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
-import {StyledConceptLink, StyledConceptTitle} from '../../styles'
 import type {ChildConceptTerm} from '../../types'
+
+import styles from './ConceptDetailLink.module.css'
 
 /**
  * #### Concept Select Link
@@ -41,16 +42,18 @@ export function ConceptSelectLink({
   return (
     <>
       {selectConcept ? (
-        <StyledConceptLink
+        // eslint-disable-next-line jsx-a11y/anchor-is-valid
+        <a
+          className={styles.conceptLink}
           href="#"
           onClick={handleClick}
           style={{color: linkColor}}
           title={prefLabel}
         >
           {truncatedLabel}
-        </StyledConceptLink>
+        </a>
       ) : (
-        <StyledConceptTitle>{truncatedLabel}</StyledConceptTitle>
+        <p>{truncatedLabel}</p>
       )}
     </>
   )

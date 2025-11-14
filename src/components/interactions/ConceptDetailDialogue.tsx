@@ -1,16 +1,26 @@
 import {InfoOutlineIcon} from '@sanity/icons'
-import {Dialog, Box, Text, Stack, Label} from '@sanity/ui'
+import {Dialog, Box, Text, Stack, Label, Button} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 
 import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
-import {StyledTreeButton} from '../../styles'
+import type {ChildConceptTerm, TopConceptTerm} from '../../types'
+
+import styles from './ConceptDetailDialogue.module.css'
 
 /**
  * #### Information Icon and Dialogue with Concept Details
  * - affords Tree View access to Definition, Examples, and Scope Notes
  * - is rendered only when concept details are present
  */
-export const ConceptDetailDialogue = ({concept}: {concept: any}) => {
+export const ConceptDetailDialogue = ({
+  concept,
+}: {
+  concept: (ChildConceptTerm | TopConceptTerm) & {
+    definition?: string
+    example?: string
+    scopeNote?: string
+  }
+}) => {
   const [open, setOpen] = useState(false)
   const onClose = useCallback(() => setOpen(false), [])
   const onOpen = useCallback(() => setOpen(true), [])
@@ -21,9 +31,9 @@ export const ConceptDetailDialogue = ({concept}: {concept: any}) => {
 
   return (
     <>
-      <StyledTreeButton className="action" aria-label="info" onClick={onOpen} type="button">
-        <InfoOutlineIcon className="info" style={{color: linkColor}} />
-      </StyledTreeButton>
+      <Button mode={'bleed'} onClick={onOpen} padding={2}>
+        <InfoOutlineIcon className={styles.info} style={{color: linkColor}} />
+      </Button>
 
       {open && (
         <Dialog

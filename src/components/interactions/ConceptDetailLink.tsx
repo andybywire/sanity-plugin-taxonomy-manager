@@ -1,13 +1,12 @@
 import {useCallback, useContext} from 'react'
-// eslint-disable-next-line import/no-unresolved
 import {RouterContext} from 'sanity/router'
-// eslint-disable-next-line import/no-unresolved
 import {usePaneRouter} from 'sanity/structure'
 
 import {truncateLabel} from '../../helpers'
 import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
-import {StyledConceptLink} from '../../styles'
 import type {ChildConceptTerm} from '../../types'
+
+import styles from './ConceptDetailLink.module.css'
 
 /**
  * #### Concept Detail Link
@@ -39,13 +38,15 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   }, [id, routerContext, routerPanesState, groupIndex])
 
   return (
-    <StyledConceptLink
+    // eslint-disable-next-line jsx-a11y/anchor-is-valid
+    <a
+      className={styles.conceptLink}
       href="#"
       onClick={openInNewPane}
       style={{color: linkColor}}
       title={prefLabel}
     >
       {truncateLabel(prefLabel)}
-    </StyledConceptLink>
+    </a>
   )
 }
