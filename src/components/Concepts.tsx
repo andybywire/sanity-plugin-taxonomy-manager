@@ -124,7 +124,7 @@ export const Concepts = ({
                 mode={'bleed'}
                 onClick={handleRemoveConcept}
                 tone={'critical'}
-                aria-label="Add child a child concept"
+                aria-label="Remove this concept from this scheme"
               />
             </Tooltip>
           </Inline>
