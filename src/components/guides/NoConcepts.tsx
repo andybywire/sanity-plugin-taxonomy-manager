@@ -1,14 +1,12 @@
 import {Card, Label, Stack, Text} from '@sanity/ui'
 
-import {InlineHelp} from '../../styles'
-
 /**
  * #### No Concepts Guide
  * Prompts adding concepts to an empty scheme.
  */
 export const NoConcepts = () => {
   return (
-    <InlineHelp>
+    <div style={{marginTop: '2rem'}}>
       <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="primary">
         <Stack space={4}>
           <Label size={4}>No Concepts</Label>
@@ -19,6 +17,6 @@ export const NoConcepts = () => {
           </Text>
         </Stack>
       </Card>
-    </InlineHelp>
+    </div>
   )
 }

@@ -4,7 +4,6 @@ import {useCallback, useState} from 'react'
 import type {SanityDocument} from 'sanity'
 
 import {useAddTitle} from '../../hooks'
-import {InlineHelp} from '../../styles'
 
 /**
  * #### New Concept Scheme Guide
@@ -33,7 +32,7 @@ export const NewScheme = ({document}: {document: SanityDocument}) => {
   }, [addTitle, descriptionValue, document, titleValue])
 
   return (
-    <InlineHelp>
+    <div style={{marginTop: '2rem'}}>
       <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="primary">
         <Stack space={6}>
           <Stack space={4}>
@@ -89,6 +88,6 @@ export const NewScheme = ({document}: {document: SanityDocument}) => {
           </Box>
         </Dialog>
       )}
-    </InlineHelp>
+    </div>
   )
 }
