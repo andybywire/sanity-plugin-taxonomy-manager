@@ -4,17 +4,16 @@ import {
   AddCircleIcon,
   TrashIcon,
   ToggleArrowRightIcon,
-  SquareIcon,
 } from '@sanity/icons'
-import {Inline, Tooltip, Box, Text} from '@sanity/ui'
+import {Inline, Tooltip, Box, Text, Button} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
-import {StyledChildConcept, StyledTreeButton, StyledTreeToggle} from '../styles'
 import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
+import styles from './Children.module.css'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
@@ -53,7 +52,9 @@ export const Children = ({
     removeConcept(concept.id, 'concept', concept?.prefLabel)
   }, [concept.id, concept?.prefLabel, removeConcept])
 
-  const [levelVisibility, setLevelVisibility] = useState(treeVisibility)
+  const [levelVisibility, setLevelVisibility] = useState<'open' | 'closed'>(
+    (treeVisibility as 'open' | 'closed') || 'open'
+  )
 
   const handleToggle = useCallback(() => {
     if (levelVisibility == 'open') {
@@ -63,22 +64,23 @@ export const Children = ({
     }
   }, [levelVisibility])
 
+  const childrenClass =
+    concept?.childConcepts && concept.childConcepts.length == 0
+      ? styles.noChildren
+      : styles.hasChildren
+
   return (
-    <StyledChildConcept className={levelVisibility}>
+    <li className={[levelVisibility, childrenClass, styles.children].join(' ')}>
       <Inline space={2}>
-        <Inline space={1}>
-          <Inline space={1}>
+        <Inline space={0}>
+          <Inline space={0}>
             {concept?.childConcepts && concept.childConcepts.length > 0 && (
-              <StyledTreeToggle
-                onClick={handleToggle}
-                type="button"
+              <Button
+                icon={ToggleArrowRightIcon}
+                mode={'bleed'}
                 aria-expanded={levelVisibility == 'open'}
-              >
-                <ToggleArrowRightIcon />
-              </StyledTreeToggle>
-            )}
-            {concept?.childConcepts && concept.childConcepts.length == 0 && (
-              <SquareIcon className="spacer" />
+                onClick={handleToggle}
+              />
             )}
             {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
             {inputComponent ? (
@@ -93,7 +95,7 @@ export const Children = ({
           releaseContext !== 'published' &&
           concept?.level &&
           concept.level < 5 && (
-            <Inline space={2}>
+            <Inline>
               <Tooltip
                 delay={{open: 750}}
                 content={
@@ -106,14 +108,13 @@ export const Children = ({
                 fallbackPlacements={['right', 'left']}
                 placement="top"
               >
-                <StyledTreeButton
+                <Button
+                  icon={AddCircleIcon}
+                  mode={'bleed'}
                   onClick={handleAddChild}
-                  type="button"
-                  className="action"
-                  aria-label="Add a child concept below this concept"
-                >
-                  <AddCircleIcon className="add" />
-                </StyledTreeButton>
+                  tone={'positive'}
+                  aria-label="Add child a child concept below this concept"
+                />
               </Tooltip>
               <Tooltip
                 delay={{open: 750}}
@@ -127,14 +128,13 @@ export const Children = ({
                 fallbackPlacements={['right', 'left']}
                 placement="top"
               >
-                <StyledTreeButton
+                <Button
+                  icon={TrashIcon}
+                  mode={'bleed'}
                   onClick={handleRemoveConcept}
-                  type="button"
-                  className="action"
+                  tone={'critical'}
                   aria-label="Remove this concept from this scheme"
-                >
-                  <TrashIcon className="remove" />
-                </StyledTreeButton>
+                />
               </Tooltip>
             </Inline>
           )}
@@ -143,7 +143,7 @@ export const Children = ({
           releaseContext !== 'published' &&
           concept.childConcepts?.length == 0 &&
           concept.level == 5 && (
-            <Inline space={2}>
+            <Inline>
               <Tooltip
                 delay={{open: 750}}
                 content={
@@ -156,7 +156,7 @@ export const Children = ({
                 fallbackPlacements={['right', 'left']}
                 placement="top"
               >
-                <InfoOutlineIcon className="info warning" />
+                <InfoOutlineIcon className={[styles.info, styles.warning].join(' ')} />
               </Tooltip>
               <Tooltip
                 delay={{open: 750}}
@@ -170,14 +170,13 @@ export const Children = ({
                 fallbackPlacements={['right', 'left']}
                 placement="top"
               >
-                <StyledTreeButton
+                <Button
+                  icon={TrashIcon}
+                  mode={'bleed'}
                   onClick={handleRemoveConcept}
-                  type="button"
-                  className="action"
-                  aria-label="Remove concept from scheme"
-                >
-                  <TrashIcon className="remove" />
-                </StyledTreeButton>
+                  tone={'critical'}
+                  aria-label="Remove this concept from this scheme"
+                />
               </Tooltip>
             </Inline>
           )}
@@ -197,7 +196,7 @@ export const Children = ({
               fallbackPlacements={['right', 'left']}
               placement="top"
             >
-              <ErrorOutlineIcon className="info error" />
+              <ErrorOutlineIcon className={[styles.info, styles.error].join(' ')} />
             </Tooltip>
             {!inputComponent && releaseContext !== 'published' && (
               <Tooltip
@@ -212,14 +211,13 @@ export const Children = ({
                 fallbackPlacements={['right', 'left']}
                 placement="top"
               >
-                <StyledTreeButton
+                <Button
+                  icon={TrashIcon}
+                  mode={'bleed'}
                   onClick={handleRemoveConcept}
-                  type="button"
-                  className="action"
-                  aria-label="Remove concept from scheme"
-                >
-                  <TrashIcon className="remove" />
-                </StyledTreeButton>
+                  tone={'critical'}
+                  aria-label="Remove this concept from this scheme"
+                />
               </Tooltip>
             )}
           </Inline>
@@ -233,8 +231,9 @@ export const Children = ({
             concepts={concept.childConcepts}
             selectConcept={selectConcept}
             inputComponent={inputComponent}
+            childVisibility={levelVisibility}
           />
         )}
-    </StyledChildConcept>
+    </li>
   )
 }

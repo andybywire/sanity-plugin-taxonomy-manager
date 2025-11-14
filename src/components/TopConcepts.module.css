@@ -1,6 +1,8 @@
 li.topConcept {
   font-weight: bold;
-  margin-top: 1rem;
+  /* margin-top: 1rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem; */
   .untitled {
     color: var(--color-gray-400);
     font-weight: normal;
@@ -8,8 +10,4 @@ li.topConcept {
   button[aria-expanded='true'] svg {
     rotate: 90deg;
   }
-  /* this needs to be added to the child */
-  /* &.closed ul {
-    display: none;
-  } */
 }

@@ -1,6 +1,8 @@
 li.children {
   font-weight: normal;
-  margin-top: .75rem;
+  /* margin-top: .75rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem; */
   button[aria-expanded='true'] svg {
     rotate: 90deg;
   }

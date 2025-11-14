@@ -1,9 +1,10 @@
+import {Button, Text} from '@sanity/ui'
 import {useCallback, useContext} from 'react'
 import {RouterContext} from 'sanity/router'
 import {usePaneRouter} from 'sanity/structure'
 
-import {truncateLabel} from '../../helpers'
-import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
+// import {truncateLabel} from '../../helpers'
+// import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import type {ChildConceptTerm} from '../../types'
 
 import styles from './ConceptDetailLink.module.css'
@@ -16,7 +17,7 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   const routerContext = useContext(RouterContext)
   const {routerPanesState, groupIndex} = usePaneRouter()
 
-  const linkColor = useLinkColorScheme()
+  // const linkColor = useLinkColorScheme()
 
   const {id, prefLabel} = concept ?? {}
 
@@ -38,15 +39,15 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
   }, [id, routerContext, routerPanesState, groupIndex])
 
   return (
-    // eslint-disable-next-line jsx-a11y/anchor-is-valid
-    <a
+    <Button
       className={styles.conceptLink}
-      href="#"
+      mode={'bleed'}
       onClick={openInNewPane}
-      style={{color: linkColor}}
-      title={prefLabel}
+      // title={prefLabel}
+      text={<Text textOverflow={'ellipsis'}>{prefLabel}</Text>}
     >
-      {truncateLabel(prefLabel)}
-    </a>
+      {/* {truncateLabel(prefLabel)} */}
+      {/* <Text textOverflow={'ellipsis'}>{prefLabel}</Text> */}
+    </Button>
   )
 }
