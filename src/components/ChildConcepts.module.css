@@ -1,0 +1,6 @@
+ul.childConcepts {
+  list-style-type: none;
+  /* &.closed {
+    display: none;
+  } */
+}

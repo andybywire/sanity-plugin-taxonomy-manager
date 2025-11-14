@@ -1,6 +1,6 @@
-import {StyledChildConcepts} from '../styles'
 import type {ChildConceptTerm} from '../types'
 
+import styles from './ChildConcepts.module.css'
 import {Children} from './Children'
 
 /**
@@ -24,8 +24,10 @@ export const ChildConcepts = ({
   childVisibility: string // retype to 'open' | 'closed
 }) => {
   return (
-    // use childVisibility to toggle visibility--this is the UL
-    <StyledChildConcepts style={childVisibility == 'open' ? {display: 'block'} : {display: 'none'}}>
+    <ul
+      className={styles.childConcepts}
+      style={childVisibility == 'closed' ? {display: 'none'} : {display: 'block'}}
+    >
       {concepts.map((concept: ChildConceptTerm) => {
         return (
           <Children
@@ -36,6 +38,6 @@ export const ChildConcepts = ({
           />
         )
       })}
-    </StyledChildConcepts>
+    </ul>
   )
 }
