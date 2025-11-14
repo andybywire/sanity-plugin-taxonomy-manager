@@ -1,6 +1,5 @@
 import type {FieldDefinition} from 'sanity'
 import {definePlugin} from 'sanity'
-// eslint-disable-next-line import/no-unresolved
 import {structureTool} from 'sanity/structure'
 
 import {ReferenceHierarchyInput, ArrayHierarchyInput} from './components/inputs'
