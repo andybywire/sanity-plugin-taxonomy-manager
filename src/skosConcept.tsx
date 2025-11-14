@@ -7,7 +7,7 @@ import type {FieldDefinition, SanityDocument} from 'sanity'
 
 import {Identifier} from './components/inputs'
 import baseIriField from './helpers/baseIriField'
-import {StyledDescription} from './styles'
+import styles from './skosConcept.module.css'
 
 const conceptFilter = ({document}: {document: SanityDocument}) => {
   const publishedId = getPublishedId(DocumentId(document._id))
@@ -83,7 +83,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'Definition',
         type: 'text',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>A complete explanation of the intended meaning of the concept.</summary>
             <div>
               <kbd>
@@ -105,7 +105,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
                 </a>
               </p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         rows: 3,
       }),
@@ -114,7 +114,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'Examples',
         type: 'text',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>An example of the use of the concept.</summary>
             <div>
               <kbd>
@@ -135,7 +135,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
                 </a>
               </p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         rows: 3,
       }),
@@ -144,7 +144,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'Scope Note',
         type: 'text',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>
               A brief statement on the intended meaning of this concept, especially as an indication
               of how the use of the concept is limited in indexing practice.
@@ -168,7 +168,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
                 </a>
               </p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         rows: 3,
       }),
@@ -177,7 +177,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'Alternate Label(s)',
         type: 'array',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>Synonyms, near-synonyms, abbreviations, and acronyms to a concept.</summary>
             <div>
               <p>
@@ -185,7 +185,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
                 overlap.
               </p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         of: [{type: 'string'}],
         validation: (Rule) => Rule.unique(),
@@ -195,7 +195,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'Hidden Label(s)',
         type: 'array',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>
               Character strings that need to be accessible to applications performing text-based
               indexing and search operations, but which should not be displayed to end users.
@@ -210,7 +210,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
                 overlap.
               </p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         of: [{type: 'string'}],
         validation: (Rule) => Rule.unique(),
@@ -232,7 +232,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         name: 'broader',
         title: 'Broader Concept(s)',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>
               Create hierarchy between concepts, for example to create category/subcategory,
               part/whole, or class/instance relationships.
@@ -240,7 +240,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
             <div>
               <p>Broader and Associated relationships are mutually exclusive.</p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         type: 'array',
         of: [
@@ -257,7 +257,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         name: 'related',
         title: 'Related Concept(s)',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>
               Indicate that two concepts are inherently "related", but that one is not in any way
               more general than the other.
@@ -265,7 +265,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
             <div>
               <p>Broader and Associated relationships are mutually exclusive.</p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         type: 'array',
         of: [
@@ -284,7 +284,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'History Notes',
         type: 'text',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>Significant changes to the meaning or the form of this concept.</summary>
             <div>
               <kbd>
@@ -305,7 +305,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
                 </a>
               </p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         rows: 3,
       }),
@@ -314,7 +314,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'Editorial Notes',
         type: 'text',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>
               Information to aid in administrative housekeeping, such as reminders of editorial work
               still to be done, or warnings in the event that future editorial changes might be
@@ -339,7 +339,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
                 </a>
               </p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         rows: 3,
       }),
@@ -348,7 +348,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
         title: 'Change Notes',
         type: 'text',
         description: (
-          <StyledDescription>
+          <details className={styles.description}>
             <summary>
               Fine-grained changes to a concept, for the purposes of administration and maintenance.
             </summary>
@@ -371,7 +371,7 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
                 </a>
               </p>
             </div>
-          </StyledDescription>
+          </details>
         ),
         rows: 3,
       }),

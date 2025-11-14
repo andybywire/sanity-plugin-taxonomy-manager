@@ -1,7 +1,8 @@
 import {defineField} from 'sanity'
 
 import {RdfUri} from '../components/inputs'
-import {StyledDescription} from '../styles'
+
+import styles from './baseIriField.module.css'
 
 /**
  * #### Base Universal Resource Identifier object for Sanity Taxonomy Manager
@@ -15,7 +16,7 @@ export default [
     validation: (Rule) =>
       Rule.required().error(`Please supply a base URI in the format 'http://example.com/'`),
     description: (
-      <StyledDescription>
+      <details className={styles.description}>
         <summary>
           The root URI (Uniform Resource Identifier) used to create unique concept identifiers.
         </summary>
@@ -32,7 +33,7 @@ export default [
           For new Concepts and Concept Schemes, the Base URI field is pre-populated based on the
           most recently used Base URI value.
         </div>
-      </StyledDescription>
+      </details>
     ),
     components: {
       input: RdfUri as any,
