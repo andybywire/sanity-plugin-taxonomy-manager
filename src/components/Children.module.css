@@ -1,0 +1,25 @@
+li.children {
+  font-weight: normal;
+  margin-top: .75rem;
+  button[aria-expanded='true'] svg {
+    rotate: 90deg;
+  }
+  &.noChildren {
+    margin-left: 2rem;
+  }
+
+}
+.info {
+  height: 1.3125rem;
+  width: 1.3125rem;
+  color: var(--color-gary-800);
+  border-radius: 3px;
+  transition: all 0.1s ease-in-out;
+}
+.warning:hover {
+  /* color: var(--color-gray-100);
+  background-color: var(--color-yellow-500); */
+}
+.error {
+  color: var(--color-red-500);
+}
