@@ -4,7 +4,6 @@ import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext} from '../context'
 import {useCreateConcept, useRemoveConcept} from '../hooks'
-// import {StyledTopConcept} from '../styles'
 import type {ConceptSchemeDocument, TopConceptTerm} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
