@@ -1,7 +1,6 @@
 import {useContext} from 'react'
 
 import {TreeContext} from '../context'
-// import {StyledTree} from '../styles'
 import type {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 
 import {Concepts} from './Concepts'
