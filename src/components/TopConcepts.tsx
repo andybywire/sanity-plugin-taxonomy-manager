@@ -1,4 +1,4 @@
-import {AddCircleIcon, TrashIcon, ToggleArrowRightIcon} from '@sanity/icons'
+import {AddCircleIcon, TrashIcon} from '@sanity/icons'
 import {Flex, Text, Inline, Tooltip, Box, Button} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
@@ -10,7 +10,7 @@ import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
-import styles from './TopConcepts.module.css'
+import {ToggleButton} from './interactions/ToggleButton'
 
 type TopConceptsProps = {
   concept: TopConceptTerm
@@ -54,17 +54,12 @@ export const TopConcepts = ({
   }, [concept?.id, concept?.prefLabel, removeConcept])
 
   return (
-    <Box className={[levelVisibility, styles.topConcept].join(' ')}>
+    <Box className={levelVisibility}>
       <Flex align={'center'} justify={'space-between'} wrap={'nowrap'}>
         {/* Toggle, label, tag — left half of flexbox */}
         <Flex align="center" gap={0} flex={1} style={{minWidth: 0}}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
-            <Button
-              icon={ToggleArrowRightIcon}
-              mode={'bleed'}
-              aria-expanded={levelVisibility == 'open'}
-              onClick={handleToggle}
-            />
+            <ToggleButton handler={handleToggle} visibility={levelVisibility} />
           )}
           {!concept?.prefLabel && (
             <Box

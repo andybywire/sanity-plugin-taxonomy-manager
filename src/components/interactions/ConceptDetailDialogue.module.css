@@ -1,9 +1,0 @@
-/* This is duplicated in Children.module.css
-TO DO: Deduplicate gracefully */
-.info {
-  height: 1.3125rem;
-  width: 1.3125rem;
-  color: var(--color-gary-800);
-  border-radius: 3px;
-  transition: all 0.1s ease-in-out;
-}

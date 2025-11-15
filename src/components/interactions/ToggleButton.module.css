@@ -1,0 +1,3 @@
+.toggleButton[aria-expanded='true'] svg {
+  rotate: 90deg;
+}

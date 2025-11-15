@@ -7,7 +7,6 @@ import type {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 import {Concepts} from './Concepts'
 import {NoConcepts} from './guides'
 import {TopConcepts} from './TopConcepts'
-// import styles from './TreeStructure.module.css'
 
 /**
  * #### Tree View

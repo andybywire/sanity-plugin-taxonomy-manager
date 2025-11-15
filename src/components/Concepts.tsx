@@ -1,4 +1,4 @@
-import {AddCircleIcon, SquareIcon, ToggleArrowRightIcon, TrashIcon} from '@sanity/icons'
+import {AddCircleIcon, SquareIcon, TrashIcon} from '@sanity/icons'
 import {Text, Inline, Tooltip, Box, Button} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
@@ -7,10 +7,10 @@ import {useCreateConcept, useRemoveConcept} from '../hooks'
 import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
-import styles from './Concepts.module.css'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
+import {ToggleButton} from './interactions/ToggleButton'
 
 type ConceptProps = {
   concept: ChildConceptTerm
@@ -58,16 +58,11 @@ export const Concepts = ({
   }, [concept.id, concept?.prefLabel, removeConcept])
 
   return (
-    <Box className={[levelVisibility, styles.concept].join(' ')}>
+    <Box className={levelVisibility}>
       <Inline space={2}>
         <Inline space={0}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
-            <Button
-              icon={ToggleArrowRightIcon}
-              mode={'bleed'}
-              aria-expanded={levelVisibility == 'open'}
-              onClick={handleToggle}
-            />
+            <ToggleButton handler={handleToggle} visibility={levelVisibility} />
           )}
           {concept?.childConcepts && concept.childConcepts.length == 0 && (
             <SquareIcon className="spacer" />

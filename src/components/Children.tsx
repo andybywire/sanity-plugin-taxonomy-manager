@@ -1,6 +1,5 @@
 /* eslint-disable complexity */
-import {ToggleArrowRightIcon} from '@sanity/icons'
-import {Inline, Box, Flex, Button} from '@sanity/ui'
+import {Inline, Box, Flex} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
@@ -13,6 +12,7 @@ import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptEditAction} from './interactions/ConceptEditAction'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 import {StructureDetailDialogue} from './interactions/StructureDetailDialogue'
+import {ToggleButton} from './interactions/ToggleButton'
 
 /**
  * #### Child Concept Component
@@ -65,12 +65,7 @@ export const Children = ({
         {/* Toggle, label, tag — left half of flexbox */}
         <Flex align="center" gap={0} flex={1} style={{minWidth: 0}}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
-            <Button
-              icon={ToggleArrowRightIcon}
-              mode={'bleed'}
-              aria-expanded={levelVisibility == 'open'}
-              onClick={handleToggle}
-            />
+            <ToggleButton handler={handleToggle} visibility={levelVisibility} />
           )}
           {!concept?.prefLabel && (
             <Box
