@@ -1,13 +1,5 @@
-/* eslint-disable complexity */
-// TO DO: abstract out components
-import {
-  ErrorOutlineIcon,
-  InfoOutlineIcon,
-  AddCircleIcon,
-  TrashIcon,
-  ToggleArrowRightIcon,
-} from '@sanity/icons'
-import {Inline, Tooltip, Box, Flex, Text, Button} from '@sanity/ui'
+import {ToggleArrowRightIcon} from '@sanity/icons'
+import {Inline, Box, Flex, Text, Button} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
@@ -18,7 +10,9 @@ import {ChildConcepts} from './ChildConcepts'
 import styles from './Children.module.css'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
+import {ConceptEditAction} from './interactions/ConceptEditAction'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
+import {StructureDetailDialogue} from './interactions/StructureDetailDialogue'
 
 /**
  * #### Child Concept Component
@@ -66,11 +60,6 @@ export const Children = ({
     }
   }, [levelVisibility])
 
-  // const childrenClass =
-  //   concept?.childConcepts && concept.childConcepts.length == 0
-  //     ? styles.noChildren
-  //     : styles.hasChildren
-
   return (
     // the list of child terms
     <Box className={[levelVisibility, styles.children].join(' ')}>
@@ -102,53 +91,16 @@ export const Children = ({
               <ConceptDetailLink concept={concept} />
             )}
           </Box>
-          {inputComponent && <ConceptDetailDialogue concept={concept} />}
         </Flex>
+        {/* Concept info and edit actions */}
+        {inputComponent && <ConceptDetailDialogue concept={concept} />}
         {!inputComponent &&
           releaseContext !== 'published' &&
           concept?.level &&
           concept.level < 5 && (
             <Inline>
-              <Tooltip
-                delay={{open: 750}}
-                content={
-                  <Box padding={1} sizing="content">
-                    <Text muted size={1}>
-                      Add a child concept below this concept
-                    </Text>
-                  </Box>
-                }
-                fallbackPlacements={['right', 'left']}
-                placement="top"
-              >
-                <Button
-                  icon={AddCircleIcon}
-                  mode={'bleed'}
-                  onClick={handleAddChild}
-                  tone={'positive'}
-                  aria-label="Add child a child concept below this concept"
-                />
-              </Tooltip>
-              <Tooltip
-                delay={{open: 750}}
-                content={
-                  <Box padding={1} sizing="content">
-                    <Text muted size={1}>
-                      Remove this concept from this scheme
-                    </Text>
-                  </Box>
-                }
-                fallbackPlacements={['right', 'left']}
-                placement="top"
-              >
-                <Button
-                  icon={TrashIcon}
-                  mode={'bleed'}
-                  onClick={handleRemoveConcept}
-                  tone={'critical'}
-                  aria-label="Remove this concept from this scheme"
-                />
-              </Tooltip>
+              <ConceptEditAction action={'add'} handler={handleAddChild} />
+              <ConceptEditAction action={'remove'} handler={handleRemoveConcept} />
             </Inline>
           )}
 
@@ -157,81 +109,28 @@ export const Children = ({
           concept.childConcepts?.length == 0 &&
           concept.level == 5 && (
             <Inline>
-              <Tooltip
-                delay={{open: 750}}
-                content={
-                  <Box padding={1} sizing="content">
-                    <Text muted size={1}>
-                      This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels.
-                    </Text>
-                  </Box>
+              <StructureDetailDialogue
+                type={'warn'}
+                title={'Taxonomy Manager Structure Notice'}
+                message={
+                  'This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels. Additional child terms are not shown in the hierarchy tree.'
                 }
-                fallbackPlacements={['right', 'left']}
-                placement="top"
-              >
-                <InfoOutlineIcon className={[styles.info, styles.warning].join(' ')} />
-              </Tooltip>
-              <Tooltip
-                delay={{open: 750}}
-                content={
-                  <Box padding={1} sizing="content">
-                    <Text muted size={1}>
-                      Remove this concept from this scheme
-                    </Text>
-                  </Box>
-                }
-                fallbackPlacements={['right', 'left']}
-                placement="top"
-              >
-                <Button
-                  icon={TrashIcon}
-                  mode={'bleed'}
-                  onClick={handleRemoveConcept}
-                  tone={'critical'}
-                  aria-label="Remove this concept from this scheme"
-                />
-              </Tooltip>
+              />
+              <ConceptEditAction action={'remove'} handler={handleRemoveConcept} />
             </Inline>
           )}
 
         {concept?.childConcepts && concept?.childConcepts?.length > 0 && concept.level == 5 && (
-          <Inline space={1}>
-            <Tooltip
-              delay={{open: 750}}
-              content={
-                <Box padding={1} sizing="content">
-                  <Text muted size={1}>
-                    This concept has unlisted child concepts. The maximum validated hierarchy depth
-                    is 5 levels.
-                  </Text>
-                </Box>
+          <Inline>
+            <StructureDetailDialogue
+              type={'error'}
+              title={'Taxonomy Manager Structure Warning'}
+              message={
+                'This concept has unlisted child concepts. The maximum validated hierarchy depth is 5 levels.'
               }
-              fallbackPlacements={['right', 'left']}
-              placement="top"
-            >
-              <ErrorOutlineIcon className={[styles.info, styles.error].join(' ')} />
-            </Tooltip>
+            />
             {!inputComponent && releaseContext !== 'published' && (
-              <Tooltip
-                delay={{open: 750}}
-                content={
-                  <Box padding={1} sizing="content">
-                    <Text muted size={1}>
-                      Remove this concept from this scheme
-                    </Text>
-                  </Box>
-                }
-                fallbackPlacements={['right', 'left']}
-                placement="top"
-              >
-                <Button
-                  icon={TrashIcon}
-                  mode={'bleed'}
-                  onClick={handleRemoveConcept}
-                  tone={'critical'}
-                  aria-label="Remove this concept from this scheme"
-                />
-              </Tooltip>
+              <ConceptEditAction action={'remove'} handler={handleRemoveConcept} />
             )}
           </Inline>
         )}
