@@ -7,7 +7,6 @@ import {useCreateConcept, useRemoveConcept} from '../hooks'
 import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
-import styles from './Children.module.css'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptEditAction} from './interactions/ConceptEditAction'
@@ -16,7 +15,8 @@ import {StructureDetailDialogue} from './interactions/StructureDetailDialogue'
 
 /**
  * #### Child Concept Component
- * Renders a list of child concepts for a given concept.
+ * Renders a list of child concepts and applicable
+ * actions for a given concept.
  */
 export const Children = ({
   concept,
@@ -33,10 +33,8 @@ export const Children = ({
 }) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
   const releaseContext: string = useContext(ReleaseContext) as string
-  const {
-    // @ts-expect-error — sort out type
-    globalVisibility: {treeVisibility},
-  } = useContext(TreeContext) || {}
+  const {globalVisibility: {treeVisibility} = {treeVisibility: 'open' as const}} =
+    useContext(TreeContext) || {}
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
@@ -49,7 +47,7 @@ export const Children = ({
   }, [concept.id, concept?.prefLabel, removeConcept])
 
   const [levelVisibility, setLevelVisibility] = useState<'open' | 'closed'>(
-    (treeVisibility as 'open' | 'closed') || 'open'
+    treeVisibility || 'open'
   )
 
   const handleToggle = useCallback(() => {
@@ -61,10 +59,9 @@ export const Children = ({
   }, [levelVisibility])
 
   return (
-    // the list of child terms
-    <Box className={[levelVisibility, styles.children].join(' ')}>
+    <Box className={levelVisibility}>
       <Flex align={'center'} justify={'space-between'} wrap={'nowrap'}>
-        {/* Toggle, label, tag */}
+        {/* Toggle, label, tag — left half of flexbox */}
         <Flex align="center" gap={0} flex={1} style={{minWidth: 0}}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
             <Button
@@ -92,7 +89,7 @@ export const Children = ({
             )}
           </Box>
         </Flex>
-        {/* Concept info and edit actions */}
+        {/* Concept info and edit actions — right half of flexbox */}
         {inputComponent && <ConceptDetailDialogue concept={concept} />}
         {!inputComponent &&
           releaseContext !== 'published' &&
@@ -103,7 +100,6 @@ export const Children = ({
               <ConceptEditAction action={'remove'} handler={handleRemoveConcept} />
             </Inline>
           )}
-
         {!inputComponent &&
           releaseContext !== 'published' &&
           concept.childConcepts?.length == 0 &&
@@ -119,7 +115,6 @@ export const Children = ({
               <ConceptEditAction action={'remove'} handler={handleRemoveConcept} />
             </Inline>
           )}
-
         {concept?.childConcepts && concept?.childConcepts?.length > 0 && concept.level == 5 && (
           <Inline>
             <StructureDetailDialogue
@@ -135,6 +130,7 @@ export const Children = ({
           </Inline>
         )}
       </Flex>
+      {/* Child elements the next level down, if any */}
       {concept?.childConcepts &&
         concept.childConcepts.length > 0 &&
         concept?.level &&
