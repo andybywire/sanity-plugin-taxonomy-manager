@@ -3,7 +3,7 @@ import {createContext} from 'react'
 import type {ConceptSchemeDocument} from './types'
 
 type TreeContextType = {
-  globalVisibility?: {treeId: string; treeVisibility: string}
+  globalVisibility?: {treeId: string; treeVisibility: 'open' | 'closed'}
   editControls?: boolean
   setEditControls?: (value: boolean) => void
 }

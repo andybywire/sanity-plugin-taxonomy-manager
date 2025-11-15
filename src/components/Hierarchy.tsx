@@ -43,7 +43,10 @@ export const Hierarchy = ({
   // short IDs are used on treeId to initiate a re-rendering of all child
   // elements on expand/collapse and re-initialize any local toggle state
   // that had been set.
-  const [globalVisibility, setGlobalVisibility] = useState({
+  const [globalVisibility, setGlobalVisibility] = useState<{
+    treeId: string
+    treeVisibility: 'open' | 'closed'
+  }>({
     treeId: nanoid(6),
     treeVisibility: 'open',
   })
