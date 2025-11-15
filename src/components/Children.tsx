@@ -106,7 +106,7 @@ export const Children = ({
             <Inline>
               <StructureDetailDialogue
                 type={'warn'}
-                title={'Taxonomy Manager Structure Notice'}
+                title={'Taxonomy Manager structure notice'}
                 message={
                   'This concept is at the maximum Taxonomy Manager hierarchy depth of 5 levels. Additional child terms are not shown in the hierarchy tree.'
                 }
@@ -118,7 +118,7 @@ export const Children = ({
           <Inline>
             <StructureDetailDialogue
               type={'error'}
-              title={'Taxonomy Manager Structure Warning'}
+              title={'Taxonomy Manager structure warning'}
               message={
                 'This concept has unlisted child concepts. The maximum validated hierarchy depth is 5 levels.'
               }

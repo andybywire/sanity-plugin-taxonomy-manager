@@ -1,10 +1,9 @@
-import {Button, Text} from '@sanity/ui'
+/* eslint-disable react/require-default-props */
+import {Button, Text, Box, Badge, Tooltip} from '@sanity/ui'
 import {useCallback, useContext} from 'react'
 import {RouterContext} from 'sanity/router'
 import {usePaneRouter} from 'sanity/structure'
 
-// import {truncateLabel} from '../../helpers'
-// import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import type {ChildConceptTerm} from '../../types'
 
 /**
@@ -14,15 +13,14 @@ import type {ChildConceptTerm} from '../../types'
 export function ConceptDetailLink({
   concept,
   topConcept = false,
+  orphan = false,
 }: {
   concept: ChildConceptTerm
-  // eslint-disable-next-line react/require-default-props
   topConcept?: boolean
+  orphan?: boolean
 }) {
   const routerContext = useContext(RouterContext)
   const {routerPanesState, groupIndex} = usePaneRouter()
-
-  // const linkColor = useLinkColorScheme()
 
   const {id, prefLabel} = concept ?? {}
   const displayLabel = prefLabel || '[new concept]'
@@ -45,21 +43,34 @@ export function ConceptDetailLink({
   }, [id, routerContext, routerPanesState, groupIndex])
 
   return (
-    <Button
-      mode="bleed"
-      paddingLeft={0}
-      onClick={openInNewPane}
-      width="fill"
-      justify={'flex-start'}
+    <Tooltip
+      delay={{open: 750}}
+      content={
+        <Box padding={1} sizing="content">
+          <Text muted size={1}>
+            {`View "${prefLabel}"`}
+          </Text>
+        </Box>
+      }
+      fallbackPlacements={['right', 'left']}
+      placement="top"
     >
-      <Text size={2} weight={topConcept ? 'bold' : 'regular'} textOverflow="ellipsis">
-        {displayLabel}
-        {topConcept && (
-          <span style={{fontWeight: 'normal', fontSize: 'small', paddingLeft: '.5rem'}}>
-            top concept
-          </span>
-        )}
-      </Text>
-    </Button>
+      <Button
+        mode="bleed"
+        paddingLeft={0}
+        onClick={openInNewPane}
+        width="fill"
+        justify={'flex-start'}
+      >
+        <Text size={2} weight={topConcept ? 'bold' : 'regular'} textOverflow="ellipsis">
+          {displayLabel}
+          {(topConcept || orphan) && (
+            <Badge fontSize={0} marginLeft={3} style={{verticalAlign: 'middle'}}>
+              {topConcept ? 'top concept' : 'orphan'}
+            </Badge>
+          )}
+        </Text>
+      </Button>
+    </Tooltip>
   )
 }

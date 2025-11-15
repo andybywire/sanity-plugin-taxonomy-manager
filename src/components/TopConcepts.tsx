@@ -1,5 +1,4 @@
-import {AddCircleIcon, TrashIcon} from '@sanity/icons'
-import {Flex, Text, Inline, Tooltip, Box, Button} from '@sanity/ui'
+import {Flex, Inline, Box} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext} from '../context'
@@ -9,6 +8,7 @@ import type {ConceptSchemeDocument, TopConceptTerm} from '../types'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
+import {ConceptEditAction} from './interactions/ConceptEditAction'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 import {ToggleButton} from './interactions/ToggleButton'
 
@@ -85,49 +85,11 @@ export const TopConcepts = ({
         {/* Input component info buttons */}
         {/* TO DO: Will probably need Inline component */}
         {inputComponent && <ConceptDetailDialogue concept={concept} />}
-        {/* Concept add and remove buttons and tooltips */}
+        {/* Concept info and edit actions — right half of flexbox */}
         {!inputComponent && releaseContext !== 'published' && (
           <Inline>
-            <Tooltip
-              delay={{open: 750}}
-              content={
-                <Box padding={1} sizing="content">
-                  <Text muted size={1}>
-                    Add a child concept below this concept
-                  </Text>
-                </Box>
-              }
-              fallbackPlacements={['right', 'left']}
-              placement="top"
-            >
-              <Button
-                icon={AddCircleIcon}
-                mode={'bleed'}
-                onClick={handleAddChild}
-                tone={'positive'}
-                aria-label="Add child a child concept"
-              />
-            </Tooltip>
-            <Tooltip
-              delay={{open: 750}}
-              content={
-                <Box padding={1} sizing="content">
-                  <Text muted size={1}>
-                    Remove this concept from this scheme
-                  </Text>
-                </Box>
-              }
-              fallbackPlacements={['right', 'left']}
-              placement="top"
-            >
-              <Button
-                icon={TrashIcon}
-                mode={'bleed'}
-                onClick={handleRemoveConcept}
-                tone={'critical'}
-                aria-label="Remove this concept from this scheme"
-              />
-            </Tooltip>
+            <ConceptEditAction action={'add'} handler={handleAddChild} />
+            <ConceptEditAction action={'remove'} handler={handleRemoveConcept} />
           </Inline>
         )}
       </Flex>

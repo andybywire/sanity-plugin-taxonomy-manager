@@ -30,7 +30,6 @@ export const TreeStructure = ({
   }
 
   return (
-    // <ul className={styles.treeStructure}>
     <Box paddingTop={4}>
       <Stack space={3} style={{listStyle: 'none', paddingLeft: '0', marginBlockStart: '0'}}>
         {concepts.topConcepts?.map((concept: TopConceptTerm) => (
@@ -57,6 +56,5 @@ export const TreeStructure = ({
           })}
       </Stack>
     </Box>
-    // {/* </ul> */}
   )
 }

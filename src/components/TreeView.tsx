@@ -8,8 +8,6 @@ import type {ConceptSchemeDocument, TreeViewProps} from '../types'
 import {Hierarchy} from './Hierarchy'
 import {InputHierarchy} from './inputs'
 
-import '../styles/taxonomyPluginStyles.css'
-
 /**
  * #### Tree View Component Wrapper
  * This is the view component for the hierarchy tree. It is the
@@ -29,37 +27,35 @@ export const TreeView = ({
   injectSanityColorVars()
   const {selectedPerspectiveName} = usePerspective()
   return (
-    <div className="taxonomyPluginRoot">
-      <SchemeContext.Provider value={document || ({} as ConceptSchemeDocument)}>
-        <ReleaseContext.Provider value={selectedPerspectiveName}>
-          {inputComponent ? (
-            <InputHierarchy
-              inputComponent={inputComponent}
-              branchId={branchId}
-              selectConcept={selectConcept}
-            />
-          ) : (
-            <Container width={1}>
-              {document?.displayed?.description && (
-                <Box padding={4} paddingTop={6}>
-                  <Stack space={4}>
-                    <Stack space={2}>
-                      <Text size={1} weight="semibold">
-                        Description
-                      </Text>
-                      <Text size={2} muted>
-                        {document?.displayed.description}
-                      </Text>
-                    </Stack>
+    <SchemeContext.Provider value={document || ({} as ConceptSchemeDocument)}>
+      <ReleaseContext.Provider value={selectedPerspectiveName}>
+        {inputComponent ? (
+          <InputHierarchy
+            inputComponent={inputComponent}
+            branchId={branchId}
+            selectConcept={selectConcept}
+          />
+        ) : (
+          <Container width={1}>
+            {document?.displayed?.description && (
+              <Box padding={4} paddingTop={6}>
+                <Stack space={4}>
+                  <Stack space={2}>
+                    <Text size={1} weight="semibold">
+                      Description
+                    </Text>
+                    <Text size={2} muted>
+                      {document?.displayed.description}
+                    </Text>
                   </Stack>
-                </Box>
-              )}
-              <Hierarchy inputComponent={inputComponent} branchId={branchId} />
-            </Container>
-          )}
-        </ReleaseContext.Provider>
-      </SchemeContext.Provider>
-    </div>
+                </Stack>
+              </Box>
+            )}
+            <Hierarchy inputComponent={inputComponent} branchId={branchId} />
+          </Container>
+        )}
+      </ReleaseContext.Provider>
+    </SchemeContext.Provider>
   )
 }
 

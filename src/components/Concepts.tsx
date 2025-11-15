@@ -1,5 +1,4 @@
-import {AddCircleIcon, SquareIcon, TrashIcon} from '@sanity/icons'
-import {Text, Inline, Tooltip, Box, Button} from '@sanity/ui'
+import {Inline, Box, Flex} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext} from '../context'
@@ -9,6 +8,7 @@ import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
 import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
+import {ConceptEditAction} from './interactions/ConceptEditAction'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 import {ToggleButton} from './interactions/ToggleButton'
 
@@ -59,72 +59,43 @@ export const Concepts = ({
 
   return (
     <Box className={levelVisibility}>
-      <Inline space={2}>
-        <Inline space={0}>
+      <Flex align={'center'} justify={'space-between'} wrap={'nowrap'}>
+        {/* Toggle, label, tag — left half of flexbox */}
+        <Flex align="center" gap={0} flex={1} style={{minWidth: 0}}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
             <ToggleButton handler={handleToggle} visibility={levelVisibility} />
           )}
-          {concept?.childConcepts && concept.childConcepts.length == 0 && (
-            <SquareIcon className="spacer" />
+          {!concept?.prefLabel && (
+            <Box
+              flex={1}
+              marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
+            >
+              <ConceptDetailLink concept={concept} orphan />
+            </Box>
           )}
-          {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
-          {inputComponent ? (
-            <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
-          ) : (
-            <ConceptDetailLink concept={concept} />
+          {concept?.prefLabel && (
+            <Box
+              flex={1}
+              marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
+            >
+              {inputComponent ? (
+                <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
+              ) : (
+                <ConceptDetailLink concept={concept} orphan />
+              )}
+            </Box>
           )}
-        </Inline>
-        {document.displayed?.topConcepts?.length && (
-          <Text size={1} muted>
-            orphan
-          </Text>
-        )}
+        </Flex>
+        {/* Input component info buttons */}
         {inputComponent && <ConceptDetailDialogue concept={concept} />}
+        {/* Concept info and edit actions — right half of flexbox */}
         {!inputComponent && releaseContext !== 'published' && (
           <Inline>
-            <Tooltip
-              delay={{open: 750}}
-              content={
-                <Box padding={1} sizing="content">
-                  <Text muted size={1}>
-                    Add a child concept below this concept
-                  </Text>
-                </Box>
-              }
-              fallbackPlacements={['right', 'left']}
-              placement="top"
-            >
-              <Button
-                icon={AddCircleIcon}
-                mode={'bleed'}
-                onClick={handleAddChild}
-                tone={'positive'}
-                aria-label="Add child a child concept"
-              />
-            </Tooltip>
-            <Tooltip
-              delay={{open: 750}}
-              content={
-                <Box padding={1} sizing="content">
-                  <Text muted size={1}>
-                    Remove this concept from this scheme
-                  </Text>
-                </Box>
-              }
-              fallbackPlacements={['right', 'left']}
-              placement="top"
-            >
-              <Button
-                icon={TrashIcon}
-                mode={'bleed'}
-                onClick={handleRemoveConcept}
-                tone={'critical'}
-                aria-label="Remove this concept from this scheme"
-              />
-            </Tooltip>
+            <ConceptEditAction action={'add'} handler={handleAddChild} />
+            <ConceptEditAction action={'remove'} handler={handleRemoveConcept} />
           </Inline>
         )}
-      </Inline>
+      </Flex>
       {concept?.childConcepts && concept.childConcepts.length > 0 && (
         <ChildConcepts
           concepts={concept.childConcepts}

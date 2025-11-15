@@ -33,7 +33,7 @@ export const StructureDetailDialogue = ({
         content={
           <Box padding={1} sizing="content">
             <Text muted size={1}>
-              Taxonomy Manager structure notice
+              {title}
             </Text>
           </Box>
         }
