@@ -1,3 +1,5 @@
+/* eslint-disable complexity */
+// TO DO: abstract out components
 import {
   ErrorOutlineIcon,
   InfoOutlineIcon,
@@ -5,7 +7,7 @@ import {
   TrashIcon,
   ToggleArrowRightIcon,
 } from '@sanity/icons'
-import {Inline, Tooltip, Box, Text, Button} from '@sanity/ui'
+import {Inline, Tooltip, Box, Flex, Text, Button} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
@@ -64,33 +66,44 @@ export const Children = ({
     }
   }, [levelVisibility])
 
-  const childrenClass =
-    concept?.childConcepts && concept.childConcepts.length == 0
-      ? styles.noChildren
-      : styles.hasChildren
+  // const childrenClass =
+  //   concept?.childConcepts && concept.childConcepts.length == 0
+  //     ? styles.noChildren
+  //     : styles.hasChildren
 
   return (
-    <li className={[levelVisibility, childrenClass, styles.children].join(' ')}>
-      <Inline space={2}>
-        <Inline space={0}>
-          <Inline space={0}>
-            {concept?.childConcepts && concept.childConcepts.length > 0 && (
-              <Button
-                icon={ToggleArrowRightIcon}
-                mode={'bleed'}
-                aria-expanded={levelVisibility == 'open'}
-                onClick={handleToggle}
-              />
-            )}
-            {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
+    // the list of child terms
+    <Box className={[levelVisibility, styles.children].join(' ')}>
+      <Flex align={'center'} justify={'space-between'} wrap={'nowrap'}>
+        {/* Toggle, label, tag */}
+        <Flex align="center" gap={0} flex={1} style={{minWidth: 0}}>
+          {concept?.childConcepts && concept.childConcepts.length > 0 && (
+            <Button
+              icon={ToggleArrowRightIcon}
+              mode={'bleed'}
+              aria-expanded={levelVisibility == 'open'}
+              onClick={handleToggle}
+            />
+          )}
+          {!concept?.prefLabel && (
+            <Box marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}>
+              <Text muted size={2}>
+                [new concept]
+              </Text>
+            </Box>
+          )}
+          <Box
+            flex={1}
+            marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
+          >
             {inputComponent ? (
               <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
             ) : (
               <ConceptDetailLink concept={concept} />
             )}
-          </Inline>
+          </Box>
           {inputComponent && <ConceptDetailDialogue concept={concept} />}
-        </Inline>
+        </Flex>
         {!inputComponent &&
           releaseContext !== 'published' &&
           concept?.level &&
@@ -222,7 +235,7 @@ export const Children = ({
             )}
           </Inline>
         )}
-      </Inline>
+      </Flex>
       {concept?.childConcepts &&
         concept.childConcepts.length > 0 &&
         concept?.level &&
@@ -234,6 +247,6 @@ export const Children = ({
             childVisibility={levelVisibility}
           />
         )}
-    </li>
+    </Box>
   )
 }

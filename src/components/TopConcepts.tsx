@@ -1,5 +1,5 @@
-import {AddCircleIcon, TrashIcon, ToggleArrowRightIcon, SquareIcon} from '@sanity/icons'
-import {Text, Inline, Tooltip, Box, Button} from '@sanity/ui'
+import {AddCircleIcon, TrashIcon, ToggleArrowRightIcon} from '@sanity/icons'
+import {Flex, Text, Inline, Tooltip, Box, Button} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext} from '../context'
@@ -54,9 +54,9 @@ export const TopConcepts = ({
   }, [concept?.id, concept?.prefLabel, removeConcept])
 
   return (
-    // <StyledTopConcept className={levelVisibility}>
-    <li className={[levelVisibility, styles.topConcept].join(' ')}>
-      <Inline space={2}>
+    <Box className={[levelVisibility, styles.topConcept].join(' ')}>
+      <Flex align={'center'} justify={'space-between'}>
+        {/* Toggle, label, tag */}
         <Inline space={0}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
             <Button
@@ -66,20 +66,28 @@ export const TopConcepts = ({
               onClick={handleToggle}
             />
           )}
-          {concept?.childConcepts && concept.childConcepts.length == 0 && (
-            <SquareIcon className="spacer" />
+          {!concept?.prefLabel && (
+            <Box marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}>
+              <Text muted size={2}>
+                [new concept]
+              </Text>
+            </Box>
           )}
-          {!concept?.prefLabel && <span className="untitled">[new concept]</span>}
-          {inputComponent ? (
-            <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
-          ) : (
-            <ConceptDetailLink concept={concept} />
-          )}
+          <Box marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}>
+            {inputComponent ? (
+              <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
+            ) : (
+              <ConceptDetailLink concept={concept} topConcept />
+            )}
+          </Box>
+          <Text size={1} muted>
+            top concept
+          </Text>
         </Inline>
-        <Text size={1} muted>
-          top concept
-        </Text>
+        {/* Input component info buttons */}
+        {/* TO DO: Will probably need Inline component */}
         {inputComponent && <ConceptDetailDialogue concept={concept} />}
+        {/* Concept add and remove buttons and tooltips */}
         {!inputComponent && releaseContext !== 'published' && (
           <Inline>
             <Tooltip
@@ -124,7 +132,8 @@ export const TopConcepts = ({
             </Tooltip>
           </Inline>
         )}
-      </Inline>
+      </Flex>
+      {/* Child Concepts */}
       {concept?.childConcepts && concept.childConcepts.length > 0 && (
         <ChildConcepts
           concepts={concept.childConcepts}
@@ -133,6 +142,6 @@ export const TopConcepts = ({
           childVisibility={levelVisibility}
         />
       )}
-    </li>
+    </Box>
   )
 }

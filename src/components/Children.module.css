@@ -7,7 +7,7 @@ li.children {
     rotate: 90deg;
   }
   &.noChildren {
-    margin-left: 2rem;
+    /* margin-left: 2rem; */
   }
 
 }

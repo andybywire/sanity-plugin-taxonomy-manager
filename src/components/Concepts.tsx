@@ -58,7 +58,7 @@ export const Concepts = ({
   }, [concept.id, concept?.prefLabel, removeConcept])
 
   return (
-    <li className={[levelVisibility, styles.concept].join(' ')}>
+    <Box className={[levelVisibility, styles.concept].join(' ')}>
       <Inline space={2}>
         <Inline space={0}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
@@ -138,6 +138,6 @@ export const Concepts = ({
           childVisibility={levelVisibility}
         />
       )}
-    </li>
+    </Box>
   )
 }

@@ -1,3 +1,4 @@
+import {Box, Stack} from '@sanity/ui'
 import {useContext} from 'react'
 
 import {TreeContext} from '../context'
@@ -6,7 +7,7 @@ import type {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 import {Concepts} from './Concepts'
 import {NoConcepts} from './guides'
 import {TopConcepts} from './TopConcepts'
-import styles from './TreeStructure.module.css'
+// import styles from './TreeStructure.module.css'
 
 /**
  * #### Tree View
@@ -30,29 +31,33 @@ export const TreeStructure = ({
   }
 
   return (
-    <ul className={styles.treeStructure}>
-      {concepts.topConcepts?.map((concept: TopConceptTerm) => (
-        <TopConcepts
-          key={`${concept?.id}+${treeId}`}
-          concept={concept}
-          treeVisibility={treeVisibility}
-          inputComponent={inputComponent}
-          selectConcept={selectConcept}
-        />
-      ))}
-      {concepts.concepts
-        ?.filter((concept: ChildConceptTerm) => concept?.isOrphan)
-        .map((concept: ChildConceptTerm) => {
-          return (
-            <Concepts
-              key={`${concept.id}+${treeId}`}
-              concept={concept}
-              treeVisibility={treeVisibility}
-              inputComponent={inputComponent}
-              selectConcept={selectConcept}
-            />
-          )
-        })}
-    </ul>
+    // <ul className={styles.treeStructure}>
+    <Box paddingTop={4}>
+      <Stack space={3} style={{listStyle: 'none', paddingLeft: '0', marginBlockStart: '0'}}>
+        {concepts.topConcepts?.map((concept: TopConceptTerm) => (
+          <TopConcepts
+            key={`${concept?.id}+${treeId}`}
+            concept={concept}
+            treeVisibility={treeVisibility}
+            inputComponent={inputComponent}
+            selectConcept={selectConcept}
+          />
+        ))}
+        {concepts.concepts
+          ?.filter((concept: ChildConceptTerm) => concept?.isOrphan)
+          .map((concept: ChildConceptTerm) => {
+            return (
+              <Concepts
+                key={`${concept.id}+${treeId}`}
+                concept={concept}
+                treeVisibility={treeVisibility}
+                inputComponent={inputComponent}
+                selectConcept={selectConcept}
+              />
+            )
+          })}
+      </Stack>
+    </Box>
+    // {/* </ul> */}
   )
 }

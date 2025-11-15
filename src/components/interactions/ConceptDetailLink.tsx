@@ -7,13 +7,18 @@ import {usePaneRouter} from 'sanity/structure'
 // import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import type {ChildConceptTerm} from '../../types'
 
-import styles from './ConceptDetailLink.module.css'
-
 /**
  * #### Concept Detail Link
  * Renders a link to a concept in the hierarchy tree that opens in a new pane.
  */
-export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
+export function ConceptDetailLink({
+  concept,
+  topConcept = false,
+}: {
+  concept: ChildConceptTerm
+  // eslint-disable-next-line react/require-default-props
+  topConcept?: boolean
+}) {
   const routerContext = useContext(RouterContext)
   const {routerPanesState, groupIndex} = usePaneRouter()
 
@@ -40,14 +45,16 @@ export function ConceptDetailLink({concept}: {concept: ChildConceptTerm}) {
 
   return (
     <Button
-      className={styles.conceptLink}
-      mode={'bleed'}
+      mode="bleed"
+      paddingLeft={0}
       onClick={openInNewPane}
-      // title={prefLabel}
-      text={<Text textOverflow={'ellipsis'}>{prefLabel}</Text>}
+      width="fill"
+      justify={'flex-start'}
     >
-      {/* {truncateLabel(prefLabel)} */}
-      {/* <Text textOverflow={'ellipsis'}>{prefLabel}</Text> */}
+      <Text size={2} weight={topConcept ? 'bold' : 'regular'} textOverflow="ellipsis">
+        {prefLabel}
+        {/* {topConcept && ` top concept`} */}
+      </Text>
     </Button>
   )
 }

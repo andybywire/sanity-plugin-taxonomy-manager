@@ -5,7 +5,7 @@ import {truncateLabel} from '../../helpers'
 import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import type {ChildConceptTerm} from '../../types'
 
-import styles from './ConceptDetailLink.module.css'
+// import styles from './ConceptDetailLink.module.css'
 
 /**
  * #### Concept Select Link
@@ -39,12 +39,14 @@ export function ConceptSelectLink({
 
   const truncatedLabel = truncateLabel(prefLabel)
 
+  // add topConcept bolding here — see ConceptDetail Link
+
   return (
     <>
       {selectConcept ? (
         // eslint-disable-next-line jsx-a11y/anchor-is-valid
         <a
-          className={styles.conceptLink}
+          // className={styles.conceptLink}
           href="#"
           onClick={handleClick}
           style={{color: linkColor}}

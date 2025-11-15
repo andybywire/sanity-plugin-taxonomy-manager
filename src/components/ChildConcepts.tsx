@@ -1,6 +1,7 @@
+import {Box, Stack} from '@sanity/ui'
+
 import type {ChildConceptTerm} from '../types'
 
-import styles from './ChildConcepts.module.css'
 import {Children} from './Children'
 
 /**
@@ -24,20 +25,20 @@ export const ChildConcepts = ({
   childVisibility: string // retype to 'open' | 'closed
 }) => {
   return (
-    <ul
-      className={styles.childConcepts}
-      style={childVisibility == 'closed' ? {display: 'none'} : {display: 'block'}}
-    >
-      {concepts.map((concept: ChildConceptTerm) => {
-        return (
-          <Children
-            key={concept.id}
-            concept={concept}
-            selectConcept={selectConcept}
-            inputComponent={inputComponent}
-          />
-        )
-      })}
-    </ul>
+    // the container for child terms
+    <Box marginLeft={4} marginTop={2} display={childVisibility == 'closed' ? 'none' : 'block'}>
+      <Stack space={3}>
+        {concepts.map((concept: ChildConceptTerm) => {
+          return (
+            <Children
+              key={concept.id}
+              concept={concept}
+              selectConcept={selectConcept}
+              inputComponent={inputComponent}
+            />
+          )
+        })}
+      </Stack>
+    </Box>
   )
 }
