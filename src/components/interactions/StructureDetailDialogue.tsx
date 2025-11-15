@@ -4,11 +4,8 @@ import {useCallback, useState} from 'react'
 
 /**
  * #### Information Icon and Dialogue with Structure Details
- * - provide feedback on concepts that are at the limit of
- *   or have children beyond the supported hierarchy depth
- * TO DO:
- * - convert component
- * - add to ChildConcepts.tsx — replace Tooltip implementation
+ * Provide feedback on concepts that are at the limit of
+ * or have children beyond the supported hierarchy depth
  */
 export const StructureDetailDialogue = ({
   message,
@@ -36,7 +33,7 @@ export const StructureDetailDialogue = ({
         content={
           <Box padding={1} sizing="content">
             <Text muted size={1}>
-              Taxonomy Manager Structure Notice
+              Taxonomy Manager structure notice
             </Text>
           </Box>
         }
