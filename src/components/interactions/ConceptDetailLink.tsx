@@ -25,6 +25,7 @@ export function ConceptDetailLink({
   // const linkColor = useLinkColorScheme()
 
   const {id, prefLabel} = concept ?? {}
+  const displayLabel = prefLabel || '[new concept]'
 
   const openInNewPane = useCallback(() => {
     if (!routerContext || !id) {
@@ -52,8 +53,12 @@ export function ConceptDetailLink({
       justify={'flex-start'}
     >
       <Text size={2} weight={topConcept ? 'bold' : 'regular'} textOverflow="ellipsis">
-        {prefLabel}
-        {/* {topConcept && ` top concept`} */}
+        {displayLabel}
+        {topConcept && (
+          <span style={{fontWeight: 'normal', fontSize: 'small', paddingLeft: '.5rem'}}>
+            top concept
+          </span>
+        )}
       </Text>
     </Button>
   )

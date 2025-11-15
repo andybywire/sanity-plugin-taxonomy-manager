@@ -55,9 +55,9 @@ export const TopConcepts = ({
 
   return (
     <Box className={[levelVisibility, styles.topConcept].join(' ')}>
-      <Flex align={'center'} justify={'space-between'}>
-        {/* Toggle, label, tag */}
-        <Inline space={0}>
+      <Flex align={'center'} justify={'space-between'} wrap={'nowrap'}>
+        {/* Toggle, label, tag — left half of flexbox */}
+        <Flex align="center" gap={0} flex={1} style={{minWidth: 0}}>
           {concept?.childConcepts && concept.childConcepts.length > 0 && (
             <Button
               icon={ToggleArrowRightIcon}
@@ -67,23 +67,26 @@ export const TopConcepts = ({
             />
           )}
           {!concept?.prefLabel && (
-            <Box marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}>
-              <Text muted size={2}>
-                [new concept]
-              </Text>
+            <Box
+              flex={1}
+              marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
+            >
+              <ConceptDetailLink concept={concept} topConcept />
             </Box>
           )}
-          <Box marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}>
-            {inputComponent ? (
-              <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
-            ) : (
-              <ConceptDetailLink concept={concept} topConcept />
-            )}
-          </Box>
-          <Text size={1} muted>
-            top concept
-          </Text>
-        </Inline>
+          {concept?.prefLabel && (
+            <Box
+              flex={1}
+              marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
+            >
+              {inputComponent ? (
+                <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
+              ) : (
+                <ConceptDetailLink concept={concept} topConcept />
+              )}
+            </Box>
+          )}
+        </Flex>
         {/* Input component info buttons */}
         {/* TO DO: Will probably need Inline component */}
         {inputComponent && <ConceptDetailDialogue concept={concept} />}

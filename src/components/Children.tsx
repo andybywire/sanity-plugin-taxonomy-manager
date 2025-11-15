@@ -1,5 +1,6 @@
+/* eslint-disable complexity */
 import {ToggleArrowRightIcon} from '@sanity/icons'
-import {Inline, Box, Flex, Text, Button} from '@sanity/ui'
+import {Inline, Box, Flex, Button} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
@@ -72,22 +73,25 @@ export const Children = ({
             />
           )}
           {!concept?.prefLabel && (
-            <Box marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}>
-              <Text muted size={2}>
-                [new concept]
-              </Text>
+            <Box
+              flex={1}
+              marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
+            >
+              <ConceptDetailLink concept={concept} />
             </Box>
           )}
-          <Box
-            flex={1}
-            marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
-          >
-            {inputComponent ? (
-              <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
-            ) : (
-              <ConceptDetailLink concept={concept} />
-            )}
-          </Box>
+          {concept?.prefLabel && (
+            <Box
+              flex={1}
+              marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
+            >
+              {inputComponent ? (
+                <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
+              ) : (
+                <ConceptDetailLink concept={concept} />
+              )}
+            </Box>
+          )}
         </Flex>
         {/* Concept info and edit actions — right half of flexbox */}
         {inputComponent && <ConceptDetailDialogue concept={concept} />}
