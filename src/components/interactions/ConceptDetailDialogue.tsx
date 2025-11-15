@@ -1,16 +1,24 @@
 import {InfoOutlineIcon} from '@sanity/icons'
-import {Dialog, Box, Text, Stack, Label, Button} from '@sanity/ui'
+import {Dialog, Box, Text, Stack, Label, Button, Tooltip} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 
-import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import type {ChildConceptTerm, TopConceptTerm} from '../../types'
 
-import styles from './ConceptDetailDialogue.module.css'
+const MessageHelper = ({title, message}: {title: string; message: string}) => {
+  return (
+    <Stack space={2}>
+      <Label size={1}>{title}</Label>
+      <Text size={2} muted style={{whiteSpace: 'pre-wrap'}}>
+        {message}
+      </Text>
+    </Stack>
+  )
+}
 
 /**
  * #### Information Icon and Dialogue with Concept Details
- * - affords Tree View access to Definition, Examples, and Scope Notes
- * - is rendered only when concept details are present
+ * - Affords Tree View access to Definition, Examples, and Scope Notes
+ * - Rendered only when concept details are present
  */
 export const ConceptDetailDialogue = ({
   concept,
@@ -25,15 +33,24 @@ export const ConceptDetailDialogue = ({
   const onClose = useCallback(() => setOpen(false), [])
   const onOpen = useCallback(() => setOpen(true), [])
 
-  const linkColor = useLinkColorScheme()
-
   if (!concept || (!concept.definition && !concept.example && !concept.scopeNote)) return null
 
   return (
     <>
-      <Button mode={'bleed'} onClick={onOpen} padding={2}>
-        <InfoOutlineIcon className={styles.info} style={{color: linkColor}} />
-      </Button>
+      <Tooltip
+        delay={{open: 750}}
+        content={
+          <Box padding={1} sizing="content">
+            <Text muted size={1}>
+              View concept details
+            </Text>
+          </Box>
+        }
+        fallbackPlacements={['right', 'left']}
+        placement="top"
+      >
+        <Button icon={InfoOutlineIcon} mode={'bleed'} onClick={onOpen} tone={'default'} />
+      </Tooltip>
 
       {open && (
         <Dialog
@@ -43,31 +60,14 @@ export const ConceptDetailDialogue = ({
           zOffset={1000}
           width={1}
         >
-          <Box padding={4} paddingBottom={5}>
+          <Box padding={4} paddingTop={2} paddingBottom={5}>
             <Stack space={4}>
               {concept.definition && (
-                <Stack space={2}>
-                  <Label size={1}>Definition</Label>
-                  <Text size={2} muted style={{whiteSpace: 'pre-wrap'}}>
-                    {concept.definition}
-                  </Text>
-                </Stack>
+                <MessageHelper title={'Definition'} message={concept.definition} />
               )}
-              {concept.example && (
-                <Stack space={2}>
-                  <Label size={1}>Example</Label>
-                  <Text size={2} muted style={{whiteSpace: 'pre-wrap'}}>
-                    {concept.example}
-                  </Text>
-                </Stack>
-              )}
+              {concept.example && <MessageHelper title={'Examples'} message={concept.example} />}
               {concept.scopeNote && (
-                <Stack space={2}>
-                  <Label size={1}>Scope Note</Label>
-                  <Text size={2} muted style={{whiteSpace: 'pre-wrap'}}>
-                    {concept.scopeNote}
-                  </Text>
-                </Stack>
+                <MessageHelper title={'Scope Notes'} message={concept.scopeNote} />
               )}
             </Stack>
           </Box>
