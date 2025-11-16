@@ -75,17 +75,15 @@ export const TopConcepts = ({
               marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
             >
               {inputComponent ? (
-                <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
+                <ConceptSelectLink concept={concept} selectConcept={selectConcept} topConcept />
               ) : (
                 <ConceptDetailLink concept={concept} topConcept />
               )}
             </Box>
           )}
         </Flex>
-        {/* Input component info buttons */}
-        {/* TO DO: Will probably need Inline component */}
-        {inputComponent && <ConceptDetailDialogue concept={concept} />}
         {/* Concept info and edit actions — right half of flexbox */}
+        {inputComponent && <ConceptDetailDialogue concept={concept} />}
         {!inputComponent && releaseContext !== 'published' && (
           <Inline>
             <ConceptEditAction action={'add'} handler={handleAddChild} />

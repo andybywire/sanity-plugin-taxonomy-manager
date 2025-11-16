@@ -79,16 +79,15 @@ export const Concepts = ({
               marginLeft={!concept.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
             >
               {inputComponent ? (
-                <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
+                <ConceptSelectLink concept={concept} selectConcept={selectConcept} orphan />
               ) : (
                 <ConceptDetailLink concept={concept} orphan />
               )}
             </Box>
           )}
         </Flex>
-        {/* Input component info buttons */}
-        {inputComponent && <ConceptDetailDialogue concept={concept} />}
         {/* Concept info and edit actions — right half of flexbox */}
+        {inputComponent && <ConceptDetailDialogue concept={concept} />}
         {!inputComponent && releaseContext !== 'published' && (
           <Inline>
             <ConceptEditAction action={'add'} handler={handleAddChild} />

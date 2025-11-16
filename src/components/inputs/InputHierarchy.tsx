@@ -77,7 +77,7 @@ export const InputHierarchy = ({branchId = '', selectConcept, inputComponent}: T
   }
   return (
     <TreeContext.Provider value={{globalVisibility: {treeId: '123', treeVisibility: 'open'}}}>
-      <Box padding={4}>
+      <Box padding={4} paddingTop={0}>
         <TreeStructure
           concepts={data}
           inputComponent={inputComponent || false}

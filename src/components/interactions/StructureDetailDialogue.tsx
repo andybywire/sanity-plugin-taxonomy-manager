@@ -39,6 +39,7 @@ export const StructureDetailDialogue = ({
         }
         fallbackPlacements={['right', 'left']}
         placement="top"
+        portal
       >
         <Button
           icon={type == 'error' ? ErrorOutlineIcon : InfoOutlineIcon}

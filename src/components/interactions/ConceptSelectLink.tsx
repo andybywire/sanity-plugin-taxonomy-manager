@@ -1,11 +1,8 @@
 /* eslint-disable react/require-default-props */
+import {Button, Text, Box, Badge, Tooltip} from '@sanity/ui'
 import {useCallback} from 'react'
 
-import {truncateLabel} from '../../helpers'
-import {useLinkColorScheme} from '../../hooks/useLinkColorScheme'
 import type {ChildConceptTerm} from '../../types'
-
-// import styles from './ConceptDetailLink.module.css'
 
 /**
  * #### Concept Select Link
@@ -13,9 +10,13 @@ import type {ChildConceptTerm} from '../../types'
  */
 export function ConceptSelectLink({
   concept,
+  topConcept = false,
+  orphan = false,
   selectConcept,
 }: {
   concept: ChildConceptTerm
+  topConcept?: boolean
+  orphan?: boolean
   selectConcept?: (conceptRef: {
     _ref: string
     _type: 'reference'
@@ -23,8 +24,7 @@ export function ConceptSelectLink({
   }) => void
 }) {
   const {prefLabel, id, _originalId} = concept ?? {}
-
-  const linkColor = useLinkColorScheme()
+  const displayLabel = prefLabel || '[new concept]'
 
   const handleClick = useCallback(() => {
     if (!selectConcept) return
@@ -37,25 +37,39 @@ export function ConceptSelectLink({
     selectConcept(conceptRef)
   }, [id, _originalId, selectConcept])
 
-  const truncatedLabel = truncateLabel(prefLabel)
-
-  // add topConcept bolding here — see ConceptDetail Link
-
   return (
     <>
-      {selectConcept ? (
-        // eslint-disable-next-line jsx-a11y/anchor-is-valid
-        <a
-          // className={styles.conceptLink}
-          href="#"
-          onClick={handleClick}
-          style={{color: linkColor}}
-          title={prefLabel}
+      {selectConcept && (
+        <Tooltip
+          delay={{open: 750}}
+          content={
+            <Box padding={1} sizing="content">
+              <Text muted size={1}>
+                {`Select "${prefLabel}"`}
+              </Text>
+            </Box>
+          }
+          fallbackPlacements={['right', 'left', 'bottom']}
+          placement="top"
+          portal
         >
-          {truncatedLabel}
-        </a>
-      ) : (
-        <p>{truncatedLabel}</p>
+          <Button
+            mode="bleed"
+            paddingLeft={0}
+            onClick={handleClick}
+            width="fill"
+            justify={'flex-start'}
+          >
+            <Text size={2} weight={topConcept ? 'bold' : 'regular'} textOverflow="ellipsis">
+              {displayLabel}
+              {(topConcept || orphan) && (
+                <Badge fontSize={0} marginLeft={3} style={{verticalAlign: 'middle'}}>
+                  {topConcept ? 'top concept' : 'orphan'}
+                </Badge>
+              )}
+            </Text>
+          </Button>
+        </Tooltip>
       )}
     </>
   )

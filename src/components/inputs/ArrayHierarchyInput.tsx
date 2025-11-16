@@ -277,7 +277,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
           zOffset={900}
           width={1}
         >
-          <Box padding={10}>
+          <Box>
             <TreeView
               document={scheme as ConceptSchemeDocument}
               // @ts-expect-error - TODO: work out this type issue.

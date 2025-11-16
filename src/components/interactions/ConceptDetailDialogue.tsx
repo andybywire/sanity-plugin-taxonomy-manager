@@ -48,6 +48,7 @@ export const ConceptDetailDialogue = ({
         }
         fallbackPlacements={['right', 'left']}
         placement="top"
+        portal
       >
         <Button icon={InfoOutlineIcon} mode={'bleed'} onClick={onOpen} tone={'default'} />
       </Tooltip>
