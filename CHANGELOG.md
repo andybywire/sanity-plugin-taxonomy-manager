@@ -16,6 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [4.2.0] - 2025-11-15
+
+### Feature
+- Improve usability with clearer select interactions, tooltips, and information dialogues
+- Align styling more closely with Sanity UI patterns using more Sanity native components
+
+### Chores
+- Modularize repeated components for better maintainability and iteration
+- Remove all instances of styled components (library still in to support the build - there appear to be a dependency that needs it)
+
 ## [4.1.0] - 2025-11-08
 
 ### Feature
@@ -414,7 +424,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.1.0...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.2.0...HEAD
+[4.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.1.4...v4.2.0
 [4.1.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.4...v4.1.0
 [4.0.4]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.3...v4.0.4
 [4.0.3]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.0.2...v4.0.3
