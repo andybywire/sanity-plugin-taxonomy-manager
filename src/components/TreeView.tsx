@@ -2,7 +2,6 @@ import {Box, Container, Stack, Text} from '@sanity/ui'
 import {usePerspective} from 'sanity'
 
 import {ReleaseContext, SchemeContext} from '../context'
-import {injectSanityColorVars} from '../styles/sanityColors.css'
 import type {ConceptSchemeDocument, TreeViewProps} from '../types'
 
 import {Hierarchy} from './Hierarchy'
@@ -24,7 +23,6 @@ export const TreeView = ({
   inputComponent = false,
   selectConcept,
 }: TreeViewProps) => {
-  injectSanityColorVars()
   const {selectedPerspectiveName} = usePerspective()
   return (
     <SchemeContext.Provider value={document || ({} as ConceptSchemeDocument)}>
