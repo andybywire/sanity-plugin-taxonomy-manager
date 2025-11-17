@@ -94,17 +94,17 @@ export const inputBuilder = (): string => {
   select($branchId != null => 
     *[_id == $id][0] {
       _updatedAt,
-      "topConcepts":*[_type == "skosConcept" && conceptId == $branchId]{
+      "concepts": concepts[$branchId in @->broader[]->.conceptId]->|order(prefLabel) {
         "id": _id,
         "level": 0,
+        "isOrphan": true,
         _originalId,
         prefLabel,
         definition,
         example,
         scopeNote,
-        ${branchBuilder() || ''}  
-      }, 
-      "concepts": []
+        ${branchBuilder() || ''}
+      }
     },
     *[_id == $id][0] {
       _updatedAt,
