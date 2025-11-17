@@ -36,6 +36,8 @@ export const Concepts = ({
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
   const releaseContext: string = useContext(ReleaseContext) as string
 
+  const hasTopConcept = !!document.displayed?.topConcepts?.length
+
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
@@ -70,7 +72,7 @@ export const Concepts = ({
               flex={1}
               marginLeft={!concept?.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
             >
-              <ConceptDetailLink concept={concept} orphan />
+              <ConceptDetailLink concept={concept} orphan={hasTopConcept} />
             </Box>
           )}
           {concept?.prefLabel && (
@@ -79,9 +81,13 @@ export const Concepts = ({
               marginLeft={!concept?.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
             >
               {inputComponent ? (
-                <ConceptSelectLink concept={concept} selectConcept={selectConcept} orphan />
+                <ConceptSelectLink
+                  concept={concept}
+                  selectConcept={selectConcept}
+                  orphan={hasTopConcept}
+                />
               ) : (
-                <ConceptDetailLink concept={concept} orphan />
+                <ConceptDetailLink concept={concept} orphan={hasTopConcept} />
               )}
             </Box>
           )}

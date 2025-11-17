@@ -86,7 +86,7 @@ export const trunkBuilder = (): string => {
  * in that branch only. Then call branchBuilder recursively — it will
  * only build terms in the scheme referenced by that concept.
  *
- * - branchBuilder() is called in Hierarchy.tsx
+ * - trunkBuilder() is called in Hierarchy.tsx
  * - inputBuilder() is called in InputHierarchy.tsx
  */
 export const inputBuilder = (): string => {
