@@ -92,4 +92,5 @@ export interface TreeViewProps {
   branchId: string
   selectConcept?: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
   inputComponent?: boolean
+  expanded?: boolean
 }

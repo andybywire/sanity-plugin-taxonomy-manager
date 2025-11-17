@@ -18,10 +18,16 @@ import {TreeStructure} from '../TreeStructure'
  * @param inputComponent - Specifies whether the component is a Studio
  *   input component. Set in HierarchyInput and passed through TreeView
  */
-export const InputHierarchy = ({branchId = '', selectConcept, inputComponent}: TreeViewProps) => {
+export const InputHierarchy = ({
+  branchId = '',
+  selectConcept,
+  inputComponent,
+  expanded,
+}: TreeViewProps) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
   const documentId = getPublishedId(document.displayed?._id as DocumentId)
   const releaseContext: string = useContext(ReleaseContext) as string
+  const initialVisibility = expanded ? 'open' : 'closed'
   const {data, loading, error} = useListeningQuery<DocumentConcepts>(
     {
       fetch: inputBuilder(),
@@ -76,7 +82,9 @@ export const InputHierarchy = ({branchId = '', selectConcept, inputComponent}: T
     )
   }
   return (
-    <TreeContext.Provider value={{globalVisibility: {treeId: '123', treeVisibility: 'open'}}}>
+    <TreeContext.Provider
+      value={{globalVisibility: {treeId: '123', treeVisibility: initialVisibility}}}
+    >
       <Box padding={4} paddingTop={0}>
         <TreeStructure
           concepts={data}

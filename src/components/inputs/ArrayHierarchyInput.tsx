@@ -28,6 +28,7 @@ type ReferenceOptions = ObjectOptions & {
       schemeId: string
       branchId?: string
     }
+    expanded?: boolean
   }>
 }
 
@@ -284,6 +285,7 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
               branchId={branchId}
               inputComponent
               selectConcept={handleAction}
+              expanded={filterValues?.expanded}
             />
           </Box>
         </Dialog>

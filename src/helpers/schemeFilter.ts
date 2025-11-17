@@ -2,6 +2,7 @@ import type {useClient} from 'sanity'
 
 type SchemeOptions = {
   schemeId: string
+  expanded?: boolean
 }
 
 type SchemeFilterResult = {
@@ -71,6 +72,7 @@ export const schemeFilter = (
       filter: `(_id in $concepts
               || _id in $topConcepts)`,
       params: {concepts, topConcepts, schemeId},
+      expanded: options.expanded,
     }
   }
 }
