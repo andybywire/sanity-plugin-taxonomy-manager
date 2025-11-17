@@ -36,7 +36,7 @@ export const Concepts = ({
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
   const releaseContext: string = useContext(ReleaseContext) as string
 
-  const hasTopConcept = !!document.displayed?.topConcepts?.length
+  const hasTopConcept = !!document.displayed?.topConcepts?.length && !inputComponent
 
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
