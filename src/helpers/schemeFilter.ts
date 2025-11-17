@@ -8,16 +8,20 @@ type SchemeOptions = {
 type SchemeFilterResult = {
   filter: string
   params: {
+    schemeId: string
     concepts: string[]
     topConcepts: string[]
   }
+  expanded?: boolean
 }
 
 /**
  * #### Reference Field Scheme Filter
- * Pluggable Function for Filtering to a Single SKOS Concept Scheme
- * @param schemeId - The unique six character concept identifier for
+ * Pluggable Function for Filtering to a Single SKOS Concept Scheme.
+ * @param {string} schemeId - The unique six character concept identifier for
  *   the Concept Scheme to which you wish to filter.
+ * @param {boolean} [expanded] - Set to `true` to display open hierarchy trees for
+ *   input components. Input component trees load closed by default.
  * @returns A reference type filter for Concepts and Top Concepts in
  *   the selected Concept Scheme test
  * @example
@@ -32,7 +36,10 @@ type SchemeFilterResult = {
  *       type: 'reference',
  *       to: {type: 'skosConcept'},
  *       options: {
- *         filter: schemeFilter({schemeId: 'a1b2c3'}),
+ *         filter: schemeFilter({
+ *            schemeId: 'a1b2c3',
+ *            expanded: true, // optional; defaults to false (closed tree)
+ *          }),
  *         disableNew: true,
  *       },
  *     },
@@ -72,7 +79,7 @@ export const schemeFilter = (
       filter: `(_id in $concepts
               || _id in $topConcepts)`,
       params: {concepts, topConcepts, schemeId},
-      expanded: options.expanded,
+      expanded: options?.expanded,
     }
   }
 }

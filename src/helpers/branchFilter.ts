@@ -3,18 +3,28 @@ import type {useClient} from 'sanity'
 type BranchOptions = {
   schemeId: string
   branchId: string
+  expanded?: boolean
 }
 
 type BranchFilterResult = {
   filter: string
-  params: BranchOptions & {concepts: string[]}
+  params: {
+    schemeId: string
+    branchId: string
+    concepts: string[]
+  }
+  expanded?: boolean
 }
 
 /**
  * #### Reference Field Scheme & Branch Filter
  * A pluggable Function for Filtering to a Top Concept Branch within a SKOS Concept Scheme
- * @param schemeId - The unique six character concept identifier for the Concept Scheme to which you wish to filter.
- * @param branchId - The unique six character concept identifier of a branch. Child concepts will be returned.
+ * @param {string} schemeId - The unique six character concept identifier for
+ *   the Concept Scheme to which you wish to filter.
+ * @param {string} branchId - The unique six character concept identifier of
+ *   a branch. Child concepts will be returned.
+ * @param {boolean} [expanded] - Set to `true` to display open hierarchy trees for
+ *   input components. Input component trees load closed by default.
  * @returns A reference type filter for the child concepts of the designated branch in the selected Concept Scheme
  * @example
  * ```ts
@@ -28,7 +38,11 @@ type BranchFilterResult = {
  *       type: 'reference',
  *       to: {type: 'skosConcept'},
  *       options: {
- *         filter: branchFilter({schemeId: 'a1b2c3', branchId: 'd4e5f6'}),
+ *         filter: branchFilter({
+ *            schemeId: 'a1b2c3',
+ *            branchId: 'd4e5f6'
+ *            expanded: true, // optional; defaults to false (closed tree)
+ *        }),
  *         disableNew: true,
  *       },
  *     },
@@ -78,6 +92,7 @@ export const branchFilter = (
     return {
       filter: `_id in $concepts`,
       params: {concepts, schemeId, branchId},
+      expanded: options?.expanded,
     }
   }
 }
