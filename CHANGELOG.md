@@ -16,6 +16,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 <!-- ## [unreleased] -->
 
+## [4.3.0] - 2025-11-17
+
+### Feature
+- Set hierarchy trees in input components to closed by default
+- Add an option to input components to set hierarchy trees to "open" on a per-field basis
+- No longer display the top-level "branch filter" term in input component hierarchies
+
+### Chore
+- Improve scheme and branch filter inline documentation
+
 ## [4.2.2] - 2025-11-16
 
 ### Fix
@@ -437,7 +447,8 @@ is available.
 - Add changelog
 - Migrate SKOS Taxonomy Management schemas from local development branch to (this) plugin repository
 
-[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.2.2...HEAD
+[unreleased]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.3.0...HEAD
+[4.3.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.2.2...v4.3.0
 [4.2.2]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.2.1...v4.2.2
 [4.2.1]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.2.0...v4.2.1
 [4.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.1.4...v4.2.0
