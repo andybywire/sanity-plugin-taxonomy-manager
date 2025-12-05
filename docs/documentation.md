@@ -22,7 +22,7 @@ yarn add sanity-plugin-taxonomy-manager
 
 ### Configuration
 
-Add `taxonomyManager()` to the plugins array of your [project configuration](https://www.sanity.io/docs/configuration#51515480034b). this will make the Taxonomy Manager Tool available in your studio workspace.
+Add `taxonomyManager()` to the plugins array of your [project configuration](https://www.sanity.io/docs/configuration#51515480034b). This will make the Taxonomy Manager Tool available in your studio workspace.
 
 ```js
 // sanity.config.js
@@ -139,7 +139,14 @@ The `customConceptFields` and `customSchemeFields` keys allow you to specify add
 
 Custom fields will appear on all Concept and Concept Scheme documents accordingly. 
 
-### 📺 Sanity Showcase Demo
+### 📺 Demos & Tutorials
+
+#### Ranked Lists of Related Content in Sanity Studio
+Here are three simple approaches I use to generate ranked lists of related content using taxonomy tags managed in Sanity Studio.
+
+<iframe width="640" height="360" src="https://www.youtube.com/embed/-A8FfdfkFRw?si=dUYyY0gBApBTWk5S" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+#### Sanity Showcase Demo
 A presentation on managing standards-based taxonomies in Sanity Studio and purposefully integrating tagging to support discovery, findability, and search for content collections. Delivered Apr 4, 2025 as part of Sanity's "Showcase" series. 
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/kkFRFtFSNeQ?si=H95eGKl69qr_jOCF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
@@ -389,8 +396,8 @@ import {ReferenceHierarchyInput} from 'sanity-plugin-taxonomy-manager'
 ...
 
 defineField({
-    name: 'habitat',
-    title: 'Habitat',
+    name: 'topics',
+    title: 'Topics',
     type: 'reference',
     to: {type: 'skosConcept'},
       options: {
@@ -400,6 +407,27 @@ defineField({
       components: {field: ReferenceHierarchyInput},
   }),
 ```
+
+If your taxonomy includes hierarchical relationships, the tree will load "closed" be default. To load an open tree, add the `expanded: true` option to the `branchFilter()` or `schemeFilter()` parameters:
+
+```js
+import {ReferenceHierarchyInput} from 'sanity-plugin-taxonomy-manager'
+
+...
+
+defineField({
+    name: 'topics',
+    title: 'Topics',
+    type: 'reference',
+    to: {type: 'skosConcept'},
+      options: {
+        filter: branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c', expanded: true}),
+        disableNew: true,
+      },
+      components: {field: ReferenceHierarchyInput},
+  }),
+```
+Loading an expanded tree can provide a better experience for Studio users when a hierarchical taxonomy is small or only has a single level.
 
 To include the input component for an `array` input, import `ArrayHierarchyInput` and include it as a `field` component for your array. 
 
