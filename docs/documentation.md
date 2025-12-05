@@ -139,6 +139,10 @@ The `customConceptFields` and `customSchemeFields` keys allow you to specify add
 
 Custom fields will appear on all Concept and Concept Scheme documents accordingly. 
 
+### Importing Terms
+
+Sanity offers a CLI and several client libraries for [importing content data](https://www.sanity.io/docs/content-lake/importing-data) into the Studio. There is also an [Import Taxonomy Terms](https://www.sanity.io/recipes/import-taxonomy-terms-b46af03f) script available on Sanity Exchange for importing SKOS formatted taxonomies directly into Taxonomy Manager. The import tool assumes your taxonomy is formatted using the provided [Google Sheets template](https://docs.google.com/spreadsheets/d/1eWaO_8pOdC7QwN4umnRnniEVFECMUc1b42FA3Ea7D0c/edit?gid=1890562484#gid=1890562484). Please see the [script documentation on Sanity Exchange](https://www.sanity.io/recipes/import-taxonomy-terms-b46af03f) for details. 
+
 ### 📺 Demos & Tutorials
 
 #### Ranked Lists of Related Content in Sanity Studio
