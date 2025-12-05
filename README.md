@@ -9,8 +9,7 @@
 
 The Taxonomy Manager document schema is based on the [World Wide Web Consortium](https://www.w3.org/) (W3C) [Simple Knowledge Organization Scheme](https://www.w3.org/TR/skos-reference/) (SKOS) recommendation. Concept and concept scheme editor tools include standard SKOS properties, hints for creating consistent concepts and vocabularies, and validation functions for preventing consistency errors. -->
 
-| ![taxonomy manager plugin screenshot](docs/_images/taxonomyManager.png) |
-| ----------------------------------------------------------------------- |
+![taxonomy manager plugin screenshot](docs/_images/taxonomyManager.png)
 
 ## Documentation
 
@@ -116,7 +115,7 @@ export default defineConfig({
 
 ## Contributing
 
-Community collaboration is highly encouraged. To make sure your contributions are aligned with project goals and principles, please read the [contributing docs](https://sanitytaxonomymanager.com/#/contributing) before submitting a pull request.
+See something that could be improved (or a bug that should be fixed)? Please feel free to pitch in. 
 
 - This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
   with default configuration for build & watch scripts.
@@ -149,8 +148,8 @@ graph BT
           <i style="color: gray; font-size: small">uses SchemeContext</i>
           <i style="color: gray; font-size: small">uses TreeContext</i>
         ]-->TreeStructure.tsx
-        Orphans.tsx[
-          Orphans.tsx
+        Concepts.tsx[
+          Concepts.tsx
           <i style="color: gray; font-size: small">uses SchemeContext</i>
           <i style="color: gray; font-size: small">uses TreeContext</i>
         ]-->TreeStructure.tsx
@@ -158,13 +157,13 @@ graph BT
 
         %% Sequence below maintains RTL ordering:
         ConceptDetailLink.tsx-->TopConcepts.tsx
-        ConceptDetailLink.tsx-->Orphans.tsx
+        ConceptDetailLink.tsx-->Concepts.tsx
 
         ChildConcepts.tsx-->TopConcepts.tsx
-        ChildConcepts.tsx-->Orphans.tsx
+        ChildConcepts.tsx-->Concepts.tsx
         Children.tsx-->ChildConcepts.tsx
 
-        ConceptDetailDialogue.tsx-->Orphans.tsx
+        ConceptDetailDialogue.tsx-->Concepts.tsx
         ConceptDetailDialogue.tsx-->TopConcepts.tsx
 
         ConceptDetailLink.tsx-->Children.tsx
@@ -204,13 +203,13 @@ graph BT
             <i style="color: gray; font-size: small">uses SchemeContext</i>
             <i style="color: gray; font-size: small">uses TreeContext</i>
           ]-->TreeStructure.tsx
-          Orphans.tsx[
-            Orphans.tsx
+          Concepts.tsx[
+            Concepts.tsx
             <i style="color: gray; font-size: small">uses SchemeContext</i>
             <i style="color: gray; font-size: small">uses TreeContext</i>
           ]-->TreeStructure.tsx
           ChildConcepts.tsx-->TopConcepts.tsx
-          ChildConcepts.tsx-->Orphans.tsx
+          ChildConcepts.tsx-->Concepts.tsx
           Children.tsx-->ChildConcepts.tsx
         end
       end
