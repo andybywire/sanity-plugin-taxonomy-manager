@@ -2,6 +2,10 @@
   "$schema": "https://raw.githubusercontent.com/googleapis/release-please/main/schemas/config.json",
   "release-type": "node",
   "packages": {
-    ".": {}
-  }
+    ".": {
+      "package-name": "",
+      "tag-separator": ""
+    }
+  },
+  "changelog-notes-template": "{{notes}}\n\n---\n\nAvailable on NPM at [sanity-plugin-taxonomy-manager](https://www.npmjs.com/package/sanity-plugin-taxonomy-manager)"
 }
