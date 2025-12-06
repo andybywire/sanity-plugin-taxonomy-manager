@@ -1,0 +1,20 @@
+name: release-please
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # update changelog, tags, releases
+      pull-requests: write   # open/update release PRs
+
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: release
+        # With manifest + config at repo root and default names,
+        # no extra inputs are needed.
+        # It will use the built-in GITHUB_TOKEN automatically.
