@@ -24,6 +24,13 @@ All notable changes to this project will be documented in this file.
 -->
 
 
+## [4.4.2](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.1...v4.4.2) (2025-12-07)
+
+
+### Bug Fixes
+
+* align repo and npm release versions ([b89db1a](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/b89db1a098df805969eb2ca810a605e100d80578))
+
 ## [4.4.1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.1...v4.4.1) (2025-12-07)
 
 ### Miscellaneous Chores
