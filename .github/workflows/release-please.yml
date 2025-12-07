@@ -15,5 +15,3 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
-        with:
-          include-component-in-tag: false
