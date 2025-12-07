@@ -15,6 +15,5 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
-        # With manifest + config at repo root and default names,
-        # no extra inputs are needed.
-        # It will use the built-in GITHUB_TOKEN automatically.
+        with:
+          include-component-in-tag: false
