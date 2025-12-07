@@ -6,12 +6,16 @@ The format of this document is based on [Keep a Changelog](https://keepachangelo
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- 
-### feat: a new feature for the user
-### fix: a bug fix for the user
-### chore: changes that aren't a fix or feature and don't modify src or test files
-### docs: changes to the documentation
-### style: formatting changes that do not affect the meaning of the code
-### test: adding or refactoring tests 
+## Tags which generate a release
+- fix: which represents bug fixes, and correlates to a SemVer patch.
+- feat: which represents a new feature, and correlates to a SemVer minor.
+- feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a SemVer major.
+
+## Non-releasable units (should not generate a release)
+- chore: changes that aren't a fix or feature and don't modify src or test files
+- docs: changes to the documentation
+- style: formatting changes that do not affect the meaning of the code
+- test: adding or refactoring tests 
 -->
 
 
