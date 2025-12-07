@@ -17,32 +17,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [4.4.1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.1...v4.4.1) (2025-12-07)
 
-
-### Features
-
-* add base iri attribution to skosConceptScheme ([2af233e](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/2af233eb24f1f6c6c4178bc7679ec3a802c40c0f))
-* add baseUri default options ([#49](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/49)) ([d6551b8](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/d6551b847d53e17e5db09c6d422de819a99a7a7b))
-* add collapse / expand functionality to tree view ([4538587](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/453858795699e9ecd33eae9c84021bcdc9708334))
-* add collapse / expand functionality to tree view ([a764d4c](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/a764d4ce967d55a116745079b6b3acc99056c690))
-* add collapse expand functionality to tree view ([51d21ef](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/51d21ef9eb5199b4b0e93d1550f195aba4d850c0))
-* add concept links to hierarchy view ([#38](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/38)) ([617127c](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/617127c371ba9e6a952c2fd680652876b6c92aaa))
-* add detailed descriptions for History, Editorial, and Change notes ([#34](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/34)) ([17aa18d](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/17aa18dd2d180cd25bd377d12fed5082e569511c))
-* add History, Editorial, and Change Notes ([#35](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/35)) ([6b505ea](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/6b505ead5c9bd797b9d583949c5bdcca937876a6))
-* add identifier generator input field ([a72bab9](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/a72bab9366745312b2cfdff82efd22bc40b60081))
-* add identifier generator input field ([ae0d6dc](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/ae0d6dc3eb6e5c65e0e3d5c87c60be1642d57a66))
-* Add New and Empty schema messaging & instructions ([df16ac8](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/df16ac805369055a942e6ac3320b36c834ad8232))
-* add progressive disclosure & improve Concept field descriptions ([7fa7f03](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/7fa7f036ae5ac3e902a51161293ef8970dec1123))
-* add schema and branch filter helpers ([c17a183](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/c17a183314b84c2f6de5e47216dde0b6e01111ee))
-* convert to standalone tool ([9c91b43](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/9c91b438f78fb20d05dd535a6b4009cc3230a595))
-* improve description fields with progressive disclosure ([edb7284](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/edb7284655881c812831e5af157ad7d9bd02eb80))
-
-
-### Bug Fixes
-
-* bug that sometimes opened a pane with a concept form, but scheme data after creating a new concept. ([78596fa](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/78596faa0f779e009bc53e8a471defc963e29e78))
-* schemeId being lost on title update ([5a2eee3](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/5a2eee35ce02bd03ba246f014ef2d095df773848))
-
-
 ### Miscellaneous Chores
 
 * adjust first release-please baseline ([9577f82](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/9577f8261f68a7c646455ac323bdf483d3cd6c95))
