@@ -19,6 +19,7 @@ All notable changes to this project will be documented in this file.
 - `release-please` will generate PR that creates a GitHub release, bumps the version number, and updates the CHANGELOG
 - merge the PR, then, to release on NPM, run:
   - git pull origin main --tags
+  - npm whoami || npm login      # verify login, log in if not authenticated
   - npm test
   - npm publish 
 -->
