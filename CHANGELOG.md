@@ -15,6 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 -->
 
 
+## [4.4.1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.0...v4.4.1) (2025-12-07)
+
+
+### Chore
+
+* correct baseline release to 4.4.1
+
 ## [4.4.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/sanity-plugin-taxonomy-manager-v4.3.1...sanity-plugin-taxonomy-manager-v4.4.0) (2025-12-06)
 
 
