@@ -2,8 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-The format of this document is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 <!-- 
 ## Tags which generate a release
@@ -16,6 +14,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - docs: changes to the documentation
 - style: formatting changes that do not affect the meaning of the code
 - test: adding or refactoring tests 
+
+## Pushing releases to NPM
+- `release-please` will generate PR that creates a GitHub release, bumps the version number, and updates the CHANGELOG
+- merge the PR, then, to release on NPM, run:
+  - git pull origin main --tags
+  - npm test
+  - npm publish 
 -->
 
 
@@ -539,6 +544,9 @@ is available.
 [0.1.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/releases/tag/v0.1.0
 
 <!---
+# Previous release process notes
+- prior to adopting an automated `release-please` workflow
+
 ## Change Log Principles
 - Changelogs are for humans, not machines.
 - There should be an entry for every single version.
