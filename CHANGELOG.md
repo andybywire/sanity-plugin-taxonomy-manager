@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 
 <!-- 
 ## Tags which generate a release
+Be sure to prepend these to commits as I work!
 - fix: which represents bug fixes, and correlates to a SemVer patch.
 - feat: which represents a new feature, and correlates to a SemVer minor.
 - feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a SemVer major.
