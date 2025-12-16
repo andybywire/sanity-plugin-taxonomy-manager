@@ -26,6 +26,13 @@ Be sure to prepend these to commits as I work!
 -->
 
 
+## [4.4.3](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.2...v4.4.3) (2025-12-16)
+
+
+### Bug Fixes
+
+* update react, react-dom, and Sanity peer deps ([891919a](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/891919a4f4314dd70f4c9e4e8b14fceac11bba98))
+
 ## [4.4.2](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.1...v4.4.2) (2025-12-07)
 
 
