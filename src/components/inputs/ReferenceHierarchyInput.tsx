@@ -1,7 +1,9 @@
+import {CloseIcon} from '@sanity/icons'
 import {isVersionId} from '@sanity/id-utils'
 import type {DocumentId} from '@sanity/id-utils'
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
+import {AiOutlineTag} from 'react-icons/ai'
 import type {ObjectFieldProps, ObjectOptions, Reference} from 'sanity'
 import {isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
 
@@ -18,6 +20,7 @@ type ReferenceOptions = ObjectOptions & {
       branchId?: string
     }
     expanded?: boolean
+    browseOnly?: boolean
   }>
 }
 
@@ -55,6 +58,11 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
   const [scheme, setScheme] = useState({})
   // State to store resolved filter values:
   const [filterValues, setFilterValues] = useState<FilterResult | undefined>()
+  // State for browse-only mode: stores the selected concept's preview data
+  const [selectedConcept, setSelectedConcept] = useState<{prefLabel: string} | null>(null)
+
+  // Get current reference value for browse-only preview
+  const currentRef = props.value?._ref
 
   // use filterValues if available, otherwise fallback to default:
   const {schemeId, branchId = null} = filterValues?.params || {}
@@ -90,6 +98,21 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
       .catch((err) => console.warn(err))
   }, [client, schemeId])
 
+  // Fetch selected concept preview data for browse-only mode
+  useEffect(() => {
+    if (!filterValues?.browseOnly) return
+    if (!currentRef) {
+      setSelectedConcept(null)
+      return
+    }
+    client
+      .fetch<{prefLabel: string} | null>(`*[_id == $id || _id == "drafts." + $id][0]{prefLabel}`, {
+        id: currentRef,
+      })
+      .then((res) => setSelectedConcept(res))
+      .catch((err) => console.error('Error fetching selected concept:', err))
+  }, [currentRef, filterValues?.browseOnly, client])
+
   const browseHierarchy = useCallback(() => {
     setOpen(true)
   }, [])
@@ -97,6 +120,36 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
   const handleClose = useCallback(() => {
     setOpen(false)
   }, [])
+
+  /**
+   * #### Clear Selection Action (browse-only mode)
+   * Removes the selected taxonomy term from the document field
+   */
+  const handleClear = useCallback(() => {
+    // if there is a draft document, unset the field and commit
+    if (isDraft || isInRelease) {
+      client
+        .patch(documentId)
+        .unset([name])
+        .commit()
+        .then(() => setSelectedConcept(null))
+        .catch((err) => console.error('Error clearing field:', err))
+      return
+    }
+    // if there is not a draft document, fetch the published
+    // version and create a new draft without the reference
+    client
+      .fetch(`*[_id == "${documentId}"][0]`)
+      .then((res: {_id: string; _type: string; [key: string]: unknown}) => {
+        res._id = `drafts.${res._id}`
+        delete res[name]
+        client
+          .create(res)
+          .then(() => setSelectedConcept(null))
+          .catch((error) => console.error('Error creating draft:', error))
+      })
+      .catch((err) => console.error('Error fetching document:', err))
+  }, [client, documentId, isDraft, isInRelease, name])
 
   /**
    * #### Term Select Action
@@ -202,13 +255,54 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
       </Box>
     )
   }
+  const isPublished = selectedPerspectiveName === 'published'
+
+  // Render the browse-only preview UI
+  const renderBrowseOnlyPreview = () => {
+    if (selectedConcept) {
+      return (
+        <Card padding={3} radius={2} border>
+          <Flex align="center" gap={3}>
+            <Box>
+              <Text size={2}>
+                <AiOutlineTag />
+              </Text>
+            </Box>
+            <Box flex={1}>
+              <Text size={1} weight="medium">
+                {selectedConcept.prefLabel}
+              </Text>
+            </Box>
+            {!isPublished && (
+              <Button
+                icon={CloseIcon}
+                mode="bleed"
+                tone="default"
+                onClick={handleClear}
+                padding={2}
+                title="Clear selection"
+              />
+            )}
+          </Flex>
+        </Card>
+      )
+    }
+    return (
+      <Card padding={3} radius={2} border tone="transparent">
+        <Text muted size={1}>
+          No term selected
+        </Text>
+      </Card>
+    )
+  }
+
   return (
     <Stack space={3}>
-      {props.renderDefault(props)}
+      {filterValues?.browseOnly ? renderBrowseOnlyPreview() : props.renderDefault(props)}
 
       <Grid columns={1} gap={3}>
         <Button
-          disabled={selectedPerspectiveName === 'published'}
+          disabled={isPublished}
           text="Browse Taxonomy Tree"
           mode="ghost"
           onClick={browseHierarchy}

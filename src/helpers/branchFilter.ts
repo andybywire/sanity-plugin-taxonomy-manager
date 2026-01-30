@@ -4,6 +4,7 @@ type BranchOptions = {
   schemeId: string
   branchId: string
   expanded?: boolean
+  browseOnly?: boolean
 }
 
 type BranchFilterResult = {
@@ -14,6 +15,7 @@ type BranchFilterResult = {
     concepts: string[]
   }
   expanded?: boolean
+  browseOnly?: boolean
 }
 
 /**
@@ -25,6 +27,8 @@ type BranchFilterResult = {
  *   a branch. Child concepts will be returned.
  * @param {boolean} [expanded] - Set to `true` to display open hierarchy trees for
  *   input components. Input component trees load closed by default.
+ * @param {boolean} [browseOnly] - Set to `true` to hide the default Sanity search
+ *   input and display only the "Browse Taxonomy Tree" button for selecting terms.
  * @returns A reference type filter for the child concepts of the designated branch in the selected Concept Scheme
  * @example
  * ```ts
@@ -40,8 +44,9 @@ type BranchFilterResult = {
  *       options: {
  *         filter: branchFilter({
  *            schemeId: 'a1b2c3',
- *            branchId: 'd4e5f6'
+ *            branchId: 'd4e5f6',
  *            expanded: true, // optional; defaults to false (closed tree)
+ *            browseOnly: true, // optional; hides search input
  *        }),
  *         disableNew: true,
  *       },
@@ -93,6 +98,7 @@ export const branchFilter = (
       filter: `_id in $concepts`,
       params: {concepts, schemeId, branchId},
       expanded: options?.expanded,
+      browseOnly: options?.browseOnly,
     }
   }
 }

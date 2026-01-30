@@ -3,6 +3,7 @@ import type {useClient} from 'sanity'
 type SchemeOptions = {
   schemeId: string
   expanded?: boolean
+  browseOnly?: boolean
 }
 
 type SchemeFilterResult = {
@@ -13,6 +14,7 @@ type SchemeFilterResult = {
     topConcepts: string[]
   }
   expanded?: boolean
+  browseOnly?: boolean
 }
 
 /**
@@ -22,6 +24,8 @@ type SchemeFilterResult = {
  *   the Concept Scheme to which you wish to filter.
  * @param {boolean} [expanded] - Set to `true` to display open hierarchy trees for
  *   input components. Input component trees load closed by default.
+ * @param {boolean} [browseOnly] - Set to `true` to hide the default Sanity search
+ *   input and display only the "Browse Taxonomy Tree" button for selecting terms.
  * @returns A reference type filter for Concepts and Top Concepts in
  *   the selected Concept Scheme test
  * @example
@@ -39,6 +43,7 @@ type SchemeFilterResult = {
  *         filter: schemeFilter({
  *            schemeId: 'a1b2c3',
  *            expanded: true, // optional; defaults to false (closed tree)
+ *            browseOnly: true, // optional; hides search input
  *          }),
  *         disableNew: true,
  *       },
@@ -80,6 +85,7 @@ export const schemeFilter = (
               || _id in $topConcepts)`,
       params: {concepts, topConcepts, schemeId},
       expanded: options?.expanded,
+      browseOnly: options?.browseOnly,
     }
   }
 }
