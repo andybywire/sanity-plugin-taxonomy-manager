@@ -1,9 +1,7 @@
-import {CloseIcon} from '@sanity/icons'
 import {isVersionId} from '@sanity/id-utils'
 import type {DocumentId} from '@sanity/id-utils'
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
-import {AiOutlineTag} from 'react-icons/ai'
 import type {ObjectFieldProps, ObjectOptions, Reference} from 'sanity'
 import {isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
 
@@ -122,36 +120,6 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
   }, [])
 
   /**
-   * #### Clear Selection Action (browse-only mode)
-   * Removes the selected taxonomy term from the document field
-   */
-  const handleClear = useCallback(() => {
-    // if there is a draft document, unset the field and commit
-    if (isDraft || isInRelease) {
-      client
-        .patch(documentId)
-        .unset([name])
-        .commit()
-        .then(() => setSelectedConcept(null))
-        .catch((err) => console.error('Error clearing field:', err))
-      return
-    }
-    // if there is not a draft document, fetch the published
-    // version and create a new draft without the reference
-    client
-      .fetch(`*[_id == "${documentId}"][0]`)
-      .then((res: {_id: string; _type: string; [key: string]: unknown}) => {
-        res._id = `drafts.${res._id}`
-        delete res[name]
-        client
-          .create(res)
-          .then(() => setSelectedConcept(null))
-          .catch((error) => console.error('Error creating draft:', error))
-      })
-      .catch((err) => console.error('Error fetching document:', err))
-  }, [client, documentId, isDraft, isInRelease, name])
-
-  /**
    * #### Term Select Action
    * Writes the selected taxonomy term to the document field
    */
@@ -260,44 +228,26 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
   // Render the browse-only preview UI
   const renderBrowseOnlyPreview = () => {
     if (selectedConcept) {
-      return (
-        <Card padding={3} radius={2} border>
-          <Flex align="center" gap={3}>
-            <Box>
-              <Text size={2}>
-                <AiOutlineTag />
-              </Text>
-            </Box>
-            <Box flex={1}>
-              <Text size={1} weight="medium">
-                {selectedConcept.prefLabel}
-              </Text>
-            </Box>
-            {!isPublished && (
-              <Button
-                icon={CloseIcon}
-                mode="bleed"
-                tone="default"
-                onClick={handleClear}
-                padding={2}
-                title="Clear selection"
-              />
-            )}
-          </Flex>
-        </Card>
-      )
+      return props.renderDefault(props)
     }
     return (
-      <Card padding={3} radius={2} border tone="transparent">
-        <Text muted size={1}>
-          No term selected
-        </Text>
-      </Card>
+      <Stack space={2}>
+        <Box paddingY={3}>
+          <Text size={1} weight={'medium'}>
+            {title}
+          </Text>
+        </Box>
+        <Card padding={3} radius={2} border tone="transparent">
+          <Text muted size={2}>
+            No term selected
+          </Text>
+        </Card>
+      </Stack>
     )
   }
 
   return (
-    <Stack space={3}>
+    <Stack space={4}>
       {filterValues?.browseOnly ? renderBrowseOnlyPreview() : props.renderDefault(props)}
 
       <Grid columns={1} gap={3}>
