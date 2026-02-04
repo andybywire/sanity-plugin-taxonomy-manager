@@ -115,7 +115,7 @@ export default defineConfig({
 
 ## Contributing
 
-See something that could be improved (or a bug that should be fixed)? Please feel free to pitch in. 
+See something that could be improved (or a bug that should be fixed)? Please feel free to pitch in.
 
 - This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
   with default configuration for build & watch scripts.

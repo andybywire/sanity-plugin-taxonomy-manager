@@ -103,55 +103,56 @@ The `customConceptFields` and `customSchemeFields` keys allow you to specify add
 
 ```js
 // sanity.config.js
-    taxonomyManager(
-      {
-        baseUri: 'https://example.com/',
-        customConceptFields: [
-          {
-            name: 'sameAs',
-            title: 'Same As',
-            type: 'url',
-            description: 'Specify a fully qualified IRI that identifies the same concept in another vocabulary',
-          },
-        ],
-        customSchemeFields:[
-          {
-            name: 'approvedBy',
-            title: 'Approved By',
-            type: 'object',
-            fields: [
-              {
-                name: 'name',
-                title: 'Name',
-                type: 'string',
-              },
-              {
-                name: 'date',
-                title: 'Date',
-                type: 'date',
-              }
-            ],
-          },
-        ],
-      },
-    )
+taxonomyManager({
+  baseUri: 'https://example.com/',
+  customConceptFields: [
+    {
+      name: 'sameAs',
+      title: 'Same As',
+      type: 'url',
+      description:
+        'Specify a fully qualified IRI that identifies the same concept in another vocabulary',
+    },
+  ],
+  customSchemeFields: [
+    {
+      name: 'approvedBy',
+      title: 'Approved By',
+      type: 'object',
+      fields: [
+        {
+          name: 'name',
+          title: 'Name',
+          type: 'string',
+        },
+        {
+          name: 'date',
+          title: 'Date',
+          type: 'date',
+        },
+      ],
+    },
+  ],
+})
 ```
 
-Custom fields will appear on all Concept and Concept Scheme documents accordingly. 
+Custom fields will appear on all Concept and Concept Scheme documents accordingly.
 
 ### Importing Terms
 
-Sanity offers a CLI and several client libraries for [importing content data](https://www.sanity.io/docs/content-lake/importing-data) into the Studio. There is also an [Import Taxonomy Terms](https://www.sanity.io/recipes/import-taxonomy-terms-b46af03f) script available on Sanity Exchange for importing SKOS formatted taxonomies directly into Taxonomy Manager. The import tool assumes your taxonomy is formatted using the provided [Google Sheets template](https://docs.google.com/spreadsheets/d/1eWaO_8pOdC7QwN4umnRnniEVFECMUc1b42FA3Ea7D0c/edit?gid=1890562484#gid=1890562484). Please see the [script documentation on Sanity Exchange](https://www.sanity.io/recipes/import-taxonomy-terms-b46af03f) for details. 
+Sanity offers a CLI and several client libraries for [importing content data](https://www.sanity.io/docs/content-lake/importing-data) into the Studio. There is also an [Import Taxonomy Terms](https://www.sanity.io/recipes/import-taxonomy-terms-b46af03f) script available on Sanity Exchange for importing SKOS formatted taxonomies directly into Taxonomy Manager. The import tool assumes your taxonomy is formatted using the provided [Google Sheets template](https://docs.google.com/spreadsheets/d/1eWaO_8pOdC7QwN4umnRnniEVFECMUc1b42FA3Ea7D0c/edit?gid=1890562484#gid=1890562484). Please see the [script documentation on Sanity Exchange](https://www.sanity.io/recipes/import-taxonomy-terms-b46af03f) for details.
 
 ### Demos & Tutorials
 
 #### Ranked Lists of Related Content in Sanity Studio
+
 Here are three simple approaches I use to generate ranked lists of related content using taxonomy tags managed in Sanity Studio.
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/-A8FfdfkFRw?si=dUYyY0gBApBTWk5S" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 #### Sanity Showcase Demo
-A presentation on managing standards-based taxonomies in Sanity Studio and purposefully integrating tagging to support discovery, findability, and search for content collections. Delivered Apr 4, 2025 as part of Sanity's "Showcase" series. 
+
+A presentation on managing standards-based taxonomies in Sanity Studio and purposefully integrating tagging to support discovery, findability, and search for content collections. Delivered Apr 4, 2025 as part of Sanity's "Showcase" series.
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/kkFRFtFSNeQ?si=H95eGKl69qr_jOCF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
@@ -176,8 +177,7 @@ Whether your taxonomy is large or small, attention to design best practices can 
 
     Identify what your taxonomy needs to accomplish. I recommend creating or adopting taxonomies _for_ a purpose, as opposed to _of_ a topic. Cross references, navigation, search support, personalization, or something else entirely: knowing what you need your taxonomy to accomplish will help you understand when you have enough coverage of your subject domain.
 
-    > [!TIP]
-    > [Domain modeling](https://www.andyfitzgeraldconsulting.com/writing/domain-modeling/) can help you understand how the concepts in your subject domain relate, and where a taxonomy may help intelligently connect them.
+    > [!TIP] > [Domain modeling](https://www.andyfitzgeraldconsulting.com/writing/domain-modeling/) can help you understand how the concepts in your subject domain relate, and where a taxonomy may help intelligently connect them.
 
 2.  #### Audit Your Content
 
@@ -431,9 +431,10 @@ defineField({
       components: {field: ReferenceHierarchyInput},
   }),
 ```
+
 Loading an expanded tree can provide a better experience for Studio users when a hierarchical taxonomy is small or only has a single level.
 
-To include the input component for an `array` input, import `ArrayHierarchyInput` and include it as a `field` component for your array. 
+To include the input component for an `array` input, import `ArrayHierarchyInput` and include it as a `field` component for your array.
 
 ```js
 import {ArrayHierarchyInput} from 'sanity-plugin-taxonomy-manager'

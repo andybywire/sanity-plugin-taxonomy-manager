@@ -49,4 +49,3 @@ For cases where more than one taxonomy is needed, multiple [SKOS Concept Schemes
 
 MIT © Andy Fitzgerald
 See [LICENSE](https://github.com/andybywire/sanity-plugin-taxonomy-manager/blob/main/LICENSE)
-

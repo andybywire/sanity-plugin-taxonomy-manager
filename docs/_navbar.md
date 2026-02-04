@@ -1,6 +1,6 @@
 <!-- _navbar.md -->
 
-* [Docs](/documentation)
-<!-- * [Contributing](/contributing) -->
-<!-- * [Services](/) -->
-* [About](/about)
+- [Docs](/documentation)
+  <!-- * [Contributing](/contributing) -->
+  <!-- * [Services](/) -->
+- [About](/about)

@@ -9,8 +9,8 @@ jobs:
   release-please:
     runs-on: ubuntu-latest
     permissions:
-      contents: write        # update changelog, tags, releases
-      pull-requests: write   # open/update release PRs
+      contents: write # update changelog, tags, releases
+      pull-requests: write # open/update release PRs
 
     steps:
       - uses: googleapis/release-please-action@v4

@@ -22,10 +22,5 @@
     "noEmit": true
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "package.config.ts", "global.d.ts"],
-  "exclude": [
-    "node_modules", 
-    "**/*.spec.ts",
-    "./src/**/__fixtures__",
-    "./src/**/__mocks__"
-  ]
+  "exclude": ["node_modules", "**/*.spec.ts", "./src/**/__fixtures__", "./src/**/__mocks__"]
 }
