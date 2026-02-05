@@ -16,21 +16,22 @@ Be sure to prepend these to commits as I work!
 - test: adding or refactoring tests
 
 ## Pushing releases to NPM
-- `release-please` will generate PR that creates a GitHub release, bumps the version number, and updates the CHANGELOG
-- merge the PR, then, to release on NPM, run:
+- push changes to github
+  - `release-please` will generate PR that creates a GitHub release, bumps the version number, and updates the CHANGELOG
+- merge the generated PR, then, to release on NPM, run:
   - git pull origin main --tags
   - npm whoami || npm login      # verify login, log in if not authenticated
   - npm test
+  - npm run build (to verify there won't be errors on build)
   - npm publish
 -->
 
 ## [4.5.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.3...v4.5.0) (2026-02-05)
 
-
 ### Features
 
-* add "browse only" option to Reference Input that disables the free text search input and forces use of the "Browse Tree" option. ([db665f9](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/db665f936bff472bd643373ef3c34e8a4bca66a5))
-* add browse only option for array hierarchy input ([7e13f22](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/7e13f2235ebde713b119eb713db537721d2051aa))
+- add "browse only" option to Reference Input that disables the free text search input and forces use of the "Browse Tree" option. ([db665f9](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/db665f936bff472bd643373ef3c34e8a4bca66a5))
+- add browse only option for array hierarchy input ([7e13f22](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/7e13f2235ebde713b119eb713db537721d2051aa))
 
 ## [4.4.3](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.2...v4.4.3) (2025-12-16)
 
