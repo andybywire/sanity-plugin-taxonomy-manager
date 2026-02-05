@@ -5,6 +5,7 @@ import {useState, useEffect, useCallback} from 'react'
 import type {ObjectFieldProps, ObjectOptions, Reference} from 'sanity'
 import {isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
 
+import NodeTree from '../../static/NodeTree'
 import type {ConceptSchemeDocument} from '../../types'
 import {TreeView} from '../TreeView'
 
@@ -217,9 +218,9 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
             {title}
           </Text>
         </Box>
-        <Card padding={3} radius={2} border tone="transparent">
-          <Text muted size={2}>
-            No term selected
+        <Card padding={3} radius={2} border>
+          <Text muted align="center" size={1}>
+            No item
           </Text>
         </Card>
       </Stack>
@@ -233,7 +234,8 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
       <Grid columns={1} gap={3}>
         <Button
           disabled={isPublished}
-          text="Browse Taxonomy Tree"
+          icon={NodeTree}
+          text="Browse taxonomy tree"
           mode="ghost"
           onClick={browseHierarchy}
         />
