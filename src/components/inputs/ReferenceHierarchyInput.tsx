@@ -40,7 +40,7 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
   // the resource document in which the input component appears:
   const documentId = useFormValue(['_id']) as string
   // name of the field to input a value
-  const {name, title} = props
+  const {name, title, value} = props
 
   // Get release and draft status of the document
   const isInRelease = isVersionId(documentId as DocumentId)
@@ -56,11 +56,6 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
   const [scheme, setScheme] = useState({})
   // State to store resolved filter values:
   const [filterValues, setFilterValues] = useState<FilterResult | undefined>()
-  // State for browse-only mode: stores the selected concept's preview data
-  const [selectedConcept, setSelectedConcept] = useState<{prefLabel: string} | null>(null)
-
-  // Get current reference value for browse-only preview
-  const currentRef = props.value?._ref
 
   // use filterValues if available, otherwise fallback to default:
   const {schemeId, branchId = null} = filterValues?.params || {}
@@ -95,21 +90,6 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
       })
       .catch((err) => console.warn(err))
   }, [client, schemeId])
-
-  // Fetch selected concept preview data for browse-only mode
-  useEffect(() => {
-    if (!filterValues?.browseOnly) return
-    if (!currentRef) {
-      setSelectedConcept(null)
-      return
-    }
-    client
-      .fetch<{prefLabel: string} | null>(`*[_id == $id || _id == "drafts." + $id][0]{prefLabel}`, {
-        id: currentRef,
-      })
-      .then((res) => setSelectedConcept(res))
-      .catch((err) => console.error('Error fetching selected concept:', err))
-  }, [currentRef, filterValues?.browseOnly, client])
 
   const browseHierarchy = useCallback(() => {
     setOpen(true)
@@ -227,7 +207,7 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
 
   // Render the browse-only preview UI
   const renderBrowseOnlyPreview = () => {
-    if (selectedConcept) {
+    if (value) {
       return props.renderDefault(props)
     }
     return (
