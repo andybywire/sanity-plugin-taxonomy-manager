@@ -220,7 +220,7 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
         </Box>
         <Card padding={3} radius={2} border>
           <Text muted align="center" size={1}>
-            No item
+            No items
           </Text>
         </Card>
       </Stack>
