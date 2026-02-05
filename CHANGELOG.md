@@ -24,6 +24,14 @@ Be sure to prepend these to commits as I work!
   - npm publish
 -->
 
+## [4.5.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.3...v4.5.0) (2026-02-05)
+
+
+### Features
+
+* add "browse only" option to Reference Input that disables the free text search input and forces use of the "Browse Tree" option. ([db665f9](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/db665f936bff472bd643373ef3c34e8a4bca66a5))
+* add browse only option for array hierarchy input ([7e13f22](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/7e13f2235ebde713b119eb713db537721d2051aa))
+
 ## [4.4.3](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.2...v4.4.3) (2025-12-16)
 
 ### Bug Fixes
