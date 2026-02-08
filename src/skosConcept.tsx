@@ -1,13 +1,14 @@
 import {WarningOutlineIcon} from '@sanity/icons'
 import {DocumentId, getPublishedId} from '@sanity/id-utils'
-import {nanoid} from 'nanoid'
 import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
-import type {FieldDefinition, SanityDocument} from 'sanity'
+import type {SanityDocument} from 'sanity'
 
 import {Identifier} from './components/inputs'
 import baseIriField from './helpers/baseIriField'
+import {createId} from './helpers/createId'
 import styles from './skosConcept.module.css'
+import type {Options} from './types'
 
 const conceptFilter = ({document}: {document: SanityDocument}) => {
   const publishedId = getPublishedId(DocumentId(document._id))
@@ -28,7 +29,11 @@ const conceptFilter = ({document}: {document: SanityDocument}) => {
 /**
  * Sanity document scheme for SKOS Taxonomy Concepts
  */
-export default function skosConcept(baseUri?: string, customConceptFields: FieldDefinition[] = []) {
+export default function skosConcept(
+  baseUri?: Options['baseUri'],
+  customConceptFields: Options['customConceptFields'] = [],
+  ident?: Options['ident']
+) {
   return defineType({
     name: 'skosConcept',
     title: 'Concept',
@@ -219,13 +224,14 @@ export default function skosConcept(baseUri?: string, customConceptFields: Field
       defineField({
         name: 'conceptId',
         title: 'Identifier',
-        description: 'This concept does not yet have a unique identifier.',
+        description:
+          "Generate or re-generate the identifier for this concept according to parameters set in Taxonomy Manager plugin options. Note that this changes the concept's URI. Use with caution.",
         type: 'string',
-        initialValue: () => `${nanoid(6)}`,
-        hidden: ({document}) => !!document?.conceptId,
+        initialValue: createId(ident),
+        hidden: ({document}) => !!document?.conceptId && !ident?.regenUi,
         readOnly: ({document}) => !!document?.conceptId,
         components: {
-          input: Identifier,
+          input: (props) => <Identifier {...props} ident={ident} />,
         },
       }),
       defineField({
