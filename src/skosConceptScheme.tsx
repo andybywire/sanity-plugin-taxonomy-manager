@@ -1,17 +1,20 @@
-import {nanoid} from 'nanoid'
-import type {FieldDefinition} from 'sanity'
+// import {nanoid} from 'nanoid'
+// import type {FieldDefinition} from 'sanity'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
 import {Identifier, ManagementControls} from './components/inputs'
 import baseIriField from './helpers/baseIriField'
+import {createId} from './helpers/createId'
 import NodeTree from './static/NodeTree'
+import type {Options} from './types'
 
 /**
  * Sanity document scheme for SKOS Concept Schemes
  */
 export default function skosConceptScheme(
-  baseUri?: string,
-  customSchemeFields: FieldDefinition[] = []
+  baseUri?: Options['baseUri'],
+  customSchemeFields: Options['customSchemeFields'] = [],
+  ident?: Options['ident']
 ) {
   return defineType({
     name: 'skosConceptScheme',
@@ -63,13 +66,14 @@ export default function skosConceptScheme(
       defineField({
         name: 'schemeId',
         title: 'Identifier',
-        description: 'This scheme does not yet have a unique identifier.',
+        description:
+          "Generate or re-generate the identifier for this scheme according to parameters set in Taxonomy Manager plugin options. Note that this changes the concept's URI. Use with caution.",
         type: 'string',
-        initialValue: () => `${nanoid(6)}`,
-        hidden: ({document}) => !!document?.schemeId,
-        readOnly: ({document}) => !!document?.schemeId,
+        initialValue: createId(ident),
+        hidden: ({document}) => !!document?.conceptId && !ident?.regenUi,
+        readOnly: ({document}) => !!document?.conceptId,
         components: {
-          input: Identifier,
+          input: (props) => <Identifier {...props} ident={ident} />,
         },
       }),
       defineField({
