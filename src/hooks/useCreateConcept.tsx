@@ -9,10 +9,11 @@ import {
 } from '@sanity/id-utils'
 import {useToast} from '@sanity/ui'
 import {uuid} from '@sanity/uuid'
-import {nanoid} from 'nanoid'
 import {useCallback} from 'react'
 import {isPublishedId, useClient} from 'sanity'
 
+import {getPluginConfig} from '../config'
+import {createId} from '../helpers/createId'
 import type {SkosConceptDocument, SkosConceptReference, ConceptSchemeDocument} from '../types'
 
 import {useOpenNewConceptPane} from './useOpenNewConceptPane'
@@ -26,6 +27,10 @@ export function useCreateConcept(document: ConceptSchemeDocument) {
   const toast = useToast()
   const client = useClient({apiVersion: '2025-02-19'})
   const openInNewPane = useOpenNewConceptPane()
+
+  // Get ident config from plugin
+  const pluginConfig = getPluginConfig()
+  const ident = pluginConfig?.ident
 
   const schemaBaseIri = document.displayed.baseIri
 
@@ -60,7 +65,7 @@ export function useCreateConcept(document: ConceptSchemeDocument) {
       const skosConcept: SkosConceptDocument = {
         _id: newConceptId, // either a draft ID or a release ID
         _type: 'skosConcept',
-        conceptId: `${nanoid(6)}`,
+        conceptId: createId(ident),
         prefLabel: '',
         baseIri: schemaBaseIri,
         broader: [],
@@ -129,7 +134,7 @@ export function useCreateConcept(document: ConceptSchemeDocument) {
           })
         })
     },
-    [document.displayed, client, schemaBaseIri, toast, openInNewPane]
+    [document.displayed, ident, schemaBaseIri, client, toast, openInNewPane]
   )
   return createConcept
 }
