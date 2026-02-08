@@ -1,4 +1,3 @@
-import type {FieldDefinition} from 'sanity'
 import {definePlugin} from 'sanity'
 import {structureTool} from 'sanity/structure'
 
@@ -9,12 +8,7 @@ import skosConcept from './skosConcept'
 import skosConceptScheme from './skosConceptScheme'
 import NodeTree from './static/NodeTree'
 import {defaultDocumentNode, structure} from './structure'
-
-interface Options {
-  baseUri?: string
-  customConceptFields?: FieldDefinition[]
-  customSchemeFields?: FieldDefinition[]
-}
+import type {Options} from './types'
 
 /**
  * #### Defines a Sanity plugin for managing taxonomies
@@ -23,18 +17,23 @@ interface Options {
  * @param options.baseUri - The base URI to use for SKOS concepts and concept schemes.
  * @param options.customConceptFields - An array of additional fields to add to the skosConcept type.
  * @param options.customSchemeFields - An array of additional fields to add to the skosConceptScheme type.
+ * @param options.ident - Configuration for identifier generation.
+ * @param options.ident.pattern - The character set to use for identifiers (default: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz').
+ * @param options.ident.length - The length of the generated identifier (default: 6).
+ * @param options.ident.prefix - A prefix to prepend to generated identifiers, for example to use Wikidata style IDs like "Q27521" (default: '').
+ * @param options.ident.regenUi - Whether to display the "Create Unique Identifier" button in the UI by default.
  * @returns A Sanity plugin object.
  */
 const taxonomyManager = definePlugin((options?: Options) => {
-  const {baseUri, customConceptFields, customSchemeFields} = options || {}
+  const {baseUri, customConceptFields, customSchemeFields, ident} = options || {}
 
   return {
     name: 'taxonomyManager',
     options,
     schema: {
       types: [
-        skosConcept(baseUri, customConceptFields),
-        skosConceptScheme(baseUri, customSchemeFields),
+        skosConcept(baseUri, customConceptFields, ident),
+        skosConceptScheme(baseUri, customSchemeFields, ident),
       ],
     },
     plugins: [

@@ -1,4 +1,16 @@
-import type {SanityDocument} from 'sanity'
+import type {SanityDocument, FieldDefinition} from 'sanity'
+
+export interface Options {
+  baseUri?: string
+  customConceptFields?: FieldDefinition[]
+  customSchemeFields?: FieldDefinition[]
+  ident?: {
+    pattern?: string
+    length?: number
+    prefix?: string
+    regenUi?: boolean
+  }
+}
 
 export interface ChildConceptTerm {
   prefLabel: string
