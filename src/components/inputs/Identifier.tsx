@@ -1,8 +1,15 @@
-import {Button, Inline, Stack, useToast} from '@sanity/ui'
-import {nanoid} from 'nanoid'
+import {GenerateIcon} from '@sanity/icons'
+import {Button, Stack, useToast} from '@sanity/ui'
 import {useCallback} from 'react'
 import {set} from 'sanity'
 import type {StringInputProps} from 'sanity'
+
+import {createId} from '../../helpers/createId'
+import type {Options} from '../../types'
+
+type IdentifierProps = StringInputProps & {
+  ident?: Options['ident']
+}
 
 /**
  * #### Create Unique Identifier
@@ -11,24 +18,34 @@ import type {StringInputProps} from 'sanity'
  * - Input is only visible if no identifier has been assigned
  * - Input disappears once an ID is generated
  */
-export const Identifier = (props: StringInputProps) => {
-  const {onChange} = props
+export const Identifier = (props: IdentifierProps) => {
+  const {onChange, ident} = props
   const toast = useToast()
 
   const handleChange = useCallback(() => {
-    onChange(set(nanoid(6)))
+    const id = createId(ident)
+    onChange(set(id))
     toast.push({
       status: 'success',
       title: 'Identifier created.',
       closable: true,
     })
-  }, [onChange, toast])
+  }, [onChange, toast, ident])
 
   return (
     <Stack space={2}>
-      <Inline space={[3, 3, 4]}>
-        <Button tone="primary" fontSize={2} onClick={handleChange} text="Generate Identifier" />
-      </Inline>
+      <Button
+        icon={GenerateIcon}
+        mode="ghost"
+        fontSize={1}
+        width="fill"
+        onClick={handleChange}
+        text="Generate identifier"
+      />
     </Stack>
   )
+}
+
+Identifier.defaultProps = {
+  ident: undefined,
 }
