@@ -3,6 +3,7 @@ import {structureTool} from 'sanity/structure'
 
 import {ReferenceHierarchyInput, ArrayHierarchyInput} from './components/inputs'
 import {TreeView} from './components/TreeView'
+import {setPluginConfig} from './config'
 import {schemeFilter, branchFilter} from './helpers'
 import skosConcept from './skosConcept'
 import skosConceptScheme from './skosConceptScheme'
@@ -26,6 +27,9 @@ import type {Options} from './types'
  */
 const taxonomyManager = definePlugin((options?: Options) => {
   const {baseUri, customConceptFields, customSchemeFields, ident} = options || {}
+
+  // Store config for access in hooks
+  setPluginConfig(options)
 
   return {
     name: 'taxonomyManager',
