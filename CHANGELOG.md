@@ -3,6 +3,11 @@
 All notable changes to this project will be documented in this file.
 
 <!--
+## Development notes
+- If yalc gets stuck on "Package content has not changed,
+  skipping publishing" when there are changes I need to see,
+  run `npx yalc push --force` in a new terminal window to force the change.
+
 ## Tags which generate a release
 Be sure to prepend these to commits as I work!
 - fix: which represents bug fixes, and correlates to a SemVer patch.
