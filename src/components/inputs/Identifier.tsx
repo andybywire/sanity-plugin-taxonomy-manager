@@ -37,7 +37,6 @@ export const Identifier = (props: IdentifierProps) => {
       <Button
         icon={GenerateIcon}
         mode="ghost"
-        fontSize={1}
         width="fill"
         onClick={handleChange}
         text="Generate identifier"

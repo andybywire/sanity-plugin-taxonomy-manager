@@ -67,7 +67,7 @@ export default function skosConceptScheme(
         name: 'schemeId',
         title: 'Identifier',
         description:
-          "Generate or re-generate the identifier for this scheme according to parameters set in Taxonomy Manager plugin options. Note that this changes the concept's URI. Use with caution.",
+          "Generate or re-generate the identifier for this scheme according to parameters set in Taxonomy Manager plugin options. Note that this changes the scheme's URI, which is not advisable if the scheme already is use in production. Use with caution.",
         type: 'string',
         initialValue: createId(ident),
         hidden: ({document}) => !!document?.conceptId && !ident?.regenUi,

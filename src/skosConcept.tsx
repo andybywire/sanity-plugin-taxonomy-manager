@@ -225,7 +225,7 @@ export default function skosConcept(
         name: 'conceptId',
         title: 'Identifier',
         description:
-          "Generate or re-generate the identifier for this concept according to parameters set in Taxonomy Manager plugin options. Note that this changes the concept's URI. Use with caution.",
+          "Generate or re-generate the identifier for this concept according to parameters set in Taxonomy Manager plugin options. Note that this changes the concept's URI, which is not advisable if the concept is already in use in production. Use with caution.",
         type: 'string',
         initialValue: createId(ident),
         hidden: ({document}) => !!document?.conceptId && !ident?.regenUi,
