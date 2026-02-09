@@ -465,7 +465,7 @@ defineField({
 
 Loading an expanded tree can provide a better experience for Studio users when a hierarchical taxonomy is small or only has a single level.
 
-#### Providing the Hierarchy Tree Input Only
+#### Providing Only the Hierarchy Tree Input
 
 By default, custom inputs such as the hierarchy tree input are displayed together with Sanity's standard Search input. While this provides the greatest flexibility for Studio users, it can also lead to "shortcuts" where Studio users tend to pick the first matching keyword instead of using the hierarchy to discover the most appropriate term.
 
