@@ -412,28 +412,6 @@ defineField({
   }),
 ```
 
-If your taxonomy includes hierarchical relationships, the tree will load "closed" be default. To load an open tree, add the `expanded: true` option to the `branchFilter()` or `schemeFilter()` parameters:
-
-```js
-import {ReferenceHierarchyInput} from 'sanity-plugin-taxonomy-manager'
-
-...
-
-defineField({
-    name: 'topics',
-    title: 'Topics',
-    type: 'reference',
-    to: {type: 'skosConcept'},
-      options: {
-        filter: branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c', expanded: true}),
-        disableNew: true,
-      },
-      components: {field: ReferenceHierarchyInput},
-  }),
-```
-
-Loading an expanded tree can provide a better experience for Studio users when a hierarchical taxonomy is small or only has a single level.
-
 To include the input component for an `array` input, import `ArrayHierarchyInput` and include it as a `field` component for your array.
 
 ```js
@@ -462,3 +440,55 @@ import {ArrayHierarchyInput} from 'sanity-plugin-taxonomy-manager'
 ```
 
 The component currently supports arrays from a single reference taxonomy, for which you can use either the scheme or branch filter helpers.
+
+#### Loading the Hierarchy Tree as Open by Default
+
+If your taxonomy includes hierarchical relationships, the tree will load "closed" be default. To load an open tree, add the `expanded: true` option to the `branchFilter()` or `schemeFilter()` parameters:
+
+```js
+import {ReferenceHierarchyInput} from 'sanity-plugin-taxonomy-manager'
+
+...
+
+defineField({
+    name: 'topics',
+    title: 'Topics',
+    type: 'reference',
+    to: {type: 'skosConcept'},
+      options: {
+        filter: branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c', expanded: true}),
+        disableNew: true,
+      },
+      components: {field: ReferenceHierarchyInput},
+  }),
+```
+
+Loading an expanded tree can provide a better experience for Studio users when a hierarchical taxonomy is small or only has a single level.
+
+#### Providing Only the Hierarchy Tree Input
+
+By default, custom inputs such as the hierarchy tree input are displayed together with Sanity's standard Search input. While this provides the greatest flexibility for Studio users, it can also lead to "shortcuts" where Studio users tend to pick the first matching keyword instead of using the hierarchy to discover the most appropriate term.
+
+You can suppress Sanity's default search field and require the use of the hierarchy tree input on a per-field basis by adding the `browseOnly` option to the `branchFilter()` or `schemeFilter()` configuration:
+
+```js
+import {ReferenceHierarchyInput} from 'sanity-plugin-taxonomy-manager'
+
+...
+
+defineField({
+    name: 'topics',
+    title: 'Topics',
+    type: 'reference',
+    to: {type: 'skosConcept'},
+      options: {
+        filter: branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c', browseOnly: true}),
+        disableNew: true,
+      },
+      components: {field: ReferenceHierarchyInput},
+  }),
+```
+
+This creates an input that offers only the hierarchy input option for setting the associated field.
+
+![Field configured for hierarchy-only input](_images/hierarchyOnlyInput.png)
