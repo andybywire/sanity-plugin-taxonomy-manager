@@ -7,6 +7,20 @@ All notable changes to this project will be documented in this file.
 - If yalc gets stuck on "Package content has not changed,
   skipping publishing" when there are changes I need to see,
   run `npx yalc push --force` in a new terminal window to force the change.
+- For testing in a local studio, packages used in Yalc can get lost:
+  - add to `defineConfig()` in sanity.config.ts
+    vite: {
+      resolve: {preserveSymlinks: true},
+      // Don’t pre-bundle your linked package (let Vite watch it like source)
+      optimizeDeps: {exclude: ['sanity-plugin-taxonomy-manager']},
+      // Make sure the dev server *doesn’t* treat it as external CJS
+      ssr: {noExternal: ['sanity-plugin-taxonomy-manager']},
+    },
+  - add .npmrc with:
+    # npm-style resolution for shared libraries (w/ .yalc)
+    public-hoist-pattern[]=*
+
+
 
 ## Tags which generate a release
 Be sure to prepend these to commits as I work!
