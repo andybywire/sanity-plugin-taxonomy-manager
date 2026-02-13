@@ -18,6 +18,7 @@ export interface ChildConceptTerm {
   _originalId?: string
   level?: number
   isOrphan?: boolean
+  score?: number
   childConcepts?: ChildConceptTerm[]
 }
 
@@ -25,6 +26,7 @@ export interface TopConceptTerm {
   prefLabel: string
   id: string
   _originalId?: string
+  score?: number
   childConcepts?: ChildConceptTerm[]
 }
 
@@ -99,10 +101,20 @@ export interface ConceptSchemeDocument extends SanityDocument {
   }
 }
 
+export interface EmbeddingsResult {
+  score: number
+  value: {
+    documentId: string
+    type: string
+  }
+}
+
 export interface TreeViewProps {
   document?: ConceptSchemeDocument
   branchId: string
   selectConcept?: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
   inputComponent?: boolean
   expanded?: boolean
+  conceptRecs?: EmbeddingsResult[]
+  recsError?: string | null
 }
