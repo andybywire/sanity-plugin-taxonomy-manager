@@ -19,6 +19,7 @@ export interface ChildConceptTerm {
   level?: number
   isOrphan?: boolean
   score?: number
+  hasMatchingDescendant?: boolean
   childConcepts?: ChildConceptTerm[]
 }
 
@@ -27,6 +28,7 @@ export interface TopConceptTerm {
   id: string
   _originalId?: string
   score?: number
+  hasMatchingDescendant?: boolean
   childConcepts?: ChildConceptTerm[]
 }
 

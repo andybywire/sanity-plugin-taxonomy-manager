@@ -48,7 +48,7 @@ export const Children = ({
   }, [concept.id, concept?.prefLabel, removeConcept])
 
   const [levelVisibility, setLevelVisibility] = useState<'open' | 'closed'>(
-    treeVisibility || 'open'
+    treeVisibility === 'closed' && concept.hasMatchingDescendant ? 'open' : treeVisibility || 'open'
   )
 
   const handleToggle = useCallback(() => {

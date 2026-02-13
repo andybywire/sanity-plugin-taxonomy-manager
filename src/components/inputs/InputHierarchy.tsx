@@ -2,6 +2,7 @@
 import type {DocumentId} from '@sanity/id-utils'
 import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Box, Text, Card} from '@sanity/ui'
+import {nanoid} from 'nanoid'
 import {useCallback, useContext, useMemo} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
@@ -59,21 +60,33 @@ export const InputHierarchy = ({
     return map
   }, [conceptRecs])
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const treeId = useMemo(() => nanoid(6), [scoreMap])
+
   // Recursively annotate tree nodes
   // Walk the tree creating new objects with score attached where
   // there's a match. Use getPublishedId() to normalize the tree
-  // node id before comparing against the lookup map:
+  // node id before comparing against the lookup map.
+  // Process children first, then check if any child has score
+  // or hasMatchingDescendant.
   const addScores = useCallback(function addScores<T extends ChildConceptTerm>(
     node: T,
     scores: Map<string, number>
   ): T {
     const publishedId = getPublishedId(node.id as DocumentId)
     const score = scores.get(publishedId)
-    const annotated = score === undefined ? node : {...node, score}
-    if (annotated.childConcepts) {
-      return {...annotated, childConcepts: annotated.childConcepts.map((c) => addScores(c, scores))}
-    }
-    return annotated
+
+    const annotatedChildren = node.childConcepts?.map((c) => addScores(c, scores))
+
+    const hasMatchingDescendant =
+      annotatedChildren?.some((c) => c.score !== undefined || c.hasMatchingDescendant) ?? false
+
+    return {
+      ...node,
+      ...(score === undefined ? {} : {score}),
+      ...(hasMatchingDescendant ? {hasMatchingDescendant: true} : {}),
+      ...(annotatedChildren ? {childConcepts: annotatedChildren} : {}),
+    } as T
   },
   [])
 
@@ -128,9 +141,7 @@ export const InputHierarchy = ({
     )
   }
   return (
-    <TreeContext.Provider
-      value={{globalVisibility: {treeId: '123', treeVisibility: initialVisibility}}}
-    >
+    <TreeContext.Provider value={{globalVisibility: {treeId, treeVisibility: initialVisibility}}}>
       <Box padding={4} paddingTop={0}>
         {recsError && (
           <Card marginTop={2} padding={3} radius={2} shadow={1} tone="caution">

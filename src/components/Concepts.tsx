@@ -41,7 +41,9 @@ export const Concepts = ({
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
 
-  const [levelVisibility, setLevelVisibility] = useState(treeVisibility)
+  const [levelVisibility, setLevelVisibility] = useState(
+    treeVisibility === 'closed' && concept.hasMatchingDescendant ? 'open' : treeVisibility
+  )
 
   const handleToggle = useCallback(() => {
     if (levelVisibility == 'open') {
