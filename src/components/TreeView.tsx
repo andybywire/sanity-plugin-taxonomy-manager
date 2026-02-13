@@ -23,6 +23,8 @@ export const TreeView = ({
   inputComponent = false,
   selectConcept,
   expanded,
+  conceptRecs,
+  recsError,
 }: TreeViewProps) => {
   const {selectedPerspectiveName} = usePerspective()
   return (
@@ -34,6 +36,8 @@ export const TreeView = ({
             branchId={branchId}
             selectConcept={selectConcept}
             expanded={expanded}
+            conceptRecs={conceptRecs}
+            recsError={recsError}
           />
         ) : (
           <Container width={1}>
