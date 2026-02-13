@@ -2,12 +2,17 @@
 import type {DocumentId} from '@sanity/id-utils'
 import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Box, Text, Card} from '@sanity/ui'
-import {useContext} from 'react'
+import {useCallback, useContext, useMemo} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
 import {inputBuilder} from '../../queries'
-import type {ConceptSchemeDocument, DocumentConcepts, TreeViewProps} from '../../types'
+import type {
+  ChildConceptTerm,
+  ConceptSchemeDocument,
+  DocumentConcepts,
+  TreeViewProps,
+} from '../../types'
 import {TreeStructure} from '../TreeStructure'
 
 /**
@@ -23,6 +28,8 @@ export const InputHierarchy = ({
   selectConcept,
   inputComponent,
   expanded,
+  conceptRecs,
+  recsError,
 }: TreeViewProps) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
   const documentId = getPublishedId(document.displayed?._id as DocumentId)
@@ -40,6 +47,45 @@ export const InputHierarchy = ({
       },
     }
   ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
+
+  // Build a score lookup map from conceptRecs:
+  const scoreMap = useMemo(() => {
+    const map = new Map<string, number>()
+    if (Array.isArray(conceptRecs)) {
+      for (const rec of conceptRecs) {
+        map.set(rec.value.documentId, rec.score)
+      }
+    }
+    return map
+  }, [conceptRecs])
+
+  // Recursively annotate tree nodes
+  // Walk the tree creating new objects with score attached where
+  // there's a match. Use getPublishedId() to normalize the tree
+  // node id before comparing against the lookup map:
+  const addScores = useCallback(function addScores<T extends ChildConceptTerm>(
+    node: T,
+    scores: Map<string, number>
+  ): T {
+    const publishedId = getPublishedId(node.id as DocumentId)
+    const score = scores.get(publishedId)
+    const annotated = score === undefined ? node : {...node, score}
+    if (annotated.childConcepts) {
+      return {...annotated, childConcepts: annotated.childConcepts.map((c) => addScores(c, scores))}
+    }
+    return annotated
+  },
+  [])
+
+  // Compute merged data with useMemo:
+  const mergedData = useMemo(() => {
+    if (!data || scoreMap.size === 0 || recsError) return data
+    return {
+      topConcepts: data.topConcepts?.map((tc) => addScores(tc, scoreMap)),
+      concepts: data.concepts?.map((c) => addScores(c, scoreMap)),
+    }
+  }, [addScores, data, scoreMap, recsError])
+
   if (loading) {
     return (
       <Box padding={5}>
@@ -86,8 +132,13 @@ export const InputHierarchy = ({
       value={{globalVisibility: {treeId: '123', treeVisibility: initialVisibility}}}
     >
       <Box padding={4} paddingTop={0}>
+        {recsError && (
+          <Card marginTop={2} padding={3} radius={2} shadow={1} tone="caution">
+            <Text size={2}>{recsError}</Text>
+          </Card>
+        )}
         <TreeStructure
-          concepts={data}
+          concepts={mergedData}
           inputComponent={inputComponent || false}
           selectConcept={selectConcept || (() => undefined)}
         />
