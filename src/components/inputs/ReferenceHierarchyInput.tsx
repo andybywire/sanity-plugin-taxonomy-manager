@@ -3,10 +3,17 @@ import type {DocumentId} from '@sanity/id-utils'
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
 import type {ObjectFieldProps, ObjectOptions, Reference} from 'sanity'
-import {isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
+import {
+  isDraftId,
+  useClient,
+  useFormValue,
+  usePerspective,
+  useDataset,
+  useGetFormValue,
+} from 'sanity'
 
 import NodeTree from '../../static/NodeTree'
-import type {ConceptSchemeDocument} from '../../types'
+import type {ConceptSchemeDocument, EmbeddingsResult} from '../../types'
 import {TreeView} from '../TreeView'
 
 type ReferenceOptions = ObjectOptions & {
@@ -23,6 +30,14 @@ type ReferenceOptions = ObjectOptions & {
   }>
 }
 
+type HierarchyInput = ObjectFieldProps<Reference> & {
+  embeddingsIndex: {
+    indexName: string
+    fieldReferences: string[]
+    maxResults?: number
+  }
+}
+
 // Extract the return type of the filter function
 type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
 
@@ -35,17 +50,26 @@ type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
  * Hierarchy view must be used in conjunction with the Taxonomy Manager
  * plugin `schemeFilter` or `branchFilter` options.
  */
-export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
-  const client = useClient({apiVersion: '2025-02-19'})
+export function ReferenceHierarchyInput(props: HierarchyInput) {
+  const client = useClient({apiVersion: 'vX'})
+  const dataset = useDataset()
+  const getFormValue = useGetFormValue()
 
   // the resource document in which the input component appears:
   const documentId = useFormValue(['_id']) as string
+
   // name of the field to input a value
-  const {name, title, value} = props
+  const {
+    name,
+    title,
+    value,
+    embeddingsIndex: {indexName, fieldReferences, maxResults = 3},
+  } = props
 
   // Get release and draft status of the document
   const isInRelease = isVersionId(documentId as DocumentId)
   const isDraft = isDraftId(documentId as DocumentId)
+
   // Selected Perspective is also used in the Tree view component. Consider tidying.
   const {selectedPerspectiveName} = usePerspective()
 
@@ -55,13 +79,63 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
 
   // the skosConceptScheme document identified by the field filter options:
   const [scheme, setScheme] = useState({})
+
   // State to store resolved filter values:
   const [filterValues, setFilterValues] = useState<FilterResult | undefined>()
 
   // use filterValues if available, otherwise fallback to default:
   const {schemeId, branchId = null} = filterValues?.params || {}
 
+  const [conceptRecs, setConceptRecs] = useState<EmbeddingsResult[]>([])
+  const [recsError, setRecsError] = useState<string | null>(null)
+
   const {filter} = props.schemaType.options as ReferenceOptions
+
+  const buildQueryString = useCallback((): string => {
+    try {
+      const emptyFields: string[] = []
+      const values = fieldReferences.map((fieldName) => {
+        const val = getFormValue([fieldName])
+        if (typeof val === 'string' && val.trim() !== '') {
+          return val
+        }
+        emptyFields.push(fieldName)
+        return ''
+      })
+      if (emptyFields.length == 1) {
+        throw new Error(`Please fill out the ${emptyFields[0]} field to enable match scores.`)
+      } else if (emptyFields.length > 1) {
+        throw new Error(
+          `The following fields must be filled out to enable match scores: ${emptyFields.join(
+            ', '
+          )}`
+        )
+      }
+      return values.filter(Boolean).join(' ')
+    } catch (error) {
+      // Re-throw the error so it can be caught by the caller
+      throw error
+    }
+  }, [fieldReferences, getFormValue])
+
+  const fetchConceptRecs = useCallback(
+    async (query: string) => {
+      try {
+        const returnedRecs: EmbeddingsResult[] = await client.request({
+          url: `/embeddings-index/query/${dataset}/${indexName}`,
+          method: 'POST',
+          body: {
+            query,
+            maxResults,
+          },
+        })
+        setConceptRecs(returnedRecs)
+      } catch (error) {
+        console.error('Error with embeddings index fetch: ', error)
+      }
+    },
+    [client, dataset, indexName, maxResults]
+  )
 
   // Fetch filter values from `reference` field filter asynchronously.
   useEffect(() => {
@@ -93,8 +167,21 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
   }, [client, schemeId])
 
   const browseHierarchy = useCallback(() => {
-    setOpen(true)
-  }, [])
+    setRecsError(null) // Clear any previous errors
+    try {
+      setOpen(true)
+      const query = buildQueryString()
+
+      fetchConceptRecs(query).catch((error) =>
+        console.error('Error with embeddings index fetch: ', error)
+      )
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : 'One or more required fields are empty'
+      setRecsError(errorMessage)
+      setOpen(true)
+    }
+  }, [buildQueryString, fetchConceptRecs])
 
   const handleClose = useCallback(() => {
     setOpen(false)
@@ -256,6 +343,8 @@ export function ReferenceHierarchyInput(props: ObjectFieldProps<Reference>) {
               inputComponent
               selectConcept={handleAction}
               expanded={filterValues?.expanded}
+              conceptRecs={conceptRecs}
+              recsError={recsError}
             />
           </Box>
         </Dialog>
