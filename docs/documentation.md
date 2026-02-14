@@ -97,6 +97,18 @@ The `baseURI` option allows you to set a default URI (Uniform Resource Identifie
 - In all cases, the URI you choose should be in a domain that you control.
 - The `baseUri` default is optional. If you omit it, the Base URI for new concepts and concept schemes is pre-populated based on the most recently used Base URI value.
 
+#### Identifier
+
+Concepts and concept schemes are assigned an unique identifier upon creation using [Nano ID](https://github.com/ai/nanoid). The generated ID which is appended to the BaseURI to create the concept or scheme's unique URI. By default these identifiers are randomly generated six character alphanumeric characters, including letters, numbers, -, and \_.
+
+Identifier generation can be modified by passing in configuration options for:
+
+- `pattern` (the character set to use for identifiers)
+- `length` (default: 6)
+- `prefix`, which is used to prepend to generated identifiers, for example to use Wikidata style IDs like "Q27521" (default: "").
+
+You can also set the `regenUi` key to `true` to display a "Create Unique Identifier" button in the UI. This allows you to regenerate keys from the UI that may need to change after you've altered any of the options above. Use this for small vocabularies where changing individual identifiers is faster than writing and running a script.
+
 #### Custom Fields
 
 The `customConceptFields` and `customSchemeFields` keys allow you to specify additional fields for `skosConcept` and `skosConceptScheme` document types. Add new fields as an array, either with or without Sanity's `defineField()` function.
