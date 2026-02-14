@@ -31,6 +31,19 @@ Be sure to prepend these to commits as I work!
   - npm publish
 -->
 
+## [4.6.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.5.0...v4.6.0) (2026-02-14)
+
+
+### Features
+
+* add identifier options to skosConcept ([1e32e22](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/1e32e22851906a87a88180801ef0cb41ff1f669a))
+* add identifier options to skosConceptScheme ([8cd373b](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/8cd373b668c4a6074d5573deb6a1c23a8050aeeb))
+
+
+### Bug Fixes
+
+* check for schemeIs  in schemeId field ([1146f90](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/1146f909640e09b58396fa9f8bf95b1a83ba56c7))
+
 ## [4.5.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.3...v4.5.0) (2026-02-05)
 
 ### Features
