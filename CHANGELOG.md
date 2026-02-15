@@ -7,6 +7,36 @@ All notable changes to this project will be documented in this file.
 - If yalc gets stuck on "Package content has not changed,
   skipping publishing" when there are changes I need to see,
   run `npx yalc push --force` in a new terminal window to force the change.
+- connect to plugin development repo with:
+  - npx yalc add sanity-plugin-taxonomy-manager --link && pnpm install
+  - pnpm dev
+- when done developing:
+  - npx yalc remove --all
+  - pnpm i
+  - pnpm dev
+  - consider wrapping these up in a script on the testing site (UXM)
+- troubleshooting — force refresh:
+  - npx yalc remove --all
+  - npx yalc update sanity-plugin-taxonomy-manager
+- troubleshooting — clear vite cache:
+  - rm -rf node_modules/.vite
+  - pnpm dev
+- for connecting a Studio project (e.g. UX Methods)
+  - In package.json: "sanity-plugin-taxonomy-manager": "file:.yalc/sanity-plugin-taxonomy-manager"
+    - this updates when I run `npx yalc add sanity-plugin-taxonomy-manager --link && pnpm install`
+  - in .npmrc:
+    # npm-style resolution for shared libraries (w/ .yalc)
+    public-hoist-pattern[]=*
+  - in sanity.config.ts (verify if this is needed for testing — 
+    it amy not be):
+    vite: {
+      resolve: {preserveSymlinks: true},
+      // Don’t pre-bundle your linked package (let Vite watch it like source)
+      optimizeDeps: {exclude: ['sanity-plugin-taxonomy-manager']},
+      // Make sure the dev server *doesn’t* treat it as external CJS
+      ssr: {noExternal: ['sanity-plugin-taxonomy-manager']},
+    },
+    - 2/16 — it appears I don' tneed this.
 
 ## Tags which generate a release
 Be sure to prepend these to commits as I work!
@@ -23,6 +53,7 @@ Be sure to prepend these to commits as I work!
 ## Pushing releases to NPM
 - push changes to github
   - `release-please` will generate PR that creates a GitHub release, bumps the version number, and updates the CHANGELOG
+  - if I want to add a custom message, go it after releasing — do not modify the PR.
 - merge the generated PR, then, to release on NPM, run:
   - git pull origin main --tags
   - npm whoami || npm login      # verify login, log in if not authenticated
@@ -33,16 +64,14 @@ Be sure to prepend these to commits as I work!
 
 ## [4.6.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.5.0...v4.6.0) (2026-02-14)
 
-
 ### Features
 
-* add identifier options to skosConcept ([1e32e22](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/1e32e22851906a87a88180801ef0cb41ff1f669a))
-* add identifier options to skosConceptScheme ([8cd373b](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/8cd373b668c4a6074d5573deb6a1c23a8050aeeb))
-
+- add identifier options to skosConcept ([1e32e22](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/1e32e22851906a87a88180801ef0cb41ff1f669a))
+- add identifier options to skosConceptScheme ([8cd373b](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/8cd373b668c4a6074d5573deb6a1c23a8050aeeb))
 
 ### Bug Fixes
 
-* check for schemeIs  in schemeId field ([1146f90](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/1146f909640e09b58396fa9f8bf95b1a83ba56c7))
+- check for schemeIs in schemeId field ([1146f90](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/1146f909640e09b58396fa9f8bf95b1a83ba56c7))
 
 ## [4.5.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.4.3...v4.5.0) (2026-02-05)
 
