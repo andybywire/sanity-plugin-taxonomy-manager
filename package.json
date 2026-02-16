@@ -1,6 +1,6 @@
 {
   "name": "sanity-plugin-taxonomy-manager",
-  "version": "4.5.0",
+  "version": "4.6.0",
   "description": "Create and manage SKOS compliant taxonomies, thesauri, and classification schemes in Sanity Studio.",
   "keywords": [
     "sanity",
