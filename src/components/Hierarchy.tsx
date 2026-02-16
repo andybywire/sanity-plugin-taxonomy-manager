@@ -24,7 +24,7 @@ import {TreeStructure} from './TreeStructure'
  */
 export const Hierarchy = ({
   inputComponent = false,
-  branchId = '',
+  // branchId = '',
   selectConcept,
 }: TreeViewProps) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
@@ -65,7 +65,6 @@ export const Hierarchy = ({
     {
       params: {
         id: documentId,
-        branchId,
       },
       options: {
         perspective: releaseContext === undefined ? 'drafts' : [releaseContext],

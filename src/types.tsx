@@ -113,7 +113,7 @@ export interface EmbeddingsResult {
 
 export interface TreeViewProps {
   document?: ConceptSchemeDocument
-  branchId: string
+  branchId?: string | null
   selectConcept?: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
   inputComponent?: boolean
   expanded?: boolean

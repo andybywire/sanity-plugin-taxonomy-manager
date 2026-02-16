@@ -31,7 +31,7 @@ type ReferenceOptions = ObjectOptions & {
 }
 
 type HierarchyInput = ObjectFieldProps<Reference> & {
-  embeddingsIndex: {
+  embeddingsIndex?: {
     indexName: string
     fieldReferences: string[]
     maxResults?: number
@@ -59,12 +59,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   const documentId = useFormValue(['_id']) as string
 
   // name of the field to input a value
-  const {
-    name,
-    title,
-    value,
-    embeddingsIndex: {indexName, fieldReferences, maxResults = 3},
-  } = props
+  const {name, title, value, embeddingsIndex} = props
 
   // Get release and draft status of the document
   const isInRelease = isVersionId(documentId as DocumentId)
@@ -78,7 +73,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   const [open, setOpen] = useState(false)
 
   // the skosConceptScheme document identified by the field filter options:
-  const [scheme, setScheme] = useState({})
+  const [scheme, setScheme] = useState<ConceptSchemeDocument | undefined>(undefined)
 
   // State to store resolved filter values:
   const [filterValues, setFilterValues] = useState<FilterResult | undefined>()
@@ -91,8 +86,8 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
 
   const {filter} = props.schemaType.options as ReferenceOptions
 
-  const buildQueryString = useCallback((): string => {
-    try {
+  const buildQueryString = useCallback(
+    (fieldReferences: string[]): string => {
       const emptyFields: string[] = []
       const values = fieldReferences.map((fieldName) => {
         const val = getFormValue([fieldName])
@@ -102,7 +97,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
         emptyFields.push(fieldName)
         return ''
       })
-      if (emptyFields.length == 1) {
+      if (emptyFields.length === 1) {
         throw new Error(`Please fill out the ${emptyFields[0]} field to enable match scores.`)
       } else if (emptyFields.length > 1) {
         throw new Error(
@@ -112,29 +107,23 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
         )
       }
       return values.filter(Boolean).join(' ')
-    } catch (error) {
-      // Re-throw the error so it can be caught by the caller
-      throw error
-    }
-  }, [fieldReferences, getFormValue])
+    },
+    [getFormValue]
+  )
 
   const fetchConceptRecs = useCallback(
-    async (query: string) => {
-      try {
-        const returnedRecs: EmbeddingsResult[] = await client.request({
-          url: `/embeddings-index/query/${dataset}/${indexName}`,
-          method: 'POST',
-          body: {
-            query,
-            maxResults,
-          },
-        })
-        setConceptRecs(returnedRecs)
-      } catch (error) {
-        console.error('Error with embeddings index fetch: ', error)
-      }
+    async (query: string, indexName: string, maxResults: number) => {
+      const returnedRecs: EmbeddingsResult[] = await client.request({
+        url: `/embeddings-index/query/${dataset}/${indexName}`,
+        method: 'POST',
+        body: {
+          query,
+          maxResults,
+        },
+      })
+      setConceptRecs(returnedRecs)
     },
-    [client, dataset, indexName, maxResults]
+    [client, dataset]
   )
 
   // Fetch filter values from `reference` field filter asynchronously.
@@ -156,10 +145,10 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   useEffect(() => {
     if (!schemeId) return
     client
-      .fetch(`{"displayed": *[schemeId == "${schemeId}"][0]}`)
+      .fetch('{"displayed": *[schemeId == $schemeId][0]}', {schemeId})
       .then((res: {displayed?: ConceptSchemeDocument['displayed']}) => {
         if (res?.displayed) {
-          setScheme(res)
+          setScheme(res as ConceptSchemeDocument)
           setSchemeLoading(false)
         }
       })
@@ -167,21 +156,24 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   }, [client, schemeId])
 
   const browseHierarchy = useCallback(() => {
+    setOpen(true)
     setRecsError(null) // Clear any previous errors
-    try {
-      setOpen(true)
-      const query = buildQueryString()
+    if (embeddingsIndex) {
+      const {indexName, fieldReferences, maxResults = 3} = embeddingsIndex
+      try {
+        const query = buildQueryString(fieldReferences)
 
-      fetchConceptRecs(query).catch((error) =>
-        console.error('Error with embeddings index fetch: ', error)
-      )
-    } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'One or more required fields are empty'
-      setRecsError(errorMessage)
-      setOpen(true)
+        fetchConceptRecs(query, indexName, maxResults).catch((error) =>
+          console.error('Error with embeddings index fetch: ', error)
+        )
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : 'One or more required fields are empty'
+        setRecsError(errorMessage)
+        // setOpen(true)
+      }
     }
-  }, [buildQueryString, fetchConceptRecs])
+  }, [buildQueryString, embeddingsIndex, fetchConceptRecs])
 
   const handleClose = useCallback(() => {
     setOpen(false)
@@ -227,7 +219,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
       // version and create a new document with the published
       // document id in the `drafts.` path and the new reference
       client
-        .fetch(`*[_id == "${documentId}"][0]`)
+        .fetch('*[_id == $id][0]', {id: documentId})
         .then((res: ConceptSchemeDocument) => {
           res._id = `drafts.${res._id}`
           res[name] = conceptId
@@ -327,7 +319,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
           onClick={browseHierarchy}
         />
       </Grid>
-      {open && (
+      {open && scheme && (
         <Dialog
           header={title}
           id="concept-select-dialog"
@@ -337,8 +329,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
         >
           <Box padding={10}>
             <TreeView
-              document={scheme as ConceptSchemeDocument}
-              // @ts-expect-error - TODO: work out this type issue.
+              document={scheme}
               branchId={branchId}
               inputComponent
               selectConcept={handleAction}
