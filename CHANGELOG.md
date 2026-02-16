@@ -36,7 +36,8 @@ All notable changes to this project will be documented in this file.
       // Make sure the dev server *doesn’t* treat it as external CJS
       ssr: {noExternal: ['sanity-plugin-taxonomy-manager']},
     },
-    - 2/16 — it appears I don' tneed this.
+    - 2/16 — it appears I don't need this. Removed from UXM repo; remove here
+      once I'm sure this is working consistently.
 
 ## Tags which generate a release
 Be sure to prepend these to commits as I work!
