@@ -46,6 +46,7 @@ export function ConceptSelectLink({
             <Box padding={1} sizing="content">
               <Text muted size={1}>
                 {`Select "${prefLabel}"`}
+                {score && ` (${(score * 100).toFixed(1)}% resource match)`}
               </Text>
             </Box>
           }
@@ -69,7 +70,7 @@ export function ConceptSelectLink({
               )}
               {score && (
                 <Badge fontSize={0} marginLeft={3} style={{verticalAlign: 'middle'}}>
-                  {score.toFixed(3)}
+                  {`${(score * 100).toFixed(1)}%`}
                 </Badge>
               )}
             </Text>
