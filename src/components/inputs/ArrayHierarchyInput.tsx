@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import type {DocumentId} from '@sanity/id-utils'
 import {
   Grid,
@@ -16,8 +17,9 @@ import {useState, useEffect, useCallback} from 'react'
 import type {ArrayFieldProps, ObjectOptions} from 'sanity'
 import {useClient, useFormValue, isVersionId, isDraftId, usePerspective} from 'sanity'
 
+import {useEmbeddingsRecs} from '../../hooks'
 import NodeTree from '../../static/NodeTree'
-import type {ConceptSchemeDocument} from '../../types'
+import type {ConceptSchemeDocument, EmbeddingsIndexConfig} from '../../types'
 import {TreeView} from '../TreeView'
 
 type ReferenceOptions = ObjectOptions & {
@@ -34,6 +36,10 @@ type ReferenceOptions = ObjectOptions & {
   }>
 }
 
+type ArrayHierarchyInputProps = ArrayFieldProps & {
+  embeddingsIndex?: EmbeddingsIndexConfig
+}
+
 // Extract the return type of the filter function
 type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
 
@@ -47,13 +53,13 @@ type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
  * plugin `schemeFilter` or `branchFilter` options.
  *
  */
-export function ArrayHierarchyInput(props: ArrayFieldProps) {
+export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
   const client = useClient({apiVersion: '2025-02-19'})
 
   // the resource document in which the input component appears:
   const documentId = useFormValue(['_id']) as string
   // name of the field to input a value:
-  const {name, title, value = []} = props
+  const {name, title, value = [], embeddingsIndex} = props
 
   // Get release and draft status of the document
   const isInRelease = isVersionId(documentId as DocumentId)
@@ -74,6 +80,8 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
   const {schemeId, branchId = null} = filterValues?.params || {}
 
   const {filter} = props.schemaType.of[0].options as ReferenceOptions
+
+  const {conceptRecs, recsError, triggerEmbeddingsSearch} = useEmbeddingsRecs(embeddingsIndex)
 
   const toast = useToast()
 
@@ -108,7 +116,8 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
 
   const browseHierarchy = useCallback(() => {
     setOpen(true)
-  }, [])
+    triggerEmbeddingsSearch()
+  }, [triggerEmbeddingsSearch])
 
   const handleClose = useCallback(() => {
     setOpen(false)
@@ -310,11 +319,12 @@ export function ArrayHierarchyInput(props: ArrayFieldProps) {
           <Box>
             <TreeView
               document={scheme as ConceptSchemeDocument}
-              // @ts-expect-error - TODO: work out this type issue.
               branchId={branchId}
               inputComponent
               selectConcept={handleAction}
               expanded={filterValues?.expanded}
+              conceptRecs={conceptRecs}
+              recsError={recsError}
             />
           </Box>
         </Dialog>

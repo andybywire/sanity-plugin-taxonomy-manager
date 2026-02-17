@@ -1,19 +1,14 @@
+/* eslint-disable react/require-default-props */
 import {isVersionId} from '@sanity/id-utils'
 import type {DocumentId} from '@sanity/id-utils'
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
 import type {ObjectFieldProps, ObjectOptions, Reference} from 'sanity'
-import {
-  isDraftId,
-  useClient,
-  useFormValue,
-  usePerspective,
-  useDataset,
-  useGetFormValue,
-} from 'sanity'
+import {isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
 
+import {useEmbeddingsRecs} from '../../hooks'
 import NodeTree from '../../static/NodeTree'
-import type {ConceptSchemeDocument, EmbeddingsResult} from '../../types'
+import type {ConceptSchemeDocument, EmbeddingsIndexConfig} from '../../types'
 import {TreeView} from '../TreeView'
 
 type ReferenceOptions = ObjectOptions & {
@@ -31,11 +26,7 @@ type ReferenceOptions = ObjectOptions & {
 }
 
 type HierarchyInput = ObjectFieldProps<Reference> & {
-  embeddingsIndex?: {
-    indexName: string
-    fieldReferences: string[]
-    maxResults?: number
-  }
+  embeddingsIndex?: EmbeddingsIndexConfig
 }
 
 // Extract the return type of the filter function
@@ -52,14 +43,14 @@ type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
  */
 export function ReferenceHierarchyInput(props: HierarchyInput) {
   const client = useClient({apiVersion: 'vX'})
-  const dataset = useDataset()
-  const getFormValue = useGetFormValue()
 
   // the resource document in which the input component appears:
   const documentId = useFormValue(['_id']) as string
 
   // name of the field to input a value
   const {name, title, value, embeddingsIndex} = props
+
+  const {conceptRecs, recsError, triggerEmbeddingsSearch} = useEmbeddingsRecs(embeddingsIndex)
 
   // Get release and draft status of the document
   const isInRelease = isVersionId(documentId as DocumentId)
@@ -81,50 +72,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   // use filterValues if available, otherwise fallback to default:
   const {schemeId, branchId = null} = filterValues?.params || {}
 
-  const [conceptRecs, setConceptRecs] = useState<EmbeddingsResult[]>([])
-  const [recsError, setRecsError] = useState<string | null>(null)
-
   const {filter} = props.schemaType.options as ReferenceOptions
-
-  const buildQueryString = useCallback(
-    (fieldReferences: string[]): string => {
-      const emptyFields: string[] = []
-      const values = fieldReferences.map((fieldName) => {
-        const val = getFormValue([fieldName])
-        if (typeof val === 'string' && val.trim() !== '') {
-          return val
-        }
-        emptyFields.push(fieldName)
-        return ''
-      })
-      if (emptyFields.length === 1) {
-        throw new Error(`Please fill out the ${emptyFields[0]} field to enable match scores.`)
-      } else if (emptyFields.length > 1) {
-        throw new Error(
-          `The following fields must be filled out to enable match scores: ${emptyFields.join(
-            ', '
-          )}`
-        )
-      }
-      return values.filter(Boolean).join(' ')
-    },
-    [getFormValue]
-  )
-
-  const fetchConceptRecs = useCallback(
-    async (query: string, indexName: string, maxResults: number) => {
-      const returnedRecs: EmbeddingsResult[] = await client.request({
-        url: `/embeddings-index/query/${dataset}/${indexName}`,
-        method: 'POST',
-        body: {
-          query,
-          maxResults,
-        },
-      })
-      setConceptRecs(returnedRecs)
-    },
-    [client, dataset]
-  )
 
   // Fetch filter values from `reference` field filter asynchronously.
   useEffect(() => {
@@ -157,23 +105,8 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
 
   const browseHierarchy = useCallback(() => {
     setOpen(true)
-    setRecsError(null) // Clear any previous errors
-    if (embeddingsIndex) {
-      const {indexName, fieldReferences, maxResults = 3} = embeddingsIndex
-      try {
-        const query = buildQueryString(fieldReferences)
-
-        fetchConceptRecs(query, indexName, maxResults).catch((error) =>
-          console.error('Error with embeddings index fetch: ', error)
-        )
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : 'One or more required fields are empty'
-        setRecsError(errorMessage)
-        // setOpen(true)
-      }
-    }
-  }, [buildQueryString, embeddingsIndex, fetchConceptRecs])
+    triggerEmbeddingsSearch()
+  }, [triggerEmbeddingsSearch])
 
   const handleClose = useCallback(() => {
     setOpen(false)
