@@ -111,6 +111,12 @@ export interface EmbeddingsResult {
   }
 }
 
+export interface EmbeddingsIndexConfig {
+  indexName: string
+  fieldReferences: string[]
+  maxResults?: number
+}
+
 export interface TreeViewProps {
   document?: ConceptSchemeDocument
   branchId?: string | null
