@@ -42,7 +42,7 @@ export const InputHierarchy = ({
       listen: `*[_type == "skosConcept" || _id == $id]`,
     },
     {
-      params: {id: documentId, branchId},
+      params: {id: documentId, branchId: branchId ?? ''},
       options: {
         perspective: releaseContext === undefined ? 'drafts' : [releaseContext],
       },
