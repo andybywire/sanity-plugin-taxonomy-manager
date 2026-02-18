@@ -504,3 +504,96 @@ defineField({
 This creates an input that offers only the hierarchy input option for setting the associated field.
 
 ![Field configured for hierarchy-only input](_images/hierarchyOnlyInput.png)
+
+#### Adding Recommendations with the Embeddings Index
+
+If you have a [Sanity Embeddings Index](https://www.sanity.io/docs/content-lake/embeddings-index-api-overview) configured for your `skosConcept` documents, you can use it to annotate hierarchy tree nodes with match scores based on the content your authors are editing. When enabled, opening the hierarchy tree input queries the specified embeddings index using values from designated form fields and displays a match percentage on each taxonomy term that the index identifies as relevant. This helps authors identify the most appropriate terms for their content without needing to manually review every node in the tree.
+
+![Field configured for embeddings index recommendations input](_images/reco-input.png)
+
+To use this feature, you will need an embeddings index that includes your `skosConcept` documents. See the [Embeddings Index API overview](https://www.sanity.io/docs/content-lake/embeddings-index-api-overview) and the [Embeddings Index CLI reference](https://www.sanity.io/docs/libraries/embeddings-index-cli-reference) for setup instructions. For the most effective term matches, index your terms' preferred labels and definitions, including scope notes and examples fields if you use them:
+
+```js
+// GROQ filter
+_type == 'skosConcept'
+
+// GROQ Projection
+{
+  _type, _id, prefLabel, definition
+}
+```
+
+To add recommendations to a `reference` field, wrap `ReferenceHierarchyInput` in an inline component function and pass the `embeddingsIndex` prop:
+
+```js
+import {ReferenceHierarchyInput, schemeFilter} from 'sanity-plugin-taxonomy-manager'
+
+...
+
+defineField({
+    name: 'topics',
+    title: 'Topics',
+    type: 'reference',
+    to: [{type: 'skosConcept'}],
+    options: {
+      filter: schemeFilter({schemeId: 'f3deba'}),
+      disableNew: true,
+    },
+    components: {
+      field: (props) => (
+        <ReferenceHierarchyInput
+          {...props}
+          embeddingsIndex={{
+            indexName: 'my-taxonomy-index',
+            fieldReferences: ['title', 'description'],
+            maxResults: 4,
+          }}
+        />
+      ),
+    },
+  }),
+```
+
+The same pattern works for `array` fields using `ArrayHierarchyInput`:
+
+```js
+import {ArrayHierarchyInput, branchFilter} from 'sanity-plugin-taxonomy-manager'
+
+...
+
+defineField({
+    name: 'categories',
+    title: 'Categories',
+    type: 'array',
+    of: [
+      {
+        type: 'reference',
+        to: [{type: 'skosConcept'}],
+        options: {
+          filter: branchFilter({schemeId: 'f3deba', branchId: '25f826'}),
+          disableNew: true,
+        },
+      },
+    ],
+    components: {
+      field: (props) => (
+        <ArrayHierarchyInput
+          {...props}
+          embeddingsIndex={{
+            indexName: 'my-taxonomy-index',
+            fieldReferences: ['title', 'description'],
+            maxResults: 4,
+          }}
+        />
+      ),
+    },
+  }),
+```
+
+The `embeddingsIndex` configuration object accepts the following options:
+
+- **`indexName`** (required): The name of the Sanity Embeddings Index to query. This should be an index that includes your `skosConcept` documents.
+- **`fieldReferences`** (required): An array of field names from the current document whose values are concatenated and sent as the query to the embeddings index. For example, `['title', 'metaDescription']` reads the current values of the `title` and `metaDescription` fields and uses them to find semantically similar taxonomy terms.
+- **`maxResults`** (optional): The maximum number of matching terms to return from the embeddings index. Defaults to `3`.
+
+All fields listed in `fieldReferences` must contain a value when the hierarchy tree is opened. If any referenced fields are empty, a message is displayed in the tree view indicating which fields need to be filled in.

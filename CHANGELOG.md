@@ -11,8 +11,8 @@ All notable changes to this project will be documented in this file.
   - npx yalc add sanity-plugin-taxonomy-manager --link && pnpm install
   - pnpm dev
 - when done developing:
-  - npx yalc remove --all
-  - pnpm i
+  - npx yalc remove --all && pnpm install
+  - pnpm i (don't need this now)
   - pnpm dev
   - consider wrapping these up in a script on the testing site (UXM)
 - troubleshooting — force refresh:
