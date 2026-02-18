@@ -42,7 +42,10 @@ export const InputHierarchy = ({
       listen: `*[_type == "skosConcept" || _id == $id]`,
     },
     {
-      params: {id: documentId, branchId: branchId ?? ''},
+      // GROQ's select($branchId != null => ...) requires null, not empty string.
+      // ListenQueryParams doesn't accept null, so we cast past it.
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
+      params: {id: documentId, branchId} as any,
       options: {
         perspective: releaseContext === undefined ? 'drafts' : [releaseContext],
       },
