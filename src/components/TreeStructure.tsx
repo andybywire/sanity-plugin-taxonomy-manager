@@ -22,7 +22,7 @@ export const TreeStructure = ({
   inputComponent: boolean
   selectConcept: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
 }) => {
-  const {globalVisibility: {treeId, treeVisibility} = {treeId: 123, treeVisibility: 'open'}} =
+  const {globalVisibility: {treeId, treeVisibility} = {treeId: 'default', treeVisibility: 'open'}} =
     useContext(TreeContext) || {}
 
   if (!concepts?.topConcepts?.length && !concepts?.concepts?.length) {
