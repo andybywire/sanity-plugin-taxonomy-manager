@@ -63,6 +63,13 @@ Be sure to prepend these to commits as I work!
   - npm publish
 -->
 
+## [4.7.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.6.0...v4.7.0) (2026-02-21)
+
+
+### Features
+
+* add AI assisted hierarchy input recommendations ([fc5dc1c](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/fc5dc1c56ee7f7f47d58ab23e3548e92bf0d11f3))
+
 ## [4.6.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.5.0...v4.6.0) (2026-02-14)
 
 ### Features
