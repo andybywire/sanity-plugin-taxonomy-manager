@@ -62,6 +62,13 @@ Be sure to prepend these to commits as I work!
   - npm publish
 -->
 
+## [4.7.1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.7.0...v4.7.1) (2026-02-23)
+
+
+### Bug Fixes
+
+* improve inline documentation to Array and Reference hierarchy inputs to include embeddings index parameter details and examples. ([9c8e61d](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/9c8e61d65793074aefc3b089c2aee2794f1f72ef))
+
 ## [4.7.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.6.0...v4.7.0) (2026-02-21)
 
 ### Features
