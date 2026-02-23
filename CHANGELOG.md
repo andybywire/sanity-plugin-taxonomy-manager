@@ -12,15 +12,14 @@ All notable changes to this project will be documented in this file.
   - pnpm dev
 - when done developing:
   - npx yalc remove --all && pnpm install
-  - pnpm i (don't need this now)
   - pnpm dev
   - consider wrapping these up in a script on the testing site (UXM)
-- troubleshooting — force refresh:
-  - npx yalc remove --all
-  - npx yalc update sanity-plugin-taxonomy-manager
-- troubleshooting — clear vite cache:
-  - rm -rf node_modules/.vite
-  - pnpm dev
+- troubleshooting:
+  - force refresh:
+    - npx yalc push --force
+  - clear vite cache:
+    - rm -rf node_modules/.vite
+    - pnpm dev
 - for connecting a Studio project (e.g. UX Methods)
   - In package.json: "sanity-plugin-taxonomy-manager": "file:.yalc/sanity-plugin-taxonomy-manager"
     - this updates when I run `npx yalc add sanity-plugin-taxonomy-manager --link && pnpm install`
@@ -65,10 +64,9 @@ Be sure to prepend these to commits as I work!
 
 ## [4.7.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.6.0...v4.7.0) (2026-02-21)
 
-
 ### Features
 
-* add AI assisted hierarchy input recommendations ([fc5dc1c](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/fc5dc1c56ee7f7f47d58ab23e3548e92bf0d11f3))
+- add AI assisted hierarchy input recommendations ([fc5dc1c](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/fc5dc1c56ee7f7f47d58ab23e3548e92bf0d11f3))
 
 ## [4.6.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.5.0...v4.6.0) (2026-02-14)
 

@@ -44,14 +44,142 @@ type ArrayHierarchyInputProps = ArrayFieldProps & {
 type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
 
 /**
- * #### Hierarchy View Input Component
- * Allows Studio users to browse and select taxonomy
- * terms from a hierarchical tree structure. It is designed to be
- * used as an input for taxonomy array fields in Sanity Studio.
+ * Input component that replaces Sanity's default array field input with a
+ * hierarchical taxonomy tree browser. Studio users can browse taxonomy terms
+ * organized in their scheme hierarchy and select terms to add to the array field.
  *
- * Hierarchy view must be used in conjunction with the Taxonomy Manager
- * plugin `schemeFilter` or `branchFilter` options.
+ * @remarks
+ * - Must be used with a `schemeFilter` or `branchFilter` helper in the field's
+ *   `options.filter`. Rendering without a filter will display a configuration warning.
+ * - Supports only **single-schema arrays** (i.e., `of: [{type: 'reference'}]`). Arrays
+ *   with multiple schema types will render a warning and fall back to the default input.
+ * - Taxonomy selection is disabled when viewing the published perspective.
+ * - When `browseOnly` is set in the filter configuration, Sanity's default search input
+ *   is suppressed and only the tree browser is available for term selection.
+ * - When `expanded` is set in the filter configuration, the hierarchy tree loads open
+ *   by default instead of collapsed.
  *
+ * @param props - Standard Sanity `ArrayFieldProps` extended with an optional
+ *   `embeddingsIndex` configuration object.
+ * @param props.embeddingsIndex - Optional configuration for AI-assisted term
+ *   recommendations via a Sanity Embeddings Index. When provided, opening the tree
+ *   browser queries the specified index and annotates matching taxonomy terms with
+ *   a relevance score to help authors identify the most appropriate terms.
+ * @param props.embeddingsIndex.indexName - The name of the Sanity Embeddings Index
+ *   to query. Must be an index that includes `skosConcept` documents.
+ * @param props.embeddingsIndex.fieldReferences - An array of field names from the
+ *   current document whose values are concatenated and sent as the embeddings search
+ *   query. All listed fields must contain values when the tree browser is opened;
+ *   empty fields will display an error message in the tree view rather than scores.
+ * @param props.embeddingsIndex.maxResults - Maximum number of semantically matching
+ *   terms to return from the embeddings index. Defaults to `3`.
+ *
+ * @example
+ * Basic usage with a scheme filter:
+ * ```js
+ * import {ArrayHierarchyInput, schemeFilter} from 'sanity-plugin-taxonomy-manager'
+ *
+ * defineField({
+ *   name: 'categories',
+ *   title: 'Categories',
+ *   type: 'array',
+ *   of: [
+ *     {
+ *       type: 'reference',
+ *       to: {type: 'skosConcept'},
+ *       options: {
+ *         filter: schemeFilter({schemeId: 'f3deba'}),
+ *         disableNew: true,
+ *       },
+ *     },
+ *   ],
+ *   components: {field: ArrayHierarchyInput},
+ * })
+ * ```
+ *
+ * @example
+ * Branch filter with tree expanded by default:
+ * ```js
+ * import {ArrayHierarchyInput, branchFilter} from 'sanity-plugin-taxonomy-manager'
+ *
+ * defineField({
+ *   name: 'habitats',
+ *   title: 'Habitats',
+ *   type: 'array',
+ *   of: [
+ *     {
+ *       type: 'reference',
+ *       to: {type: 'skosConcept'},
+ *       options: {
+ *         filter: branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c', expanded: true}),
+ *         disableNew: true,
+ *       },
+ *     },
+ *   ],
+ *   components: {field: ArrayHierarchyInput},
+ * })
+ * ```
+ *
+ * @example
+ * Browse-only mode (suppresses the default Sanity search input):
+ * ```js
+ * import {ArrayHierarchyInput, branchFilter} from 'sanity-plugin-taxonomy-manager'
+ *
+ * defineField({
+ *   name: 'habitats',
+ *   title: 'Habitats',
+ *   type: 'array',
+ *   of: [
+ *     {
+ *       type: 'reference',
+ *       to: {type: 'skosConcept'},
+ *       options: {
+ *         filter: branchFilter({schemeId: 'cf76c1', branchId: '1e5e6c', browseOnly: true}),
+ *         disableNew: true,
+ *       },
+ *     },
+ *   ],
+ *   components: {field: ArrayHierarchyInput},
+ * })
+ * ```
+ *
+ * @example
+ * AI-assisted recommendations via an embeddings index:
+ * ```jsx
+ * import {ArrayHierarchyInput, branchFilter} from 'sanity-plugin-taxonomy-manager'
+ *
+ * defineField({
+ *   name: 'categories',
+ *   title: 'Categories',
+ *   type: 'array',
+ *   of: [
+ *     {
+ *       type: 'reference',
+ *       to: [{type: 'skosConcept'}],
+ *       options: {
+ *         filter: branchFilter({schemeId: 'f3deba', branchId: '25f826'}),
+ *         disableNew: true,
+ *       },
+ *     },
+ *   ],
+ *   components: {
+ *     field: (props) => (
+ *       <ArrayHierarchyInput
+ *         {...props}
+ *         embeddingsIndex={{
+ *           indexName: 'my-taxonomy-index',
+ *           fieldReferences: ['title', 'description'],
+ *           maxResults: 4,
+ *         }}
+ *       />
+ *     ),
+ *   },
+ * })
+ * ```
+ *
+ * @see {@link ReferenceHierarchyInput} for single-value `reference` fields
+ * @see {@link schemeFilter} for filtering by a full concept scheme
+ * @see {@link branchFilter} for filtering by a branch within a concept scheme
  */
 export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
   const client = useClient({apiVersion: '2025-02-19'})
