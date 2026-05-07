@@ -4,7 +4,7 @@ import type {DocumentId} from '@sanity/id-utils'
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
 import {useState, useEffect, useCallback} from 'react'
 import type {ObjectFieldProps, ObjectOptions, Reference} from 'sanity'
-import {isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
+import {FormField, isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
 
 import {useEmbeddingsRecs} from '../../hooks'
 import NodeTree from '../../static/NodeTree'
@@ -330,19 +330,24 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
     if (value) {
       return props.renderDefault(props)
     }
+    // Wrap the empty state in `FormField` so the field exposes the same
+    // DOM target Sanity's Validation panel uses for scroll-to-field /
+    // highlight on click. Without this wrapper, clicking a required
+    // browse-only field's validation error has no effect.
     return (
-      <Stack space={2}>
-        <Box paddingY={3}>
-          <Text size={1} weight={'medium'}>
-            {title}
-          </Text>
-        </Box>
+      <FormField
+        title={title}
+        description={props.description}
+        level={props.level}
+        validation={props.validation}
+        __unstable_presence={props.presence}
+      >
         <Card padding={3} radius={2} border>
           <Text muted align="center" size={1}>
             No items
           </Text>
         </Card>
-      </Stack>
+      </FormField>
     )
   }
 
