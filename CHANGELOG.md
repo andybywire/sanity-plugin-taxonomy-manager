@@ -62,6 +62,14 @@ Be sure to prepend these to commits as I work!
   - npm publish
 -->
 
+## [4.7.2](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.7.1...v4.7.2) (2026-05-08)
+
+
+### Bug Fixes
+
+* highlight browseOnly fields when validation error is clicked ([31ddc2c](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/31ddc2ccec499231b7ebc18ecd561bb80e99f5f5))
+* wrap browseOnly empty-state in FormField so validation panel can scroll to field ([2ac0788](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/2ac07881ea79b003e143f8fc403225d97b89c15d))
+
 ## [4.7.1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.7.0...v4.7.1) (2026-02-23)
 
 
