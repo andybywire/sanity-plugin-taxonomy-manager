@@ -4,7 +4,7 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 
 import {Identifier, ManagementControls} from './components/inputs'
 import baseIriField from './helpers/baseIriField'
-import {createId} from './helpers/createId'
+import {createId} from './core/createId'
 import NodeTree from './static/NodeTree'
 import type {Options} from './types'
 

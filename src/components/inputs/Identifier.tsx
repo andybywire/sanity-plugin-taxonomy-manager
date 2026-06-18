@@ -4,7 +4,7 @@ import {useCallback} from 'react'
 import {set} from 'sanity'
 import type {StringInputProps} from 'sanity'
 
-import {createId} from '../../helpers/createId'
+import {createId} from '../../core/createId'
 import type {Options} from '../../types'
 
 type IdentifierProps = StringInputProps & {

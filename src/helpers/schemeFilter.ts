@@ -1,18 +1,9 @@
 import type {useClient} from 'sanity'
 
+import {assertSchemeId, buildSchemeFilterResult, type SchemeFilterResult} from '../core/filters'
+
 type SchemeOptions = {
   schemeId: string
-  expanded?: boolean
-  browseOnly?: boolean
-}
-
-type SchemeFilterResult = {
-  filter: string
-  params: {
-    schemeId: string
-    concepts: string[]
-    topConcepts: string[]
-  }
   expanded?: boolean
   browseOnly?: boolean
 }
@@ -61,10 +52,7 @@ export const schemeFilter = (
 }) => Promise<SchemeFilterResult>) => {
   // Get and validate the schemeId from options
   const {schemeId} = options || {}
-
-  if (!schemeId || typeof schemeId !== 'string') {
-    throw new Error('Invalid or missing schemeId: scheme Id must be a string')
-  }
+  assertSchemeId(schemeId)
 
   return async (props) => {
     const client = props?.getClient({apiVersion: '2025-02-19'})
@@ -80,12 +68,12 @@ export const schemeFilter = (
     }`
     )) as {concepts: string[]; topConcepts: string[]}
     // schemeId is included in params for use by the ArrayHierarchyInput component
-    return {
-      filter: `(_id in $concepts
-              || _id in $topConcepts)`,
-      params: {concepts, topConcepts, schemeId},
+    return buildSchemeFilterResult({
+      schemeId,
+      concepts,
+      topConcepts,
       expanded: options?.expanded,
       browseOnly: options?.browseOnly,
-    }
+    })
   }
 }

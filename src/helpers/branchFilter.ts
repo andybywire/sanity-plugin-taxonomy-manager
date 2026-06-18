@@ -1,19 +1,15 @@
 import type {useClient} from 'sanity'
 
+import {
+  assertBranchId,
+  assertSchemeId,
+  buildBranchFilterResult,
+  type BranchFilterResult,
+} from '../core/filters'
+
 type BranchOptions = {
   schemeId: string
   branchId: string
-  expanded?: boolean
-  browseOnly?: boolean
-}
-
-type BranchFilterResult = {
-  filter: string
-  params: {
-    schemeId: string
-    branchId: string
-    concepts: string[]
-  }
   expanded?: boolean
   browseOnly?: boolean
 }
@@ -63,14 +59,8 @@ export const branchFilter = (
   getClient: (clientOptions: {apiVersion: string}) => ReturnType<typeof useClient>
 }) => Promise<BranchFilterResult>) => {
   const {schemeId, branchId = null} = options || {}
-
-  if (!schemeId || typeof schemeId !== 'string') {
-    throw new Error('Invalid or missing schemeId: scheme Id must be a string')
-  }
-
-  if (!branchId || typeof branchId !== 'string') {
-    throw new Error('Invalid or missing branchId: branch Id must be a string')
-  }
+  assertSchemeId(schemeId)
+  assertBranchId(branchId)
 
   return async (props) => {
     const client = props?.getClient({apiVersion: '2023-01-01'})
@@ -94,11 +84,12 @@ export const branchFilter = (
       {schemeId, branchId}
     )) as {concepts: string[]}
     // schemeId is included in params for use by the ArrayHierarchyInput component
-    return {
-      filter: `_id in $concepts`,
-      params: {concepts, schemeId, branchId},
+    return buildBranchFilterResult({
+      schemeId,
+      branchId,
+      concepts,
       expanded: options?.expanded,
       browseOnly: options?.browseOnly,
-    }
+    })
   }
 }

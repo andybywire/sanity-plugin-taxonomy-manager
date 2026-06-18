@@ -13,7 +13,7 @@ import {useCallback} from 'react'
 import {isPublishedId, useClient} from 'sanity'
 
 import {getPluginConfig} from '../config'
-import {createId} from '../helpers/createId'
+import {createId} from '../core/createId'
 import type {SkosConceptDocument, SkosConceptReference, ConceptSchemeDocument} from '../types'
 
 import {useOpenNewConceptPane} from './useOpenNewConceptPane'
