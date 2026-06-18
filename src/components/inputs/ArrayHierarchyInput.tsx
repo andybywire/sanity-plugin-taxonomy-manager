@@ -414,6 +414,7 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
     return (
       <FormField
         title={title}
+        path={props.path}
         description={props.description}
         level={props.level}
         validation={props.validation}

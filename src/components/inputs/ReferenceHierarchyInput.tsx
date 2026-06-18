@@ -337,6 +337,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
     return (
       <FormField
         title={title}
+        path={props.path}
         description={props.description}
         level={props.level}
         validation={props.validation}
