@@ -1,0 +1,386 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`inputBuilder > matches the characterized GROQ output 1`] = `
+"
+  select($branchId != null => 
+    *[_id == $id][0] {
+      _updatedAt,
+      "concepts": concepts[$branchId in @->broader[]->.conceptId]->|order(prefLabel) {
+        "id": _id,
+        "level": 0,
+        "isOrphan": true,
+        _originalId,
+        prefLabel,
+        definition,
+        example,
+        scopeNote,
+        "childConcepts": *[_id in ^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 1,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 2,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 3,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 4,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 5,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 6,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      
+    }
+    }
+    }
+    }
+    }
+    }
+      }
+    },
+    *[_id == $id][0] {
+      _updatedAt,
+      "topConcepts":topConcepts[]->|order(prefLabel){
+        "id": _id,
+        "level": 0,
+        _originalId,
+        prefLabel,
+        definition,
+        example,
+        scopeNote,
+        "childConcepts": *[_id in ^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 1,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 2,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 3,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 4,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 5,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 6,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      
+    }
+    }
+    }
+    }
+    }
+    }
+      }, 
+      "concepts": concepts[]->|order(prefLabel){
+        "id": _id,
+        "level": 0,
+        "isOrphan": 
+          coalesce(
+            !array::intersects(
+              broader[]._ref, (
+                coalesce(^.concepts[]._ref, []) + coalesce(^.topConcepts[]._ref, [])
+              )
+            ), 
+          true),
+        _originalId,
+        prefLabel,
+        definition,
+        example,
+        scopeNote,
+        "childConcepts": *[_id in ^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 1,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 2,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 3,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 4,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 5,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 6,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      
+    }
+    }
+    }
+    }
+    }
+    }
+      }
+    }
+  )"
+`;
+
+exports[`trunkBuilder > matches the characterized GROQ output 1`] = `
+"*[_id == $id][0] {
+    _updatedAt,
+    "topConcepts": topConcepts[]->|order(prefLabel) {
+      "id": _id,
+      "level": 0,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 1,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 2,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 3,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 4,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 5,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 6,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      
+    }
+    }
+    }
+    }
+    }
+    }
+    },
+    "concepts": concepts[]->|order(prefLabel) {
+      "id": _id,
+      "level": 0,
+      "isOrphan": 
+        coalesce(
+          !array::intersects(
+            broader[]._ref, (
+              coalesce(^.concepts[]._ref, []) + coalesce(^.topConcepts[]._ref, [])
+            )
+          ),
+        true),
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 1,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 2,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 3,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 4,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 5,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      "childConcepts": *[_id in ^.^.^.^.^.^.^.concepts[]._ref && ^._id in broader[]._ref]|order(prefLabel)
+     {
+      "id": _id,
+      "level": 6,
+      _originalId,
+      prefLabel,
+      definition,
+      example,
+      scopeNote,
+      
+    }
+    }
+    }
+    }
+    }
+    }
+    }
+  }"
+`;

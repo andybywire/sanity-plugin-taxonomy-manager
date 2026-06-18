@@ -25,4 +25,15 @@ export default [
       'react/no-unescaped-entities': 'off',
     },
   },
+  {
+    // Test files and test infra: allow intentional empty stub methods (jsdom
+    // matchMedia/ResizeObserver shims), `any` in fixtures/mocks, and deep
+    // describe/it nesting.
+    files: ['**/*.test.ts', '**/*.test.tsx', 'src/test/**', 'src/test-setup.ts'],
+    rules: {
+      'typescript/no-empty-function': 'off',
+      'typescript/no-explicit-any': 'off',
+      'max-nested-callbacks': 'off',
+    },
+  },
 ]
