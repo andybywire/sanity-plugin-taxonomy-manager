@@ -3,17 +3,13 @@ import type {DocumentId} from '@sanity/id-utils'
 import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Box, Text, Card} from '@sanity/ui'
 import {nanoid} from 'nanoid'
-import {useCallback, useContext, useMemo} from 'react'
+import {useContext, useMemo} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
 import {inputBuilder} from '../../core/queries'
-import type {
-  ChildConceptTerm,
-  ConceptSchemeDocument,
-  DocumentConcepts,
-  TreeViewProps,
-} from '../../types'
+import {annotateScores} from '../../core/tree/annotateScores'
+import type {ConceptSchemeDocument, DocumentConcepts, TreeViewProps} from '../../types'
 import {TreeStructure} from '../TreeStructure'
 
 /**
@@ -66,41 +62,14 @@ export const InputHierarchy = ({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const treeId = useMemo(() => nanoid(6), [scoreMap])
 
-  // Recursively annotate tree nodes
-  // Walk the tree creating new objects with score attached where
-  // there's a match. Use getPublishedId() to normalize the tree
-  // node id before comparing against the lookup map.
-  // Process children first, then check if any child has score
-  // or hasMatchingDescendant.
-  const addScores = useCallback(function addScores<T extends ChildConceptTerm>(
-    node: T,
-    scores: Map<string, number>
-  ): T {
-    const publishedId = getPublishedId(node.id as DocumentId)
-    const score = scores.get(publishedId)
-
-    const annotatedChildren = node.childConcepts?.map((c) => addScores(c, scores))
-
-    const hasMatchingDescendant =
-      annotatedChildren?.some((c) => c.score !== undefined || c.hasMatchingDescendant) ?? false
-
-    return {
-      ...node,
-      ...(score === undefined ? {} : {score}),
-      ...(hasMatchingDescendant ? {hasMatchingDescendant: true} : {}),
-      ...(annotatedChildren ? {childConcepts: annotatedChildren} : {}),
-    } as T
-  },
-  [])
-
   // Compute merged data with useMemo:
   const mergedData = useMemo(() => {
     if (!data || scoreMap.size === 0 || recsError) return data
     return {
-      topConcepts: data.topConcepts?.map((tc) => addScores(tc, scoreMap)),
-      concepts: data.concepts?.map((c) => addScores(c, scoreMap)),
+      topConcepts: data.topConcepts?.map((tc) => annotateScores(tc, scoreMap)),
+      concepts: data.concepts?.map((c) => annotateScores(c, scoreMap)),
     }
-  }, [addScores, data, scoreMap, recsError])
+  }, [data, scoreMap, recsError])
 
   if (loading) {
     return (
