@@ -1,26 +1,4 @@
 {
-  "compilerOptions": {
-    "jsx": "preserve",
-    "moduleResolution": "node",
-    "target": "esnext",
-    "module": "preserve",
-    "esModuleInterop": true,
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
-    "strict": true,
-    "sourceMap": false,
-    "inlineSourceMap": false,
-    "downlevelIteration": true,
-    "declaration": true,
-    "allowSyntheticDefaultImports": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "outDir": "lib",
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "checkJs": false,
-    "rootDir": ".",
-    "noEmit": true
-  },
-  "include": ["src/**/*.ts", "src/**/*.tsx", "package.config.ts", "global.d.ts"],
-  "exclude": ["node_modules", "**/*.spec.ts", "./src/**/__fixtures__", "./src/**/__mocks__"]
+  "extends": "./tsconfig.settings.json",
+  "include": ["src", "package.config.ts", "global.d.ts"]
 }

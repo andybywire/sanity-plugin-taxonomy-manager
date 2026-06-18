@@ -3,6 +3,7 @@ import postcss from 'rollup-plugin-postcss'
 
 export default defineConfig({
   dist: 'lib',
+  tsconfig: 'tsconfig.dist.json',
   minify: true,
   legacyExports: true,
   // Remove this block to enable strict export validation
