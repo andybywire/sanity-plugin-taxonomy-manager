@@ -1,13 +1,14 @@
 /**
- * ### Tree Builder
- * Recursive function to build out successive branches of the hierarchy
- * up to five levels deep.
+ * Maximum hierarchy depth the builders recurse to. This is the single knob for
+ * the depth cap — raising it later (if performance permits and use cases
+ * warrant) is a one-line change. Kept at its long-standing value of 6.
  */
+const MAX_TREE_DEPTH = 6
 
 /**
  * #### Branch Builder
- * Recursive function to build out successive branches of the hierarchy
- * up to five levels deep.
+ * Recursive builder for successive branches of the concept hierarchy, down to
+ * `MAX_TREE_DEPTH` levels deep.
  */
 const branchBuilder = (level = 1): string | void => {
   let reference = '^.^.concepts[]._ref'
@@ -16,7 +17,7 @@ const branchBuilder = (level = 1): string | void => {
     reference = `^.${reference}`
     i++
   }
-  if (level > 6) {
+  if (level > MAX_TREE_DEPTH) {
     return ''
   }
   return `"childConcepts": *[_id in ${reference} && ^._id in broader[]._ref]|order(prefLabel)

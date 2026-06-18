@@ -7,7 +7,7 @@ import {useCallback, useContext, useMemo} from 'react'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
-import {inputBuilder} from '../../queries'
+import {inputBuilder} from '../../core/queries'
 import type {
   ChildConceptTerm,
   ConceptSchemeDocument,

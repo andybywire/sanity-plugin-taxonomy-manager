@@ -8,7 +8,7 @@ import {useListeningQuery} from 'sanity-plugin-utils'
 
 import {SchemeContext, TreeContext, ReleaseContext} from '../context'
 import {useCreateConcept} from '../hooks'
-import {trunkBuilder} from '../queries'
+import {trunkBuilder} from '../core/queries'
 import type {DocumentConcepts, ConceptSchemeDocument, TreeViewProps} from '../types'
 
 import {NewScheme} from './guides'
