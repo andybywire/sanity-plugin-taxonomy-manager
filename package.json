@@ -86,7 +86,7 @@
     "react-dom": "^19.2.3",
     "react-is": "^18.2.0",
     "rollup-plugin-postcss": "^4.0.2",
-    "sanity": "^4.10.1",
+    "sanity": "^5.31.1",
     "sanity-plugin-utils": "^1.7.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"

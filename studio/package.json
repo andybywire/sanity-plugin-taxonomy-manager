@@ -1,0 +1,21 @@
+{
+  "name": "studio",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "sanity dev",
+    "build": "sanity build",
+    "start": "sanity start"
+  },
+  "dependencies": {
+    "@sanity/vision": "^5",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "sanity": "^5",
+    "sanity-plugin-taxonomy-manager": "workspace:*",
+    "styled-components": "^6.1.19"
+  },
+  "devDependencies": {
+    "vite-tsconfig-paths": "^5"
+  }
+}

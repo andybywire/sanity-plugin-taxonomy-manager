@@ -62,3 +62,7 @@ yalc.lock
 # Compiled plugin
 lib
 
+# Dev studio build output and runtime artifacts
+studio/dist
+studio/.sanity
+

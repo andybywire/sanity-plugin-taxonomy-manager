@@ -12,8 +12,6 @@
     "isolatedModules": true,
     "downlevelIteration": true,
     "declaration": true,
-    "outDir": "./lib",
-    "rootDir": ".",
     "noEmit": true
   }
 }

@@ -1,0 +1,11 @@
+{
+  "extends": "../tsconfig.settings.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "sanity-plugin-taxonomy-manager": ["../src"],
+      "sanity-plugin-taxonomy-manager/*": ["../src/*"]
+    }
+  },
+  "include": ["."]
+}
