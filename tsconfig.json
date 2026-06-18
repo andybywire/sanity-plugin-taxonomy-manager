@@ -1,4 +1,4 @@
 {
   "extends": "./tsconfig.settings.json",
-  "include": ["src", "package.config.ts", "global.d.ts"]
+  "include": ["src", "package.config.ts", "vitest.config.ts", "global.d.ts"]
 }
