@@ -12,14 +12,13 @@ all core functionality**. This doc is the resume point for a fresh session.
 ## How to resume (read first)
 
 - **Branch state (nothing pushed):** work is on stacked local branches
-  `chore/0-baseline-inventory` → `chore/1-tooling-studio` → `chore/2-characterization` →
-  `refactor/3-core-extraction` → `feat/4-data-port` (current HEAD; **Stage 4 complete**). Start
-  Stage 5 on a new branch off the current HEAD (e.g. `feat/5-semantic-recs`). Pushing/PRs are Andy's
-  call.
+  `chore/0-baseline-inventory` → … → `refactor/3-core-extraction` → `feat/4-data-port` →
+  `feat/5-semantic-recs` (current HEAD; **Stage 5 code-complete, pending Andy's `pnpm dev` verify**).
+  Start Stage 6 on a new branch off the current HEAD (e.g. `test/6-component-tests`). Pushing/PRs are
+  Andy's call.
 - **The gate (must be green before every commit):**
-  `pnpm test && pnpm typecheck && pnpm build && pnpm lint`. Currently green — **67 tests / 14
-  files**, 0 type errors, build clean, **lint 0 errors / 0 warnings** (the stale eslint-disable
-  directives were cleaned up during Stage 4).
+  `pnpm test && pnpm typecheck && pnpm build && pnpm lint`. Currently green — **80 tests / 15
+  files**, 0 type errors, build clean, **lint 0 errors / 0 warnings**.
 - **Dev studio (eyeball):** `pnpm dev` runs the embedded `studio/` (sanity 5, project
   `zw90ihi2` / `dev` dataset). Andy runs visual / behind-auth checks.
 - **Working style:** small reviewable chunks, **pause for review at each sub-step**; surface design
@@ -80,12 +79,16 @@ Concentric layers; logic lives in `src/core/` (pure), Sanity coupling in thin se
   (`b7a4eec`). **Code-complete; pending Andy's `pnpm dev` verify pass.** Scope = the "core three"
   seams (watch, mutate, embeddings); filters + the array-input resource patch were left by design.
   See detail below.
-- **Stage 5 ⬜ NEXT — Semantic recommendations migration** — replace the deprecated Embeddings Index API
+- **Stage 5 ✅ Semantic recommendations migration** — replaced the deprecated Embeddings Index API
   (`client.request('/embeddings-index/…')`, `text::embedding()`) with a GROQ
-  `score(text::semanticSimilarity($q))` query in a new `core/semanticRecommendations.ts`; redesign
-  the public `embeddingsIndex` option (clean break in 5.0.0); graceful degradation when a dataset
-  has no embeddings enabled. The display path (`annotateScores` → `_score`) is unchanged.
-- **Stage 6 ⬜ Component interaction tests + assembly hardening** — jsdom tests for tree views +
+  `score(text::semanticSimilarity($searchQuery))` query in a new pure `core/semanticRecommendations.ts`,
+  run through a thinned `useSemanticRecommendations` hook on a published-perspective client. Public
+  `embeddingsIndex` option → `semanticSearch` (dropped `indexName`); `EmbeddingsResult` →
+  `ConceptRecommendation {conceptId, score}` — clean breaks bundled into 5.0.0. Graceful degradation
+  when a dataset has no embeddings (friendly notice, tree still renders). Display path
+  (`annotateScores` → `_score`) unchanged. **Code-complete; pending Andy's `pnpm dev` verify.** See
+  detail below.
+- **Stage 6 ⬜ NEXT — Component interaction tests + assembly hardening** — jsdom tests for tree views +
   input components (gating, warnings, browse-only, duplicate toast); export-surface test pinning the
   exact 6 public exports + schema type names.
 - **Stage 7 ⬜ Release tooling swap** — release-please → semantic-release + OIDC; land the breaking
@@ -121,6 +124,43 @@ browse-only across draft · release · published, especially the instant removal
 a full embeddings interaction test (needs an input-component harness mocking
 `useClient`/`useFormValue`/`usePerspective`).
 
+## Stage 5 — Semantic recommendations migration (DONE — pending Andy's `pnpm dev` verify)
+
+Migrated term recommendations off the deprecated Embeddings Index API onto GROQ dataset embeddings.
+Three commits on `feat/5-semantic-recs`:
+
+- **`0743aa9` pure core** — `core/semanticRecommendations.ts` (+13 tests): `recommendationsQuery()`
+  (`*[_type=="skosConcept"] | score(text::semanticSimilarity($searchQuery)) | order(_score desc)
+  [0...$maxResults]`), `assembleQueryText()` (query-text join + empty-field validation, messages
+  preserved verbatim), `toConceptRecommendations()` (rows → `{conceptId, score}`, published-id
+  normalized), `recommendationsErrorMessage()` (embeddings-disabled vs generic).
+- **`73a55fb` the swap** — `useSemanticRecommendations` hook (replaces `useEmbeddingsRecs`): reads form
+  fields, runs the query on a published-perspective client (`withConfig`, memoized), maps via the
+  core. Renames threaded everywhere: prop `embeddingsIndex` → `semanticSearch`, type
+  `EmbeddingsIndexConfig` → `SemanticSearchConfig` (no `indexName`), `EmbeddingsResult` →
+  `ConceptRecommendation`, port `triggerEmbeddingsSearch` → `triggerSearch`. Adapter wrapper
+  collapsed; `useDataset` dropped.
+- **`5a2d819` docs** — `docs/documentation.md` recommendations section rewritten for `semanticSearch`
+  + dataset-embeddings CLI setup.
+
+**Decisions (Andy steered the first three):** `semanticSearch`/`SemanticSearchConfig` name; new
+`ConceptRecommendation {conceptId, score}` (sheds the dead `value.type`); surface a friendly
+`recsError` when embeddings are off.
+
+**Carried forward — need Andy's live confirmation:**
+- **apiVersion** — pinned to `'vX'` (`SEMANTIC_API_VERSION` in the hook). `text::semanticSimilarity` is
+  documented stable but its min dated version isn't published, and the MCP's GROQ version rejects it.
+  No regression (the old embeddings code used `vX`). Pin to a dated version once confirmed live.
+- **Embeddings-disabled error string** — the classifier matches `/embedding/i` on the error text
+  (couldn't capture the real error shape from here). Widen if the live wording differs.
+- **Perspective** — the query uses the **published** perspective (parity with the old published index).
+
+**Verify steps (Andy):** in a dataset with embeddings enabled, configure a `reference`/`array` field
+with `semanticSearch={{fieldReferences, maxResults}}`, fill the referenced fields, open the tree →
+expect a match % on relevant terms; clear a referenced field → expect the "fill out …" notice; point
+at a dataset without embeddings → expect the friendly "not enabled" notice with the tree still
+rendering. The full embeddings interaction test stays deferred to Stage 6 (input-component harness).
+
 ## Known issues / cleanup carried forward
 
 - ✅ **Tree View instant removal** — fixed in Stage 4 (optimistic prune, `core/tree/pruneConcepts` +
@@ -131,7 +171,7 @@ a full embeddings interaction test (needs an input-component harness mocking
 - ✅ **Stale `eslint-disable` directives** — all removed; lint is warning-free.
 - ◑ **Phantom `@sanity/*` deps** — `@sanity/uuid` is now an explicit dependency (`^3.0.2`).
   `@sanity/util` (`/paths` in `ConceptUseView`) is still `.npmrc`-hoisted; it is version-locked to
-  `sanity`, so resolve it when that view is refactored (Stage 5/6).
+  `sanity`, so resolve it when that view is refactored (Stage 6).
 - **`react/no-unescaped-entities`** turned off for the schema description JSX — revisit when schemas
   move to `src/schema/`.
 - **Embeddings interaction test deferred to Stage 6** — a browse → trigger → scored-tree test needs
