@@ -44,7 +44,7 @@ export const ConceptEditAction = ({
         mode={'bleed'}
         onClick={handler}
         tone={typeMap[action].tone}
-        aria-label="Remove this concept from this scheme"
+        aria-label={typeMap[action].message}
       />
     </Tooltip>
   )
