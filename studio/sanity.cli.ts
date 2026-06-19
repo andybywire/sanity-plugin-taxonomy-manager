@@ -3,6 +3,9 @@ import tsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineCliConfig({
   api: {projectId: 'zw90ihi2', dataset: 'dev'},
+  deployment: {
+    appId: 'plhyflt0jvg6bna51jaoccyg',
+  },
 
   vite: {
     // Resolve `sanity-plugin-taxonomy-manager` to ../src (per studio/tsconfig.json

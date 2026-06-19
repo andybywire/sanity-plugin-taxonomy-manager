@@ -11,9 +11,6 @@ export default defineConfig({
 
   projectId: 'zw90ihi2',
   dataset: 'dev',
-  deployment: {
-    appId: 'plhyflt0jvg6bna51jaoccyg',
-  },
 
   plugins: [
     // Default structure tool, so the sample `article` type is browsable.
