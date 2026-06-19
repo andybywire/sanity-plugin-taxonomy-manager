@@ -505,25 +505,22 @@ This creates an input that offers only the hierarchy input option for setting th
 
 ![Field configured for hierarchy-only input](_images/hierarchyOnlyInput.png)
 
-#### Adding Recommendations with the Embeddings Index
+#### Adding Term Recommendations with Semantic Search
 
-If you have a [Sanity Embeddings Index](https://www.sanity.io/docs/content-lake/embeddings-index-api-overview) configured for your `skosConcept` documents, you can use it to annotate hierarchy tree nodes with match scores based on the content your authors are editing. When enabled, opening the hierarchy tree input queries the specified embeddings index using values from designated form fields and displays a match percentage on each taxonomy term that the index identifies as relevant. This helps authors identify the most appropriate terms for their content without needing to manually review every node in the tree.
+If your dataset has [embeddings](https://www.sanity.io/docs/content-lake/dataset-embeddings) enabled, the input components can annotate hierarchy tree nodes with match scores based on the content your authors are editing. When enabled, opening the hierarchy tree input scores your `skosConcept` documents by semantic similarity — using the GROQ [`text::semanticSimilarity()`](https://www.sanity.io/docs/content-lake/search-content-with-groq) function — against the values of designated form fields, and displays a match percentage on each taxonomy term it identifies as relevant. This helps authors identify the most appropriate terms for their content without needing to manually review every node in the tree.
 
-![Field configured for embeddings index recommendations input](_images/reco-input.png)
+![Field configured for semantic term recommendations](_images/reco-input.png)
 
-To use this feature, you will need an embeddings index that includes your `skosConcept` documents. See the [Embeddings Index API overview](https://www.sanity.io/docs/content-lake/embeddings-index-api-overview) and the [Embeddings Index CLI reference](https://www.sanity.io/docs/libraries/embeddings-index-cli-reference) for setup instructions. For the most effective term matches, index your terms' preferred labels and definitions, including scope notes and examples fields if you use them:
+To use this feature, enable embeddings on your dataset. For the most relevant matches, scope the embeddings [projection](https://www.sanity.io/docs/content-lake/dataset-embeddings) to the fields your terms are matched against — typically each concept's preferred label and definition, plus scope notes and examples if you use them:
 
-```js
-// GROQ filter
-_type == 'skosConcept'
-
-// GROQ Projection
-{
-  _type, _id, prefLabel, definition
-}
+```sh
+sanity datasets embeddings enable <dataset> \
+  --projection='{ _type == "skosConcept" => { prefLabel, definition, scopeNote, example } }'
 ```
 
-To add recommendations to a `reference` field, wrap `ReferenceHierarchyInput` in an inline component function and pass the `embeddingsIndex` prop:
+This projection embeds only your concepts; if other document types in your dataset also need semantic search, include them in the projection too. Embeddings generation runs asynchronously — check progress with `sanity datasets embeddings status <dataset>`. Until it is ready (or if embeddings are not enabled), the tree still renders normally and simply shows a notice in place of scores.
+
+To add recommendations to a `reference` field, wrap `ReferenceHierarchyInput` in an inline component function and pass the `semanticSearch` prop:
 
 ```js
 import {ReferenceHierarchyInput, schemeFilter} from 'sanity-plugin-taxonomy-manager'
@@ -543,8 +540,7 @@ defineField({
       field: (props) => (
         <ReferenceHierarchyInput
           {...props}
-          embeddingsIndex={{
-            indexName: 'my-taxonomy-index',
+          semanticSearch={{
             fieldReferences: ['title', 'description'],
             maxResults: 4,
           }}
@@ -579,8 +575,7 @@ defineField({
       field: (props) => (
         <ArrayHierarchyInput
           {...props}
-          embeddingsIndex={{
-            indexName: 'my-taxonomy-index',
+          semanticSearch={{
             fieldReferences: ['title', 'description'],
             maxResults: 4,
           }}
@@ -590,10 +585,9 @@ defineField({
   }),
 ```
 
-The `embeddingsIndex` configuration object accepts the following options:
+The `semanticSearch` configuration object accepts the following options:
 
-- **`indexName`** (required): The name of the Sanity Embeddings Index to query. This should be an index that includes your `skosConcept` documents.
-- **`fieldReferences`** (required): An array of field names from the current document whose values are concatenated and sent as the query to the embeddings index. For example, `['title', 'metaDescription']` reads the current values of the `title` and `metaDescription` fields and uses them to find semantically similar taxonomy terms.
-- **`maxResults`** (optional): The maximum number of matching terms to return from the embeddings index. Defaults to `3`.
+- **`fieldReferences`** (required): An array of field names from the current document whose values are concatenated and sent as the semantic search query. For example, `['title', 'metaDescription']` reads the current values of the `title` and `metaDescription` fields and uses them to find semantically similar taxonomy terms.
+- **`maxResults`** (optional): The maximum number of matching terms to return. Defaults to `3`.
 
 All fields listed in `fieldReferences` must contain a value when the hierarchy tree is opened. If any referenced fields are empty, a message is displayed in the tree view indicating which fields need to be filled in.
