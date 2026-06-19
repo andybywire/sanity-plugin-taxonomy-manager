@@ -7,7 +7,7 @@ import {FormField, isDraftId, useClient, useFormValue, usePerspective} from 'san
 
 import {useTaxonomyDataPort} from '../../seams/TaxonomyPortContext'
 import NodeTree from '../../static/NodeTree'
-import type {ConceptSchemeDocument, EmbeddingsIndexConfig} from '../../types'
+import type {ConceptSchemeDocument, SemanticSearchConfig} from '../../types'
 import {TreeView} from '../TreeView'
 
 type ReferenceOptions = ObjectOptions & {
@@ -25,7 +25,7 @@ type ReferenceOptions = ObjectOptions & {
 }
 
 type HierarchyInput = ObjectFieldProps<Reference> & {
-  embeddingsIndex?: EmbeddingsIndexConfig
+  semanticSearch?: SemanticSearchConfig
 }
 
 // Extract the return type of the filter function
@@ -46,19 +46,18 @@ type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
  *   by default instead of collapsed.
  *
  * @param props - Standard Sanity `ObjectFieldProps<Reference>` extended with an optional
- *   `embeddingsIndex` configuration object.
- * @param props.embeddingsIndex - Optional configuration for AI-assisted term
- *   recommendations via a Sanity Embeddings Index. When provided, opening the tree
- *   browser queries the specified index and annotates matching taxonomy terms with
- *   a relevance score to help authors identify the most appropriate term.
- * @param props.embeddingsIndex.indexName - The name of the Sanity Embeddings Index
- *   to query. Must be an index that includes `skosConcept` documents.
- * @param props.embeddingsIndex.fieldReferences - An array of field names from the
- *   current document whose values are concatenated and sent as the embeddings search
- *   query. All listed fields must contain values when the tree browser is opened;
- *   empty fields will display an error message in the tree view rather than scores.
- * @param props.embeddingsIndex.maxResults - Maximum number of semantically matching
- *   terms to return from the embeddings index. Defaults to `3`.
+ *   `semanticSearch` configuration object.
+ * @param props.semanticSearch - Optional configuration for AI-assisted term
+ *   recommendations. When provided, opening the tree browser scores `skosConcept`
+ *   documents against the dataset's embeddings (`text::semanticSimilarity()`) and
+ *   annotates matching taxonomy terms with a relevance score to help authors
+ *   identify the most appropriate term. Requires dataset embeddings to be enabled.
+ * @param props.semanticSearch.fieldReferences - An array of field names from the
+ *   current document whose values are concatenated and sent as the search query.
+ *   All listed fields must contain values when the tree browser is opened; empty
+ *   fields will display a message in the tree view rather than scores.
+ * @param props.semanticSearch.maxResults - Maximum number of semantically matching
+ *   terms to return. Defaults to `3`.
  *
  * @example
  * Basic usage with a scheme filter:
@@ -115,7 +114,7 @@ type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
  * ```
  *
  * @example
- * AI-assisted recommendations via an embeddings index:
+ * AI-assisted recommendations via dataset embeddings:
  * ```jsx
  * import {ReferenceHierarchyInput, schemeFilter} from 'sanity-plugin-taxonomy-manager'
  *
@@ -132,8 +131,7 @@ type FilterResult = Awaited<ReturnType<ReferenceOptions['filter']>>
  *     field: (props) => (
  *       <ReferenceHierarchyInput
  *         {...props}
- *         embeddingsIndex={{
- *           indexName: 'my-taxonomy-index',
+ *         semanticSearch={{
  *           fieldReferences: ['title', 'metaDescription'],
  *           maxResults: 4,
  *         }}
@@ -154,11 +152,10 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   const documentId = useFormValue(['_id']) as string
 
   // name of the field to input a value
-  const {name, title, value, embeddingsIndex} = props
+  const {name, title, value, semanticSearch} = props
 
   const port = useTaxonomyDataPort()
-  const {conceptRecs, recsError, triggerEmbeddingsSearch} =
-    port.useSemanticRecommendations(embeddingsIndex)
+  const {conceptRecs, recsError, triggerSearch} = port.useSemanticRecommendations(semanticSearch)
 
   // Get release and draft status of the document
   const isInRelease = isVersionId(documentId as DocumentId)
@@ -213,8 +210,8 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
 
   const browseHierarchy = useCallback(() => {
     setOpen(true)
-    triggerEmbeddingsSearch()
-  }, [triggerEmbeddingsSearch])
+    triggerSearch()
+  }, [triggerSearch])
 
   const handleClose = useCallback(() => {
     setOpen(false)

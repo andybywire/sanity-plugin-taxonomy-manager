@@ -1,5 +1,5 @@
 import type {CreateConceptPlan, RemoveConceptPlan} from './mutations'
-import type {DocumentConcepts, EmbeddingsIndexConfig, EmbeddingsResult} from '../types'
+import type {ConceptRecommendation, DocumentConcepts, SemanticSearchConfig} from '../types'
 
 /**
  * #### Taxonomy Data Port
@@ -8,8 +8,8 @@ import type {DocumentConcepts, EmbeddingsIndexConfig, EmbeddingsResult} from '..
  * semantic term recommendations. Components and mutation hooks talk to this
  * interface instead of `useListeningQuery`/`useClient` directly, so the render
  * tree can be exercised against an in-memory fake (`test/FakeDataPort`) and the
- * implementation can be swapped later (e.g. the embeddings → `semanticSimilarity`
- * migration in Stage 5, or the App SDK) without touching components.
+ * implementation can be swapped later (e.g. the App SDK) without touching
+ * components.
  *
  * Members are hooks (`use*`): the tree seam wraps Studio's
  * `documentStore.listenQuery` and the mutation/embeddings seams read the Studio
@@ -22,8 +22,8 @@ export interface TaxonomyDataPort {
   useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts>
   /** Replay a pure create/remove plan (`core/mutations`) onto a Studio transaction. */
   useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void>
-  /** Semantic term recommendations for the input components (embeddings today; swapped in Stage 5). */
-  useSemanticRecommendations(config?: EmbeddingsIndexConfig): SemanticRecommendationsResult
+  /** Semantic term recommendations for the input components (GROQ `text::semanticSimilarity()`). */
+  useSemanticRecommendations(config?: SemanticSearchConfig): SemanticRecommendationsResult
 }
 
 /**
@@ -50,9 +50,9 @@ export interface WatchResult<T> {
 /** A create or remove transaction plan, discriminated by `kind` (see `core/mutations`). */
 export type ConceptPlan = CreateConceptPlan | RemoveConceptPlan
 
-/** Return shape of the semantic-recommendations seam (kept identical to today's `useEmbeddingsRecs`). */
+/** Return shape of the semantic-recommendations seam. */
 export interface SemanticRecommendationsResult {
-  conceptRecs: EmbeddingsResult[]
+  conceptRecs: ConceptRecommendation[]
   recsError: string | null
-  triggerEmbeddingsSearch: () => void
+  triggerSearch: () => void
 }

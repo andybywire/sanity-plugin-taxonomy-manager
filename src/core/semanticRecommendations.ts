@@ -17,14 +17,14 @@ import type {ConceptRecommendation} from '../types'
 
 /**
  * GROQ for the recommendations query. Every `skosConcept` is scored by semantic
- * similarity to `$query`; the top `$maxResults` come back as `{conceptId, score}`,
+ * similarity to `$searchQuery`; the top `$maxResults` come back as `{conceptId, score}`,
  * most-relevant first. `text::semanticSimilarity()` is only valid inside `score()`,
  * and the dataset must have embeddings enabled or the query errors (surfaced via
  * {@link recommendationsErrorMessage}). Filtering to `skosConcept` first keeps the
  * candidate set small, mirroring the old index's concept-only scope.
  */
 export const recommendationsQuery = (): string =>
-  `*[_type == "skosConcept"] | score(text::semanticSimilarity($query)) | order(_score desc) [0...$maxResults] {
+  `*[_type == "skosConcept"] | score(text::semanticSimilarity($searchQuery)) | order(_score desc) [0...$maxResults] {
     "conceptId": _id,
     "score": _score
   }`

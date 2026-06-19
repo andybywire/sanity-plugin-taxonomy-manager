@@ -2,25 +2,20 @@ import {useCallback} from 'react'
 import {useClient} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
-import type {
-  ConceptPlan,
-  ConceptTreeParams,
-  SemanticRecommendationsResult,
-  TaxonomyDataPort,
-  WatchResult,
-} from '../core/ports'
+import type {ConceptPlan, ConceptTreeParams, TaxonomyDataPort, WatchResult} from '../core/ports'
 import {inputBuilder, trunkBuilder} from '../core/queries'
-import {useEmbeddingsRecs} from '../hooks/useEmbeddingsRecs'
-import type {DocumentConcepts, EmbeddingsIndexConfig} from '../types'
+import {useSemanticRecommendations} from '../hooks/useSemanticRecommendations'
+import type {DocumentConcepts} from '../types'
 
 /**
  * #### Studio Data Adapter
  * The default `TaxonomyDataPort` implementation: today's behavior, lifted
  * verbatim behind the interface. Tree watching stays on Studio's
  * `documentStore.listenQuery` (via `useListeningQuery`), mutations replay
- * `core/mutations` plans onto `client.transaction()`, and recommendations
- * delegate to the existing embeddings hook (replaced in Stage 5). Behavior is
- * intended to be identical to the pre-port components/hooks.
+ * `core/mutations` plans onto `client.transaction()`, and recommendations run a
+ * `text::semanticSimilarity()` GROQ query (`useSemanticRecommendations`). Watch
+ * and mutation behavior matches the pre-port components; recommendations were
+ * migrated off the deprecated Embeddings Index API in Stage 5.
  */
 
 // Content Releases API version — must be preserved on the mutation path.
@@ -77,12 +72,6 @@ function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
     },
     [client]
   )
-}
-
-function useSemanticRecommendations(
-  config?: EmbeddingsIndexConfig
-): SemanticRecommendationsResult {
-  return useEmbeddingsRecs(config)
 }
 
 export const studioDataAdapter: TaxonomyDataPort = {

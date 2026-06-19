@@ -16,7 +16,7 @@ describe('recommendationsQuery', () => {
 
   it('scores skosConcepts by semanticSimilarity and returns the top $maxResults', () => {
     expect(query).toContain('*[_type == "skosConcept"]')
-    expect(query).toContain('score(text::semanticSimilarity($query))')
+    expect(query).toContain('score(text::semanticSimilarity($searchQuery))')
     expect(query).toContain('order(_score desc)')
     expect(query).toContain('[0...$maxResults]')
     expect(query).toContain('"conceptId": _id')

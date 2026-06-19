@@ -103,28 +103,34 @@ export interface ConceptSchemeDocument extends SanityDocument {
   }
 }
 
-export interface EmbeddingsResult {
-  score: number
-  value: {
-    documentId: string
-    type: string
-  }
-}
-
 /**
  * A semantic match score for a single concept, keyed by its published document id.
  * Produced by the recommendations seam and merged into the hierarchy tree by
- * `annotateScores`. Replaces {@link EmbeddingsResult} in 5.0.0 — the GROQ
- * projection owns this shape, so the dead nested `value.type` is gone.
+ * `annotateScores`. The GROQ `text::semanticSimilarity()` projection owns this
+ * shape directly — no wrapper object, no document type.
  */
 export interface ConceptRecommendation {
   conceptId: string
   score: number
 }
 
-export interface EmbeddingsIndexConfig {
-  indexName: string
+/**
+ * Configuration for the input components' semantic term recommendations. When
+ * provided, opening the tree browser scores concepts against the dataset's
+ * embeddings (via `text::semanticSimilarity()`) using the current values of the
+ * referenced fields, and annotates matching terms with a relevance score.
+ *
+ * Requires [dataset embeddings](https://www.sanity.io/docs/content-lake/dataset-embeddings)
+ * to be enabled; without them the tree still renders, just without scores.
+ */
+export interface SemanticSearchConfig {
+  /**
+   * Field names on the current document whose values are concatenated into the
+   * search query. Every listed field must hold a value when the tree is opened;
+   * empty fields surface a message in the tree view instead of scores.
+   */
   fieldReferences: string[]
+  /** Maximum number of matching terms to return. Defaults to `3`. */
   maxResults?: number
 }
 
@@ -134,6 +140,6 @@ export interface TreeViewProps {
   selectConcept?: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
   inputComponent?: boolean
   expanded?: boolean
-  conceptRecs?: EmbeddingsResult[]
+  conceptRecs?: ConceptRecommendation[]
   recsError?: string | null
 }

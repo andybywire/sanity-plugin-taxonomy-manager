@@ -43,7 +43,7 @@ export const InputHierarchy = ({
     const map = new Map<string, number>()
     if (Array.isArray(conceptRecs)) {
       for (const rec of conceptRecs) {
-        map.set(rec.value.documentId, rec.score)
+        map.set(rec.conceptId, rec.score)
       }
     }
     return map

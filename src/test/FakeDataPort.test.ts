@@ -48,14 +48,14 @@ describe('createFakeDataPort', () => {
 
   it('useSemanticRecommendations returns configured recs and counts search triggers', () => {
     const port = createFakeDataPort({
-      recommendations: [{score: 0.9, value: {documentId: 'd1', type: 'skosConcept'}}],
+      recommendations: [{conceptId: 'd1', score: 0.9}],
     })
 
     const {result} = renderHook(() => port.useSemanticRecommendations())
     expect(result.current.conceptRecs).toHaveLength(1)
     expect(result.current.recsError).toBeNull()
 
-    result.current.triggerEmbeddingsSearch()
+    result.current.triggerSearch()
     expect(port.triggeredSearches).toBe(1)
   })
 })

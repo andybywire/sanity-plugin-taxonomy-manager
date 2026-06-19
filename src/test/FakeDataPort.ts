@@ -5,14 +5,14 @@ import type {
   TaxonomyDataPort,
   WatchResult,
 } from '../core/ports'
-import type {DocumentConcepts, EmbeddingsResult} from '../types'
+import type {ConceptRecommendation, DocumentConcepts} from '../types'
 
 /** Fixtures + canned responses for a {@link createFakeDataPort}. */
 export interface FakeDataPortConfig {
   tree?: DocumentConcepts | null
   loading?: boolean
   error?: Error | null
-  recommendations?: EmbeddingsResult[]
+  recommendations?: ConceptRecommendation[]
   recsError?: string | null
 }
 
@@ -20,7 +20,7 @@ export interface FakeDataPortConfig {
 export interface FakeDataPort extends TaxonomyDataPort {
   /** Plans passed to the applyConceptPlan function, in call order. */
   readonly appliedPlans: ConceptPlan[]
-  /** Number of `triggerEmbeddingsSearch()` calls. */
+  /** Number of `triggerSearch()` calls. */
   triggeredSearches: number
   /** Params from the most recent `useWatchTree` call. */
   lastWatchParams: ConceptTreeParams | null
@@ -42,7 +42,7 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
   const recsResult: SemanticRecommendationsResult = {
     conceptRecs: config.recommendations ?? [],
     recsError: config.recsError ?? null,
-    triggerEmbeddingsSearch: () => {
+    triggerSearch: () => {
       fake.triggeredSearches += 1
     },
   }
