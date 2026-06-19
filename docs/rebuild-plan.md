@@ -13,9 +13,9 @@ all core functionality**. This doc is the resume point for a fresh session.
 
 - **Branch state (nothing pushed):** work is on stacked local branches
   `chore/0-baseline-inventory` → … → `refactor/3-core-extraction` → `feat/4-data-port` →
-  `feat/5-semantic-recs` (current HEAD; **Stage 5 code-complete, pending Andy's `pnpm dev` verify**).
-  Start Stage 6 on a new branch off the current HEAD (e.g. `test/6-component-tests`). Pushing/PRs are
-  Andy's call.
+  `feat/5-semantic-recs` (current HEAD; **Stage 5 done — `pnpm dev` verify passed 2026-06-19, one
+  score-display bug deferred to Stage 6**). Start Stage 6 on a new branch off the current HEAD (e.g.
+  `test/6-component-tests`). Pushing/PRs are Andy's call.
 - **The gate (must be green before every commit):**
   `pnpm test && pnpm typecheck && pnpm build && pnpm lint`. Currently green — **80 tests / 15
   files**, 0 type errors, build clean, **lint 0 errors / 0 warnings**.
@@ -90,7 +90,8 @@ Concentric layers; logic lives in `src/core/` (pure), Sanity coupling in thin se
   detail below.
 - **Stage 6 ⬜ NEXT — Component interaction tests + assembly hardening** — jsdom tests for tree views +
   input components (gating, warnings, browse-only, duplicate toast); export-surface test pinning the
-  exact 6 public exports + schema type names.
+  exact 6 public exports + schema type names; **fix the recommendation score display** (see Known
+  issues — semanticSimilarity `_score` is unbounded, so the old `× 100 %` shows "658.5%").
 - **Stage 7 ⬜ Release tooling swap** — release-please → semantic-release + OIDC; land the breaking
   changes (peer `^5 || ^6`, ESM-only `dist/`) as **5.0.0**; verify version continuity from 4.7.2 via
   `semantic-release --dry-run`.
@@ -147,13 +148,14 @@ Three commits on `feat/5-semantic-recs`:
 `ConceptRecommendation {conceptId, score}` (sheds the dead `value.type`); surface a friendly
 `recsError` when embeddings are off.
 
-**Carried forward — need Andy's live confirmation:**
-- **apiVersion** — pinned to `'vX'` (`SEMANTIC_API_VERSION` in the hook). `text::semanticSimilarity` is
-  documented stable but its min dated version isn't published, and the MCP's GROQ version rejects it.
-  No regression (the old embeddings code used `vX`). Pin to a dated version once confirmed live.
-- **Embeddings-disabled error string** — the classifier matches `/embedding/i` on the error text
-  (couldn't capture the real error shape from here). Widen if the live wording differs.
-- **Perspective** — the query uses the **published** perspective (parity with the old published index).
+**Verify outcomes (Andy's `pnpm dev` pass, 2026-06-19) — functionally PASSED:**
+- ✅ **Empty-field + embeddings-disabled warnings** both fire as expected — so the `/embedding/i`
+  classifier matched the real not-enabled error, and `'vX'` (`SEMANTIC_API_VERSION`) does expose
+  `text::semanticSimilarity` (recs returned). Published perspective works.
+- ✅ Recommendations appear and rank correctly once embeddings are enabled on the dataset.
+- ◑ **One finding, deferred to Stage 6 (Andy's call):** the score *display* shows nonsense
+  percentages ("658.5%") — see Known issues. Ranking is unaffected.
+- Still optional: pin `'vX'` → a dated API version (now known to work, just not pinned).
 
 **Verify steps (Andy):** in a dataset with embeddings enabled, configure a `reference`/`array` field
 with `semanticSearch={{fieldReferences, maxResults}}`, fill the referenced fields, open the tree →
@@ -176,6 +178,15 @@ rendering. The full embeddings interaction test stays deferred to Stage 6 (input
   move to `src/schema/`.
 - **Embeddings interaction test deferred to Stage 6** — a browse → trigger → scored-tree test needs
   the input-component harness; Stage 4 pinned the seam contract via `FakeDataPort` + typecheck.
+- **Recommendation score display shows nonsense percentages (deferred to Stage 6, Andy's call)** —
+  `ConceptSelectLink.tsx` renders `(score * 100).toFixed(1)%` (tooltip + badge). That assumed the old
+  Embeddings Index API's 0–1 cosine score; `text::semanticSimilarity()`'s `_score` is unbounded and
+  opaque ("not a measure of general match quality"), so a ~6.6 score renders as "658.5%". Confirmed in
+  Andy's `pnpm dev` verify (2026-06-19). Ranking/highlighting are unaffected (`hasMatchingDescendant`
+  is boolean). No score-threshold logic depends on the range. Fix options weighed: normalize to a
+  within-query relative % (top match = 100%) — closest to the old UX; or drop the % for a rank /
+  "suggested" badge — most honest about the opaque score. Lean toward a pure `normalizeScores` helper
+  (testable) feeding the existing display, decided with the Stage 6 component tests.
 
 ## Key files / where things are
 
