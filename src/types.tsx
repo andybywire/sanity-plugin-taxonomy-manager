@@ -111,6 +111,17 @@ export interface EmbeddingsResult {
   }
 }
 
+/**
+ * A semantic match score for a single concept, keyed by its published document id.
+ * Produced by the recommendations seam and merged into the hierarchy tree by
+ * `annotateScores`. Replaces {@link EmbeddingsResult} in 5.0.0 — the GROQ
+ * projection owns this shape, so the dead nested `value.type` is gone.
+ */
+export interface ConceptRecommendation {
+  conceptId: string
+  score: number
+}
+
 export interface EmbeddingsIndexConfig {
   indexName: string
   fieldReferences: string[]

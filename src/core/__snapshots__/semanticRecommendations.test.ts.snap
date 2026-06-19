@@ -1,0 +1,8 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`recommendationsQuery > matches the characterized GROQ output 1`] = `
+"*[_type == "skosConcept"] | score(text::semanticSimilarity($query)) | order(_score desc) [0...$maxResults] {
+    "conceptId": _id,
+    "score": _score
+  }"
+`;
