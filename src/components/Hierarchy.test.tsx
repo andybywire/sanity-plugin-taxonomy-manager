@@ -76,4 +76,17 @@ describe('Hierarchy (trunk watch seam)', () => {
       unsetPaths: ['topConcepts[_ref=="concept-1"]'],
     })
   })
+
+  it('optimistically removes the concept from the tree before the listener catches up', async () => {
+    // The fake's watch data stays static, standing in for the listener's refetch lag.
+    const tree: DocumentConcepts = {
+      topConcepts: [{id: 'concept-1', prefLabel: 'Animals'}],
+      concepts: [],
+    }
+    renderHierarchy(createFakeDataPort({tree}))
+
+    expect(screen.getByRole('button', {name: /Animals/})).toBeInTheDocument()
+    await userEvent.setup().click(screen.getByLabelText('Remove this concept from this scheme'))
+    expect(screen.queryByRole('button', {name: /Animals/})).not.toBeInTheDocument()
+  })
 })

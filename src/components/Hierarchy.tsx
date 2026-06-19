@@ -3,9 +3,10 @@ import type {DocumentId} from '@sanity/id-utils'
 import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Stack, Box, Text, Inline, Card, Button} from '@sanity/ui'
 import {nanoid} from 'nanoid'
-import {useCallback, useContext, useState} from 'react'
+import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 
-import {SchemeContext, TreeContext, ReleaseContext} from '../context'
+import {OptimisticTreeContext, SchemeContext, TreeContext, ReleaseContext} from '../context'
+import {collectConceptIds, pruneConcepts} from '../core/tree/pruneConcepts'
 import {useCreateConcept} from '../hooks'
 import {useTaxonomyDataPort} from '../seams/TaxonomyPortContext'
 import type {ConceptSchemeDocument, TreeViewProps} from '../types'
@@ -57,11 +58,50 @@ export const Hierarchy = ({
     setGlobalVisibility({treeId: nanoid(6), treeVisibility: 'closed'})
   }, [])
 
+  // Optimistic removal: prune a removed concept from the tree immediately, then
+  // let the live listener reconcile (see core/tree/pruneConcepts). markRemoved is
+  // reached by the deep remove actions through OptimisticTreeContext below.
+  const [removedIds, setRemovedIds] = useState<Set<string>>(() => new Set())
+  const markRemoved = useCallback((id: string) => {
+    setRemovedIds((prev) => {
+      if (prev.has(id)) return prev
+      const next = new Set(prev)
+      next.add(id)
+      return next
+    })
+  }, [])
+  const unmarkRemoved = useCallback((id: string) => {
+    setRemovedIds((prev) => {
+      if (!prev.has(id)) return prev
+      const next = new Set(prev)
+      next.delete(id)
+      return next
+    })
+  }, [])
+  const optimisticValue = useMemo(
+    () => ({markRemoved, unmarkRemoved}),
+    [markRemoved, unmarkRemoved]
+  )
+
   const {data, loading, error} = port.useWatchTree({
     mode: 'trunk',
     documentId,
     perspective: releaseContext,
   })
+
+  // Once fresh data no longer contains a removed id, stop tracking it so the
+  // optimistic set self-cleans and never prunes a later re-added concept.
+  useEffect(() => {
+    setRemovedIds((prev) => {
+      if (prev.size === 0) return prev
+      const present = collectConceptIds(data)
+      const next = new Set([...prev].filter((id) => present.has(id)))
+      return next.size === prev.size ? prev : next
+    })
+  }, [data])
+
+  const prunedData = useMemo(() => pruneConcepts(data, removedIds), [data, removedIds])
+
   if (loading) {
     return (
       <Box padding={4} paddingTop={6}>
@@ -76,7 +116,7 @@ export const Hierarchy = ({
   } else if (error) {
     console.error(error)
     return <div>Error here</div>
-  } else if (!data) {
+  } else if (!prunedData) {
     return <NewScheme document={document} />
   }
   return (
@@ -87,9 +127,11 @@ export const Hierarchy = ({
             <Card borderBottom paddingBottom={1} display={'flex'} flex={1}>
               <Flex justify={'space-between'} flex={1}>
                 <Card>
-                  {(data.topConcepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
+                  {(prunedData.topConcepts
+                    ?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
                     .length > 0 ||
-                    data.concepts?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
+                    prunedData.concepts
+                      ?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
                       .length > 0) && (
                     <Inline space={1}>
                       <Button
@@ -130,11 +172,13 @@ export const Hierarchy = ({
               </Flex>
             </Card>
           </Stack>
-          <TreeStructure
-            concepts={data}
-            inputComponent={inputComponent}
-            selectConcept={selectConcept || (() => undefined)}
-          />
+          <OptimisticTreeContext.Provider value={optimisticValue}>
+            <TreeStructure
+              concepts={prunedData}
+              inputComponent={inputComponent}
+              selectConcept={selectConcept || (() => undefined)}
+            />
+          </OptimisticTreeContext.Provider>
         </>
       </Box>
     </TreeContext.Provider>

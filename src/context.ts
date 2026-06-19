@@ -32,3 +32,19 @@ export const ReleaseContext = createContext<any>(undefined)
  */
 export type TaxonomyConfig = {ident?: Options['ident']}
 export const TaxonomyConfigContext = createContext<TaxonomyConfig>({})
+
+/**
+ * Connects the deep remove actions to Hierarchy's optimistic-removal layer:
+ * removing a concept marks its id so the tree prunes it instantly, ahead of the
+ * live listener catching up (see Hierarchy + core/tree/pruneConcepts). Defaults
+ * to no-ops, so trees rendered without the provider — the input components,
+ * which never remove — behave normally.
+ */
+export type OptimisticTreeContextType = {
+  markRemoved: (id: string) => void
+  unmarkRemoved: (id: string) => void
+}
+export const OptimisticTreeContext = createContext<OptimisticTreeContextType>({
+  markRemoved: () => undefined,
+  unmarkRemoved: () => undefined,
+})

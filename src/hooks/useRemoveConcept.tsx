@@ -1,6 +1,7 @@
 import {useToast} from '@sanity/ui'
-import {useCallback} from 'react'
+import {useCallback, useContext} from 'react'
 
+import {OptimisticTreeContext} from '../context'
 import {planRemoveConcept} from '../core/mutations'
 import {useTaxonomyDataPort} from '../seams/TaxonomyPortContext'
 import type {ConceptSchemeDocument} from '../types'
@@ -10,12 +11,14 @@ import type {ConceptSchemeDocument} from '../types'
  * Used for removing concepts and top concepts from the Concept Scheme hierarchy
  * view. The release/version-aware transaction is planned purely in
  * `core/mutations` and executed through the data port; this hook replays the
- * plan and handles the toast.
+ * plan, prunes the concept from the tree optimistically (reverting if the
+ * mutation fails), and handles the toast.
  */
 export function useRemoveConcept(document: ConceptSchemeDocument) {
   const toast = useToast()
   const port = useTaxonomyDataPort()
   const applyConceptPlan = port.useApplyConceptPlan()
+  const {markRemoved, unmarkRemoved} = useContext(OptimisticTreeContext)
 
   // conceptId is the id of the concept to be removed
   const removeConcept = useCallback(
@@ -26,6 +29,9 @@ export function useRemoveConcept(document: ConceptSchemeDocument) {
         conceptType,
       })
 
+      // Prune from the tree immediately; the live listener reconciles after.
+      markRemoved(conceptId)
+
       applyConceptPlan(plan)
         .then(() => {
           toast.push({
@@ -35,6 +41,8 @@ export function useRemoveConcept(document: ConceptSchemeDocument) {
           })
         })
         .catch((err) => {
+          // Roll the optimistic removal back so the concept reappears.
+          unmarkRemoved(conceptId)
           toast.push({
             closable: true,
             status: 'error',
@@ -43,7 +51,7 @@ export function useRemoveConcept(document: ConceptSchemeDocument) {
           })
         })
     },
-    [applyConceptPlan, document.displayed, toast]
+    [applyConceptPlan, document.displayed, toast, markRemoved, unmarkRemoved]
   )
   return removeConcept
 }
