@@ -18,7 +18,7 @@ export const TreeStructure = ({
   inputComponent,
   selectConcept,
 }: {
-  concepts: DocumentConcepts
+  concepts: DocumentConcepts | null
   inputComponent: boolean
   selectConcept: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
 }) => {
@@ -32,7 +32,7 @@ export const TreeStructure = ({
   return (
     <Box paddingTop={4}>
       <Stack space={3} style={{listStyle: 'none', paddingLeft: '0', marginBlockStart: '0'}}>
-        {concepts.topConcepts?.map((concept: TopConceptTerm) => (
+        {concepts?.topConcepts?.map((concept: TopConceptTerm) => (
           <TopConcepts
             key={`${concept?.id}+${treeId}`}
             concept={concept}
@@ -41,7 +41,7 @@ export const TreeStructure = ({
             selectConcept={selectConcept}
           />
         ))}
-        {concepts.concepts
+        {concepts?.concepts
           ?.filter((concept: ChildConceptTerm) => concept?.isOrphan)
           .map((concept: ChildConceptTerm) => {
             return (

@@ -4,12 +4,11 @@ import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Stack, Box, Text, Inline, Card, Button} from '@sanity/ui'
 import {nanoid} from 'nanoid'
 import {useCallback, useContext, useState} from 'react'
-import {useListeningQuery} from 'sanity-plugin-utils'
 
 import {SchemeContext, TreeContext, ReleaseContext} from '../context'
 import {useCreateConcept} from '../hooks'
-import {trunkBuilder} from '../core/queries'
-import type {DocumentConcepts, ConceptSchemeDocument, TreeViewProps} from '../types'
+import {useTaxonomyDataPort} from '../seams/TaxonomyPortContext'
+import type {ConceptSchemeDocument, TreeViewProps} from '../types'
 
 import {NewScheme} from './guides'
 import {TreeStructure} from './TreeStructure'
@@ -31,6 +30,7 @@ export const Hierarchy = ({
   const documentId = getPublishedId(document.displayed?._id as DocumentId)
   const releaseContext: string = useContext(ReleaseContext) as string
 
+  const port = useTaxonomyDataPort()
   const createConcept = useCreateConcept(document)
   const createTopConcept = useCallback(() => {
     createConcept('topConcept')
@@ -57,20 +57,11 @@ export const Hierarchy = ({
     setGlobalVisibility({treeId: nanoid(6), treeVisibility: 'closed'})
   }, [])
 
-  const {data, loading, error} = useListeningQuery<DocumentConcepts>(
-    {
-      fetch: trunkBuilder(),
-      listen: `*[_type == "skosConcept" || _type == "skosConceptScheme" ]`,
-    },
-    {
-      params: {
-        id: documentId,
-      },
-      options: {
-        perspective: releaseContext === undefined ? 'drafts' : [releaseContext],
-      },
-    }
-  ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
+  const {data, loading, error} = port.useWatchTree({
+    mode: 'trunk',
+    documentId,
+    perspective: releaseContext,
+  })
   if (loading) {
     return (
       <Box padding={4} paddingTop={6}>

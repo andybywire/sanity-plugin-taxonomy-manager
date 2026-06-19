@@ -1,15 +1,13 @@
-/* eslint-disable react/require-default-props */
 import type {DocumentId} from '@sanity/id-utils'
 import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Box, Text, Card} from '@sanity/ui'
 import {nanoid} from 'nanoid'
 import {useContext, useMemo} from 'react'
-import {useListeningQuery} from 'sanity-plugin-utils'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
-import {inputBuilder} from '../../core/queries'
 import {annotateScores} from '../../core/tree/annotateScores'
-import type {ConceptSchemeDocument, DocumentConcepts, TreeViewProps} from '../../types'
+import {useTaxonomyDataPort} from '../../seams/TaxonomyPortContext'
+import type {ConceptSchemeDocument, TreeViewProps} from '../../types'
 import {TreeStructure} from '../TreeStructure'
 
 /**
@@ -32,21 +30,13 @@ export const InputHierarchy = ({
   const documentId = getPublishedId(document.displayed?._id as DocumentId)
   const releaseContext: string = useContext(ReleaseContext) as string
   const initialVisibility = expanded ? 'open' : 'closed'
-  const {data, loading, error} = useListeningQuery<DocumentConcepts>(
-    {
-      fetch: inputBuilder(),
-      listen: `*[_type == "skosConcept" || _id == $id]`,
-    },
-    {
-      // GROQ's select($branchId != null => ...) requires null, not empty string.
-      // ListenQueryParams doesn't accept null, so we cast past it.
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
-      params: {id: documentId, branchId} as any,
-      options: {
-        perspective: releaseContext === undefined ? 'drafts' : [releaseContext],
-      },
-    }
-  ) as {data: DocumentConcepts; loading: boolean; error: Error | null}
+  const port = useTaxonomyDataPort()
+  const {data, loading, error} = port.useWatchTree({
+    mode: 'input',
+    documentId,
+    branchId,
+    perspective: releaseContext,
+  })
 
   // Build a score lookup map from conceptRecs:
   const scoreMap = useMemo(() => {
