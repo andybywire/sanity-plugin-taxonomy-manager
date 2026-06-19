@@ -13,12 +13,13 @@ all core functionality**. This doc is the resume point for a fresh session.
 
 - **Branch state (nothing pushed):** work is on stacked local branches
   `chore/0-baseline-inventory` → `chore/1-tooling-studio` → `chore/2-characterization` →
-  `refactor/3-core-extraction` (current HEAD). Start Stage 4 on a new branch off the current HEAD
-  (e.g. `feat/4-data-port`). Pushing/PRs are Andy's call.
+  `refactor/3-core-extraction` → `feat/4-data-port` (current HEAD; **Stage 4 complete**). Start
+  Stage 5 on a new branch off the current HEAD (e.g. `feat/5-semantic-recs`). Pushing/PRs are Andy's
+  call.
 - **The gate (must be green before every commit):**
-  `pnpm test && pnpm typecheck && pnpm build && pnpm lint`. Currently green — **49 tests / 10
-  files**, 0 type errors, build clean, lint 0 errors (11 pre-existing "unused eslint-disable"
-  warnings, slated for cleanup as files are touched).
+  `pnpm test && pnpm typecheck && pnpm build && pnpm lint`. Currently green — **67 tests / 14
+  files**, 0 type errors, build clean, **lint 0 errors / 0 warnings** (the stale eslint-disable
+  directives were cleaned up during Stage 4).
 - **Dev studio (eyeball):** `pnpm dev` runs the embedded `studio/` (sanity 5, project
   `zw90ihi2` / `dev` dataset). Andy runs visual / behind-auth checks.
 - **Working style:** small reviewable chunks, **pause for review at each sub-step**; surface design
@@ -50,14 +51,16 @@ Concentric layers; logic lives in `src/core/` (pure), Sanity coupling in thin se
   `prefLabelUniquenessResult`), `tree/annotateScores.ts`, `ids.ts` (release/version id math +
   `conceptReferenceStrength`), `mutations.ts` (`planCreateConcept`/`planRemoveConcept`). **All have
   co-located `*.test.ts`.**
-- **Impure seams** (Stage 4 target): one `TaxonomyDataPort` interface + a `StudioDataAdapter`.
-  Today the impurity still lives in: `helpers/schemeFilter.ts`/`branchFilter.ts` (fetch closures,
-  public API), `hooks/useCreateConcept`/`useRemoveConcept` (thin executors replaying core plans),
-  `hooks/useEmbeddingsRecs` (deprecated embeddings index), `components/Hierarchy.tsx` /
-  `inputs/InputHierarchy.tsx` (`useListeningQuery`), `inputs/ArrayHierarchyInput.tsx`
-  (resource-doc patch + inline ref-flagging).
+- **Impure seams** (Stage 4 ✅): the live tree query, concept mutations, and semantic
+  recommendations now sit behind one `TaxonomyDataPort` (`core/ports.ts`), implemented by
+  `seams/StudioDataAdapter.ts` and reached via `seams/TaxonomyPortContext` (default = the adapter, so
+  prod needs no provider; tests inject `test/FakeDataPort.ts`). Intentionally **not** ported (still
+  impure): `helpers/schemeFilter.ts`/`branchFilter.ts` (fetch closures, public API, already
+  mocked-client tested) and the `inputs/ArrayHierarchyInput`/`ReferenceHierarchyInput` resource-doc
+  patch (the "third mutation site"). `views/ConceptUseView.tsx` still calls `useListeningQuery`
+  directly.
 - **Thin component shell:** tree views + input components (jsdom interaction tests come in Stage 6).
-- **Assembly:** `src/index.ts` (6 public exports — unchanged), `src/structure.ts`.
+- **Assembly:** `src/index.ts` (6 public exports — unchanged), `src/structure.tsx`.
 
 ## Staged roadmap & progress
 
@@ -70,8 +73,14 @@ Concentric layers; logic lives in `src/core/` (pure), Sanity coupling in thin se
   for `createId`, mocked-client tests for the filters. `9b9404f`
 - **Stage 3 ✅ Extract pure core** — `b2dc6f8` (queries), `70a628f` (createId/filters/validation
   batch), `a90f1be` (annotateScores), `10ceff3` (ids), `847027a` (mutations + thinned hooks).
-- **Stage 4 ⬜ NEXT — Data port.** See detail below.
-- **Stage 5 ⬜ Semantic recommendations migration** — replace the deprecated Embeddings Index API
+- **Stage 4 ✅ Data port** — port + adapter + fake (`d790a2a`), mutations through the port +
+  `config.ts` singleton removed (`3b12564`), add/remove aria-label fix (`19b5166`), tree watch
+  through the port + component tests (`b3157fe`), embeddings seam (`8f9e088`), optimistic-removal fix
+  (`91c1854`), `ReleaseContext` real type + lint cleanup (`b8e0c5e`), `@sanity/uuid` explicit dep
+  (`b7a4eec`). **Code-complete; pending Andy's `pnpm dev` verify pass.** Scope = the "core three"
+  seams (watch, mutate, embeddings); filters + the array-input resource patch were left by design.
+  See detail below.
+- **Stage 5 ⬜ NEXT — Semantic recommendations migration** — replace the deprecated Embeddings Index API
   (`client.request('/embeddings-index/…')`, `text::embedding()`) with a GROQ
   `score(text::semanticSimilarity($q))` query in a new `core/semanticRecommendations.ts`; redesign
   the public `embeddingsIndex` option (clean break in 5.0.0); graceful degradation when a dataset
@@ -83,48 +92,60 @@ Concentric layers; logic lives in `src/core/` (pure), Sanity coupling in thin se
   changes (peer `^5 || ^6`, ESM-only `dist/`) as **5.0.0**; verify version continuity from 4.7.2 via
   `semantic-release --dry-run`.
 
-## Stage 4 — Data port (the immediate next work)
+## Stage 4 — Data port (DONE — pending Andy's `pnpm dev` verify)
 
-Goal: decouple components/hooks from `useListeningQuery`/`useClient` via one `TaxonomyDataPort`,
-defaulting to a behavior-identical `StudioDataAdapter`; make the tree update reactively on mutation
-(see Known issues); delete the `config.ts` singleton; give `ReleaseContext` a real type.
+Decoupled components/hooks from `useListeningQuery`/`useClient` behind one `TaxonomyDataPort`. What
+landed (the "core three" seams — watch, mutate, embeddings):
 
-- `core/ports.ts` — `TaxonomyDataPort` interface (pure types): `watchTree`, `fetchSchemeRefs`,
-  `fetchBranchConcepts`, `applyConceptPlan`, `querySemanticRecommendations` (the embeddings seam;
-  its impl swaps in Stage 5, the interface stays).
-- `seams/StudioDataAdapter.ts` — implements the port with today's `useListeningQuery` + client
-  transactions (replaying `core/mutations` plans) + the existing embeddings code (carried unchanged;
-  replaced in Stage 5). Behavior-identical default.
-- `test/FakeDataPort.ts` — in-memory fake returning fixtures synchronously, so Layer A/C tests run
-  fast without a Studio.
-- Thin port-backed hooks (`useTaxonomyTree`, `useApplyConceptPlan`, `useEmbeddingsQuery`), provided
-  via React context — **this also replaces the `config.ts` `getPluginConfig()` singleton** (pass
-  `ident` through context/props). Re-point `Hierarchy`/`InputHierarchy`/input components/mutation
-  hooks to the port.
-- **Tree-update-on-removal fix** (Andy-flagged): when reworking the live-query seam, make the tree
-  reflect a removal instantly — optimistic update, or corrected listen/perspective handling.
-- Verify: component + tree tests against `FakeDataPort`; one integration test per seam; `pnpm dev`
-  full manual pass of create/remove/add-reference/browse-only across draft + release + published.
+- `core/ports.ts` — the `TaxonomyDataPort` interface. Members are hooks (`useWatchTree`,
+  `useApplyConceptPlan`, `useSemanticRecommendations`) because the watch wraps a hook.
+- `seams/StudioDataAdapter.ts` — the default impl: today's `useListeningQuery` + client transactions
+  replaying `core/mutations` plans + the existing embeddings hook (carried unchanged for Stage 5).
+- `seams/TaxonomyPortContext.tsx` — `useTaxonomyDataPort()` with the adapter as the **default**, so
+  prod needs no provider; tests inject `test/FakeDataPort.ts` (synchronous fixtures + recorded calls).
+- `config.ts` singleton **removed** — `ident` flows from plugin options through a
+  `createDefaultDocumentNode` factory into `TaxonomyConfigContext` around the structure Tree View.
+- **Instant removal** — optimistic prune (`core/tree/pruneConcepts` + `OptimisticTreeContext`,
+  reconciled against fresh listener data); `useRemoveConcept` marks on click, rolls back on error.
+- `ReleaseContext` retyped to `string | undefined` (the perspective name); `as string` casts dropped.
+- Tests: `FakeDataPort`, `pruneConcepts`, and `Hierarchy`/`InputHierarchy` component tests covering
+  watch params, loading, render, removal-routes-to-port, and the optimistic disappearance.
+
+**Watch-seam decision (investigated):** `useListeningQuery` is built on Studio's
+`documentStore.listenQuery`, not raw `client.listen()` (which the docs steer toward backend use; the
+"modern" reactive path is the deferred Live Content API / App SDK). Kept it — the port makes that a
+one-file swap later.
+
+**Before Stage 4 fully closes:** Andy's `pnpm dev` pass — create / remove / add-reference /
+browse-only across draft · release · published, especially the instant removal. Deferred to Stage 6:
+a full embeddings interaction test (needs an input-component harness mocking
+`useClient`/`useFormValue`/`usePerspective`).
 
 ## Known issues / cleanup carried forward
 
-- **Tree View doesn't update instantly on concept removal** (PRE-EXISTING — confirmed not a Stage 3
-  regression: removal transaction is byte-identical and `Hierarchy.tsx`'s `useListeningQuery` is
-  untouched; create masks the same lag by navigating away via `openInNewPane`). Fix in Stage 4.
-- **`config.ts` singleton** (`getPluginConfig`/`setPluginConfig`) — hidden global read by
-  `useCreateConcept` for `ident`; replace with context in Stage 4.
-- **Phantom `@sanity/*` deps** (`@sanity/uuid`, `@sanity/util`) — currently exposed via `.npmrc`
-  public-hoist (sanity's own copies). Make explicit or import from `sanity` when their consumers are
-  refactored (Stage 4).
-- **11 stale `eslint-disable` directives** (warnings) in components/helpers/types/views — remove as
-  those files are touched.
+- ✅ **Tree View instant removal** — fixed in Stage 4 (optimistic prune, `core/tree/pruneConcepts` +
+  `OptimisticTreeContext`). Pending Andy's live `pnpm dev` confirmation across draft · release ·
+  published.
+- ✅ **`config.ts` singleton** — removed in Stage 4; `ident` flows via `TaxonomyConfigContext` from a
+  `createDefaultDocumentNode` factory.
+- ✅ **Stale `eslint-disable` directives** — all removed; lint is warning-free.
+- ◑ **Phantom `@sanity/*` deps** — `@sanity/uuid` is now an explicit dependency (`^3.0.2`).
+  `@sanity/util` (`/paths` in `ConceptUseView`) is still `.npmrc`-hoisted; it is version-locked to
+  `sanity`, so resolve it when that view is refactored (Stage 5/6).
 - **`react/no-unescaped-entities`** turned off for the schema description JSX — revisit when schemas
   move to `src/schema/`.
+- **Embeddings interaction test deferred to Stage 6** — a browse → trigger → scored-tree test needs
+  the input-component harness; Stage 4 pinned the seam contract via `FakeDataPort` + typecheck.
 
 ## Key files / where things are
 
-- `src/core/*` — the tested pure core (see Architecture). `src/index.ts` — the 6 public exports.
-- `src/structure.ts` — the `'taxonomy'` structure tool + `defaultDocumentNode`.
+- `src/core/*` — the tested pure core (queries, ids, mutations, filters, validation, createId,
+  `tree/annotateScores`, `tree/pruneConcepts`, and **`ports.ts`** the data-port interface).
+  `src/index.ts` — the 6 public exports.
+- `src/seams/` — `StudioDataAdapter.ts` (default port impl) + `TaxonomyPortContext.tsx`
+  (`useTaxonomyDataPort`, default = the adapter). `src/test/FakeDataPort.ts` — the in-memory fake.
+- `src/structure.tsx` — the `'taxonomy'` structure tool + `createDefaultDocumentNode(config)` factory
+  (wraps the Tree View in `TaxonomyConfigContext` to pass `ident`). The old `config.ts` is removed.
 - `studio/` — the dev studio (`sanity.config.ts`, `sanity.cli.ts` w/ `vite-tsconfig-paths` + dedupe,
   `schemaTypes.ts` wiring a sample `article` to scheme `f3deba` in the `dev` dataset).
 - Config: `package.config.ts`, `tsconfig.settings.json`/`.json`/`.dist.json`, `eslint.config.mjs`,
