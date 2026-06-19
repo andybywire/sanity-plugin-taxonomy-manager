@@ -36,7 +36,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
         template: {id},
       })
     },
-    [routerPanesState, groupIndex, handleEditReference]
+    [routerPanesState, groupIndex, handleEditReference],
   )
 
   const {data, loading, error} = useListeningQuery<SanityDocument[]>(
@@ -46,7 +46,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
       options: {
         perspective: selectedPerspectiveName ? [selectedPerspectiveName] : 'drafts',
       },
-    }
+    },
   ) as {
     data: TagReference[]
     loading: boolean
@@ -106,7 +106,6 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
               schemaType && (
                 <Button
                   key={d._id}
-                  // eslint-disable-next-line react/jsx-no-bind
                   onClick={() => handleClick(d._id, d._type)}
                   padding={2}
                   mode="bleed"

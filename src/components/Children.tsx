@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import {Inline, Box, Flex} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
@@ -33,7 +32,7 @@ export const Children = ({
   inputComponent: boolean
 }) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
-  const releaseContext: string = useContext(ReleaseContext) as string
+  const releaseContext = useContext(ReleaseContext)
   const {globalVisibility: {treeVisibility} = {treeVisibility: 'open' as const}} =
     useContext(TreeContext) || {}
   const createConcept = useCreateConcept(document)
@@ -48,7 +47,9 @@ export const Children = ({
   }, [concept.id, concept?.prefLabel, removeConcept])
 
   const [levelVisibility, setLevelVisibility] = useState<'open' | 'closed'>(
-    treeVisibility === 'closed' && concept.hasMatchingDescendant ? 'open' : treeVisibility || 'open'
+    treeVisibility === 'closed' && concept.hasMatchingDescendant
+      ? 'open'
+      : treeVisibility || 'open',
   )
 
   const handleToggle = useCallback(() => {

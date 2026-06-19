@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 import type {DocumentId} from '@sanity/id-utils'
 import {
   Grid,
@@ -324,7 +323,7 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
         })
         .catch((err) => console.error(err))
     },
-    [value, isDraft, isInRelease, client, documentId, toast, name]
+    [value, isDraft, isInRelease, client, documentId, toast, name],
   )
 
   // Check to be sure a filter is present

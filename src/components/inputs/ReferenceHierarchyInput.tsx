@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 import {isVersionId} from '@sanity/id-utils'
 import type {DocumentId} from '@sanity/id-utils'
 import {Grid, Stack, Button, Dialog, Box, Spinner, Text, Flex, Card} from '@sanity/ui'
@@ -270,7 +269,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
         .then(() => setOpen(false))
         .catch((err) => console.error(err))
     },
-    [client, documentId, isDraft, isInRelease, name]
+    [client, documentId, isDraft, isInRelease, name],
   )
 
   // Check to be sure a filter is present

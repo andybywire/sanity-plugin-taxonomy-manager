@@ -29,7 +29,7 @@ export const Hierarchy = ({
 }: TreeViewProps) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
   const documentId = getPublishedId(document.displayed?._id as DocumentId)
-  const releaseContext: string = useContext(ReleaseContext) as string
+  const releaseContext = useContext(ReleaseContext)
 
   const port = useTaxonomyDataPort()
   const createConcept = useCreateConcept(document)
@@ -80,7 +80,7 @@ export const Hierarchy = ({
   }, [])
   const optimisticValue = useMemo(
     () => ({markRemoved, unmarkRemoved}),
-    [markRemoved, unmarkRemoved]
+    [markRemoved, unmarkRemoved],
   )
 
   const {data, loading, error} = port.useWatchTree({
@@ -127,12 +127,12 @@ export const Hierarchy = ({
             <Card borderBottom paddingBottom={1} display={'flex'} flex={1}>
               <Flex justify={'space-between'} flex={1}>
                 <Card>
-                  {(prunedData.topConcepts
-                    ?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
-                    .length > 0 ||
-                    prunedData.concepts
-                      ?.filter((concept) => (concept?.childConcepts?.length ?? 0) > 0)
-                      .length > 0) && (
+                  {(prunedData.topConcepts?.filter(
+                    (concept) => (concept?.childConcepts?.length ?? 0) > 0,
+                  ).length > 0 ||
+                    prunedData.concepts?.filter(
+                      (concept) => (concept?.childConcepts?.length ?? 0) > 0,
+                    ).length > 0) && (
                     <Inline space={1}>
                       <Button
                         text={'Collapse'}

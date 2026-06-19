@@ -34,7 +34,7 @@ export const Concepts = ({
   selectConcept,
 }: ConceptProps) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
-  const releaseContext: string = useContext(ReleaseContext) as string
+  const releaseContext = useContext(ReleaseContext)
 
   const hasTopConcept = !!document.displayed?.topConcepts?.length && !inputComponent
 
@@ -42,7 +42,7 @@ export const Concepts = ({
   const removeConcept = useRemoveConcept(document)
 
   const [levelVisibility, setLevelVisibility] = useState(
-    treeVisibility === 'closed' && concept.hasMatchingDescendant ? 'open' : treeVisibility
+    treeVisibility === 'closed' && concept.hasMatchingDescendant ? 'open' : treeVisibility,
   )
 
   const handleToggle = useCallback(() => {

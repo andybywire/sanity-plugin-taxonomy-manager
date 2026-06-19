@@ -39,7 +39,7 @@ export interface DocumentConcepts {
 
 export interface PrefLabelValue {
   value: string
-  // eslint-disable-next-line
+
   renderDefault: (props: PrefLabelValue) => React.ReactElement
 }
 

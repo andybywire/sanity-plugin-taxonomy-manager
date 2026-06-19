@@ -1,4 +1,3 @@
-/* eslint-disable react/require-default-props */
 import {Button, Text, Box, Badge, Tooltip} from '@sanity/ui'
 import {useCallback, useContext} from 'react'
 import {RouterContext} from 'sanity/router'

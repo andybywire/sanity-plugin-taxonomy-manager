@@ -44,7 +44,7 @@ type SchemeOptions = {
  * ```
  */
 export const schemeFilter = (
-  options: SchemeOptions
+  options: SchemeOptions,
 ): (({
   getClient,
 }: {
@@ -60,12 +60,12 @@ export const schemeFilter = (
       throw new Error('Client not available')
     }
     // Fetch concepts and topConcepts for the given schemeId
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-type-assertion
+
     const {concepts, topConcepts} = (await client.fetch(
       `{
       "concepts": *[_type=="skosConceptScheme" && schemeId == "${schemeId}"].concepts[]._ref,
       "topConcepts": *[_type=="skosConceptScheme" && schemeId == "${schemeId}"].topConcepts[]._ref
-    }`
+    }`,
     )) as {concepts: string[]; topConcepts: string[]}
     // schemeId is included in params for use by the ArrayHierarchyInput component
     return buildSchemeFilterResult({

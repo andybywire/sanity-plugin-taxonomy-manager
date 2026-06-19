@@ -52,7 +52,7 @@ type BranchOptions = {
  * ```
  */
 export const branchFilter = (
-  options: BranchOptions
+  options: BranchOptions,
 ): (({
   getClient,
 }: {
@@ -69,7 +69,7 @@ export const branchFilter = (
     }
 
     // Fetch concepts for the given schemeId and branchId
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unnecessary-type-assertion
+
     const {concepts} = (await client.fetch(
       `{      
         "concepts": *[
@@ -81,7 +81,7 @@ export const branchFilter = (
               || $branchId in broader[]->broader[]->broader[]->broader[]->broader[]->conceptId)
           ]._id
       }`,
-      {schemeId, branchId}
+      {schemeId, branchId},
     )) as {concepts: string[]}
     // schemeId is included in params for use by the ArrayHierarchyInput component
     return buildBranchFilterResult({

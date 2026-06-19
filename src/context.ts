@@ -8,21 +8,16 @@ type TreeContextType = {
   setEditControls?: (value: boolean) => void
 }
 
-export type ReleaseContextType = {
-  isPublished?: boolean
-  isInRelease: boolean
-  releaseName?: string
-  documentId: string
-  versionId?: string
-}
-
 export const SchemeContext = createContext<ConceptSchemeDocument | null>(null)
 export const TreeContext = createContext<TreeContextType>({editControls: false})
-// export const ReleaseContext = createContext<ReleaseContextType>({
-//   isInRelease: false,
-//   documentId: '',
-// })
-export const ReleaseContext = createContext<any>(undefined)
+
+/**
+ * The active perspective name from `usePerspective().selectedPerspectiveName`
+ * (provided by TreeView): `undefined` for the default drafts view, otherwise a
+ * release name or `'published'`. Drives perspective-aware queries and the gating
+ * of edit controls.
+ */
+export const ReleaseContext = createContext<string | undefined>(undefined)
 
 /**
  * Plugin config the render tree needs at runtime. Provided around the structure
