@@ -6,7 +6,7 @@ import {useState, useEffect, useCallback} from 'react'
 import type {ObjectFieldProps, ObjectOptions, Reference} from 'sanity'
 import {FormField, isDraftId, useClient, useFormValue, usePerspective} from 'sanity'
 
-import {useEmbeddingsRecs} from '../../hooks'
+import {useTaxonomyDataPort} from '../../seams/TaxonomyPortContext'
 import NodeTree from '../../static/NodeTree'
 import type {ConceptSchemeDocument, EmbeddingsIndexConfig} from '../../types'
 import {TreeView} from '../TreeView'
@@ -157,7 +157,9 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   // name of the field to input a value
   const {name, title, value, embeddingsIndex} = props
 
-  const {conceptRecs, recsError, triggerEmbeddingsSearch} = useEmbeddingsRecs(embeddingsIndex)
+  const port = useTaxonomyDataPort()
+  const {conceptRecs, recsError, triggerEmbeddingsSearch} =
+    port.useSemanticRecommendations(embeddingsIndex)
 
   // Get release and draft status of the document
   const isInRelease = isVersionId(documentId as DocumentId)

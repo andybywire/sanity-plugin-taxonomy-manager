@@ -17,7 +17,7 @@ import {useState, useEffect, useCallback} from 'react'
 import type {ArrayFieldProps, ObjectOptions} from 'sanity'
 import {FormField, useClient, useFormValue, isVersionId, isDraftId, usePerspective} from 'sanity'
 
-import {useEmbeddingsRecs} from '../../hooks'
+import {useTaxonomyDataPort} from '../../seams/TaxonomyPortContext'
 import NodeTree from '../../static/NodeTree'
 import type {ConceptSchemeDocument, EmbeddingsIndexConfig} from '../../types'
 import {TreeView} from '../TreeView'
@@ -209,7 +209,9 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
 
   const {filter} = props.schemaType.of[0].options as ReferenceOptions
 
-  const {conceptRecs, recsError, triggerEmbeddingsSearch} = useEmbeddingsRecs(embeddingsIndex)
+  const port = useTaxonomyDataPort()
+  const {conceptRecs, recsError, triggerEmbeddingsSearch} =
+    port.useSemanticRecommendations(embeddingsIndex)
 
   const toast = useToast()
 
