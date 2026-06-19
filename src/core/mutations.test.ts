@@ -21,6 +21,7 @@ describe('planCreateConcept', () => {
         broaderKey: 'broader-key',
       }),
     ).toEqual({
+      kind: 'create',
       schemeId: 'drafts.scheme-1',
       newConceptId: 'drafts.new-1',
       createIfNotExists: {_id: 'drafts.scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
@@ -94,6 +95,7 @@ describe('planRemoveConcept', () => {
     expect(
       planRemoveConcept({scheme: scheme('scheme-1'), conceptRef: 'concept-9', conceptType: 'topConcept'}),
     ).toEqual({
+      kind: 'remove',
       schemeId: 'drafts.scheme-1',
       createIfNotExists: {_id: 'drafts.scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
       unsetPaths: ['topConcepts[_ref=="concept-9"]'],

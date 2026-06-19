@@ -20,6 +20,7 @@ type SchemeDisplayed = ConceptSchemeDocument['displayed']
  */
 
 export type CreateConceptPlan = {
+  kind: 'create'
   schemeId: string
   newConceptId: string
   createIfNotExists: SchemeDisplayed & {_id: string}
@@ -71,6 +72,7 @@ export function planCreateConcept(input: {
   }
 
   return {
+    kind: 'create',
     schemeId: target.schemeId,
     newConceptId,
     createIfNotExists: {...input.scheme, _id: target.schemeId},
@@ -81,6 +83,7 @@ export function planCreateConcept(input: {
 }
 
 export type RemoveConceptPlan = {
+  kind: 'remove'
   schemeId: string
   createIfNotExists: SchemeDisplayed & {_id: string}
   unsetPaths: string[]
@@ -94,6 +97,7 @@ export function planRemoveConcept(input: {
   const field = input.conceptType === 'topConcept' ? 'topConcepts' : 'concepts'
   const {schemeId} = deriveSchemeMutationTarget(input.scheme._id)
   return {
+    kind: 'remove',
     schemeId,
     createIfNotExists: {...input.scheme, _id: schemeId},
     unsetPaths: [`${field}[_ref=="${input.conceptRef}"]`],
