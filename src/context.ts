@@ -1,6 +1,6 @@
 import {createContext} from 'react'
 
-import type {ConceptSchemeDocument} from './types'
+import type {ConceptSchemeDocument, Options} from './types'
 
 type TreeContextType = {
   globalVisibility?: {treeId: string; treeVisibility: 'open' | 'closed'}
@@ -23,3 +23,12 @@ export const TreeContext = createContext<TreeContextType>({editControls: false})
 //   documentId: '',
 // })
 export const ReleaseContext = createContext<any>(undefined)
+
+/**
+ * Plugin config the render tree needs at runtime. Provided around the structure
+ * Tree View (see `createDefaultDocumentNode`); replaces the old `config.ts`
+ * `getPluginConfig` singleton. Defaults to empty so input-component trees (which
+ * never create concepts) render correctly without a provider.
+ */
+export type TaxonomyConfig = {ident?: Options['ident']}
+export const TaxonomyConfigContext = createContext<TaxonomyConfig>({})
