@@ -1,6 +1,7 @@
 {
   "name": "sanity-plugin-taxonomy-manager",
   "version": "4.7.2",
+  "type": "module",
   "description": "Create and manage SKOS compliant taxonomies, thesauri, and classification schemes in Sanity Studio.",
   "keywords": [
     "sanity",
@@ -24,20 +25,16 @@
   "exports": {
     ".": {
       "source": "./src/index.ts",
-      "import": "./lib/index.esm.mjs",
-      "require": "./lib/index.js",
-      "default": "./lib/index.esm.mjs"
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
     },
     "./package.json": "./package.json"
   },
-  "main": "./lib/index.js",
-  "module": "./lib/index.esm.js",
-  "types": "./lib/index.d.ts",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "files": [
-    "lib",
-    "sanity.json",
-    "src",
-    "v2-incompatible.js"
+    "dist",
+    "src"
   ],
   "scripts": {
     "build": "pkg-utils build --strict --check --clean",
@@ -55,7 +52,6 @@
     "@sanity/color": "^3.0.0",
     "@sanity/icons": "^3.4.0",
     "@sanity/id-utils": "^1.0.0",
-    "@sanity/incompatible-plugin": "^1.0.4",
     "@sanity/uuid": "^3.0.2",
     "nanoid": "^5.1.5",
     "react-fast-compare": "^3.2.2",

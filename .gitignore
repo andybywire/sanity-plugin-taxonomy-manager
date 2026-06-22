@@ -60,7 +60,7 @@ yalc.lock
 *.tgz
 
 # Compiled plugin
-lib
+dist
 
 # Dev studio build output and runtime artifacts
 studio/dist

@@ -2,10 +2,10 @@ import {defineConfig} from '@sanity/pkg-utils'
 import postcss from 'rollup-plugin-postcss'
 
 export default defineConfig({
-  dist: 'lib',
+  dist: 'dist',
   tsconfig: 'tsconfig.dist.json',
   minify: true,
-  legacyExports: true,
+  legacyExports: false,
   // Remove this block to enable strict export validation
   extract: {
     rules: {

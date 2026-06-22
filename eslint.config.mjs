@@ -5,7 +5,7 @@ import tseslint from 'typescript-eslint'
 export default [
   {
     // Migrated from the legacy .eslintignore; flat config uses `ignores`.
-    ignores: ['lib/**', 'coverage/**', 'studio/**', '_local/**', 'v2-incompatible.js'],
+    ignores: ['dist/**', 'coverage/**', 'studio/**', '_local/**', 'v2-incompatible.js'],
   },
   ...studio,
   prettier,
