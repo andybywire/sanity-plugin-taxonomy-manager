@@ -1,66 +1,10 @@
+<!-- markdownlint-disable --><!-- textlint-disable -->
+
 # 📓 Changelog <!-- {docsify-ignore} -->
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-<!--
-## Development notes
-- If yalc gets stuck on "Package content has not changed,
-  skipping publishing" when there are changes I need to see,
-  run `npx yalc push --force` in a new terminal window to force the change.
-- connect to plugin development repo with:
-  - npx yalc add sanity-plugin-taxonomy-manager --link && pnpm install
-  - pnpm dev
-- when done developing:
-  - npx yalc remove --all && pnpm install
-  - pnpm dev
-  - consider wrapping these up in a script on the testing site (UXM)
-- troubleshooting:
-  - force refresh:
-    - npx yalc push --force
-  - clear vite cache:
-    - rm -rf node_modules/.vite
-    - pnpm dev
-- for connecting a Studio project (e.g. UX Methods)
-  - In package.json: "sanity-plugin-taxonomy-manager": "file:.yalc/sanity-plugin-taxonomy-manager"
-    - this updates when I run `npx yalc add sanity-plugin-taxonomy-manager --link && pnpm install`
-  - in .npmrc:
-    # npm-style resolution for shared libraries (w/ .yalc)
-    public-hoist-pattern[]=*
-  - in sanity.config.ts (verify if this is needed for testing — 
-    it amy not be):
-    vite: {
-      resolve: {preserveSymlinks: true},
-      // Don’t pre-bundle your linked package (let Vite watch it like source)
-      optimizeDeps: {exclude: ['sanity-plugin-taxonomy-manager']},
-      // Make sure the dev server *doesn’t* treat it as external CJS
-      ssr: {noExternal: ['sanity-plugin-taxonomy-manager']},
-    },
-    - 2/16 — it appears I don't need this. Removed from UXM repo; remove here
-      once I'm sure this is working consistently.
-
-## Tags which generate a release
-Be sure to prepend these to commits as I work!
-- fix: which represents bug fixes, and correlates to a SemVer patch.
-- feat: which represents a new feature, and correlates to a SemVer minor.
-- feat!:, or fix!:, refactor!:, etc., which represent a breaking change (indicated by the !) and will result in a SemVer major.
-
-## Non-releasable units (should not generate a release)
-- chore: changes that aren't a fix or feature and don't modify src or test files
-- docs: changes to the documentation
-- style: formatting changes that do not affect the meaning of the code
-- test: adding or refactoring tests
-
-## Pushing releases to NPM
-- push changes to github
-  - `release-please` will generate PR that creates a GitHub release, bumps the version number, and updates the CHANGELOG
-  - if I want to add a custom message, go it after releasing — do not modify the PR.
-- merge the generated PR, then, to release on NPM, run:
-  - git pull origin main --tags
-  - npm whoami || npm login      # verify login, log in if not authenticated
-  - npm test
-  - npm run build (to verify there won't be errors on build)
-  - npm publish
--->
 
 ## [4.7.2](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.7.1...v4.7.2) (2026-05-08)
 
@@ -683,72 +627,3 @@ Be sure to prepend these to commits as I work!
 [1.0.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v0.2.0...v1.0.0
 [0.2.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/andybywire/sanity-plugin-taxonomy-manager/releases/tag/v0.1.0
-
-<!---
-# Previous release process notes
-- prior to adopting an automated `release-please` workflow
-
-## Change Log Principles
-- Changelogs are for humans, not machines.
-- There should be an entry for every single version.
-- The same types of changes should be grouped.
-- Versions and sections should be linkable.
-- The latest version comes first.
-- The release date of each version is displayed.
-- Mention whether you follow Semantic Versioning.
-
-## Tags
-### Added
-- for new features.
-### Changed
-- for changes in existing functionality.
-### Deprecated
-- for soon-to-be removed features.
-### Removed
-- for now removed features.
-### Fixed
-- for any bug fixes.
-### Security
-- in case of vulnerabilities.
-
-### Unreleased
-- Keep at the top to track upcoming changes.
-- People can see what changes they might expect in upcoming releases
-- At release time, you can move the Unreleased section changes into a new release version section.
-
-## Commit Message Prefixes
-### feat: a new feature for the user
-### fix: a bug fix for the user
-### chore: changes that aren't a fix or feature and don't modify src or test files
-### docs: changes to the documentation
-### style: formatting changes that do not affect the meaning of the code
-### test: adding or refactoring tests
-
-### Release Process
-1. Safety Checks:
-  - git pull
-  - git status
-  - npm ci
-  - npm test
-2. Prepare the Release:
-  - npm run build
-    (this is to verify there won't be errors on build)
-3. Update the Changelog
-4. Update the Version Number:
-  - npm version patch | minor | major -m "message"
-5. Publish to npm:
-  - npm publish
-    (this runs the build steps again)
-  - publish as beta: npm publish --tag beta
-    - format version to: "version": "0.1.12-beta.1"
-6. Publish to Git:
-  - git push
-  - git push --tags
-7. Create a GitHub Release (optional)
-8. Update (reinstall) plugin in staging studio, deploy updated studio, and validate published package.
-  - npm i sanity-plugin-taxonomy-manager
-  - sanity deploy
-  - https://taxonomy-manager.sanity.studio/
-
-source: https://cloudfour.com/thinks/how-to-publish-an-updated-version-of-an-npm-package/
--->
