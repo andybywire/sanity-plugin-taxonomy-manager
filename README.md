@@ -26,15 +26,15 @@ For full documentation, visit [sanitytaxonomymanager.com](https://sanitytaxonomy
 
 ## Installation
 
-In your Sanity project folder, run
+> Compatible with **Sanity Studio v5 and v6** (React 19).
+
+In your Sanity project folder, run:
 
 ```bash
-npm i sanity-plugin-taxonomy-manager
-```
-
-or
-
-```bash
+npm install sanity-plugin-taxonomy-manager
+# or
+pnpm add sanity-plugin-taxonomy-manager
+# or
 yarn add sanity-plugin-taxonomy-manager
 ```
 
@@ -113,110 +113,15 @@ export default defineConfig({
 })
 ```
 
-## Contributing
+## Development
 
-See something that could be improved (or a bug that should be fixed)? Please feel free to pitch in.
+This repo bundles a dev Studio as a workspace member (`studio/`). Run it and open the **Taxonomy** tool:
 
-- This plugin uses [@sanity/plugin-kit](https://github.com/sanity-io/plugin-kit)
-  with default configuration for build & watch scripts.
-
-- See [Testing a plugin in Sanity Studio](https://github.com/sanity-io/plugin-kit#testing-a-plugin-in-sanity-studio)
-  on how to run the plugin with hot-reload in the studio.
-
-### Component Diagrams
-
-The following diagrams map out the relationships between the components used in this plugin and are intended to help those interested in contributing to the project orient themselves. The Taxonomy Manager tree view is designed to support polyhierarchy, and to provide UI affordances common to other taxonomy management tools, both of which lend some complexity to the component structure.
-
-> [!TIP]
-> You **do not** need to understand any of this to use the plugin!
-
-<Details>
-<Summary><h4>Tree View</h4></Summary>
-
-The [Tree View component](docs/_images/taxonomyManager.png) creates the user interface for interacting with a given taxonomy (SKOS Concept Scheme) visually in the Sanity Structure tool.
-
-```mermaid
-graph BT
-    subgraph SchemeContext.Provider
-      direction BT
-      Hierarchy.tsx-->TreeView.tsx
-      subgraph TreeContext.Provider
-        direction BT
-        TreeStructure.tsx-->Hierarchy.tsx
-        TopConcepts.tsx[
-          TopConcepts.tsx
-          <i style="color: gray; font-size: small">uses SchemeContext</i>
-          <i style="color: gray; font-size: small">uses TreeContext</i>
-        ]-->TreeStructure.tsx
-        Concepts.tsx[
-          Concepts.tsx
-          <i style="color: gray; font-size: small">uses SchemeContext</i>
-          <i style="color: gray; font-size: small">uses TreeContext</i>
-        ]-->TreeStructure.tsx
-
-
-        %% Sequence below maintains RTL ordering:
-        ConceptDetailLink.tsx-->TopConcepts.tsx
-        ConceptDetailLink.tsx-->Concepts.tsx
-
-        ChildConcepts.tsx-->TopConcepts.tsx
-        ChildConcepts.tsx-->Concepts.tsx
-        Children.tsx-->ChildConcepts.tsx
-
-        ConceptDetailDialogue.tsx-->Concepts.tsx
-        ConceptDetailDialogue.tsx-->TopConcepts.tsx
-
-        ConceptDetailLink.tsx-->Children.tsx
-        ConceptDetailDialogue.tsx-->Children.tsx
-      end
-    end
+```bash
+pnpm dev
 ```
 
-</Details>
-
-<Details>
-<Summary><h4>Input Components</h4></Summary>
-
-The [ReferenceHierarchyInput and ArrayHierarchyInput components](https://sanitytaxonomymanager.com/#/?id=tree-view-input-component) afford a field-level hierarchical browse and selection experience for taxonomy terms. Both components draw on filter options supplied by the `schemeFilter` and `branchFilter` helper functions.
-
-```mermaid
-graph BT
-    subgraph Input Components
-      direction BT
-      TreeView.tsx-->ArrayHierarchyInput.tsx[
-        ArrayHierarchyInput.tsx
-        <i style="color: gray; font-size: small">requires schemeFilter</i>
-        <i style="color: gray; font-size: small">or branchFilter helper</i>
-        ]
-      TreeView.tsx-->ReferenceHierarchyInput.tsx[
-        ReferenceHierarchyInput.tsx
-        <i style="color: gray; font-size: small">requires schemeFilter</i>
-        <i style="color: gray; font-size: small">or branchFilter helper</i>
-      ]
-      subgraph SchemeContext.Provider
-        InputHierarchy.tsx-->TreeView.tsx
-        subgraph TreeContext.Provider
-          direction BT
-          TreeStructure.tsx-->InputHierarchy.tsx
-          TopConcepts.tsx[
-            TopConcepts.tsx
-            <i style="color: gray; font-size: small">uses SchemeContext</i>
-            <i style="color: gray; font-size: small">uses TreeContext</i>
-          ]-->TreeStructure.tsx
-          Concepts.tsx[
-            Concepts.tsx
-            <i style="color: gray; font-size: small">uses SchemeContext</i>
-            <i style="color: gray; font-size: small">uses TreeContext</i>
-          ]-->TreeStructure.tsx
-          ChildConcepts.tsx-->TopConcepts.tsx
-          ChildConcepts.tsx-->Concepts.tsx
-          Children.tsx-->ChildConcepts.tsx
-        end
-      end
-    end
-```
-
-</Details>
+See the [development docs](docs/development/README.md) for details on plugin design intent, architecture, and functional composition. 
 
 ## License
 
