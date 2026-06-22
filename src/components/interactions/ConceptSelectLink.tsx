@@ -22,7 +22,7 @@ export function ConceptSelectLink({
     _originalId: string | undefined
   }) => void
 }) {
-  const {prefLabel, id, _originalId, score} = concept ?? {}
+  const {prefLabel, id, _originalId, recommended} = concept ?? {}
   const displayLabel = prefLabel || '[new concept]'
 
   const handleClick = useCallback(() => {
@@ -45,7 +45,7 @@ export function ConceptSelectLink({
             <Box padding={1} sizing="content">
               <Text muted size={1}>
                 {`Select "${prefLabel}"`}
-                {score && ` (${(score * 100).toFixed(1)}% resource match)`}
+                {recommended && ` (recommended)`}
               </Text>
             </Box>
           }
@@ -67,9 +67,14 @@ export function ConceptSelectLink({
                   {topConcept ? 'top concept' : 'orphan'}
                 </Badge>
               )}
-              {score && (
-                <Badge fontSize={0} marginLeft={3} style={{verticalAlign: 'middle'}}>
-                  {`${(score * 100).toFixed(1)}%`}
+              {recommended && (
+                <Badge
+                  tone="positive"
+                  fontSize={0}
+                  marginLeft={3}
+                  style={{verticalAlign: 'middle'}}
+                >
+                  recommended
                 </Badge>
               )}
             </Text>

@@ -5,7 +5,8 @@ import {nanoid} from 'nanoid'
 import {useContext, useMemo} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
-import {annotateScores} from '../../core/tree/annotateScores'
+import {recommendedConceptIds} from '../../core/semanticRecommendations'
+import {annotateRecommendations} from '../../core/tree/annotateRecommendations'
 import {useTaxonomyDataPort} from '../../seams/TaxonomyPortContext'
 import type {ConceptSchemeDocument, TreeViewProps} from '../../types'
 import {TreeStructure} from '../TreeStructure'
@@ -38,28 +39,20 @@ export const InputHierarchy = ({
     perspective: releaseContext,
   })
 
-  // Build a score lookup map from conceptRecs:
-  const scoreMap = useMemo(() => {
-    const map = new Map<string, number>()
-    if (Array.isArray(conceptRecs)) {
-      for (const rec of conceptRecs) {
-        map.set(rec.conceptId, rec.score)
-      }
-    }
-    return map
-  }, [conceptRecs])
+  // Mark which concepts are recommendations (by published id):
+  const recommendedIds = useMemo(() => recommendedConceptIds(conceptRecs ?? []), [conceptRecs])
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const treeId = useMemo(() => nanoid(6), [scoreMap])
+  const treeId = useMemo(() => nanoid(6), [recommendedIds])
 
   // Compute merged data with useMemo:
   const mergedData = useMemo(() => {
-    if (!data || scoreMap.size === 0 || recsError) return data
+    if (!data || recommendedIds.size === 0 || recsError) return data
     return {
-      topConcepts: data.topConcepts?.map((tc) => annotateScores(tc, scoreMap)),
-      concepts: data.concepts?.map((c) => annotateScores(c, scoreMap)),
+      topConcepts: data.topConcepts?.map((tc) => annotateRecommendations(tc, recommendedIds)),
+      concepts: data.concepts?.map((c) => annotateRecommendations(c, recommendedIds)),
     }
-  }, [data, scoreMap, recsError])
+  }, [data, recommendedIds, recsError])
 
   if (loading) {
     return (

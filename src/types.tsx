@@ -18,7 +18,8 @@ export interface ChildConceptTerm {
   _originalId?: string
   level?: number
   isOrphan?: boolean
-  score?: number
+  /** True when this concept is among the current semantic recommendations. */
+  recommended?: boolean
   hasMatchingDescendant?: boolean
   childConcepts?: ChildConceptTerm[]
 }
@@ -27,7 +28,8 @@ export interface TopConceptTerm {
   prefLabel: string
   id: string
   _originalId?: string
-  score?: number
+  /** True when this concept is among the current semantic recommendations. */
+  recommended?: boolean
   hasMatchingDescendant?: boolean
   childConcepts?: ChildConceptTerm[]
 }
@@ -106,8 +108,8 @@ export interface ConceptSchemeDocument extends SanityDocument {
 /**
  * A semantic match score for a single concept, keyed by its published document id.
  * Produced by the recommendations seam and merged into the hierarchy tree by
- * `annotateScores`. The GROQ `text::semanticSimilarity()` projection owns this
- * shape directly — no wrapper object, no document type.
+ * `annotateRecommendations`. The GROQ `text::semanticSimilarity()` projection owns
+ * this shape directly — no wrapper object, no document type.
  */
 export interface ConceptRecommendation {
   conceptId: string

@@ -4,6 +4,7 @@ import {
   assembleQueryText,
   recommendationsErrorMessage,
   recommendationsQuery,
+  recommendedConceptIds,
   toConceptRecommendations,
 } from './semanticRecommendations'
 
@@ -106,6 +107,29 @@ describe('toConceptRecommendations', () => {
   it('returns an empty array for null or undefined input', () => {
     expect(toConceptRecommendations(null)).toEqual([])
     expect(toConceptRecommendations(undefined)).toEqual([])
+  })
+})
+
+describe('recommendedConceptIds', () => {
+  it('collects the recommended concept ids as a set', () => {
+    const ids = recommendedConceptIds([
+      {conceptId: 'a', score: 0.9},
+      {conceptId: 'b', score: 0.4},
+    ])
+    expect(ids).toEqual(new Set(['a', 'b']))
+  })
+
+  it('de-duplicates repeated concept ids', () => {
+    const ids = recommendedConceptIds([
+      {conceptId: 'a', score: 0.9},
+      {conceptId: 'a', score: 0.3},
+      {conceptId: 'b', score: 0.5},
+    ])
+    expect(ids).toEqual(new Set(['a', 'b']))
+  })
+
+  it('returns an empty set for no recommendations', () => {
+    expect(recommendedConceptIds([]).size).toBe(0)
   })
 })
 

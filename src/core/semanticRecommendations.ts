@@ -71,8 +71,8 @@ export interface RecommendationRow {
 
 /**
  * Map raw query rows to {@link ConceptRecommendation}s, normalizing each concept id
- * to its published form so the scores line up with `annotateScores`, which keys the
- * tree by published id. Rows missing a string id or numeric score are dropped.
+ * to its published form so they line up with `annotateRanks`, which keys the tree by
+ * published id. Rows missing a string id or numeric score are dropped.
  */
 export function toConceptRecommendations(
   rows: readonly RecommendationRow[] | null | undefined
@@ -85,6 +85,17 @@ export function toConceptRecommendations(
     recs.push({conceptId: getPublishedId(row.conceptId as DocumentId), score: row.score})
   }
   return recs
+}
+
+/**
+ * The set of published concept ids that are semantic recommendations. The raw
+ * `text::semanticSimilarity()` score is opaque and unitless (meaningful only for
+ * relative ordering within one query), so we keep only set membership — a concept
+ * is either recommended or it isn't — and let the query's `maxResults` bound the
+ * size. De-duplicated by construction.
+ */
+export function recommendedConceptIds(recs: readonly ConceptRecommendation[]): Set<string> {
+  return new Set(recs.map((rec) => rec.conceptId))
 }
 
 /** Friendly message shown when a dataset has no embeddings enabled. */
