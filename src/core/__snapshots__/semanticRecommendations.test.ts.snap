@@ -1,7 +1,9 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`recommendationsQuery > matches the characterized GROQ output 1`] = `
-"*[_type == "skosConcept"] | score(text::semanticSimilarity($searchQuery)) | order(_score desc) [0...$maxResults] {
+"*[_type == "skosConcept" && _id in *[_type == "skosConceptScheme" && schemeId == $schemeId][0]{
+    "ids": coalesce(topConcepts[]._ref, []) + coalesce(concepts[]._ref, [])
+  }.ids] | score(text::semanticSimilarity($searchQuery)) | order(_score desc) [0...$maxResults] {
     "conceptId": _id,
     "score": _score
   }"

@@ -16,15 +16,23 @@ import type {ConceptRecommendation} from '../types'
  */
 
 /**
- * GROQ for the recommendations query. Every `skosConcept` is scored by semantic
- * similarity to `$searchQuery`; the top `$maxResults` come back as `{conceptId, score}`,
- * most-relevant first. `text::semanticSimilarity()` is only valid inside `score()`,
- * and the dataset must have embeddings enabled or the query errors (surfaced via
- * {@link recommendationsErrorMessage}). Filtering to `skosConcept` first keeps the
- * candidate set small, mirroring the old index's concept-only scope.
+ * GROQ for the recommendations query. Scores the `skosConcept`s belonging to the
+ * scheme identified by `$schemeId` — those referenced by that scheme's `topConcepts`
+ * or `concepts` (concepts carry no scheme back-reference, so membership runs through
+ * the scheme) — by semantic similarity to `$searchQuery`, returning the top
+ * `$maxResults` as `{conceptId, score}`, most-relevant first. Scoping to the field's
+ * scheme keeps recommendations within the vocabulary the field draws from rather than
+ * the whole dataset. `text::semanticSimilarity()` is only valid inside `score()`, and
+ * the dataset must have embeddings enabled or the query errors (surfaced via
+ * {@link recommendationsErrorMessage}).
+ *
+ * Scoping is scheme-level: a `branchFilter` field still scores the whole scheme, not
+ * just the displayed branch. Branch-level scoping is tracked in #93.
  */
 export const recommendationsQuery = (): string =>
-  `*[_type == "skosConcept"] | score(text::semanticSimilarity($searchQuery)) | order(_score desc) [0...$maxResults] {
+  `*[_type == "skosConcept" && _id in *[_type == "skosConceptScheme" && schemeId == $schemeId][0]{
+    "ids": coalesce(topConcepts[]._ref, []) + coalesce(concepts[]._ref, [])
+  }.ids] | score(text::semanticSimilarity($searchQuery)) | order(_score desc) [0...$maxResults] {
     "conceptId": _id,
     "score": _score
   }`

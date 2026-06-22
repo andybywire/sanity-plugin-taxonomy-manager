@@ -54,5 +54,6 @@ export type ConceptPlan = CreateConceptPlan | RemoveConceptPlan
 export interface SemanticRecommendationsResult {
   conceptRecs: ConceptRecommendation[]
   recsError: string | null
-  triggerSearch: () => void
+  /** Run the search, scoping recommendations to the given scheme; a no-op without a `schemeId`. */
+  triggerSearch: (schemeId?: string) => void
 }

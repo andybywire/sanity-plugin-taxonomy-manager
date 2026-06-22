@@ -187,6 +187,11 @@ rendering. The full embeddings interaction test stays deferred to Stage 6 (input
   within-query relative % (top match = 100%) — closest to the old UX; or drop the % for a rank /
   "suggested" badge — most honest about the opaque score. Lean toward a pure `normalizeScores` helper
   (testable) feeding the existing display, decided with the Stage 6 component tests.
+- **Branch-level recommendation scoping
+  ([#93](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/93))** — semantic
+  recommendations are scoped to the field's *scheme* (`recommendationsQuery` + `$schemeId`); a
+  `branchFilter` + `semanticSearch` field scores the whole scheme, not just the displayed branch. No
+  current field pairs them, so it's deferred — tracked in the issue.
 
 ## Key files / where things are
 

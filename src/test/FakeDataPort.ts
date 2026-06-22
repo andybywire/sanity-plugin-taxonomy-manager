@@ -22,6 +22,8 @@ export interface FakeDataPort extends TaxonomyDataPort {
   readonly appliedPlans: ConceptPlan[]
   /** Number of `triggerSearch()` calls. */
   triggeredSearches: number
+  /** The `schemeId` passed to the most recent `triggerSearch()` call. */
+  lastSearchSchemeId: string | undefined
   /** Params from the most recent `useWatchTree` call. */
   lastWatchParams: ConceptTreeParams | null
 }
@@ -42,8 +44,9 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
   const recsResult: SemanticRecommendationsResult = {
     conceptRecs: config.recommendations ?? [],
     recsError: config.recsError ?? null,
-    triggerSearch: () => {
+    triggerSearch: (schemeId?: string) => {
       fake.triggeredSearches += 1
+      fake.lastSearchSchemeId = schemeId
     },
   }
   const apply = (plan: ConceptPlan): Promise<void> => {
@@ -53,6 +56,7 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
   const fake: FakeDataPort = {
     appliedPlans: [],
     triggeredSearches: 0,
+    lastSearchSchemeId: undefined,
     lastWatchParams: null,
     useWatchTree: (params: ConceptTreeParams) => {
       fake.lastWatchParams = params

@@ -16,12 +16,19 @@ describe('recommendationsQuery', () => {
   })
 
   it('scores skosConcepts by semanticSimilarity and returns the top $maxResults', () => {
-    expect(query).toContain('*[_type == "skosConcept"]')
+    expect(query).toContain('_type == "skosConcept"')
     expect(query).toContain('score(text::semanticSimilarity($searchQuery))')
     expect(query).toContain('order(_score desc)')
     expect(query).toContain('[0...$maxResults]')
     expect(query).toContain('"conceptId": _id')
     expect(query).toContain('"score": _score')
+  })
+
+  it("scopes candidates to the field's scheme via $schemeId membership", () => {
+    expect(query).toContain('_type == "skosConceptScheme" && schemeId == $schemeId')
+    expect(query).toContain('topConcepts[]._ref')
+    expect(query).toContain('concepts[]._ref')
+    expect(query).toContain('_id in')
   })
 
   it('uses no part of the deprecated Embeddings Index API', () => {

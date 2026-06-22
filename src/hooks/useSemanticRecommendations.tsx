@@ -40,29 +40,36 @@ export function useSemanticRecommendations(semanticSearch?: SemanticSearchConfig
   const [conceptRecs, setConceptRecs] = useState<ConceptRecommendation[]>([])
   const [recsError, setRecsError] = useState<string | null>(null)
 
-  const triggerSearch = useCallback(() => {
-    setRecsError(null)
-    if (!semanticSearch) return
-    const {fieldReferences, maxResults = DEFAULT_MAX_RESULTS} = semanticSearch
+  const triggerSearch = useCallback(
+    (schemeId?: string) => {
+      setRecsError(null)
+      // Recommendations are scoped to the field's scheme; without a resolved
+      // schemeId there is nothing to scope against, so skip the search.
+      if (!semanticSearch || !schemeId) return
+      const {fieldReferences, maxResults = DEFAULT_MAX_RESULTS} = semanticSearch
 
-    let searchQuery: string
-    try {
-      searchQuery = assembleQueryText(
-        fieldReferences.map((name) => ({name, value: getFormValue([name])}))
-      )
-    } catch (error) {
-      setRecsError(error instanceof Error ? error.message : 'One or more required fields are empty')
-      return
-    }
+      let searchQuery: string
+      try {
+        searchQuery = assembleQueryText(
+          fieldReferences.map((name) => ({name, value: getFormValue([name])}))
+        )
+      } catch (error) {
+        setRecsError(
+          error instanceof Error ? error.message : 'One or more required fields are empty'
+        )
+        return
+      }
 
-    client
-      .fetch(recommendationsQuery(), {searchQuery, maxResults})
-      .then((rows: RecommendationRow[]) => setConceptRecs(toConceptRecommendations(rows)))
-      .catch((error) => {
-        console.error('Error fetching semantic recommendations: ', error)
-        setRecsError(recommendationsErrorMessage(error))
-      })
-  }, [client, getFormValue, semanticSearch])
+      client
+        .fetch(recommendationsQuery(), {searchQuery, maxResults, schemeId})
+        .then((rows: RecommendationRow[]) => setConceptRecs(toConceptRecommendations(rows)))
+        .catch((error) => {
+          console.error('Error fetching semantic recommendations: ', error)
+          setRecsError(recommendationsErrorMessage(error))
+        })
+    },
+    [client, getFormValue, semanticSearch]
+  )
 
   return {conceptRecs, recsError, triggerSearch}
 }

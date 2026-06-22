@@ -210,8 +210,8 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
 
   const browseHierarchy = useCallback(() => {
     setOpen(true)
-    triggerSearch()
-  }, [triggerSearch])
+    triggerSearch(schemeId)
+  }, [triggerSearch, schemeId])
 
   const handleClose = useCallback(() => {
     setOpen(false)

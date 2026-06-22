@@ -55,7 +55,8 @@ describe('createFakeDataPort', () => {
     expect(result.current.conceptRecs).toHaveLength(1)
     expect(result.current.recsError).toBeNull()
 
-    result.current.triggerSearch()
+    result.current.triggerSearch('scheme-7')
     expect(port.triggeredSearches).toBe(1)
+    expect(port.lastSearchSchemeId).toBe('scheme-7')
   })
 })

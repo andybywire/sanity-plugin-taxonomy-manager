@@ -242,8 +242,8 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
 
   const browseHierarchy = useCallback(() => {
     setOpen(true)
-    triggerSearch()
-  }, [triggerSearch])
+    triggerSearch(schemeId)
+  }, [triggerSearch, schemeId])
 
   const handleClose = useCallback(() => {
     setOpen(false)
