@@ -63,6 +63,7 @@
     "@commitlint/config-conventional": "^21.0.2",
     "@sanity/eslint-config-studio": "^6.0.0",
     "@sanity/pkg-utils": "^6.10.10",
+    "@sanity/semantic-release-preset": "^6.0.0",
     "@sanity/ui": "^3.2.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -84,6 +85,7 @@
     "rollup-plugin-postcss": "^4.0.2",
     "sanity": "^6.1.0",
     "sanity-plugin-utils": "^2.0.3",
+    "semantic-release": "^25.0.5",
     "styled-components": "^6.1.19",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"

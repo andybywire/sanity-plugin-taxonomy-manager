@@ -1,0 +1,41 @@
+name: Release
+
+# Continuous release on push to main, plus manual publish-on-demand.
+# Publishing to npm uses OIDC trusted publishing (no NPM_TOKEN): the package must
+# be configured as a trusted publisher on npmjs.com, pointing at this repo + the
+# `release` workflow. If the bundled @semantic-release/npm doesn't support
+# tokenless OIDC yet, fall back to an `NPM_TOKEN` secret + `env.NPM_TOKEN`.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create git tags, GitHub releases, and commit version + CHANGELOG
+      issues: write # comment on released issues
+      pull-requests: write # comment on released PRs
+      id-token: write # npm OIDC trusted publishing + provenance
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # semantic-release needs full history + tags
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: pnpm
+      - run: npm install --global npm@latest # npm 11.5+ for OIDC trusted publishing
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm exec semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_CONFIG_PROVENANCE: true
