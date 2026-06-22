@@ -86,16 +86,16 @@
     "react-dom": "^19.2.3",
     "react-is": "^18.2.0",
     "rollup-plugin-postcss": "^4.0.2",
-    "sanity": "^5.31.1",
-    "sanity-plugin-utils": "^1.7.0",
+    "sanity": "^6.1.0",
+    "sanity-plugin-utils": "^2.0.3",
     "styled-components": "^6.1.19",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
     "@sanity/ui": "^3",
-    "react": ">=18 <20 || ^19",
-    "react-dom": ">=18 <20 || ^19",
+    "react": "^19",
+    "react-dom": "^19",
     "sanity": "^5 || ^6",
     "styled-components": "^5.2 || ^6"
   },

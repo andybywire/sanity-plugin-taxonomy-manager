@@ -2,7 +2,6 @@ import {Flex, Spinner, Stack, Box, Card, Inline, Text, Button} from '@sanity/ui'
 import {fromString as pathFromString} from '@sanity/util/paths'
 import {useCallback} from 'react'
 import {Preview, useSchema, usePerspective, getPublishedId} from 'sanity'
-import type {SanityDocument} from 'sanity'
 import type {UserViewComponent} from 'sanity/structure'
 import {usePaneRouter} from 'sanity/structure'
 import {Feedback, useListeningQuery} from 'sanity-plugin-utils'
@@ -39,7 +38,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
     [routerPanesState, groupIndex, handleEditReference],
   )
 
-  const {data, loading, error} = useListeningQuery<SanityDocument[]>(
+  const {data, loading, error} = useListeningQuery<TagReference[]>(
     `*[!(_type in ["skosConcept","skosConceptScheme"]) && references($refId)]{_id,_type,title}`,
     {
       params: {refId},
@@ -47,11 +46,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
         perspective: selectedPerspectiveName ? [selectedPerspectiveName] : 'drafts',
       },
     },
-  ) as {
-    data: TagReference[]
-    loading: boolean
-    error: Error | null
-  }
+  )
 
   if (loading) {
     return (

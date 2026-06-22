@@ -8,10 +8,10 @@
     "start": "sanity start"
   },
   "dependencies": {
-    "@sanity/vision": "^5",
+    "@sanity/vision": "^6",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "sanity": "^5",
+    "sanity": "^6",
     "sanity-plugin-taxonomy-manager": "workspace:*",
     "styled-components": "^6.1.19"
   },
