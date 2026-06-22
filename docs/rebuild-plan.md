@@ -12,12 +12,11 @@ all core functionality**. This doc is the resume point for a fresh session.
 ## How to resume (read first)
 
 - **Branch state (nothing pushed):** work is on stacked local branches
-  `chore/0-baseline-inventory` → … → `refactor/3-core-extraction` → `feat/4-data-port` →
-  `feat/5-semantic-recs` (current HEAD; **Stage 5 done — `pnpm dev` verify passed 2026-06-19, one
-  score-display bug deferred to Stage 6**). Start Stage 6 on a new branch off the current HEAD (e.g.
-  `test/6-component-tests`). Pushing/PRs are Andy's call.
+  `chore/0-baseline-inventory` → … → `feat/4-data-port` → `feat/5-semantic-recs` →
+  `test/6-component-tests` (current HEAD; **Stage 6 complete**). Start Stage 7 on a new branch off the
+  current HEAD (e.g. `chore/7-release-tooling`). Pushing/PRs are Andy's call.
 - **The gate (must be green before every commit):**
-  `pnpm test && pnpm typecheck && pnpm build && pnpm lint`. Currently green — **80 tests / 15
+  `pnpm test && pnpm typecheck && pnpm build && pnpm lint`. Currently green — **100 tests / 19
   files**, 0 type errors, build clean, **lint 0 errors / 0 warnings**.
 - **Dev studio (eyeball):** `pnpm dev` runs the embedded `studio/` (sanity 5, project
   `zw90ihi2` / `dev` dataset). Andy runs visual / behind-auth checks.
@@ -88,11 +87,13 @@ Concentric layers; logic lives in `src/core/` (pure), Sanity coupling in thin se
   when a dataset has no embeddings (friendly notice, tree still renders). Display path
   (`annotateScores` → `_score`) unchanged. **Code-complete; pending Andy's `pnpm dev` verify.** See
   detail below.
-- **Stage 6 ⬜ NEXT — Component interaction tests + assembly hardening** — jsdom tests for tree views +
-  input components (gating, warnings, browse-only, duplicate toast); export-surface test pinning the
-  exact 6 public exports + schema type names; **fix the recommendation score display** (see Known
-  issues — semanticSimilarity `_score` is unbounded, so the old `× 100 %` shows "658.5%").
-- **Stage 7 ⬜ Release tooling swap** — release-please → semantic-release + OIDC; land the breaking
+- **Stage 6 ✅ Component interaction tests + assembly hardening** — jsdom tests for the input
+  components (config warnings, published gating, browse-only, duplicate-term toast, and the embeddings
+  browse→scoped-search→badge flow) via a shared `test/inputHarness`; export-surface test pinning the
+  exact 6 public exports + 2 schema type names; recommendation score display fixed (the unbounded
+  `_score` became a green "recommended" badge) and recommendations scoped to the field's scheme. See
+  detail below.
+- **Stage 7 ⬜ NEXT — Release tooling swap** — release-please → semantic-release + OIDC; land the breaking
   changes (peer `^5 || ^6`, ESM-only `dist/`) as **5.0.0**; verify version continuity from 4.7.2 via
   `semantic-release --dry-run`.
 
@@ -163,6 +164,31 @@ expect a match % on relevant terms; clear a referenced field → expect the "fil
 at a dataset without embeddings → expect the friendly "not enabled" notice with the tree still
 rendering. The full embeddings interaction test stays deferred to Stage 6 (input-component harness).
 
+## Stage 6 — Component interaction tests + assembly hardening (DONE)
+
+Branch `test/6-component-tests`, four commits:
+
+- **`4337136` score display** — replaced the bogus `(score*100)%` (semanticSimilarity `_score` is
+  unbounded/opaque) with a green "recommended" badge. Internal model went score→boolean:
+  `recommendedConceptIds(recs)→Set` + `annotateRecommendations(node, ids)` (renamed from
+  `annotateScores`; node field `score`→`recommended`).
+- **`e496c5d` scheme scoping** — `recommendationsQuery()` now scores only the field scheme's concepts
+  (`topConcepts[] + concepts[]` membership via `$schemeId`); `triggerSearch(schemeId)` threads the
+  resolved `filterValues.params.schemeId`. Fixes fields showing no recs when the global top-N lived in
+  other schemes. Branch-level scoping deferred → [#93](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/93).
+- **`a1828ef` export surface** — `src/index.test.ts` pins the 6 exports + the plugin name + the
+  `skosConcept` / `skosConceptScheme` type names.
+- **`2c219f7` input-component tests** — shared `test/inputHarness` (stubs the Studio hooks + FormField,
+  drives the seam through `FakeDataPort`); Reference + Array tests for config warnings, multi-schema
+  fallback, published gating, browse-only, the duplicate-term toast, and the
+  browse→scoped-search→"recommended" badge flow.
+
+**Harness gotcha:** the inputs treat a zero-arity filter as misconfigured (`filter.length === 0`), so
+test filters must be arity-1 like the real `schemeFilter()` / `branchFilter()`.
+
+**Not done (out of named scope):** a direct assertion of tree auto-expand on `hasMatchingDescendant`
+(exercised indirectly by the embeddings-flow test); the `ConceptUseView` / `@sanity/util` refactor.
+
 ## Known issues / cleanup carried forward
 
 - ✅ **Tree View instant removal** — fixed in Stage 4 (optimistic prune, `core/tree/pruneConcepts` +
@@ -173,20 +199,15 @@ rendering. The full embeddings interaction test stays deferred to Stage 6 (input
 - ✅ **Stale `eslint-disable` directives** — all removed; lint is warning-free.
 - ◑ **Phantom `@sanity/*` deps** — `@sanity/uuid` is now an explicit dependency (`^3.0.2`).
   `@sanity/util` (`/paths` in `ConceptUseView`) is still `.npmrc`-hoisted; it is version-locked to
-  `sanity`, so resolve it when that view is refactored (Stage 6).
+  `sanity`, so resolve it when that view is refactored (not yet done — `ConceptUseView` was untouched
+  in Stage 6).
 - **`react/no-unescaped-entities`** turned off for the schema description JSX — revisit when schemas
   move to `src/schema/`.
-- **Embeddings interaction test deferred to Stage 6** — a browse → trigger → scored-tree test needs
-  the input-component harness; Stage 4 pinned the seam contract via `FakeDataPort` + typecheck.
-- **Recommendation score display shows nonsense percentages (deferred to Stage 6, Andy's call)** —
-  `ConceptSelectLink.tsx` renders `(score * 100).toFixed(1)%` (tooltip + badge). That assumed the old
-  Embeddings Index API's 0–1 cosine score; `text::semanticSimilarity()`'s `_score` is unbounded and
-  opaque ("not a measure of general match quality"), so a ~6.6 score renders as "658.5%". Confirmed in
-  Andy's `pnpm dev` verify (2026-06-19). Ranking/highlighting are unaffected (`hasMatchingDescendant`
-  is boolean). No score-threshold logic depends on the range. Fix options weighed: normalize to a
-  within-query relative % (top match = 100%) — closest to the old UX; or drop the % for a rank /
-  "suggested" badge — most honest about the opaque score. Lean toward a pure `normalizeScores` helper
-  (testable) feeding the existing display, decided with the Stage 6 component tests.
+- ✅ **Embeddings interaction test** — done in Stage 6 (`2c219f7`): the browse→scoped-search→badge flow
+  is covered via `test/inputHarness` + `FakeDataPort` in the Reference input test.
+- ✅ **Recommendation score display** — fixed in Stage 6 (`4337136`). The unbounded/opaque
+  `text::semanticSimilarity()` `_score` (which rendered as "658.5%") is no longer shown as a percentage;
+  recommended concepts get a green "recommended" badge instead. Ranking/highlighting unaffected.
 - **Branch-level recommendation scoping
   ([#93](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/93))** — semantic
   recommendations are scoped to the field's *scheme* (`recommendationsQuery` + `$schemeId`); a
