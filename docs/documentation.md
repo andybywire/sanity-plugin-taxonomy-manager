@@ -8,15 +8,13 @@
 
 ### Installation
 
-In your Sanity project folder, run
+In your Sanity project folder, run:
 
 ```bash
-npm i sanity-plugin-taxonomy-manager
-```
-
-or
-
-```bash
+npm install sanity-plugin-taxonomy-manager
+# or
+pnpm add sanity-plugin-taxonomy-manager
+# or
 yarn add sanity-plugin-taxonomy-manager
 ```
 
@@ -168,139 +166,9 @@ A presentation on managing standards-based taxonomies in Sanity Studio and purpo
 
 <iframe width="640" height="360" src="https://www.youtube.com/embed/kkFRFtFSNeQ?si=H95eGKl69qr_jOCF" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
-## Taxonomy Design
+### Taxonomy Design Resources
 
-Taxonomies come in a variety of shapes and sizes, ranging from huge hierarchies of thousands of terms, to small trees or lists of a handful of important concepts. While larger taxonomies can take teams of experts years to build, the "[open-world assumption](https://en.wikipedia.org/wiki/Open-world_assumption)" on which standards-based taxonomies are built means that small, purposeful taxonomies of well defined terms can also deliver value and form a solid foundation for future work.
-
-Whether your taxonomy is large or small, attention to design best practices can help ensure that work performs and scales as intended. Here is a very high level summary of the common steps often involved in taxonomy creation:
-
-1. [Formulate goals](#formulate-goals)
-2. [Audit your content](#audit-your-content)
-3. [Adopt, adapt, buy, or build](#adopt-adapt-buy-or-build)
-4. [Identify & define concepts](#identify--define-concepts)
-5. [Create relationships](#create-relationships)
-6. [Review, test, and revise](#review-test-and-revise)
-7. [Tag content](#tag-content)
-8. [Establish Governance](#establish-governance)
-
-### Steps
-
-1.  #### Formulate Goals
-
-    Identify what your taxonomy needs to accomplish. I recommend creating or adopting taxonomies _for_ a purpose, as opposed to _of_ a topic. Cross references, navigation, search support, personalization, or something else entirely: knowing what you need your taxonomy to accomplish will help you understand when you have enough coverage of your subject domain.
-
-    > [!TIP] > [Domain modeling](https://www.andyfitzgeraldconsulting.com/writing/domain-modeling/) can help you understand how the concepts in your subject domain relate, and where a taxonomy may help intelligently connect them.
-
-2.  #### Audit Your Content
-
-    You have to understand the scope and scale of what you're organizing to know how best to arrange it. Auditing your content give you a qualitative picture of the quality and character of the resources in your collection. If you've never performed an audit, it can feel like a daunting task&mdash;especially if you have a lot of content&mdash;but the exercise provides invaluable perspective: without a clear understanding of what you have, everything else is guesswork.
-
-3.  #### Adopt, Adapt, Buy, or Build
-
-    Is there a free taxonomy that you can use or adapt to meet your goals? If so, start there. If not—especially if you don't realistically have the resources in-house—consider buying a published taxonomy if there's on that meets your needs. The research, iteration, and support paid resources provide may be well worth the cost. Build when you need to: for smaller taxonomies, those just beginning to use classification, or very specific domains, this may be the right option.
-
-    > [!TIP]
-    > The [Basic Register of Thesauri, Ontologies & Classifications](https://bartoc.org/about) (BARTOC) lets you search, compare, and access details about thousands of vocabularies in multiple languages, many of them available for free use. It's a great place to start a taxonomy search.
-
-4.  #### Identify & Define Concepts
-
-    Though we commonly think of taxonomies as hierarchies of terms, each of these "terms" is ultimately a label for a concept in your subject domain. Identifying the **concepts** you need to organize can help you focus on what you need to organize before getting mired in the organizational and usability details of what labels those things will have. Candidate concepts can be found in your content audit and other business resources, in your user research, and through discussions with stakeholders. Look for concepts that represent classes of things (as opposed to individual instances), and which have significance in your content, to your users, and to your organization.
-
-    Once you've identified concepts, give them a preferred label and a brief definition based on the evidence you've collected. Clear definitions help ensure that when you test and vet terms and relationships with stakeholders and subject matter experts you're all talking about the same idea.
-
-    > [!TIP]
-    > Evidence for taxonomy term definitions and relationships is called "warrant" in the literature. See [ANSI/NISO Z39-19-2005 (2010)](https://groups.niso.org/higherlogic/ws/public/download/12591/z39-19-2005r2010.pdf) "5.3.5 Using Warrant to Select Terms" for a concise overview.
-
-5.  #### Create Relationships
-
-    Once you have enumerated and defined the concepts your taxonomy needs to organize, it's time to create relationships between then. Hierarchies based on parent-child "Broader Concept" relationships are perhaps the most common, and will likely be the primary kinds of connections you make in Type<!-- TODO: Link to Type example, once created --> and Topic <!-- TODO: Link to Topic example, once created -->taxonomies.
-
-    ![Sanity taxonomy manager view showing highlighted plus sign inside of a circle icon next to a top term, and a tool tip with the text, "Add a child concept"](_images/add-child.png)
-
-    Faceted<!-- TODO: Link to Type example, once created --> taxonomies also commonly use a shallow set of parent concepts (the facets) with allowed facet values as their children.
-
-    Don't assume, however, that your taxonomy will necessarily be a tree. Create relationships based on the goals you established in step one. A set of well defined and controlled terms in a simple flat list can be incredibly useful in some contexts. "Related Concept" relationships are also a powerful way to create nuanced relationships between terms in order to achieve well defined outcomes.
-
-    > [!NOTE]
-    > Concepts cannot be related by both "Broader" and "Related" relationships. This is to help avoid the inference of unintended relationships between concepts at different levels of the hierarchy. See [SKOS Primer: 2.3.2 Associative Relationships](https://www.w3.org/TR/skos-primer/#secassociative) for details.
-
-6.  #### Review, Test, and Revise
-
-    Ideally, you should plan to review goals, audits, concepts, and relationships with stakeholders and subject matter experts as you go. At the very least, it is important to review your draft taxonomy with them to make sure you haven't missed anything from their point of view, and to ensure that your vision of the domain aligns with theirs.
-
-    It is also important to test your draft taxonomy with future users: both those who will tag content, and those who will use the taxonomy to find content by browsing or search. Which tests to perform will depend on how your taxonomy will be used and what outcomes it is intended to achieve. Card sorting (usually closed sorting at this phase), tree testing, A/B testing, and prototype usability testing are all testing methods to consider. Be sure to do this early enough in your project that you leave time to revise based on what you learn and integrate changes.
-
-7.  #### Tag Content
-
-    Depending on the volume of content you need to tag, you may opt for automated or manual approaches. Natural language processing (NLP) tools&mdash;and yes, generative AI&mdash;can be used to automate the tagging process. Even the best of tools are not error free, so it is important for a human with background on the project and the taxonomy to review tags prior to unleashing them on your users.
-
-    Manual tagging can be a good option if you have a small content collection, an army of interns, or are tagging new content as you go. Don't assume that your taggers or writers will intuitively know how to correctly tag content in a way that achieves the goals you've envisioned. Training should include background on what the purposes the taxonomy serves, an orientation to the structure of the taxonomy and concept definitions, and practice applying tags to different types of content.
-
-8.  #### Establish Governance
-
-    Taxonomies are never finished. Rather, they are living systems that grow and evolve with the business. The goal of governance is to create a repeatable, accountable, visible, and predictable process for managing taxonomy changes.
-
-    Successful taxonomy governance establishes long-term ownership and responsibility for taxonomies, responds to feedback from taxonomy users, and assures the sustainable evolution of taxonomies in response to changes in user and system needs. Governance activities include periodic review of taxonomy performance and responding to suggestions, requests, and problems raised by taxonomy users.
-
-<!-- Merge this once I have at least two here -->
-
-### Common Structures
-
-Taxonomies can take a wide range of shapes and sizes, depending on the purposes for which they're created and the subject matter they're designed to represent. There are, nonetheless, a few common patterns that tend to be a good fit for a lot of knowledge representation needs. If you're creating a taxonomy from scratch or adapting one to your needs, consider one of the patterns below as a starting point.
-
-#### Type Taxonomy
-
-Type taxonomies are a crucial tool for organizing digital content for findability and discovery. Product catalogs, services listings, resource types, and subject hierarchies are all commonly characterized by "type" organization: each child category describes a more specialize type of thing than the parent category. Well defined type taxonomies area powerful tool for making your content more discoverable and reusable across contexts.
-
-![First example: Housing Advice, subtopics: Foreclosure Counseling, Homebuyer Education; Residential Housing, subtopics: Long-Term Housing, subtopics: Assisted Living, Independent Living, Nursing Home, Public Housing; Safe Housing, Short-Term Housing, subtopics: Nursing Home, Sober Living. Second example: How-To, subtopics: Clinical Procedure, subtopics: Assessment, Intervention; Electronic Health Record (EHR) How-To, Equipment Operation, subtopics: Equipment Setup, Equipment Troubleshooting, Equipment Use; Newsletter. Third example: Anthropology(258), subtopics: Archaeology(101), Sociology(81); Arts and Music(119), Biology(875), subtopics: Ecology(492), Genetics(45), Health(142), Chemistry(62). Fourth example: Specialty Bikes (65), Mountain Bikes (57), Electric Bikes (50), Road Bikes (44), subtopics: Gravel Bikes (32), Endurance Bikes (7), Electric Road Bikes (6), Touring Bikes (5); Kids' Bikes (40), Hybrid Bikes (27).](_images/type-taxonomies%E2%80%93blue.png)
-
-_Examples of type taxonomies (clockwise from top-left): The Open Eligibility Project (human services), Elemeno Health (resource types, using the Sanity Taxonomy Manager plugin), National Geographic (education subjects), REI (product categories)_
-
-Type classification helps users navigate and browse categories from general to more specific and narrow down large content sets to specific items that meet their needs. It also allows information designers to assemble related content into meaningful collections and to provide richer search results based on parent/child relationships.
-
-When combined with search term and traffic data, type taxonomies help you to draw deeper insight from visitor behaviors, and they can play a vital role in providing AI the ground truth it needs to return reliable, trustworthy results.
-
-**Key Features**
-
-- **Relationships:** Type taxonomies organize concepts in "is-a" relationships: "Nutrition Education" is a type of "Health Education," which is a type of "Education." These relationships, when consistently maintained, help users to confidently navigate categories, and can allow algorithms to accurately draw inferences about resources tagged with taxonomy terms.
-- **Adaptability:** Type taxonomies can be tailored to a wide range of specific content collections or subject domains.
-- **Flexibility:** Type taxonomies can be used to add structure to simple domains with only a handful of concepts, or can scale to many thousands of terms.
-
-#### Topic Taxonomy
-
-Topic taxonomies give you a way to group ideas or things that have meaningful associations for your users or your business, but are not necessarily sub-types of one another or of a common parent concept. "Prescription cat food" is "cat food," which is in turn "pet food." Your users however, may look for "kidney diet" cat food under the "cat" category—and "cat food" is not a cat. This is where topic taxonomies can help.
-
-![Activity submenu of the Columbia website, with links to Hiking, Fishing, Ski & Snow, Trail Running, Hunting, Golf; Sports submenu of the Patagonia website, with links to Surfing, Kitesurfing, Fly Fishing, Trail Running, Climbing, Mountain Biking, Snow](_images/topic-taxonomies-blue.png)
-
-_Detail views of the topical categories on the Columbia and Patagonia retail websites._
-
-Topic classification is often used to provide multiple pathways to a concept, article, or product. Topic classification is also a powerful way to express brand differentiation. Columbia and Patagonia both make and sell a similar range of outdoor activity apparel for adults and kids, and products for both companies fall into clearly delineated types: jackets, shirts, base layers, pants, etc. Topical grouping on each site (which, when at the top level we usually call "categories") tell users of each site what kind of "place" it is.
-
-**Key Features**
-
-- **Relationships:** Topic taxonomies may only be a singe level, or comparatively shallow, and often combine parent-child "is-a" and whole-part "has-a" relationships freely.
-- **Adaptability:** Topic taxonomies are much more flexible than "type" taxonomies, and can be used to express a brand's (or user's) particular perspective.
-- **Size Limitations:** Topic taxonomies are often are not very large: because the relationships are less strict than in many Type taxonomies, large structures in Topic taxonomies may end up hiding concepts in categories users may not expect.
-
-#### Faceted Taxonomy
-
-Faceted taxonomies are a great option for organizing and classifying resources that don't fit neatly into a single hierarchical tree structure. Consider a faceted taxonomy if you find that you repeat categories at the lower levels of your hierarchical taxonomy, or if there are no clear candidates for top level categories, such as when resources need to be classified in different ways for different audiences.
-
-![Hierarchy view of recipe categories: Breakfast, Lunch: Asian Cuisine, European Cuisine, Latin American Cuisine, etc.; Dinner: Asian Cuisine, European Cuisine: Appetizers, Mains, Sides; Latin American Cuisine: Appetizers, Mains: Burritos, Tacos, Soups, etc; Sides, etc. Faceted view of recipe categories: Course: breakfast, lunch, dinner; Cuisine: Asian, European, Latin American; Dish: Appetizer, Mains: Burritos, Tacos, Soups; Sides.](_images/facets-comparison-blue.png)
-
-_Side by side comparison of recipe categories presented as a hierarchy and as facets_
-
-Faceted classification offers an alternative to the rigidity of tree structures for content that has similar attributes. The example shown above also illustrates an important consideration in the design of effective facets: the attributes described in each facet should be mutually exclusive (you'll hear taxonomists refer to this as "orthogonality"). The values in "Cuisine," for example, have no overlap with the values in "Course" or "Dish." Likewise, the label "Latin American" will only ever appear in the Cuisine menu.
-
-**Key Features**
-
-- **Relationships:** While orthogonality is a key feature of the relationship between facets, within each facet concepts may be structured in any way that makes sense to the taxonomy's target users. Simple lists are by far the most common, but individual facets can also be structured as hierarchies or trees with different kinds of relationships (part/whole, cause/effect, sequence, etc).
-- **Adaptability:** While special care needs to be taken to identify and test facets based on user and business needs and the content being organized, the collection of terms within individual facets tend to accommodate new entities easily. This makes them attractive options for resource collections of mostly homogenous content that is expected to evolve and change over time.
-- **Size Limitations:** Facets allow you to present multiple, mutually exclusive organization schemes easily. The tradeoff is that they introduce additional complexity into discovery and findability. If you find you have fewer than three facets, a type or topic taxonomy may work just as well for your content collection (and introduce less complexity for your users). At the upper end, unless you're building a system for expert users, limit your facets to a half dozen or so.
-
-### Resources
-
-As you might imagine, there is much more to creating, using, and managing taxonomies than is covered in this brief guide. Here are a few resources I've found particularly insightful to help you expand on what is presented here:
+As you might imagine, there is much more to creating, using, and managing taxonomies than just configuring a tool. Here are a few resources I've found particularly insightful to help you expand on what is presented here:
 
 #### Articles
 
@@ -342,7 +210,7 @@ When you add a new concept scheme, Taxonomy Manager will prompt to you add a nam
 
 You can create SKOS Concepts via Sanity Studio's New Document buttons, or from within a SKOS Concept Scheme. Creating concepts within a scheme automatically adds concepts to the scheme in question, and creates hierarchical relationships between terms based on where in the tree view they are added.
 
-- **Top Concepts** are, by convention, used to signify the topmost concepts in the hierarchical relations for that scheme. Top Concepts can be used to denote the broadest categories in a hierarchy, or to describe facets in a faceted taxonomy.  
+- **Top Concepts** are, by convention, used to signify the topmost concepts in the hierarchical relations for that scheme.  
   ![adding a top concept to a scheme animation](_images/addTopConcept.gif)
 
 - **Concepts** are the fundamental elements of a SKOS vocabulary. Concepts are the ideas, meanings, or (categories of) objects and events which underlie your knowledge organization systems. Concepts are distinct from the labels used to refer to them. This distinction is important because it is what allows you to change and iterate the details of labels based on performance or user expectations, and to localize concepts with labels in different languages without changing the meaning or semantics of your scheme.  
@@ -505,7 +373,8 @@ This creates an input that offers only the hierarchy input option for setting th
 
 ![Field configured for hierarchy-only input](_images/hierarchyOnlyInput.png)
 
-#### Adding Term Recommendations with Semantic Search
+<!-- Omit Semantic Search instructions until I've worked through a more effective way to generate accurate results -->
+<!-- #### Adding Term Recommendations with Semantic Search
 
 If your dataset has [embeddings](https://www.sanity.io/docs/content-lake/dataset-embeddings) enabled, the input components can annotate hierarchy tree nodes with match scores based on the content your authors are editing. When enabled, opening the hierarchy tree input scores your `skosConcept` documents by semantic similarity — using the GROQ [`text::semanticSimilarity()`](https://www.sanity.io/docs/content-lake/search-content-with-groq) function — against the values of designated form fields, and displays a match percentage on each taxonomy term it identifies as relevant. This helps authors identify the most appropriate terms for their content without needing to manually review every node in the tree.
 
@@ -590,4 +459,4 @@ The `semanticSearch` configuration object accepts the following options:
 - **`fieldReferences`** (required): An array of field names from the current document whose values are concatenated and sent as the semantic search query. For example, `['title', 'metaDescription']` reads the current values of the `title` and `metaDescription` fields and uses them to find semantically similar taxonomy terms.
 - **`maxResults`** (optional): The maximum number of matching terms to return. Defaults to `3`.
 
-All fields listed in `fieldReferences` must contain a value when the hierarchy tree is opened. If any referenced fields are empty, a message is displayed in the tree view indicating which fields need to be filled in.
+All fields listed in `fieldReferences` must contain a value when the hierarchy tree is opened. If any referenced fields are empty, a message is displayed in the tree view indicating which fields need to be filled in. -->
