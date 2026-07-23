@@ -1,5 +1,14 @@
 <!-- markdownlint-disable --><!-- textlint-disable -->
 
+# 📓 Changelog
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [5.0.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.7.2...v5.0.0) (2026-07-23)
+
+<!-- markdownlint-disable --><!-- textlint-disable -->
+
 # 📓 Changelog <!-- {docsify-ignore} -->
 
 All notable changes to this project will be documented in this file. See
