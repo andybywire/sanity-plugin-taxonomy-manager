@@ -1,4 +1,3 @@
-import {WarningOutlineIcon} from '@sanity/icons'
 import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
 import {defineType, defineField} from 'sanity'
 
@@ -6,7 +5,6 @@ import {Identifier} from './components/inputs'
 import {createId} from './core/createId'
 import {conceptFilter, prefLabelUniquenessResult} from './core/validation'
 import baseIriField from './helpers/baseIriField'
-import styles from './skosConcept.module.css'
 import type {Options} from './types'
 
 /**
@@ -15,7 +13,7 @@ import type {Options} from './types'
 export default function skosConcept(
   baseUri?: Options['baseUri'],
   customConceptFields: Options['customConceptFields'] = [],
-  ident?: Options['ident']
+  ident?: Options['ident'],
 ) {
   return defineType({
     name: 'skosConcept',
@@ -56,7 +54,7 @@ export default function skosConcept(
               .fetch(
                 `*[_type == "skosConcept" && prefLabel == "${
                   prefLabel as string
-                }" && !(_id in path("drafts.**") || _id in path("versions.**"))][0]._id`
+                }" && !(_id in path("drafts.**") || _id in path("versions.**"))][0]._id`,
               )
               .then((conceptId) =>
                 prefLabelUniquenessResult(conceptId as string | null, context.document?._id),
@@ -67,111 +65,29 @@ export default function skosConcept(
         name: 'definition',
         title: 'Definition',
         type: 'text',
-        description: (
-          <details className={styles.description}>
-            <summary>A complete explanation of the intended meaning of the concept.</summary>
-            <div>
-              <kbd>
-                Example: documentation
-                <br />
-                Definition: "The process of storing and retrieving information in all fields of
-                knowledge."
-              </kbd>
-              <p>
-                For more information on the recommended usage of the SKOS documentation properties,
-                see
-                <a
-                  href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {' '}
-                  W3C SKOS Primer: 2.4 Documentary Notes
-                </a>
-              </p>
-            </div>
-          </details>
-        ),
+        description: 'A complete explanation of the intended meaning of the concept.',
         rows: 3,
       }),
       defineField({
         name: 'example',
         title: 'Examples',
         type: 'text',
-        description: (
-          <details className={styles.description}>
-            <summary>An example of the use of the concept.</summary>
-            <div>
-              <kbd>
-                Example: organizations of science and culture
-                <br />
-                Example: "academies of science, general museums, world fairs"
-              </kbd>
-              <p>
-                For more information on the recommended usage of the SKOS documentation properties,
-                see
-                <a
-                  href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {' '}
-                  W3C SKOS Primer: 2.4 Documentary Notes
-                </a>
-              </p>
-            </div>
-          </details>
-        ),
+        description: 'An example of the use of the concept.',
         rows: 3,
       }),
       defineField({
         name: 'scopeNote',
         title: 'Scope Note',
         type: 'text',
-        description: (
-          <details className={styles.description}>
-            <summary>
-              A brief statement on the intended meaning of this concept, especially as an indication
-              of how the use of the concept is limited in indexing practice.
-            </summary>
-            <div>
-              <kbd>
-                Example: microwave frequencies
-                <br />
-                Scope Note: "Used for frequencies between 1Ghz and 300Ghz"
-              </kbd>
-              <p>
-                For more information on the recommended usage of the SKOS documentation properties,
-                see
-                <a
-                  href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {' '}
-                  W3C SKOS Primer: 2.4 Documentary Notes
-                </a>
-              </p>
-            </div>
-          </details>
-        ),
+        description:
+          'A brief statement on the intended meaning of this concept, especially as an indication of how the use of the concept is limited in indexing practice.',
         rows: 3,
       }),
       defineField({
         name: 'altLabel',
         title: 'Alternate Label(s)',
         type: 'array',
-        description: (
-          <details className={styles.description}>
-            <summary>Synonyms, near-synonyms, abbreviations, and acronyms to a concept.</summary>
-            <div>
-              <p>
-                <WarningOutlineIcon /> Preferred, alternative, and hidden label sets must not
-                overlap.
-              </p>
-            </div>
-          </details>
-        ),
+        description: 'Synonyms, near-synonyms, abbreviations, and acronyms to a concept.',
         of: [{type: 'string'}],
         validation: (Rule) => Rule.unique(),
       }),
@@ -179,24 +95,8 @@ export default function skosConcept(
         name: 'hiddenLabel',
         title: 'Hidden Label(s)',
         type: 'array',
-        description: (
-          <details className={styles.description}>
-            <summary>
-              Character strings that need to be accessible to applications performing text-based
-              indexing and search operations, but which should not be displayed to end users.
-            </summary>
-            <div>
-              <p>
-                Hidden labels may for instance be used to include misspelled variants of other
-                lexical labels.
-              </p>
-              <p>
-                <WarningOutlineIcon /> Preferred, alternative, and hidden label sets must not
-                overlap.
-              </p>
-            </div>
-          </details>
-        ),
+        description:
+          'Character strings that need to be accessible to applications performing text-based indexing and search operations, but which should not be displayed to end users.',
         of: [{type: 'string'}],
         validation: (Rule) => Rule.unique(),
       }),
@@ -217,17 +117,8 @@ export default function skosConcept(
       defineField({
         name: 'broader',
         title: 'Broader Concept(s)',
-        description: (
-          <details className={styles.description}>
-            <summary>
-              Create hierarchy between concepts, for example to create category/subcategory,
-              part/whole, or class/instance relationships.
-            </summary>
-            <div>
-              <p>Broader and Associated relationships are mutually exclusive.</p>
-            </div>
-          </details>
-        ),
+        description:
+          'Create hierarchy between concepts, for example to create category/subcategory, part/whole, or class/instance relationships.',
         type: 'array',
         of: [
           {
@@ -242,17 +133,8 @@ export default function skosConcept(
       defineField({
         name: 'related',
         title: 'Related Concept(s)',
-        description: (
-          <details className={styles.description}>
-            <summary>
-              Indicate that two concepts are inherently "related", but that one is not in any way
-              more general than the other.
-            </summary>
-            <div>
-              <p>Broader and Associated relationships are mutually exclusive.</p>
-            </div>
-          </details>
-        ),
+        description:
+          'Indicate that two concepts are inherently "related", but that one is not in any way more general than the other.',
         type: 'array',
         of: [
           {
@@ -269,96 +151,23 @@ export default function skosConcept(
         name: 'historyNote',
         title: 'History Notes',
         type: 'text',
-        description: (
-          <details className={styles.description}>
-            <summary>Significant changes to the meaning or the form of this concept.</summary>
-            <div>
-              <kbd>
-                Example: person with disabilities
-                <br />
-                History Note: "Estab. 1992; heading was: handicapped [1884 - 1992]."
-              </kbd>
-              <p>
-                For more information on the recommended usage of the SKOS documentation properties,
-                see
-                <a
-                  href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {' '}
-                  W3C SKOS Primer: 2.4 Documentary Notes
-                </a>
-              </p>
-            </div>
-          </details>
-        ),
+        description: 'Significant changes to the meaning or the form of this concept.',
         rows: 3,
       }),
       defineField({
         name: 'editorialNote',
         title: 'Editorial Notes',
         type: 'text',
-        description: (
-          <details className={styles.description}>
-            <summary>
-              Information to aid in administrative housekeeping, such as reminders of editorial work
-              still to be done, or warnings in the event that future editorial changes might be
-              made.
-            </summary>
-            <div>
-              <kbd>
-                Example: doubleclick
-                <br />
-                Editorial Note: "Review this term after the company merger is complete."
-              </kbd>
-              <p>
-                For more information on the recommended usage of the SKOS documentation properties,
-                see
-                <a
-                  href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {' '}
-                  W3C SKOS Primer: 2.4 Documentary Notes
-                </a>
-              </p>
-            </div>
-          </details>
-        ),
+        description:
+          'Information to aid in administrative housekeeping, such as reminders of editorial work still to be done, or warnings in the event that future editorial changes might be made.',
         rows: 3,
       }),
       defineField({
         name: 'changeNote',
         title: 'Change Notes',
         type: 'text',
-        description: (
-          <details className={styles.description}>
-            <summary>
-              Fine-grained changes to a concept, for the purposes of administration and maintenance.
-            </summary>
-            <div>
-              <kbd>
-                Example: tomato
-                <br />
-                Change Note: "Moved from under 'fruits' to under 'vegetables' by Horace Gray"
-              </kbd>
-              <p>
-                For more information on the recommended usage of the SKOS documentation properties,
-                see
-                <a
-                  href="https://www.w3.org/TR/2009/NOTE-skos-primer-20090818/#secdocumentation"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  {' '}
-                  W3C SKOS Primer: 2.4 Documentary Notes
-                </a>
-              </p>
-            </div>
-          </details>
-        ),
+        description:
+          'Fine-grained changes to a concept, for the purposes of administration and maintenance.',
         rows: 3,
       }),
     ],

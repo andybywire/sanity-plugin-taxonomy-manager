@@ -1,5 +1,3 @@
-// import {nanoid} from 'nanoid'
-// import type {FieldDefinition} from 'sanity'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
 import {Identifier, ManagementControls} from './components/inputs'
@@ -14,7 +12,7 @@ import type {Options} from './types'
 export default function skosConceptScheme(
   baseUri?: Options['baseUri'],
   customSchemeFields: Options['customSchemeFields'] = [],
-  ident?: Options['ident']
+  ident?: Options['ident'],
 ) {
   return defineType({
     name: 'skosConceptScheme',
