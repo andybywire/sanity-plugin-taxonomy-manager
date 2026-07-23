@@ -39,7 +39,8 @@ array-input resource patch, and `views/ConceptUseView` (calls `useListeningQuery
 ## Development
 
 - **`pnpm dev`** — runs the bundled dev Studio (`studio/`, Sanity 6, project `zw90ihi2` / `dev`); the
-  plugin is served live from `src/` via `vite-tsconfig-paths` (HMR). Visual / behind-auth checks are the
+  plugin is served live from `src/` via Sanity's `vite.resolve.tsconfigPaths` option (in `sanity.cli.ts`),
+  which reads the `paths` block in `studio/tsconfig.json` (HMR). Visual / behind-auth checks are the
   author's eyeball.
 - **The gate before every commit:** `pnpm test && pnpm typecheck && pnpm build && pnpm lint` — all green.
 - **TDD is the default cadence.** The pure core makes most tests plain input→output with hand-built
