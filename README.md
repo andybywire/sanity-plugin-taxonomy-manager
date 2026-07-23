@@ -1,7 +1,7 @@
 # Sanity Taxonomy Manager
 
-![NPM Version](https://img.shields.io/npm/v/sanity-plugin-taxonomy-manager?style=flat-square)
-![License](https://img.shields.io/npm/l/sanity-plugin-taxonomy-manager?style=flat-square)
+![NPM Version](https://img.shields.io/npm/v/sanity-plugin-taxonomy-manager)
+![License](https://img.shields.io/npm/l/sanity-plugin-taxonomy-manager)
 
 ### Create and manage SKOS compliant taxonomies, thesauri, and classification schemes in Sanity Studio.
 
