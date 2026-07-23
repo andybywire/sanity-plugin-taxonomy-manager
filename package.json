@@ -101,6 +101,11 @@
     "node": ">=20"
   },
   "packageManager": "pnpm@10.11.0",
+  "pnpm": {
+    "overrides": {
+      "conventional-changelog-conventionalcommits": "9.3.1"
+    }
+  },
   "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager",
   "sanityPlugin": {
     "verifyPackage": {
