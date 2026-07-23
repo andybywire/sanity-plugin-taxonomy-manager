@@ -7,13 +7,39 @@ All notable changes to this project will be documented in this file. See
 
 ## [5.0.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.7.2...v5.0.0) (2026-07-23)
 
-<!-- markdownlint-disable --><!-- textlint-disable -->
+### ⚠ BREAKING CHANGES
 
-# 📓 Changelog <!-- {docsify-ignore} -->
+* the package is ESM-only (no CommonJS require) and ships from
+dist/ instead of lib/. The Sanity v1/v2 incompatibility shim is removed.
+* react and react-dom peers are now ^19 (drops the >=18 range).
+* @sanity/ui (^3) and styled-components (^5.2 || ^6) are now peer
+dependencies the host studio must provide, and the sanity peer range is ^5 || ^6
+(drops sanity 4).
+* the input prop `embeddingsIndex` is renamed `semanticSearch`
+and drops the obsolete `indexName` (embeddings are dataset-level now); config
+type EmbeddingsIndexConfig -> SemanticSearchConfig and result type
+EmbeddingsResult -> ConceptRecommendation {conceptId, score}.
 
-All notable changes to this project will be documented in this file. See
-[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+### Features
 
+* add taxonomy data port with studio adapter and in-memory fake ([d790a2a](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/d790a2a70e6bb26879784403c8c25436c3f179e1))
+* add the pure core for semantic recommendations ([0743aa9](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/0743aa96be9c623c815f50e12e44e66a926bcd35))
+* run semantic recommendations through text::semanticSimilarity ([73a55fb](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/73a55fb340ed839188a1d08aa57c651004429acb))
+* scope semantic recommendations to the field's scheme ([e496c5d](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/e496c5d96ce309b1ffad24141c7916ef2b196648))
+* support Sanity Studio v6 ([cd9c346](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/cd9c346cf3465845e94d6afb351cf3319d05fc44))
+
+### Bug Fixes
+
+* give the add and remove concept actions distinct aria-labels ([19b5166](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/19b516619df0a70837ef33186a183b1ee3197901))
+* pass field path to FormField for sanity 5 compatibility ([2b9f17b](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/2b9f17b6f6587e84e9f699b32024edefeb665ea5))
+* show a "recommended" badge instead of a raw similarity score ([4337136](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/43371369d936c46a05c82fb36156df848b88d2ae))
+* simplify concept and scheme descriptions ([b66f7f7](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/b66f7f7c92171913fff269a08d6c023e1c68d41f))
+* update the hierarchy tree instantly when a concept is removed ([91c1854](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/91c185444a3aec6e0c955de9b3f8005a3aad33c5))
+
+### Build System
+
+* require @sanity/ui v3 and sanity ^5 || ^6 as peers ([cc5ca9a](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/cc5ca9a19aedb5e433a1a92f7260c6967388a931))
+* ship an ESM-only dist and drop the Studio v1/v2 shim ([41e4695](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/41e46959e72b883621486e3c5693d96ae4e25adb))
 
 ## [4.7.2](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.7.1...v4.7.2) (2026-05-08)
 
