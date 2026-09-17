@@ -51,6 +51,12 @@ array-input resource patch, and `views/ConceptUseView` (calls `useListeningQuery
   toast) — not visual correctness, which stays the author's eyeball check.
 - **The studio is outside the gate** (eslint-ignored; not in typecheck/build/test). `pnpm --filter studio
   build` is the headless integration check.
+- **`pnpm test:studio-install`** packs the plugin and npm-installs it into throwaway Studios at both ends
+  of the `sanity` peer range, asserting a single shared `@sanity/ui` and `@sanity/icons`. Two copies mean
+  two React contexts (`useToast` no-ops, theming falls back) — the failure that forced 6.0.0. No build
+  step can see it, and a dev Studio structurally cannot either. It runs two real npm installs, so it
+  lives in CI (its own **Consumer install** job, which the release depends on) rather than the
+  pre-commit gate. See [ADR 0004](docs/development/decisions/0004-sanity-ui-v4.md).
 - Three non-obvious traps: the recommendations GROQ parameter is `$searchQuery`, **not** `$query` (`query`
   is a reserved `@sanity/client` `QueryParams` key — a `$query` param fails typecheck cryptically); and
   reference-field `filter` functions must be **arity-1** (the inputs treat a zero-arity filter as

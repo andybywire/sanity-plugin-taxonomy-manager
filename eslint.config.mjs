@@ -1,4 +1,5 @@
 import studio from '@sanity/eslint-config-studio'
+import globals from 'globals'
 import prettier from 'eslint-config-prettier'
 import tseslint from 'typescript-eslint'
 
@@ -24,6 +25,13 @@ export default [
       // schema definitions move to src/schema/ in Stage 3.
       'react/no-unescaped-entities': 'off',
     },
+  },
+  {
+    // Repo tooling that runs under Node, not in the Studio bundle: it needs the
+    // Node globals (`console`, `process`) the browser-oriented studio config
+    // doesn't provide. Linted rather than ignored — it gates releases.
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {globals: globals.node},
   },
   {
     // Test files and test infra: allow intentional empty stub methods (jsdom
