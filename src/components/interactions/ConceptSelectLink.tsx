@@ -1,4 +1,5 @@
-import {Button, Text, Box, Badge, Tooltip} from '@sanity/ui'
+import {Button, Text, Box, Badge} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback} from 'react'
 
 import type {ChildConceptTerm} from '../../types'

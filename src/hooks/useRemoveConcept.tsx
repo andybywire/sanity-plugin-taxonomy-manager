@@ -1,4 +1,4 @@
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback, useContext} from 'react'
 
 import {OptimisticTreeContext} from '../context'

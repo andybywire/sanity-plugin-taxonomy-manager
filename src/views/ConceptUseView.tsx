@@ -70,7 +70,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
 
   if (error) {
     return (
-      <Stack padding={4} space={5}>
+      <Stack padding={4} gap={5}>
         <Feedback tone={'caution'}>There was en error fetching use data</Feedback>
       </Stack>
     )
@@ -78,7 +78,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
 
   if (!data?.length) {
     return (
-      <Stack padding={4} space={5}>
+      <Stack padding={4} gap={5}>
         <Feedback>This concept is not currently in use</Feedback>
       </Stack>
     )
@@ -86,7 +86,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
 
   return (
     <Box padding={4} paddingTop={4}>
-      <Stack space={2}>
+      <Stack gap={2}>
         <Card borderBottom paddingTop={3} paddingBottom={3}>
           <Inline paddingTop={1}>
             <Text weight="semibold" muted size={1}>
@@ -94,7 +94,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
             </Text>
           </Inline>
         </Card>
-        <Stack space={1}>
+        <Stack gap={1}>
           {data?.map((d: TagReference) => {
             const schemaType = schema.get(d._type)
             return (

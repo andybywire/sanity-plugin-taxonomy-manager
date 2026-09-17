@@ -27,7 +27,7 @@ export const ChildConcepts = ({
   return (
     // the container for child terms
     <Box marginLeft={4} marginTop={2} display={childVisibility == 'closed' ? 'none' : 'block'}>
-      <Stack space={3}>
+      <Stack gap={3}>
         {concepts.map((concept: ChildConceptTerm) => {
           return (
             <Children

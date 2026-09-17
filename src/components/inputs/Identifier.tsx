@@ -1,5 +1,6 @@
-import {GenerateIcon} from '@sanity/icons'
-import {Button, Stack, useToast} from '@sanity/ui'
+import {GenerateIcon} from '@sanity/icons/Generate'
+import {Button, Stack} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback} from 'react'
 import {set} from 'sanity'
 import type {StringInputProps} from 'sanity'
@@ -33,7 +34,7 @@ export const Identifier = (props: IdentifierProps) => {
   }, [onChange, toast, ident])
 
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <Button
         icon={GenerateIcon}
         mode="ghost"

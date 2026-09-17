@@ -1,0 +1,36 @@
+name: CI
+
+# The gate from CLAUDE.md, run on every PR and on main.
+# Until this existed, `release.yml` ran `pnpm build` on main and nothing else —
+# tests, typecheck and lint were enforced only by the local husky pre-commit hook.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.12 # floor set by @sanity/ui v4 (engines: >=22.12)
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm test
+      - run: pnpm typecheck
+      - run: pnpm build
+      - run: pnpm lint
+      # The studio is outside the gate (eslint-ignored, not in typecheck/build/test);
+      # this is the headless integration check that the plugin still composes.
+      - run: pnpm --filter studio build

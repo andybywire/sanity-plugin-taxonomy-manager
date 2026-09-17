@@ -1,4 +1,5 @@
-import {Button, Inline, Stack, useToast} from '@sanity/ui'
+import {Button, Inline, Stack} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useCallback} from 'react'
 import {unset} from 'sanity'
 
@@ -27,8 +28,8 @@ export const ManagementControls = (props: any) => {
   }, [onChange, toast])
 
   return (
-    <Stack space={2}>
-      <Inline space={[3, 3, 4]}>
+    <Stack gap={2}>
+      <Inline gap={[3, 3, 4]}>
         {props.renderDefault(props)}
         <Button tone="primary" fontSize={2} onClick={handleChange} text="Remove Value" />
       </Inline>

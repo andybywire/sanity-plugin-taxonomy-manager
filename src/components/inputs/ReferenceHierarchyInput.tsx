@@ -272,7 +272,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   // Check to be sure a filter is present
   if (!(props.schemaType.options as ReferenceOptions)?.filter) {
     return (
-      <Stack space={3}>
+      <Stack gap={3}>
         {props.renderDefault(props)}
         <Box padding={4}>
           <Card padding={[3]} radius={2} shadow={1} tone="caution">
@@ -289,7 +289,7 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   // ... and that it is a scheme or branch filter and configured correctly
   else if ((props.schemaType.options as ReferenceOptions)?.filter.length === 0) {
     return (
-      <Stack space={3}>
+      <Stack gap={3}>
         {props.renderDefault(props)}
         <Box padding={4}>
           <Card padding={[3]} radius={2} shadow={1} tone="caution">
@@ -351,10 +351,10 @@ export function ReferenceHierarchyInput(props: HierarchyInput) {
   }
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       {filterValues?.browseOnly ? renderBrowseOnlyPreview() : props.renderDefault(props)}
 
-      <Grid columns={1} gap={3}>
+      <Grid gridTemplateColumns={1} gap={3}>
         <Button
           disabled={isPublished}
           icon={NodeTree}

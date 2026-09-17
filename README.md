@@ -26,7 +26,9 @@ For full documentation, visit [sanitytaxonomymanager.com](https://sanitytaxonomy
 
 ## Installation
 
-> Compatible with **Sanity Studio v5 and v6** (React 19).
+> Compatible with **Sanity Studio v6.9.2 and later** (React 19.2+, Node 22.12+).
+> Studio v6.9.2 is where Sanity moved to `@sanity/ui` v4, which this plugin requires.
+> For Sanity Studio v5, use plugin `5.x`.
 
 In your Sanity project folder, run:
 

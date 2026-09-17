@@ -1,5 +1,6 @@
-import {LayerProvider, ThemeProvider, ToastProvider} from '@sanity/ui'
+import {LayerProvider, ThemeProvider} from '@sanity/ui'
 import {buildTheme} from '@sanity/ui/theme'
+import {ToastProvider} from '@sanity/ui/toast'
 import {render, type RenderResult} from '@testing-library/react'
 import type {ReactElement, ReactNode} from 'react'
 

@@ -29,7 +29,7 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 22.12 # floor set by @sanity/ui v4 (engines: >=22.12)
           registry-url: https://registry.npmjs.org
           cache: pnpm
       - run: npm install --global npm@latest # npm 11.5+ for OIDC trusted publishing

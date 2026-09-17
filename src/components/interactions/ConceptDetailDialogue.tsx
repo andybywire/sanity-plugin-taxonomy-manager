@@ -1,12 +1,13 @@
-import {InfoOutlineIcon} from '@sanity/icons'
-import {Dialog, Box, Text, Stack, Label, Button, Tooltip} from '@sanity/ui'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {Dialog, Box, Text, Stack, Label, Button} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useState} from 'react'
 
 import type {ChildConceptTerm, TopConceptTerm} from '../../types'
 
 const MessageHelper = ({title, message}: {title: string; message: string}) => {
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <Label size={1}>{title}</Label>
       <Text size={2} muted style={{whiteSpace: 'pre-wrap'}}>
         {message}
@@ -62,7 +63,7 @@ export const ConceptDetailDialogue = ({
           width={1}
         >
           <Box padding={4} paddingTop={2} paddingBottom={5}>
-            <Stack space={4}>
+            <Stack gap={4}>
               {concept.definition && (
                 <MessageHelper title={'Definition'} message={concept.definition} />
               )}

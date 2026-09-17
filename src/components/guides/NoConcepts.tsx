@@ -8,7 +8,7 @@ export const NoConcepts = () => {
   return (
     <div style={{marginTop: '2rem'}}>
       <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="primary">
-        <Stack space={4}>
+        <Stack gap={4}>
           <Label size={4}>No Concepts</Label>
           <Text size={2}>
             There are not yet any concepts assigned to this scheme. To create a multi-level

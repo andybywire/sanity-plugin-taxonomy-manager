@@ -31,7 +31,7 @@ export const TreeStructure = ({
 
   return (
     <Box paddingTop={4}>
-      <Stack space={3} style={{listStyle: 'none', paddingLeft: '0', marginBlockStart: '0'}}>
+      <Stack gap={3} style={{listStyle: 'none', paddingLeft: '0', marginBlockStart: '0'}}>
         {concepts?.topConcepts?.map((concept: TopConceptTerm) => (
           <TopConcepts
             key={`${concept?.id}+${treeId}`}

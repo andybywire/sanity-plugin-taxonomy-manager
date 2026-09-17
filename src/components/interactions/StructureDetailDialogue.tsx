@@ -1,5 +1,7 @@
-import {InfoOutlineIcon, ErrorOutlineIcon} from '@sanity/icons'
-import {Dialog, Box, Text, Button, Tooltip} from '@sanity/ui'
+import {ErrorOutlineIcon} from '@sanity/icons/ErrorOutline'
+import {InfoOutlineIcon} from '@sanity/icons/InfoOutline'
+import {Dialog, Box, Text, Button} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useState} from 'react'
 
 /**
