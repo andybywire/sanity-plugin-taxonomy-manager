@@ -43,6 +43,7 @@
     "lint": "eslint .",
     "format": "prettier --write --cache --ignore-unknown .",
     "test": "vitest run",
+    "test:studio-install": "node scripts/test-studio-install.mjs",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
     "prepare": "husky",
