@@ -1,4 +1,4 @@
-import {useToast} from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {uuid} from '@sanity/uuid'
 import {useCallback, useContext} from 'react'
 

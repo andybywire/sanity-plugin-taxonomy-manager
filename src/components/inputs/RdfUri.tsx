@@ -10,7 +10,7 @@ export function RdfUri(props: StringInputProps) {
   const conceptId = useFormValue(['conceptId'])
   const schemeId = useFormValue(['schemeId'])
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       {props.renderDefault(props)}
       <Text muted size={1}>
         <>

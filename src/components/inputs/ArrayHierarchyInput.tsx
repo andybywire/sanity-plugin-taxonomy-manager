@@ -8,10 +8,10 @@ import {
   Card,
   Label,
   Text,
-  useToast,
   Flex,
   Spinner,
 } from '@sanity/ui'
+import {useToast} from '@sanity/ui/toast'
 import {useState, useEffect, useCallback} from 'react'
 import type {ArrayFieldProps, ObjectOptions} from 'sanity'
 import {FormField, useClient, useFormValue, isVersionId, isDraftId, usePerspective} from 'sanity'
@@ -326,7 +326,7 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
   // Check to be sure a filter is present
   if (!(props.schemaType.of[0].options as ReferenceOptions)?.filter) {
     return (
-      <Stack space={3}>
+      <Stack gap={3}>
         {props.renderDefault(props)}
         <Box padding={4}>
           <Card padding={[3]} radius={2} shadow={1} tone="caution">
@@ -343,7 +343,7 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
   // ... and that it is a scheme or branch filter and configured correctly
   else if ((props.schemaType.of[0].options as ReferenceOptions)?.filter?.length === 0) {
     return (
-      <Stack space={3}>
+      <Stack gap={3}>
         {props.renderDefault(props)}
         <Box padding={4}>
           <Card padding={[3]} radius={2} shadow={1} tone="caution">
@@ -360,11 +360,11 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
   // Check to see if array uses more than one schema and bail with a notification if more than one is detected.
   else if (props.schemaType.of.length > 1) {
     return (
-      <Stack space={3}>
+      <Stack gap={3}>
         {props.renderDefault(props)}
         <Card padding={[3]} radius={2} shadow={1} tone="caution">
-          <Stack space={4}>
-            <Stack space={2}>
+          <Stack gap={4}>
+            <Stack gap={2}>
               <Label size={2}>Input Component Not Supported for Multi-Schema Arrays</Label>
               <Text size={1}>
                 The Sanity Taxonomy Manager Hierarchy Input Component is not designed to support
@@ -428,10 +428,10 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
   }
 
   return (
-    <Stack space={3}>
+    <Stack gap={3}>
       {filterValues?.browseOnly ? renderBrowseOnlyPreview() : props.renderDefault(props)}
 
-      <Grid columns={1} gap={3}>
+      <Grid gridTemplateColumns={1} gap={3}>
         <Button
           disabled={isPublished}
           icon={NodeTree}

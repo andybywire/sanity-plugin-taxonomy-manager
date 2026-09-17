@@ -14,3 +14,4 @@ Architecture Decision Records — one per major architectural axis. Each capture
 - [0001 — Pure core behind a data-port seam](decisions/0001-pure-core-data-port.md)
 - [0002 — Semantic recommendations via `text::semanticSimilarity`](decisions/0002-semantic-recommendations.md)
 - [0003 — 5.0.0 platform modernization](decisions/0003-5.0.0-platform-modernization.md)
+- [0004 — `@sanity/ui` v4 and the 6.0.0 peer floor](decisions/0004-sanity-ui-v4.md)

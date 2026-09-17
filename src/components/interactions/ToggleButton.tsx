@@ -1,5 +1,5 @@
 // import styles from '../styles/toggleButton.module.css'
-import {ToggleArrowRightIcon} from '@sanity/icons'
+import {ToggleArrowRightIcon} from '@sanity/icons/ToggleArrowRight'
 import {Button} from '@sanity/ui'
 
 import styles from './ToggleButton.module.css'

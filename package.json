@@ -49,12 +49,10 @@
     "prepublishOnly": "pnpm run build"
   },
   "dependencies": {
-    "@sanity/color": "^3.0.0",
-    "@sanity/icons": "^3.4.0",
+    "@sanity/icons": "^5.2.2",
     "@sanity/id-utils": "^1.0.0",
     "@sanity/uuid": "^3.0.2",
     "nanoid": "^5.1.5",
-    "react-fast-compare": "^3.2.2",
     "react-icons": "^5.5.0",
     "rxjs": "^7.8.1"
   },
@@ -64,7 +62,7 @@
     "@sanity/eslint-config-studio": "^6.0.0",
     "@sanity/pkg-utils": "^6.10.10",
     "@sanity/semantic-release-preset": "^6.0.0",
-    "@sanity/ui": "^3.2.0",
+    "@sanity/ui": "^4.2.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.3.0",
@@ -81,24 +79,23 @@
     "prettier-plugin-packagejson": "^3.0.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "react-is": "^18.2.0",
     "rollup-plugin-postcss": "^4.0.2",
-    "sanity": "^6.6.0",
-    "sanity-plugin-utils": "^2.0.3",
+    "sanity": "^6.15.0",
+    "sanity-plugin-utils": "^2.0.18",
     "semantic-release": "^25.0.5",
     "styled-components": "^6.1.19",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4"
   },
   "peerDependencies": {
-    "@sanity/ui": "^3",
-    "react": "^19",
-    "react-dom": "^19",
-    "sanity": "^5 || ^6",
-    "styled-components": "^5.2 || ^6"
+    "@sanity/ui": "^4",
+    "react": "^19.2",
+    "react-dom": "^19.2",
+    "sanity": "^6.9.2",
+    "styled-components": "^6.1"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22.12"
   },
   "packageManager": "pnpm@10.11.0",
   "pnpm": {

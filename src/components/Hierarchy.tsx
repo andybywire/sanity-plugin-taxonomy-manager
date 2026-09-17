@@ -1,4 +1,4 @@
-import {AddCircleIcon} from '@sanity/icons'
+import {AddCircleIcon} from '@sanity/icons/AddCircle'
 import type {DocumentId} from '@sanity/id-utils'
 import {getPublishedId} from '@sanity/id-utils'
 import {Flex, Spinner, Stack, Box, Text, Inline, Card, Button} from '@sanity/ui'
@@ -123,7 +123,7 @@ export const Hierarchy = ({
     <TreeContext.Provider value={{globalVisibility}}>
       <Box padding={4}>
         <>
-          <Stack space={4}>
+          <Stack gap={4}>
             <Card borderBottom paddingBottom={1} display={'flex'} flex={1}>
               <Flex justify={'space-between'} flex={1}>
                 <Card>
@@ -133,7 +133,7 @@ export const Hierarchy = ({
                     prunedData.concepts?.filter(
                       (concept) => (concept?.childConcepts?.length ?? 0) > 0,
                     ).length > 0) && (
-                    <Inline space={1}>
+                    <Inline gap={1}>
                       <Button
                         text={'Collapse'}
                         paddingY={2}
@@ -149,7 +149,7 @@ export const Hierarchy = ({
                 </Card>
                 <Card>
                   {releaseContext !== 'published' && (
-                    <Inline space={1}>
+                    <Inline gap={1}>
                       <Button
                         text={'Add Top Concept'}
                         icon={AddCircleIcon}

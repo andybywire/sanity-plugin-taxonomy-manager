@@ -1,5 +1,7 @@
-import {TrashIcon, AddCircleIcon} from '@sanity/icons'
-import {Box, Text, Button, Tooltip} from '@sanity/ui'
+import {AddCircleIcon} from '@sanity/icons/AddCircle'
+import {TrashIcon} from '@sanity/icons/Trash'
+import {Box, Text, Button} from '@sanity/ui'
+import {Tooltip} from '@sanity/ui/tooltip'
 // import {useCallback, useState} from 'react'
 
 export const ConceptEditAction = ({

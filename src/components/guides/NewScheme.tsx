@@ -1,4 +1,4 @@
-import {AddIcon} from '@sanity/icons'
+import {AddIcon} from '@sanity/icons/Add'
 import {Card, Label, Stack, Text, Button, Dialog, Box, TextArea, TextInput} from '@sanity/ui'
 import {useCallback, useState} from 'react'
 import type {SanityDocument} from 'sanity'
@@ -34,8 +34,8 @@ export const NewScheme = ({document}: {document: SanityDocument}) => {
   return (
     <div style={{marginTop: '2rem'}}>
       <Card padding={[3, 3, 4]} radius={2} shadow={1} tone="primary">
-        <Stack space={6}>
-          <Stack space={4}>
+        <Stack gap={6}>
+          <Stack gap={4}>
             <Label size={4}>New Concept Scheme</Label>
             <Text size={2}>
               To start using hierarchy view taxonomy builder, first give your concept scheme a name
@@ -55,8 +55,8 @@ export const NewScheme = ({document}: {document: SanityDocument}) => {
           width={1}
         >
           <Box padding={4}>
-            <Stack space={4}>
-              <Stack space={2}>
+            <Stack gap={4}>
+              <Stack gap={2}>
                 <Label size={1}>Title</Label>
                 <Text size={1} muted>
                   Describe the concept scheme in one or two words.
@@ -69,7 +69,7 @@ export const NewScheme = ({document}: {document: SanityDocument}) => {
                 placeholder=""
                 value={titleValue}
               />
-              <Stack space={2}>
+              <Stack gap={2}>
                 <Label size={1}>Description (optional)</Label>
                 <Text size={1} muted>
                   Describe the intended use of this concept scheme.

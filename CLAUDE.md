@@ -51,10 +51,14 @@ array-input resource patch, and `views/ConceptUseView` (calls `useListeningQuery
   toast) — not visual correctness, which stays the author's eyeball check.
 - **The studio is outside the gate** (eslint-ignored; not in typecheck/build/test). `pnpm --filter studio
   build` is the headless integration check.
-- Two non-obvious traps: the recommendations GROQ parameter is `$searchQuery`, **not** `$query` (`query`
+- Three non-obvious traps: the recommendations GROQ parameter is `$searchQuery`, **not** `$query` (`query`
   is a reserved `@sanity/client` `QueryParams` key — a `$query` param fails typecheck cryptically); and
   reference-field `filter` functions must be **arity-1** (the inputs treat a zero-arity filter as
-  misconfigured). See [ADR 0002](docs/development/decisions/0002-semantic-recommendations.md).
+  misconfigured); and **`@sanity/ui` v4 / `@sanity/icons` v5 moved components off the root entry** —
+  import `Tooltip` from `@sanity/ui/tooltip`, `useToast`/`ToastProvider` from `@sanity/ui/toast`, and
+  each icon from its own subpath (`@sanity/icons/AddCircle`). Root imports are typed `never`. See
+  [ADR 0002](docs/development/decisions/0002-semantic-recommendations.md) and
+  [ADR 0004](docs/development/decisions/0004-sanity-ui-v4.md).
 
 ## Commits & releases (read before committing)
 

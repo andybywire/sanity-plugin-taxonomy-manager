@@ -1,4 +1,5 @@
-import {EditIcon, DocumentsIcon} from '@sanity/icons'
+import {DocumentsIcon} from '@sanity/icons/Documents'
+import {EditIcon} from '@sanity/icons/Edit'
 import type {StructureBuilder, ListBuilder, DefaultDocumentNodeResolver} from 'sanity/structure'
 
 import {TreeView} from './components/TreeView'
