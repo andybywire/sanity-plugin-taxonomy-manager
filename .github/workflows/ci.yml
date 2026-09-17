@@ -24,7 +24,9 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.12 # floor set by @sanity/ui v4 (engines: >=22.12)
+          # Deliberately the exact engines floor, so CI proves the package really does
+          # work at its declared minimum. Do not raise this to track latest.
+          node-version: 22.12
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
