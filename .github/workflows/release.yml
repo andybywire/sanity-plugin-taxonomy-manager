@@ -15,7 +15,31 @@ permissions:
   contents: read
 
 jobs:
+  consumer-install:
+    # Its own job, not a step in `gate`: this is the only check that exercises a
+    # real consumer dependency layout, so a failure means something categorically
+    # different from a build failure and should read that way.
+    name: Consumer install
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          # About dependency resolution, not the engines floor `gate` already pins.
+          node-version: lts/*
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      # Packs the plugin and npm-installs it into throwaway Studios, asserting a
+      # single shared @sanity/ui and @sanity/icons. This is the check a plugin dev
+      # Studio structurally cannot make: pnpm workspaces and Vite's dep-optimizer
+      # both collapse a duplicate major into one copy, so the bug is invisible
+      # locally while breaking real installs. See ADR 0004.
+      - run: pnpm test:studio-install
+
   release:
+    # A package that would break a real consumer install must not publish.
+    needs: consumer-install
     runs-on: ubuntu-latest
     permissions:
       contents: write # create git tags, GitHub releases, and commit version + CHANGELOG

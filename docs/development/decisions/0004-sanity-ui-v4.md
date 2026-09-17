@@ -95,10 +95,16 @@ ever reachable via the inlined `sanity-plugin-utils@2.0.13`; `2.0.18` uses `dequ
   match compares an element's whole normalized text — its tooltip reads `Select "X" (recommended)`, which
   is not `recommended`. **A future `getByText(/recommended/)` or `queryByText(/Select/)` will now match
   hidden tooltip content.** Assert visibility, not presence.
-- **`sanityPlugin.verifyPackage.dependencies` is `false`**, so `pkg-utils build --check` will *not* flag a
-  stale peer range. The duplicate-copy check has to be run deliberately: pack the plugin and
-  `npm install --dry-run` it against a current `sanity` in a scratch dir, then confirm exactly one
-  `@sanity/ui` and one `@sanity/icons` resolve.
+- **No build step can see a duplicate-copy problem.** `pnpm build`, `pnpm typecheck`, `pnpm test` and
+  `pnpm --filter studio build` all pass with the bug present, because a pnpm workspace (and Vite's dev
+  dep-optimizer) collapses one bare specifier app-wide — the duplicate only exists in a real consumer's
+  `node_modules`. `sanityPlugin.verifyPackage.dependencies` is `false`, so `pkg-utils build --check`
+  won't flag a stale peer range either. **`pnpm test:studio-install`**
+  ([`scripts/test-studio-install.mjs`](../../../scripts/test-studio-install.mjs)) is the check that
+  closes this: it packs the plugin, npm-installs it into throwaway Studios at both ends of the peer
+  range (`sanity@^6.9.2` and `^6.15.0`), and asserts exactly one `@sanity/ui` and one `@sanity/icons`,
+  shared by plugin and Studio. It runs as its own CI job and the release job depends on it. See
+  [#97](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/97).
 
 ## Consequences
 
