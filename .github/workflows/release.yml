@@ -29,7 +29,9 @@ jobs:
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 22.12 # floor set by @sanity/ui v4 (engines: >=22.12)
+          # Latest 22.x, NOT the >=22.12 engines floor: the next step installs npm@latest,
+          # which requires node ^22.22.2. Pinning to the floor breaks the release job.
+          node-version: 22
           registry-url: https://registry.npmjs.org
           cache: pnpm
       - run: npm install --global npm@latest # npm 11.5+ for OIDC trusted publishing
