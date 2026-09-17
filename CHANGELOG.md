@@ -5,6 +5,20 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v5.0.0...v6.0.0) (2026-09-17)
+
+### ⚠ BREAKING CHANGES
+
+* Sanity Studio v5 is no longer supported. The `sanity` peer range moves from
+`^5 || ^6` to `^6.9.2`, and `@sanity/ui` from `^3` to `^4`. `@sanity/ui` v4 only exists in Studio
+6.9.2 and later, and `sanity@5.31.2` pins `@sanity/ui@^3.2.0`, so one source tree cannot serve
+both. Peers also tighten to `react`/`react-dom` `^19.2` and `styled-components` `^6.1`, and
+`engines.node` rises from `>=20` to `>=22.12`. Studio v5 users should stay on plugin `5.x`.
+
+### Features
+
+* upgrade to @sanity/ui v4 and require Sanity Studio ^6.9.2 ([8a332f4](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/8a332f444b32a1e26fe29505d426c6643c0593f9)), closes [#94](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/94)
+
 ## [5.0.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v4.7.2...v5.0.0) (2026-07-23)
 
 ### ⚠ BREAKING CHANGES
