@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.0.0...v6.0.1) (2026-10-20)
+
+### Bug Fixes
+
+* drop unused runtime dependencies and the postcss build branch ([89018b1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/89018b154d97f609f9b31b5720664ec91bb04309)), closes [#99](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/99)
+
 ## [6.0.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v5.0.0...v6.0.0) (2026-09-17)
 
 ### ⚠ BREAKING CHANGES
