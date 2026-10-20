@@ -22,9 +22,9 @@ jobs:
     name: Consumer install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           # About dependency resolution, not the engines floor `gate` already pins.
           node-version: lts/*
@@ -47,11 +47,11 @@ jobs:
       pull-requests: write # comment on released PRs
       id-token: write # npm OIDC trusted publishing + provenance
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0 # semantic-release needs full history + tags
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           # Latest 22.x, NOT the >=22.12 engines floor: the next step installs npm@latest,
           # which requires node ^22.22.2. Pinning to the floor breaks the release job.

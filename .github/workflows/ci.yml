@@ -20,9 +20,9 @@ jobs:
   gate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           # Deliberately the exact engines floor, so CI proves the package really does
           # work at its declared minimum. Do not raise this to track latest.
@@ -44,9 +44,9 @@ jobs:
     name: Consumer install
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
         with:
           # About dependency resolution, not the engines floor `gate` already pins.
           node-version: lts/*
