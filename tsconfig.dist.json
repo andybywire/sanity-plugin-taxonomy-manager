@@ -4,7 +4,7 @@
     "outDir": "./lib",
     "rootDir": "."
   },
-  "include": ["src", "global.d.ts"],
+  "include": ["src"],
   "exclude": [
     "src/**/__fixtures__",
     "src/**/__mocks__",

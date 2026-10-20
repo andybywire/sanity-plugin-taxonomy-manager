@@ -1,17 +1,17 @@
-// import styles from '../styles/toggleButton.module.css'
 import {ToggleArrowRightIcon} from '@sanity/icons/ToggleArrowRight'
 import {Button} from '@sanity/ui'
 
-import styles from './ToggleButton.module.css'
-
 export function ToggleButton({handler, visibility}: {handler: () => void; visibility: string}) {
+  const expanded = visibility == 'open'
+
   return (
     <Button
-      icon={ToggleArrowRightIcon}
+      // Rotated inline rather than through a CSS module: this one rule was the
+      // only thing the plugin's postcss build step existed for.
+      icon={<ToggleArrowRightIcon style={{rotate: expanded ? '90deg' : undefined}} />}
       mode={'bleed'}
-      aria-expanded={visibility == 'open'}
+      aria-expanded={expanded}
       onClick={handler}
-      className={styles.toggleButton}
     />
   )
 }
