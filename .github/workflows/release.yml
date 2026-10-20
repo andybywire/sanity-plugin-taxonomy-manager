@@ -19,15 +19,21 @@ jobs:
     # Its own job, not a step in `gate`: this is the only check that exercises a
     # real consumer dependency layout, so a failure means something categorically
     # different from a build failure and should read that way.
-    name: Consumer install
+    name: Consumer install (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Mirrors ci.yml: 22.12 is the `engines.node` floor the package promises, lts/*
+        # is where a consumer most likely is. `release` needs both legs, so a package
+        # that would not install on the declared minimum cannot publish.
+        node-version: ['22.12', 'lts/*']
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          # About dependency resolution, not the engines floor `gate` already pins.
-          node-version: lts/*
+          node-version: ${{ matrix.node-version }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # Packs the plugin and npm-installs it into throwaway Studios, asserting a

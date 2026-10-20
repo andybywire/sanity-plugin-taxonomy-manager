@@ -24,9 +24,12 @@ jobs:
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          # Deliberately the exact engines floor, so CI proves the package really does
-          # work at its declared minimum. Do not raise this to track latest.
-          node-version: 22.12
+          # The toolchain's Node, not the package's. vitest, tsc and eslint never run on
+          # a consumer's machine, so pinning them to the engines floor proved nothing a
+          # consumer is promised — and the floor blocked eslint 10 (^22.13) and jsdom 30
+          # (^22.22.2). `Consumer install` proves the floor instead, where it means
+          # something. Keep this tracking current Node.
+          node-version: lts/*
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm test
@@ -41,15 +44,21 @@ jobs:
     # Its own job, not a step in `gate`: this is the only check that exercises a
     # real consumer dependency layout, so a failure means something categorically
     # different from a build failure and should read that way.
-    name: Consumer install
+    name: Consumer install (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 22.12 is the exact `engines.node` floor: this is where the package's declared
+        # minimum is proven, by the one job that installs it the way a consumer does.
+        # lts/* is where a consumer most likely actually is. Both must resolve cleanly.
+        node-version: ['22.12', 'lts/*']
     steps:
       - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
-          # About dependency resolution, not the engines floor `gate` already pins.
-          node-version: lts/*
+          node-version: ${{ matrix.node-version }}
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       # Packs the plugin and npm-installs it into throwaway Studios, asserting a
