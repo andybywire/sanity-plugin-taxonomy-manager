@@ -1,5 +1,4 @@
 import {defineConfig} from '@sanity/pkg-utils'
-import postcss from 'rollup-plugin-postcss'
 
 export default defineConfig({
   dist: 'dist',
@@ -14,14 +13,5 @@ export default defineConfig({
       'ae-internal-missing-underscore': 'off',
       'ae-missing-release-tag': 'off',
     },
-  },
-  rollup: {
-    plugins: [
-      postcss({
-        modules: true, // Enable CSS modules
-        extract: false, // Don't extract to separate file, inject into JS
-        inject: true, // Automatically inject styles
-      }),
-    ],
   },
 })

@@ -53,9 +53,7 @@
     "@sanity/icons": "^5.2.2",
     "@sanity/id-utils": "^1.0.0",
     "@sanity/uuid": "^3.0.2",
-    "nanoid": "^5.1.5",
-    "react-icons": "^5.5.0",
-    "rxjs": "^7.8.1"
+    "nanoid": "^5.1.5"
   },
   "devDependencies": {
     "@commitlint/cli": "^21.0.2",
@@ -80,7 +78,6 @@
     "prettier-plugin-packagejson": "^3.0.2",
     "react": "^19.2.3",
     "react-dom": "^19.2.3",
-    "rollup-plugin-postcss": "^4.0.2",
     "sanity": "^6.15.0",
     "sanity-plugin-utils": "^2.0.18",
     "semantic-release": "^25.0.5",
@@ -101,7 +98,8 @@
   "packageManager": "pnpm@10.11.0",
   "pnpm": {
     "overrides": {
-      "conventional-changelog-conventionalcommits": "9.3.1"
+      "conventional-changelog-conventionalcommits": "9.3.1",
+      "handlebars": "^4.7.10"
     }
   },
   "sanityExchangeUrl": "https://www.sanity.io/plugins/taxonomy-manager",

@@ -1,4 +1,5 @@
-import {AiOutlineTag, AiOutlineTags} from 'react-icons/ai'
+import {TagIcon} from '@sanity/icons/Tag'
+import {TagsIcon} from '@sanity/icons/Tags'
 import {defineType, defineField} from 'sanity'
 
 import {Identifier} from './components/inputs'
@@ -19,7 +20,7 @@ export default function skosConcept(
     name: 'skosConcept',
     title: 'Concept',
     type: 'document',
-    icon: AiOutlineTags,
+    icon: TagsIcon,
     initialValue: async (_, context) => {
       if (baseUri)
         return {
@@ -193,7 +194,7 @@ export default function skosConcept(
       prepare({title}: {title: string}) {
         return {
           title: title,
-          media: AiOutlineTag,
+          media: TagIcon,
         }
       },
     },
