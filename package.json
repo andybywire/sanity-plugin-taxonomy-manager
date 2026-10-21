@@ -59,7 +59,7 @@
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@sanity/eslint-config-studio": "^6.0.0",
-    "@sanity/pkg-utils": "^6.10.10",
+    "@sanity/pkg-utils": "^10.9.2",
     "@sanity/semantic-release-preset": "^6.0.0",
     "@sanity/ui": "^4.4.10",
     "@testing-library/dom": "^10.4.2",
