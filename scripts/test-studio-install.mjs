@@ -191,7 +191,7 @@ function installStudio(studio, tarball) {
 
   console.log(`\nInstalling into a throwaway ${studio.name} Studio…`)
   let ok = false
-  let out = ''
+  let out
   try {
     out = run('npm install 2>&1', {cwd: testDir})
     ok = true
