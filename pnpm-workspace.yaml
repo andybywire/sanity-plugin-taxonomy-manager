@@ -1,3 +1,38 @@
 packages:
   - '.'
   - 'studio'
+
+# Everything below used to live elsewhere. pnpm 11 reads settings from this file
+# rather than from `.npmrc` (now auth and registry only) or the `pnpm` field in
+# package.json, and pnpm 12 fails outright on settings it does not recognize.
+
+# Moved out of the `pnpm` field in package.json, which pnpm 11 stopped reading.
+# That field is ignored with only a warning, so both of these would have quietly
+# stopped applying — including the `handlebars` pin, which is what keeps a
+# critical advisory out of the tree (see #99).
+overrides:
+  conventional-changelog-conventionalcommits: 9.3.1
+  handlebars: ^4.7.10
+
+# esbuild's postinstall links its platform binary. pnpm 11 defaults
+# `strictDepBuilds` to true, so an unapproved build script is an error rather than
+# a warning: every package that needs to build has to be named here.
+allowBuilds:
+  esbuild: true
+
+# pnpm 11 added `minimumReleaseAge` (default 1440 minutes) so a version published
+# minutes ago cannot be pulled in before anyone has had the chance to notice it is
+# malicious. By default pnpm re-applies that check to every entry of an existing
+# lockfile, which makes installs — CI's `--frozen-lockfile` included — fail for a
+# day whenever a bump lands a freshly published transitive package. `sanity@6.20`
+# did exactly that.
+#
+# `trustLockfile` keeps the delay where it does the work, at resolution: running an
+# update locally still refuses a too-new version. What it stops is re-litigating a
+# lockfile a human already reviewed and committed. Enforcement sits at the point of
+# the decision rather than on every install that reads the result.
+#
+# When pnpm does re-resolve and accepts a too-new package, it records the exact
+# version under `minimumReleaseAgeExclude` here. That is expected, and worth
+# reading rather than committing blind.
+trustLockfile: true

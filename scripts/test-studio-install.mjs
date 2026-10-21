@@ -184,9 +184,10 @@ function installStudio(studio, tarball) {
     dependencies: {...studio.deps, [PKG]: `file:${tarball}`},
   }
   writeFileSync(path.join(testDir, 'package.json'), JSON.stringify(pkg, null, 2))
-  // npm walks up from cwd and would otherwise read the repo's .npmrc, whose
-  // pnpm-only public-hoist-pattern keys make it warn once per line. Harmless,
-  // but noisy enough to bury a real failure in the captured output.
+  // Keep npm's audit and funding summaries out of the captured output, so a real
+  // failure isn't buried. (This also used to shield the throwaway Studio from the
+  // repo's own .npmrc, whose pnpm-only keys npm warned about line by line; that
+  // file is gone now its settings live in pnpm-workspace.yaml.)
   writeFileSync(path.join(testDir, '.npmrc'), 'audit=false\nfund=false\n')
 
   console.log(`\nInstalling into a throwaway ${studio.name} Studio…`)
