@@ -22,8 +22,8 @@ importers:
         specifier: ^3.0.2
         version: 3.0.3
       nanoid:
-        specifier: ^5.1.5
-        version: 5.1.16
+        specifier: ^6.0.2
+        version: 6.0.2
     devDependencies:
       '@commitlint/cli':
         specifier: ^21.2.4
