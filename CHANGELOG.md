@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.0.2](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.0.1...v6.0.2) (2026-10-21)
+
+### Bug Fixes
+
+* upgrade nanoid to 6 ([4c35a93](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/4c35a930b79ed187b895d873c0c7080c84dd8c8b)), closes [#104](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/104)
+
 ## [6.0.1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.0.0...v6.0.1) (2026-10-20)
 
 ### Bug Fixes
