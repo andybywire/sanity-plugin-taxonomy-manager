@@ -1,7 +1,6 @@
 import {Flex, Spinner, Stack, Box, Card, Inline, Text, Button} from '@sanity/ui'
-import {fromString as pathFromString} from '@sanity/util/paths'
 import {useCallback} from 'react'
-import {Preview, useSchema, usePerspective, getPublishedId} from 'sanity'
+import {Preview, useSchema, usePerspective, getPublishedId, stringToPath} from 'sanity'
 import type {UserViewComponent} from 'sanity/structure'
 import {usePaneRouter} from 'sanity/structure'
 import {Feedback, useListeningQuery} from 'sanity-plugin-utils'
@@ -31,7 +30,7 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
       handleEditReference({
         id,
         type,
-        parentRefPath: parentRefPath ? pathFromString(parentRefPath) : [``],
+        parentRefPath: parentRefPath ? stringToPath(parentRefPath) : [``],
         template: {id},
       })
     },
