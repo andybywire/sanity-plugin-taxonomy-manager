@@ -184,6 +184,9 @@ As you might imagine, there is much more to creating, using, and managing taxono
 
 #### Books
 
+- [Ontology Pipeline](https://www.ontologypipeline.com/en/bookpage), Jessica Talisman, Technics Publications (2026)
+  A clear, practical guide for building standards-based knowledge models, moving methodically from controlled vocabularies to taxonomies to thesauri to ontologies. _Ontology Pipeline_ includes a thorough introduction to SKOS, its formal syntax, and its practical application.  
+
 - [The Accidental Taxonomist](https://www.amazon.com/Accidental-Taxonomist-Third-Heather-Hedden/dp/1573875864), Heather Hedden, Information Today  
   An approachable, practical, and thorough introduction to taxonomy design, use, and management by a highly knowledgeable expert in the field. Now in its third edition (2022).
 
