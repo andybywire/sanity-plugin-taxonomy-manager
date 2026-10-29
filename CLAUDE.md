@@ -88,7 +88,7 @@ GitHub Issues are the work queue (e.g.
 ## Layout
 
 - **`src/core/`** — the pure, tested core (queries, ids, mutations, filters, validation, `tree/`,
-  `semanticRecommendations`, and `ports.ts` — the data-port interface).
+  `semanticRecommendations`, `activeConcept`, and `ports.ts` — the data-port interface).
 - **`src/seams/`** — `StudioDataAdapter` (default port impl) + `TaxonomyPortContext`.
 - **`src/components/`, `src/hooks/`, `src/views/`** — the thin component shell.
 - **`src/test/`** — `FakeDataPort`, `inputHarness`, `renderWithUi` (test infrastructure).
