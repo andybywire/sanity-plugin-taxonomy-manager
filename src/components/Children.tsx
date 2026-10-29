@@ -73,7 +73,7 @@ export const Children = ({
               flex={1}
               marginLeft={!concept?.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
             >
-              <ConceptDetailLink concept={concept} />
+              <ConceptDetailLink concept={concept} inputComponent={inputComponent} />
             </Box>
           )}
           {concept?.prefLabel && (
@@ -84,7 +84,7 @@ export const Children = ({
               {inputComponent ? (
                 <ConceptSelectLink concept={concept} selectConcept={selectConcept} />
               ) : (
-                <ConceptDetailLink concept={concept} />
+                <ConceptDetailLink concept={concept} inputComponent={inputComponent} />
               )}
             </Box>
           )}

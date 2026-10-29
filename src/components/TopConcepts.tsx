@@ -68,7 +68,7 @@ export const TopConcepts = ({
               flex={1}
               marginLeft={!concept?.childConcepts || concept.childConcepts.length == 0 ? 5 : 0}
             >
-              <ConceptDetailLink concept={concept} topConcept />
+              <ConceptDetailLink concept={concept} topConcept inputComponent={inputComponent} />
             </Box>
           )}
           {concept?.prefLabel && (
@@ -79,7 +79,7 @@ export const TopConcepts = ({
               {inputComponent ? (
                 <ConceptSelectLink concept={concept} selectConcept={selectConcept} topConcept />
               ) : (
-                <ConceptDetailLink concept={concept} topConcept />
+                <ConceptDetailLink concept={concept} topConcept inputComponent={inputComponent} />
               )}
             </Box>
           )}

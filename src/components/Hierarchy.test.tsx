@@ -1,6 +1,6 @@
 import {screen} from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import {describe, expect, it, vi} from 'vitest'
+import {beforeEach, describe, expect, it, vi} from 'vitest'
 
 import {ReleaseContext, SchemeContext} from '../context'
 import {TaxonomyPortProvider} from '../seams/TaxonomyPortContext'
@@ -11,11 +11,27 @@ import type {ConceptSchemeDocument, DocumentConcepts} from '../types'
 import {Hierarchy} from './Hierarchy'
 
 // Concept links + new-pane navigation read Studio's pane router, which isn't
-// present in jsdom. Stub it — navigation isn't what these tests exercise.
+// present in jsdom. Stub it — navigation isn't what these tests exercise, but
+// the pane open beside the tree drives which row is marked current.
+const mocks = vi.hoisted(() => ({usePaneRouter: vi.fn()}))
+
 vi.mock('sanity/structure', async (importOriginal) => ({
   ...(await importOriginal<typeof import('sanity/structure')>()),
-  usePaneRouter: () => ({routerPanesState: [], groupIndex: 0}),
+  usePaneRouter: mocks.usePaneRouter,
 }))
+
+/** Tree pane at index 0, so the concept pane — if any — is the group at index 1. */
+function panes(openId?: string) {
+  return {
+    routerPanesState: openId ? [[{id: 'scheme-1'}], [{id: openId}]] : [[{id: 'scheme-1'}]],
+    groupIndex: 0,
+  }
+}
+
+beforeEach(() => {
+  vi.clearAllMocks()
+  mocks.usePaneRouter.mockReturnValue(panes())
+})
 
 const scheme = {
   displayed: {_id: 'scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
@@ -23,7 +39,7 @@ const scheme = {
 
 function renderHierarchy(
   port: ReturnType<typeof createFakeDataPort>,
-  releaseContext: string | undefined = undefined
+  releaseContext: string | undefined = undefined,
 ) {
   return renderWithUi(
     <TaxonomyPortProvider port={port}>
@@ -32,7 +48,7 @@ function renderHierarchy(
           <Hierarchy inputComponent={false} />
         </ReleaseContext.Provider>
       </SchemeContext.Provider>
-    </TaxonomyPortProvider>
+    </TaxonomyPortProvider>,
   )
 }
 
@@ -88,5 +104,44 @@ describe('Hierarchy (trunk watch seam)', () => {
     expect(screen.getByRole('button', {name: /Animals/})).toBeInTheDocument()
     await userEvent.setup().click(screen.getByLabelText('Remove this concept from this scheme'))
     expect(screen.queryByRole('button', {name: /Animals/})).not.toBeInTheDocument()
+  })
+
+  it('marks only the concept open in the pane to the right', () => {
+    mocks.usePaneRouter.mockReturnValue(panes('concept-2'))
+    const tree: DocumentConcepts = {
+      topConcepts: [
+        {id: 'concept-1', prefLabel: 'Animals'},
+        {id: 'concept-2', prefLabel: 'Minerals'},
+      ],
+      concepts: [],
+    }
+    renderHierarchy(createFakeDataPort({tree}))
+
+    expect(screen.getByRole('button', {name: /Minerals/})).toHaveAttribute('aria-current', 'true')
+    expect(screen.getByRole('button', {name: /Animals/})).not.toHaveAttribute('aria-current')
+  })
+
+  it('marks every occurrence of a concept with more than one broader term', () => {
+    mocks.usePaneRouter.mockReturnValue(panes('concept-3'))
+    const tree: DocumentConcepts = {
+      topConcepts: [
+        {
+          id: 'concept-1',
+          prefLabel: 'Animals',
+          childConcepts: [{id: 'concept-3', prefLabel: 'Carbon', level: 1}],
+        },
+        {
+          id: 'concept-2',
+          prefLabel: 'Minerals',
+          childConcepts: [{id: 'concept-3', prefLabel: 'Carbon', level: 1}],
+        },
+      ],
+      concepts: [],
+    }
+    renderHierarchy(createFakeDataPort({tree}))
+
+    const occurrences = screen.getAllByRole('button', {name: /Carbon/})
+    expect(occurrences).toHaveLength(2)
+    occurrences.forEach((row) => expect(row).toHaveAttribute('aria-current', 'true'))
   })
 })
