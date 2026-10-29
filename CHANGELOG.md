@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.1.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.0.2...v6.1.0) (2026-10-29)
+
+### Features
+
+* highlight the concept open in the adjacent pane ([ad67308](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/ad67308a4d01ae9a14bed1209919e31421b96d81)), closes [#110](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/110)
+
 ## [6.0.2](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.0.1...v6.0.2) (2026-10-21)
 
 ### Bug Fixes
