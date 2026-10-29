@@ -4,26 +4,36 @@ import {useCallback, useContext} from 'react'
 import {RouterContext} from 'sanity/router'
 import {usePaneRouter} from 'sanity/structure'
 
+import {activeConceptId, isActiveConcept} from '../../core/activeConcept'
 import type {ChildConceptTerm} from '../../types'
 
 /**
  * #### Concept Detail Link
- * Renders a link to a concept in the hierarchy tree that opens in a new pane.
+ * Renders a link to a concept in the hierarchy tree that opens in a new pane,
+ * marked as current when its document is the one already open there.
  */
 export function ConceptDetailLink({
   concept,
   topConcept = false,
   orphan = false,
+  inputComponent = false,
 }: {
   concept: ChildConceptTerm
   topConcept?: boolean
   orphan?: boolean
+  inputComponent?: boolean
 }) {
   const routerContext = useContext(RouterContext)
   const {routerPanesState, groupIndex} = usePaneRouter()
 
   const {id, prefLabel} = concept ?? {}
   const displayLabel = prefLabel || '[new concept]'
+
+  // Input trees render this link only for concepts with no prefLabel, so a
+  // highlight there would mark one '[new concept]' row among siblings that
+  // can never mark (they render ConceptSelectLink) — a rendering bug, not a cue.
+  const isActive =
+    !inputComponent && isActiveConcept(id, activeConceptId(routerPanesState, groupIndex))
 
   const openInNewPane = useCallback(() => {
     if (!routerContext || !id) {
@@ -61,6 +71,8 @@ export function ConceptDetailLink({
         onClick={openInNewPane}
         width="fill"
         justify={'flex-start'}
+        selected={isActive}
+        aria-current={isActive ? 'true' : undefined}
       >
         <Text size={2} weight={topConcept ? 'bold' : 'regular'} textOverflow="ellipsis">
           {displayLabel}

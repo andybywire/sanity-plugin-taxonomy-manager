@@ -55,6 +55,14 @@ tests inject `test/FakeDataPort` (synchronous fixtures + recorded calls).
   resource patch (the "third mutation site" in `ArrayHierarchyInput.handleAction`); and
   `views/ConceptUseView` (calls `useListeningQuery` directly). Porting these added cost without a
   testability gain, so they stay impure by design.
+- **Pane routing is outside the port's remit, not an exemption from it.** The port covers *data* — the
+  live query, mutations, recommendations. Studio's pane router is host navigation state, so components
+  read `usePaneRouter` / `RouterContext` directly (`ConceptDetailLink`, `hooks/useOpenNewConceptPane`,
+  `views/ConceptUseView`). Widening the port to carry pane state would grow both the interface and
+  `FakeDataPort` for no testability gain, because the decision-bearing part is already pure:
+  [`core/activeConcept`](../../../src/core/activeConcept.ts) derives the concept open beside the tree
+  from the pane array and is unit-tested with hand-built fixtures, like any other core module. The rule
+  that matters is the standing one — components read the router, the core decides what it means.
 
 ### The testing strategy this enables
 
