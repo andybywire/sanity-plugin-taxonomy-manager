@@ -1,5 +1,6 @@
 export * from './useAddTitle'
 export * from './useCreateConcept'
+export * from './useMoveConcept'
 export * from './useOpenNewConceptPane'
 export * from './useRemoveConcept'
 export * from './useSemanticRecommendations'

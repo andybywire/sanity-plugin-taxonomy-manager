@@ -13,13 +13,16 @@ const theme = buildTheme()
  * interaction tests.
  */
 export function renderWithUi(ui: ReactElement): RenderResult {
-  return render(ui, {
-    wrapper: ({children}: {children: ReactNode}) => (
-      <ThemeProvider theme={theme}>
-        <LayerProvider>
-          <ToastProvider>{children}</ToastProvider>
-        </LayerProvider>
-      </ThemeProvider>
-    ),
-  })
+  return render(ui, {wrapper: UiProviders})
+}
+
+/** The same stack as a standalone wrapper, for `renderHook`. */
+export function UiProviders({children}: {children: ReactNode}): ReactElement {
+  return (
+    <ThemeProvider theme={theme}>
+      <LayerProvider>
+        <ToastProvider>{children}</ToastProvider>
+      </LayerProvider>
+    </ThemeProvider>
+  )
 }

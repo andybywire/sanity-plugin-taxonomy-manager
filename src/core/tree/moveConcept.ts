@@ -150,6 +150,17 @@ function surfaceAtRoot(
   return {...data, concepts: insertInOrder(concepts, {...relevelled(moved, 0), isOrphan: true})}
 }
 
+/**
+ * Whether fresh listener data already reflects a move, so the optimistic copy
+ * of it can be dropped. The concept leaving its former parent is the signal —
+ * it is what both a re-parent and a dropped broader term have in common, and it
+ * arrives with the same refetch that would carry the new position.
+ */
+export function isMoveApplied(data: DocumentConcepts | null, move: ConceptMove): boolean {
+  if (!data) return false
+  return !isChildOf(data, move.conceptId, move.fromParentId)
+}
+
 /** Whether any node in the tree still lists this concept among its children. */
 function isNestedAnywhere(data: DocumentConcepts, id: string): boolean {
   let nested = false

@@ -3,7 +3,12 @@ import {describe, expect, it} from 'vitest'
 import type {ConceptSchemeDocument} from '../types'
 
 import {SKOS_CONCEPT_STRENGTHEN} from './ids'
-import {planCreateConcept, planMoveConcept, planRemoveConcept} from './mutations'
+import {
+  conceptMovePatch,
+  planCreateConcept,
+  planMoveConcept,
+  planRemoveConcept,
+} from './mutations'
 
 const scheme = (id: string): ConceptSchemeDocument['displayed'] =>
   ({_id: id, _type: 'skosConceptScheme', title: 'Test Scheme'}) as ConceptSchemeDocument['displayed']
@@ -223,5 +228,43 @@ describe('planMoveConcept, out of the hierarchy', () => {
     expect(plan.targetId).toBe('versions.rel1.falcons')
     expect(plan.isInRelease).toBe(true)
     expect(plan.insertBroader).toBeNull()
+  })
+})
+
+describe('conceptMovePatch', () => {
+  const plan = (toParent: {id: string; _originalId?: string} | null) =>
+    toParent === null
+      ? planMoveConcept({
+          scheme: scheme('scheme-1'),
+          concept: {id: 'falcons'},
+          fromParentId: 'birds',
+          toParent: null,
+        })
+      : planMoveConcept({
+          scheme: scheme('scheme-1'),
+          concept: {id: 'falcons'},
+          fromParentId: 'birds',
+          toParent,
+          broaderKey: 'broader-key',
+        })
+
+  it('drops the old reference and appends the new one in a single patch', () => {
+    expect(conceptMovePatch(plan({id: 'mammals', _originalId: 'mammals'}))).toEqual({
+      // Content Lake applies setIfMissing → set → unset → insert, so one patch
+      // can empty the old reference out and append the new one after it.
+      setIfMissing: {broader: []},
+      unset: ['broader[_ref=="birds"]'],
+      insert: {
+        after: 'broader[-1]',
+        items: [{_key: 'broader-key', _ref: 'mammals', _type: 'reference', _weak: false}],
+      },
+    })
+  })
+
+  it('omits the insert entirely when the broader term is simply dropped', () => {
+    expect(conceptMovePatch(plan(null))).toEqual({
+      setIfMissing: {broader: []},
+      unset: ['broader[_ref=="birds"]'],
+    })
   })
 })

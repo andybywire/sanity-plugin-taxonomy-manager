@@ -170,3 +170,30 @@ export function planMoveConcept(input: MoveConceptInput): MoveConceptPlan {
       : null,
   }
 }
+
+/**
+ * The patch a {@link MoveConceptPlan} applies to the moved concept's document.
+ *
+ * One patch does both halves. Content Lake applies `setIfMissing` → `set` →
+ * `unset` → `insert`, so the reference to the old broader term is gone before
+ * the new one is appended, and `setIfMissing` guarantees there is an array to
+ * append to even for a concept that had none. Verified against a real dataset:
+ * appending after `broader[-1]` still lands when the unset emptied the array,
+ * so these do not need to be two patches.
+ *
+ * Shaped to satisfy `@sanity/client`'s `PatchOperations` structurally, without
+ * importing it — the core stays free of Sanity dependencies.
+ */
+export function conceptMovePatch(plan: MoveConceptPlan): {
+  setIfMissing: {broader: never[]}
+  unset: string[]
+  insert?: {after: string; items: SkosConceptReference[]}
+} {
+  return {
+    setIfMissing: {broader: []},
+    unset: [plan.unsetBroader],
+    ...(plan.insertBroader
+      ? {insert: {after: 'broader[-1]', items: [plan.insertBroader]}}
+      : {}),
+  }
+}
