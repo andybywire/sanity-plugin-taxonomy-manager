@@ -20,10 +20,17 @@ import {ToggleButton} from './interactions/ToggleButton'
  */
 export const Children = ({
   concept,
+  parentId,
   selectConcept,
   inputComponent = false,
 }: {
   concept: ChildConceptTerm
+  /**
+   * The concept this row hangs under. A concept with more than one broader term
+   * renders at several points in the tree, so the pair (`concept.id`,
+   * `parentId`) — not the concept id alone — identifies this occurrence.
+   */
+  parentId: string
   selectConcept: (conceptId: {
     _ref: string
     _type: 'reference'
@@ -137,6 +144,7 @@ export const Children = ({
         concept.level < 5 && (
           <ChildConcepts
             concepts={concept.childConcepts}
+            parentId={concept.id}
             selectConcept={selectConcept}
             inputComponent={inputComponent}
             childVisibility={levelVisibility}
