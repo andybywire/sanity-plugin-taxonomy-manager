@@ -4,6 +4,8 @@ import {useCallback} from 'react'
 
 import type {ChildConceptTerm} from '../../types'
 
+import {SLOT_PADDING_X} from '../../hooks'
+
 /**
  * #### Concept Select Link
  * Writes a concept _ref from the hierarchy tree to the current document
@@ -56,7 +58,7 @@ export function ConceptSelectLink({
         >
           <Button
             mode="bleed"
-            paddingLeft={0}
+            paddingLeft={SLOT_PADDING_X}
             onClick={handleClick}
             width="fill"
             justify={'flex-start'}

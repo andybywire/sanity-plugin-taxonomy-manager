@@ -1,6 +1,8 @@
 import {DragHandleIcon} from '@sanity/icons/DragHandle'
 import {Button} from '@sanity/ui'
 
+import {SLOT_PADDING_X} from '../../hooks'
+
 /**
  * #### Concept Drag Handle
  * The grip that picks a concept up, revealed when the pointer is over its row.
@@ -35,7 +37,7 @@ export function ConceptDragHandle({
       tabIndex={-1}
       icon={DragHandleIcon}
       mode="bleed"
-      paddingY={2}
+      paddingX={SLOT_PADDING_X}
       // touchAction keeps a touch drag from scrolling the pane instead.
       style={{cursor: 'grab', touchAction: 'none', visibility: visible ? 'visible' : 'hidden'}}
     />

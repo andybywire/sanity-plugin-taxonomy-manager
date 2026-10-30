@@ -87,7 +87,7 @@ export function MoveConceptDialog({
     >
       <Stack gap={4} padding={4}>
         <Text muted size={1}>
-          {`Choose the concept that should become the broader term for “${label}”.`}
+          {`Choose the concept that should become the broader term for “${label}”:`}
         </Text>
 
         {refusal && (
@@ -111,7 +111,7 @@ export function MoveConceptDialog({
           <Card borderTop paddingTop={4}>
             <Stack gap={3}>
               <Text muted size={1}>
-                {`Or take “${label}” out of the hierarchy. It keeps any other broader terms it has.`}
+                {`Or remove “${label}” from this point in the hierarchy. It will either become a top level term, or remain a child of any other broader terms assigned to it.`}
               </Text>
               <Button
                 text={`Remove “${parentLabel}” as a broader term`}

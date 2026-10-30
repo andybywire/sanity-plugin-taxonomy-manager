@@ -52,6 +52,13 @@ function renderHierarchy(
   )
 }
 
+/** Removing a concept lives in the row's overflow menu, not on the row itself. */
+async function removeViaMenu(label: string) {
+  const user = userEvent.setup()
+  await user.click(screen.getByRole('button', {name: `More actions for ${label}`}))
+  await user.click(await screen.findByText('Remove from scheme'))
+}
+
 describe('Hierarchy (trunk watch seam)', () => {
   it('watches the trunk tree with the document id and perspective', () => {
     const port = createFakeDataPort({loading: true})
@@ -83,8 +90,7 @@ describe('Hierarchy (trunk watch seam)', () => {
     const port = createFakeDataPort({tree})
     renderHierarchy(port)
 
-    const removeAction = screen.getByLabelText('Remove this concept from this scheme')
-    await userEvent.setup().click(removeAction)
+    await removeViaMenu('Animals')
 
     expect(port.appliedPlans).toHaveLength(1)
     expect(port.appliedPlans[0]).toMatchObject({
@@ -102,7 +108,7 @@ describe('Hierarchy (trunk watch seam)', () => {
     renderHierarchy(createFakeDataPort({tree}))
 
     expect(screen.getByRole('button', {name: /^Animals/})).toBeInTheDocument()
-    await userEvent.setup().click(screen.getByLabelText('Remove this concept from this scheme'))
+    await removeViaMenu('Animals')
     expect(screen.queryByRole('button', {name: /^Animals/})).not.toBeInTheDocument()
   })
 
