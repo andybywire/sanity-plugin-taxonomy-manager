@@ -12,7 +12,7 @@ import {
 type SchemeDisplayed = ConceptSchemeDocument['displayed']
 
 /**
- * "Describe, don't execute": the create/remove planners below compute a pure
+ * "Describe, don't execute": the create/remove/move planners below compute a pure
  * description of the transaction a concept mutation should run. The hooks stay
  * thin — they generate the random ids/keys, pass them in, and replay the plan
  * onto client.transaction(). This makes the release/version-aware mutation logic
@@ -101,5 +101,72 @@ export function planRemoveConcept(input: {
     schemeId,
     createIfNotExists: {...input.scheme, _id: schemeId},
     unsetPaths: [`${field}[_ref=="${input.conceptRef}"]`],
+  }
+}
+
+type MoveConceptBase = {
+  scheme: SchemeDisplayed
+  concept: {id: string}
+  fromParentId: string
+}
+
+/**
+ * Either a new broader term, which needs a `_key` for the reference, or none at
+ * all. Keeping these as separate shapes means a caller cannot ask for a new
+ * broader term and forget the key.
+ */
+export type MoveConceptInput =
+  | (MoveConceptBase & {toParent: {id: string; _originalId?: string}; broaderKey: string})
+  | (MoveConceptBase & {toParent: null})
+
+export type MoveConceptPlan = {
+  kind: 'move'
+  /** Published id of the moved concept — the Actions API `publishedId`. */
+  publishedId: string
+  /** The draft, or release version, the patch is applied to. */
+  targetId: string
+  /** True when `targetId` names a release version rather than a draft. */
+  isInRelease: boolean
+  /** Path unsetting the reference to the concept's former broader term. */
+  unsetBroader: string
+  /** The concept's new broader term, or `null` when it is simply dropped. */
+  insertBroader: SkosConceptReference | null
+}
+
+/**
+ * Plan the re-parenting of a concept: drop the reference to its former broader
+ * term, and add one to its new broader term. A `null` `toParent` drops it with
+ * nothing to replace it, which leaves the concept an orphan when that was its
+ * last broader term in the scheme.
+ *
+ * Either way this is a single patch to a single document. The concept is
+ * already a member of the scheme's `concepts[]` array and stays one, so no
+ * scheme field changes. Moving a *top* concept is the case that needs a second
+ * document, and is not this plan.
+ *
+ * `unsetBroader` and `insertBroader` go in one patch. The patch order Content
+ * Lake applies is `setIfMissing` → `set` → `unset` → `insert`, so the unset of
+ * the old reference lands before the new one is appended.
+ */
+export function planMoveConcept(input: MoveConceptInput): MoveConceptPlan {
+  const target = deriveSchemeMutationTarget(input.scheme._id)
+  const publishedId = getPublishedId(DocumentId(input.concept.id))
+
+  return {
+    kind: 'move',
+    publishedId,
+    // Same draft/version math as a new concept, applied to an existing one: the
+    // moved concept is edited in whichever context its scheme is being edited.
+    targetId: deriveNewConceptId(publishedId, target),
+    isInRelease: target.isInRelease,
+    unsetBroader: `broader[_ref=="${getPublishedId(DocumentId(input.fromParentId))}"]`,
+    insertBroader: input.toParent
+      ? {
+          _key: input.broaderKey,
+          _ref: getPublishedId(DocumentId(input.toParent.id)),
+          _type: 'reference',
+          ...conceptReferenceStrength(input.toParent._originalId ?? input.toParent.id),
+        }
+      : null,
   }
 }

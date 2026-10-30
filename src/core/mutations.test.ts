@@ -3,7 +3,7 @@ import {describe, expect, it} from 'vitest'
 import type {ConceptSchemeDocument} from '../types'
 
 import {SKOS_CONCEPT_STRENGTHEN} from './ids'
-import {planCreateConcept, planRemoveConcept} from './mutations'
+import {planCreateConcept, planMoveConcept, planRemoveConcept} from './mutations'
 
 const scheme = (id: string): ConceptSchemeDocument['displayed'] =>
   ({_id: id, _type: 'skosConceptScheme', title: 'Test Scheme'}) as ConceptSchemeDocument['displayed']
@@ -110,5 +110,118 @@ describe('planRemoveConcept', () => {
     })
     expect(plan.schemeId).toBe('versions.rel1.scheme-1')
     expect(plan.unsetPaths).toEqual(['concepts[_ref=="concept-9"]'])
+  })
+})
+
+describe('planMoveConcept', () => {
+  it('plans a move on a published scheme (draft target, published new parent)', () => {
+    expect(
+      planMoveConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'falcons'},
+        fromParentId: 'birds',
+        toParent: {id: 'mammals', _originalId: 'mammals'},
+        broaderKey: 'broader-key',
+      }),
+    ).toEqual({
+      kind: 'move',
+      publishedId: 'falcons',
+      targetId: 'drafts.falcons',
+      isInRelease: false,
+      unsetBroader: 'broader[_ref=="birds"]',
+      insertBroader: {
+        _key: 'broader-key',
+        _ref: 'mammals',
+        _type: 'reference',
+        _weak: false,
+      },
+    })
+  })
+
+  it('plans a move in a release against the version of the concept', () => {
+    const plan = planMoveConcept({
+      scheme: scheme('versions.rel1.scheme-1'),
+      concept: {id: 'falcons'},
+      fromParentId: 'birds',
+      toParent: {id: 'mammals', _originalId: 'mammals'},
+      broaderKey: 'broader-key',
+    })
+    expect(plan.targetId).toBe('versions.rel1.falcons')
+    expect(plan.isInRelease).toBe(true)
+    expect(plan.publishedId).toBe('falcons')
+  })
+
+  it('weakens the new broader reference when the new parent is not published yet', () => {
+    const plan = planMoveConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'falcons'},
+      fromParentId: 'birds',
+      toParent: {id: 'mammals', _originalId: 'drafts.mammals'},
+      broaderKey: 'broader-key',
+    })
+    expect(plan.insertBroader).toEqual({
+      _key: 'broader-key',
+      _ref: 'mammals',
+      _type: 'reference',
+      _weak: true,
+      _strengthenOnPublish: SKOS_CONCEPT_STRENGTHEN,
+    })
+  })
+
+  it('normalizes every id to its published form, on both sides of the patch', () => {
+    const plan = planMoveConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'drafts.falcons'},
+      fromParentId: 'drafts.birds',
+      toParent: {id: 'drafts.mammals', _originalId: 'drafts.mammals'},
+      broaderKey: 'broader-key',
+    })
+    expect(plan.publishedId).toBe('falcons')
+    expect(plan.targetId).toBe('drafts.falcons')
+    expect(plan.unsetBroader).toBe('broader[_ref=="birds"]')
+    expect(plan.insertBroader!._ref).toBe('mammals')
+  })
+
+  it('falls back to the concept id when the new parent carries no _originalId', () => {
+    const plan = planMoveConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'falcons'},
+      fromParentId: 'birds',
+      toParent: {id: 'mammals'},
+      broaderKey: 'broader-key',
+    })
+    expect(plan.insertBroader!._weak).toBe(false)
+  })
+})
+
+describe('planMoveConcept, out of the hierarchy', () => {
+  it('plans a dropped broader term as an unset with nothing inserted', () => {
+    expect(
+      planMoveConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'falcons'},
+        fromParentId: 'birds',
+        toParent: null,
+      }),
+    ).toEqual({
+      kind: 'move',
+      publishedId: 'falcons',
+      targetId: 'drafts.falcons',
+      isInRelease: false,
+      unsetBroader: 'broader[_ref=="birds"]',
+      insertBroader: null,
+    })
+  })
+
+  it('targets the release version when the scheme is being edited in one', () => {
+    const plan = planMoveConcept({
+      scheme: scheme('versions.rel1.scheme-1'),
+      concept: {id: 'falcons'},
+      fromParentId: 'birds',
+      toParent: null,
+    })
+    expect(plan.targetId).toBe('versions.rel1.falcons')
+    expect(plan.isInRelease).toBe(true)
+    expect(plan.insertBroader).toBeNull()
   })
 })
