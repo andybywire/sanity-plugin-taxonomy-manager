@@ -16,7 +16,8 @@ type MoveTerm = {id: string; _originalId?: string; prefLabel?: string}
  * Re-parents a concept in the hierarchy: drops the reference to the broader term
  * it currently hangs under, and adds one to the term it was moved to. A `null`
  * destination drops the broader term with nothing to replace it, leaving the
- * concept an orphan when that was its last one in the scheme.
+ * concept an orphan when that was its last one in the scheme; a `null` source is
+ * the mirror image, an orphan being given a broader term.
  *
  * The move is planned purely in `core/mutations` and executed through the data
  * port; this hook stays thin — it generates the reference key, re-parents the
@@ -31,11 +32,11 @@ export function useMoveConcept(document: ConceptSchemeDocument) {
   const {markMoved, unmarkMoved} = useContext(OptimisticTreeContext)
 
   const moveConcept = useCallback(
-    (concept: MoveTerm, fromParent: MoveTerm, toParent: MoveTerm | null) => {
+    (concept: MoveTerm, fromParent: MoveTerm | null, toParent: MoveTerm | null) => {
       const base = {
         scheme: document.displayed,
         concept: {id: concept.id},
-        fromParentId: fromParent.id,
+        fromParentId: fromParent?.id ?? null,
       }
       const plan = toParent
         ? planMoveConcept({
@@ -47,7 +48,7 @@ export function useMoveConcept(document: ConceptSchemeDocument) {
 
       const move: ConceptMove = {
         conceptId: concept.id,
-        fromParentId: fromParent.id,
+        fromParentId: fromParent?.id ?? null,
         toParentId: toParent?.id ?? null,
       }
 
@@ -63,7 +64,7 @@ export function useMoveConcept(document: ConceptSchemeDocument) {
             status: 'success',
             title: toParent
               ? `${label} moved under "${toParent.prefLabel ?? 'its new broader term'}"`
-              : `${label} is no longer under "${fromParent.prefLabel ?? 'its broader term'}"`,
+              : `${label} is no longer under "${fromParent?.prefLabel ?? 'its broader term'}"`,
           })
         })
         .catch((err) => {

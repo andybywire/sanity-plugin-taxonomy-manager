@@ -107,7 +107,8 @@ export function planRemoveConcept(input: {
 type MoveConceptBase = {
   scheme: SchemeDisplayed
   concept: {id: string}
-  fromParentId: string
+  /** The broader term being left, or `null` for a concept that has none. */
+  fromParentId: string | null
 }
 
 /**
@@ -127,8 +128,8 @@ export type MoveConceptPlan = {
   targetId: string
   /** True when `targetId` names a release version rather than a draft. */
   isInRelease: boolean
-  /** Path unsetting the reference to the concept's former broader term. */
-  unsetBroader: string
+  /** Path unsetting the former broader term, or `null` when there was none. */
+  unsetBroader: string | null
   /** The concept's new broader term, or `null` when it is simply dropped. */
   insertBroader: SkosConceptReference | null
 }
@@ -137,7 +138,8 @@ export type MoveConceptPlan = {
  * Plan the re-parenting of a concept: drop the reference to its former broader
  * term, and add one to its new broader term. A `null` `toParent` drops it with
  * nothing to replace it, which leaves the concept an orphan when that was its
- * last broader term in the scheme.
+ * last broader term in the scheme. A `null` `fromParentId` is the mirror image:
+ * an orphan being given a broader term, with nothing to drop.
  *
  * Either way this is a single patch to a single document. The concept is
  * already a member of the scheme's `concepts[]` array and stays one, so no
@@ -159,7 +161,10 @@ export function planMoveConcept(input: MoveConceptInput): MoveConceptPlan {
     // moved concept is edited in whichever context its scheme is being edited.
     targetId: deriveNewConceptId(publishedId, target),
     isInRelease: target.isInRelease,
-    unsetBroader: `broader[_ref=="${getPublishedId(DocumentId(input.fromParentId))}"]`,
+    unsetBroader:
+      input.fromParentId === null
+        ? null
+        : `broader[_ref=="${getPublishedId(DocumentId(input.fromParentId))}"]`,
     insertBroader: input.toParent
       ? {
           _key: input.broaderKey,
@@ -186,12 +191,12 @@ export function planMoveConcept(input: MoveConceptInput): MoveConceptPlan {
  */
 export function conceptMovePatch(plan: MoveConceptPlan): {
   setIfMissing: {broader: never[]}
-  unset: string[]
+  unset?: string[]
   insert?: {after: string; items: SkosConceptReference[]}
 } {
   return {
     setIfMissing: {broader: []},
-    unset: [plan.unsetBroader],
+    ...(plan.unsetBroader ? {unset: [plan.unsetBroader]} : {}),
     ...(plan.insertBroader
       ? {insert: {after: 'broader[-1]', items: [plan.insertBroader]}}
       : {}),

@@ -510,3 +510,143 @@ describe('findConcept', () => {
     expect(findConcept(null, 'falcons')).toBeUndefined()
   })
 })
+
+/** schemeTree with an orphan that carries a child, for the depth and re-level rules. */
+const orphanWithChild = (): DocumentConcepts => {
+  const data = schemeTree()
+  data.concepts.push({
+    id: 'strays',
+    prefLabel: 'Strays',
+    level: 0,
+    isOrphan: true,
+    childConcepts: [{id: 'stray-kid', prefLabel: 'Stray Kid', level: 1}],
+  })
+  return data
+}
+
+describe('canMoveConcept, from outside the hierarchy', () => {
+  it('allows an orphan to be given a broader term', () => {
+    expect(
+      canMoveConcept({
+        data: schemeTree(),
+        conceptId: 'unfiled',
+        fromParentId: null,
+        toParentId: 'birds',
+      }),
+    ).toEqual({allowed: true})
+  })
+
+  it('allows an orphan to be given a top concept as its broader term', () => {
+    expect(
+      canMoveConcept({
+        data: schemeTree(),
+        conceptId: 'unfiled',
+        fromParentId: null,
+        toParentId: 'animals',
+      }),
+    ).toEqual({allowed: true})
+  })
+
+  it('rejects an orphan dropped on itself', () => {
+    expect(
+      canMoveConcept({
+        data: schemeTree(),
+        conceptId: 'unfiled',
+        fromParentId: null,
+        toParentId: 'unfiled',
+      }),
+    ).toEqual({allowed: false, reason: 'A concept cannot be its own broader term.'})
+  })
+
+  it('rejects an orphan dropped onto one of its own narrower terms', () => {
+    expect(
+      canMoveConcept({
+        data: orphanWithChild(),
+        conceptId: 'strays',
+        fromParentId: null,
+        toParentId: 'stray-kid',
+      }),
+    ).toEqual({
+      allowed: false,
+      reason: 'A concept cannot be moved beneath one of its own narrower terms.',
+    })
+  })
+
+  it('still measures the depth the orphan would bring with it', () => {
+    const data = orphanWithChild()
+    // Falcons sits at level 2, so Strays would land at 3 and its child at 4 — fine.
+    expect(
+      canMoveConcept({data, conceptId: 'strays', fromParentId: null, toParentId: 'falcons'}),
+    ).toEqual({allowed: true})
+  })
+
+  it('rejects a move that comes from nowhere and goes nowhere', () => {
+    expect(
+      canMoveConcept({
+        data: schemeTree(),
+        conceptId: 'unfiled',
+        fromParentId: null,
+        toParentId: null,
+      }),
+    ).toEqual({allowed: false, reason: 'There is nothing to move.'})
+  })
+})
+
+describe('moveConcept, from outside the hierarchy', () => {
+  it('nests the orphan under its new broader term', () => {
+    const result = moveConcept(schemeTree(), {
+      conceptId: 'unfiled',
+      fromParentId: null,
+      toParentId: 'mammals',
+    })
+    const mammals = result!.topConcepts[0].childConcepts![1]
+    expect(mammals.childConcepts!.map((c) => c.id)).toEqual(['unfiled'])
+  })
+
+  it('takes the orphan out of the root list by clearing its orphan flag', () => {
+    const result = moveConcept(schemeTree(), {
+      conceptId: 'unfiled',
+      fromParentId: null,
+      toParentId: 'mammals',
+    })
+    expect(rootOrphans(result)).toEqual([])
+    // It stays a member of the scheme, just no longer a root one.
+    expect(result!.concepts.map((c) => c.id)).toContain('unfiled')
+  })
+
+  it('re-levels the orphan and everything beneath it', () => {
+    const result = moveConcept(orphanWithChild(), {
+      conceptId: 'strays',
+      fromParentId: null,
+      toParentId: 'birds',
+    })
+    const moved = result!.topConcepts[0].childConcepts![0].childConcepts!.find(
+      (c) => c.id === 'strays',
+    )!
+    expect(moved.level).toBe(2)
+    expect(moved.childConcepts![0].level).toBe(3)
+  })
+
+  it('returns the same reference for a concept that is not in the tree', () => {
+    const data = schemeTree()
+    expect(moveConcept(data, {conceptId: 'ghost', fromParentId: null, toParentId: 'birds'})).toBe(
+      data,
+    )
+  })
+
+  it('does not mutate the input', () => {
+    const data = schemeTree()
+    const snapshot = JSON.stringify(data)
+    moveConcept(data, {conceptId: 'unfiled', fromParentId: null, toParentId: 'mammals'})
+    expect(JSON.stringify(data)).toBe(snapshot)
+  })
+})
+
+describe('isMoveApplied, from outside the hierarchy', () => {
+  const adopt = {conceptId: 'unfiled', fromParentId: null, toParentId: 'mammals'}
+
+  it('watches for the concept arriving, since there is no departure to watch', () => {
+    expect(isMoveApplied(schemeTree(), adopt)).toBe(false)
+    expect(isMoveApplied(moveConcept(schemeTree(), adopt), adopt)).toBe(true)
+  })
+})

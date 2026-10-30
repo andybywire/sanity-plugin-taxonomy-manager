@@ -14,7 +14,11 @@ export const MAX_VISIBLE_LEVEL = 5
  */
 export type ConceptMove = {
   conceptId: string
-  fromParentId: string
+  /**
+   * The broader term the concept currently hangs under, or `null` when it has
+   * none in this scheme — an orphan, which renders once at the root.
+   */
+  fromParentId: string | null
   /** The new broader term, or `null` to drop the broader term altogether. */
   toParentId: string | null
 }
@@ -48,7 +52,10 @@ export function canMoveConcept({
   if (!data) {
     return {allowed: false, reason: 'The concept tree has not loaded yet.'}
   }
-  if (!isChildOf(data, conceptId, fromParentId)) {
+  if (fromParentId === null && toParentId === null) {
+    return {allowed: false, reason: 'There is nothing to move.'}
+  }
+  if (fromParentId !== null && !isChildOf(data, conceptId, fromParentId)) {
     return {allowed: false, reason: 'This concept is no longer where it was.'}
   }
   // Dropping a broader term can neither cycle nor deepen anything.
@@ -95,6 +102,10 @@ export function canMoveConcept({
  * the input. Passes `null` through and returns the same reference when the
  * concept is no longer under the parent the move names.
  *
+ * A `null` source adopts an orphan instead of lifting the concept out of a
+ * parent: nothing is removed, and the concept leaves the root list because it
+ * is no longer an orphan.
+ *
  * Used by the optimistic layer in `Hierarchy`, exactly as `pruneConcepts` is: it
  * mirrors what the live listener will return once the `broader` patch lands, so
  * the tree re-draws immediately instead of waiting on a full-trunk refetch.
@@ -111,18 +122,42 @@ export function moveConcept(
   move: ConceptMove,
 ): DocumentConcepts | null {
   if (!data) return data
-  if (move.toParentId !== null && move.fromParentId === move.toParentId) return data
+  if (move.fromParentId === move.toParentId) return data
 
-  const moved = findChildOf(data, move.conceptId, move.fromParentId)
+  // An orphan has no parent to be lifted out of, and renders once, at the root.
+  const moved =
+    move.fromParentId === null
+      ? findConcept(data, move.conceptId)
+      : findChildOf(data, move.conceptId, move.fromParentId)
   if (!moved) return data
 
+  // No node carries a null id, so with no source the walk only ever inserts.
   const next: DocumentConcepts = {
     ...data,
     topConcepts: applyMove(data.topConcepts ?? [], move, moved) as TopConceptTerm[],
     concepts: applyMove(data.concepts ?? [], move, moved),
   }
 
-  return move.toParentId === null ? surfaceAtRoot(next, move.conceptId, moved) : next
+  if (move.toParentId === null) return surfaceAtRoot(next, move.conceptId, moved)
+  if (move.fromParentId === null) return sinkFromRoot(next, move.conceptId)
+  return next
+}
+
+/**
+ * The counterpart to {@link surfaceAtRoot}: once a concept has a broader term in
+ * this scheme it is no longer an orphan, so it drops out of the root list. The
+ * entry itself stays — it is still a member of the scheme — which is exactly
+ * what the query's `isOrphan` will report on the next refetch.
+ */
+function sinkFromRoot(data: DocumentConcepts, conceptId: string): DocumentConcepts {
+  const concepts = data.concepts ?? []
+  if (!concepts.some((concept) => concept.id === conceptId && concept.isOrphan)) return data
+  return {
+    ...data,
+    concepts: concepts.map((concept) =>
+      concept.id === conceptId ? {...concept, isOrphan: false} : concept,
+    ),
+  }
 }
 
 /**
@@ -158,6 +193,11 @@ function surfaceAtRoot(
  */
 export function isMoveApplied(data: DocumentConcepts | null, move: ConceptMove): boolean {
   if (!data) return false
+  // With no former parent there is no departure to watch for, so the signal is
+  // the concept arriving under its destination instead.
+  if (move.fromParentId === null) {
+    return move.toParentId !== null && isChildOf(data, move.conceptId, move.toParentId)
+  }
   return !isChildOf(data, move.conceptId, move.fromParentId)
 }
 
