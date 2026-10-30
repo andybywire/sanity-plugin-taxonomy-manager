@@ -9,7 +9,9 @@ import {ChildConcepts} from './ChildConcepts'
 import {ConceptDetailDialogue} from './interactions/ConceptDetailDialogue'
 import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptEditAction} from './interactions/ConceptEditAction'
+import {ConceptRowMenu} from './interactions/ConceptRowMenu'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
+import {MoveConceptDialog} from './interactions/MoveConceptDialog'
 import {StructureDetailDialogue} from './interactions/StructureDetailDialogue'
 import {ToggleButton} from './interactions/ToggleButton'
 
@@ -52,6 +54,14 @@ export const Children = ({
   const handleRemoveConcept = useCallback(() => {
     removeConcept(concept.id, 'concept', concept?.prefLabel)
   }, [concept.id, concept?.prefLabel, removeConcept])
+
+  // The move command is offered in the drafts perspective only: the published
+  // view hides every edit affordance, and a move cannot target a release
+  // version yet, so offering it there would only produce an error.
+  const [moveOpen, setMoveOpen] = useState(false)
+  const openMove = useCallback(() => setMoveOpen(true), [])
+  const closeMove = useCallback(() => setMoveOpen(false), [])
+  const canMove = !inputComponent && releaseContext === undefined
 
   const [levelVisibility, setLevelVisibility] = useState<'open' | 'closed'>(
     treeVisibility === 'closed' && concept.hasMatchingDescendant
@@ -136,7 +146,17 @@ export const Children = ({
             )}
           </Inline>
         )}
+        {canMove && (
+          <ConceptRowMenu
+            conceptId={concept.id}
+            label={concept.prefLabel || '[new concept]'}
+            onMove={openMove}
+          />
+        )}
       </Flex>
+      {moveOpen && (
+        <MoveConceptDialog concept={concept} parentId={parentId} onClose={closeMove} />
+      )}
       {/* Child elements the next level down, if any */}
       {concept?.childConcepts &&
         concept.childConcepts.length > 0 &&

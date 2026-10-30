@@ -1,12 +1,19 @@
 import {createContext} from 'react'
 
 import type {ConceptMove} from './core/tree/moveConcept'
-import type {ConceptSchemeDocument, Options} from './types'
+import type {ConceptSchemeDocument, DocumentConcepts, Options} from './types'
 
 type TreeContextType = {
   globalVisibility?: {treeId: string; treeVisibility: 'open' | 'closed'}
   editControls?: boolean
   setEditControls?: (value: boolean) => void
+  /**
+   * The tree as currently rendered, including any optimistic edits. Rows read it
+   * to decide whether a move is legal and to name the concepts involved, rather
+   * than running a second query of their own. Only the structure Tree View
+   * provides it; input trees never move anything.
+   */
+  concepts?: DocumentConcepts | null
 }
 
 export const SchemeContext = createContext<ConceptSchemeDocument | null>(null)

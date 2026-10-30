@@ -72,7 +72,7 @@ describe('Hierarchy (trunk watch seam)', () => {
     }
     renderHierarchy(createFakeDataPort({tree}))
 
-    expect(screen.getByRole('button', {name: /Animals/})).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: /^Animals/})).toBeInTheDocument()
   })
 
   it('routes a concept removal through the port as a remove plan', async () => {
@@ -101,9 +101,9 @@ describe('Hierarchy (trunk watch seam)', () => {
     }
     renderHierarchy(createFakeDataPort({tree}))
 
-    expect(screen.getByRole('button', {name: /Animals/})).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: /^Animals/})).toBeInTheDocument()
     await userEvent.setup().click(screen.getByLabelText('Remove this concept from this scheme'))
-    expect(screen.queryByRole('button', {name: /Animals/})).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', {name: /^Animals/})).not.toBeInTheDocument()
   })
 
   it('marks only the concept open in the pane to the right', () => {
@@ -117,8 +117,8 @@ describe('Hierarchy (trunk watch seam)', () => {
     }
     renderHierarchy(createFakeDataPort({tree}))
 
-    expect(screen.getByRole('button', {name: /Minerals/})).toHaveAttribute('aria-current', 'true')
-    expect(screen.getByRole('button', {name: /Animals/})).not.toHaveAttribute('aria-current')
+    expect(screen.getByRole('button', {name: /^Minerals/})).toHaveAttribute('aria-current', 'true')
+    expect(screen.getByRole('button', {name: /^Animals/})).not.toHaveAttribute('aria-current')
   })
 
   it('marks every occurrence of a concept with more than one broader term', () => {
@@ -140,7 +140,7 @@ describe('Hierarchy (trunk watch seam)', () => {
     }
     renderHierarchy(createFakeDataPort({tree}))
 
-    const occurrences = screen.getAllByRole('button', {name: /Carbon/})
+    const occurrences = screen.getAllByRole('button', {name: /^Carbon/})
     expect(occurrences).toHaveLength(2)
     occurrences.forEach((row) => expect(row).toHaveAttribute('aria-current', 'true'))
   })
