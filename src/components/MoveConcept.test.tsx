@@ -167,3 +167,56 @@ describe('the move command, choosing a destination', () => {
     })
   })
 })
+
+/** The same scheme, plus an orphan: a member with no broader term in the scheme. */
+const treeWithOrphan = (): DocumentConcepts => ({
+  ...tree(),
+  concepts: [{id: 'unfiled', prefLabel: 'Unfiled', level: 0, isOrphan: true}],
+})
+
+describe('the move command, for an orphan', () => {
+  it('offers a move, so an orphan can be brought into the hierarchy', () => {
+    renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}))
+    expect(screen.getByRole('button', {name: 'More actions for Unfiled'})).toBeInTheDocument()
+  })
+
+  it('routes the new broader term through the port with nothing to unset', async () => {
+    const user = userEvent.setup()
+    const port = createFakeDataPort({tree: treeWithOrphan()})
+    renderHierarchy(port)
+
+    const dialog = await openMoveDialog(user, 'Unfiled')
+    await user.click(within(dialog).getByRole('button', {name: /^Mammals/}))
+
+    expect(port.appliedPlans).toHaveLength(1)
+    expect(port.appliedPlans[0]).toMatchObject({
+      kind: 'move',
+      publishedId: 'unfiled',
+      unsetBroader: null,
+      insertBroader: {_ref: 'mammals', _type: 'reference'},
+    })
+  })
+
+  it('takes the orphan out of the root list optimistically', async () => {
+    const user = userEvent.setup()
+    renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}))
+
+    const dialog = await openMoveDialog(user, 'Unfiled')
+    await user.click(within(dialog).getByRole('button', {name: /^Mammals/}))
+
+    // One rendering left, and it is nested rather than at the root.
+    const occurrences = screen.getAllByRole('button', {name: /^Unfiled/})
+    expect(occurrences).toHaveLength(1)
+    expect(screen.getByRole('button', {name: /^Mammals/}).closest('.open')).toContainElement(
+      occurrences[0],
+    )
+  })
+
+  it('offers no way to drop a broader term the orphan does not have', async () => {
+    const user = userEvent.setup()
+    renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}))
+
+    const dialog = await openMoveDialog(user, 'Unfiled')
+    expect(within(dialog).queryByRole('button', {name: /as a broader term/})).not.toBeInTheDocument()
+  })
+})

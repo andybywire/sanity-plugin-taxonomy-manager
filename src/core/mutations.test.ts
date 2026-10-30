@@ -268,3 +268,46 @@ describe('conceptMovePatch', () => {
     })
   })
 })
+
+describe('planMoveConcept, from outside the hierarchy', () => {
+  it('plans an orphan being given a broader term as an insert with nothing to unset', () => {
+    expect(
+      planMoveConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'unfiled'},
+        fromParentId: null,
+        toParent: {id: 'mammals', _originalId: 'mammals'},
+        broaderKey: 'broader-key',
+      }),
+    ).toEqual({
+      kind: 'move',
+      publishedId: 'unfiled',
+      targetId: 'drafts.unfiled',
+      isInRelease: false,
+      unsetBroader: null,
+      insertBroader: {
+        _key: 'broader-key',
+        _ref: 'mammals',
+        _type: 'reference',
+        _weak: false,
+      },
+    })
+  })
+
+  it('omits the unset from the patch entirely', () => {
+    const plan = planMoveConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'unfiled'},
+      fromParentId: null,
+      toParent: {id: 'mammals', _originalId: 'mammals'},
+      broaderKey: 'broader-key',
+    })
+    expect(conceptMovePatch(plan)).toEqual({
+      setIfMissing: {broader: []},
+      insert: {
+        after: 'broader[-1]',
+        items: [{_key: 'broader-key', _ref: 'mammals', _type: 'reference', _weak: false}],
+      },
+    })
+  })
+})

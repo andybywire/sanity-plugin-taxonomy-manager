@@ -11,7 +11,8 @@ import {InputHierarchy} from '../inputs/InputHierarchy'
 /**
  * #### Move Concept Dialog
  * Picks a new broader term for a concept, from the same tree browser the
- * reference inputs use. A destination the hierarchy cannot take — the concept
+ * reference inputs use. With no `parentId` it is an orphan being brought into
+ * the hierarchy, so there is no broader term to drop and that option is absent. A destination the hierarchy cannot take — the concept
  * itself, one of its own narrower terms, a term it already has, or one deep
  * enough to push the subtree out of view — is explained in place rather than
  * applied, and the dialog stays open so another can be chosen.
@@ -26,7 +27,8 @@ export function MoveConceptDialog({
   onClose,
 }: {
   concept: ChildConceptTerm
-  parentId: string
+  /** The broader term being left, or `null` for an orphan being given one. */
+  parentId: string | null
   onClose: () => void
 }) {
   const scheme: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
@@ -36,11 +38,14 @@ export function MoveConceptDialog({
 
   const tree = concepts ?? null
   const label = concept.prefLabel || '[new concept]'
-  const parent = useMemo(() => findConcept(tree, parentId), [tree, parentId])
+  const parent = useMemo(
+    () => (parentId === null ? undefined : findConcept(tree, parentId)),
+    [tree, parentId],
+  )
   const parentLabel = parent?.prefLabel || 'its broader term'
 
   const from = useMemo(
-    () => ({id: parentId, prefLabel: parent?.prefLabel}),
+    () => (parentId === null ? null : {id: parentId, prefLabel: parent?.prefLabel}),
     [parentId, parent?.prefLabel],
   )
 
@@ -101,19 +106,22 @@ export function MoveConceptDialog({
           <InputHierarchy branchId={null} inputComponent selectConcept={handleSelect} expanded />
         </Box>
 
-        <Card borderTop paddingTop={4}>
-          <Stack gap={3}>
-            <Text muted size={1}>
-              {`Or take “${label}” out of the hierarchy. It keeps any other broader terms it has.`}
-            </Text>
-            <Button
-              text={`Remove “${parentLabel}” as a broader term`}
-              mode="ghost"
-              tone="critical"
-              onClick={handleDetach}
-            />
-          </Stack>
-        </Card>
+        {/* Nothing to drop when the concept has no broader term to begin with. */}
+        {parentId !== null && (
+          <Card borderTop paddingTop={4}>
+            <Stack gap={3}>
+              <Text muted size={1}>
+                {`Or take “${label}” out of the hierarchy. It keeps any other broader terms it has.`}
+              </Text>
+              <Button
+                text={`Remove “${parentLabel}” as a broader term`}
+                mode="ghost"
+                tone="critical"
+                onClick={handleDetach}
+              />
+            </Stack>
+          </Card>
+        )}
       </Stack>
     </Dialog>
   )
