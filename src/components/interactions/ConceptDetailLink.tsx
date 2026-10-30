@@ -1,4 +1,6 @@
 import {Button, Text, Box, Badge} from '@sanity/ui'
+
+import {SLOT_PADDING_X} from '../../hooks'
 import {Tooltip} from '@sanity/ui/tooltip'
 import {useCallback, useContext} from 'react'
 import {RouterContext} from 'sanity/router'
@@ -67,7 +69,7 @@ export function ConceptDetailLink({
     >
       <Button
         mode="bleed"
-        paddingLeft={0}
+        paddingLeft={SLOT_PADDING_X}
         onClick={openInNewPane}
         width="fill"
         justify={'flex-start'}

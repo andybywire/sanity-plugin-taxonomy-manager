@@ -71,15 +71,28 @@ async function openMoveDialog(user: ReturnType<typeof userEvent.setup>, label: s
   return screen.getByRole('dialog')
 }
 
+/**
+ * A menu's items are not in the DOM until it is opened, and once opened they sit
+ * in a container @sanity/ui leaves hidden without a layout engine to position
+ * against. So presence after opening is the signal here, not visibility.
+ */
+async function openRowMenu(user: ReturnType<typeof userEvent.setup>, label: string) {
+  await user.click(screen.getByRole('button', {name: `More actions for ${label}`}))
+}
+
 describe('the move command, where it is offered', () => {
   it('offers a move on a nested concept', () => {
     renderHierarchy(createFakeDataPort({tree: tree()}))
     expect(screen.getByRole('button', {name: 'More actions for Falcons'})).toBeInTheDocument()
   })
 
-  it('does not offer one on a top concept, which has no broader term to move from', () => {
+  it('gives a top concept a menu, but no move — it has no broader term to leave', async () => {
+    const user = userEvent.setup()
     renderHierarchy(createFakeDataPort({tree: tree()}))
-    expect(screen.queryByRole('button', {name: 'More actions for Animals'})).not.toBeInTheDocument()
+
+    await openRowMenu(user, 'Animals')
+    expect(await screen.findByText('Remove from scheme')).toBeInTheDocument()
+    expect(screen.queryByText('Move to…')).not.toBeInTheDocument()
   })
 
   it('does not offer one in the published perspective', () => {
@@ -87,9 +100,13 @@ describe('the move command, where it is offered', () => {
     expect(screen.queryByRole('button', {name: 'More actions for Falcons'})).not.toBeInTheDocument()
   })
 
-  it('does not offer one inside a release, which the move path cannot target yet', () => {
+  it('keeps remove but drops move inside a release, which the move path cannot target yet', async () => {
+    const user = userEvent.setup()
     renderHierarchy(createFakeDataPort({tree: tree()}), 'rSummerDrop')
-    expect(screen.queryByRole('button', {name: 'More actions for Falcons'})).not.toBeInTheDocument()
+
+    await openRowMenu(user, 'Falcons')
+    expect(await screen.findByText('Remove from scheme')).toBeInTheDocument()
+    expect(screen.queryByText('Move to…')).not.toBeInTheDocument()
   })
 })
 
@@ -289,5 +306,21 @@ describe('the drag handle, when it shows itself', () => {
     const handle = handleIn(rowOf('Falcons'))!
     expect(handle).toBeInTheDocument()
     expect(handle.style.visibility).toBe('hidden')
+  })
+})
+
+describe('the row menu, across the kinds of row', () => {
+  it.each(['Unfiled', 'Falcons'])('offers both commands on %s', async (label) => {
+    const user = userEvent.setup()
+    renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}))
+
+    await openRowMenu(user, label)
+    expect(await screen.findByText('Move to…')).toBeInTheDocument()
+    expect(screen.getByText('Remove from scheme')).toBeInTheDocument()
+  })
+
+  it('offers no menu at all in the published perspective', () => {
+    renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}), 'published')
+    expect(screen.queryByRole('button', {name: /^More actions/})).not.toBeInTheDocument()
   })
 })

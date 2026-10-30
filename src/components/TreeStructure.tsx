@@ -5,9 +5,8 @@ import {TreeContext} from '../context'
 import {rootOrphans} from '../core/tree/rootOrphans'
 import type {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 
-import {Concepts} from './Concepts'
+import {ConceptRow} from './ConceptRow'
 import {NoConcepts} from './guides'
-import {TopConcepts} from './TopConcepts'
 
 /**
  * #### Tree View
@@ -23,8 +22,9 @@ export const TreeStructure = ({
   inputComponent: boolean
   selectConcept: (conceptId: {_ref: string; _type: 'reference'; _originalId?: string}) => void
 }) => {
-  const {globalVisibility: {treeId, treeVisibility} = {treeId: 'default', treeVisibility: 'open'}} =
-    useContext(TreeContext) || {}
+  // Rows read their own visibility from context; only the id is needed here,
+  // to remount every root row — and so the whole tree — on expand or collapse.
+  const {globalVisibility: {treeId} = {treeId: 'default'}} = useContext(TreeContext) || {}
 
   if (!concepts?.topConcepts?.length && !concepts?.concepts?.length) {
     return <NoConcepts />
@@ -34,25 +34,25 @@ export const TreeStructure = ({
     <Box paddingTop={4}>
       <Stack gap={3} style={{listStyle: 'none', paddingLeft: '0', marginBlockStart: '0'}}>
         {concepts?.topConcepts?.map((concept: TopConceptTerm) => (
-          <TopConcepts
+          <ConceptRow
             key={`${concept?.id}+${treeId}`}
             concept={concept}
-            treeVisibility={treeVisibility}
+            kind="top"
+            parentId={null}
             inputComponent={inputComponent}
             selectConcept={selectConcept}
           />
         ))}
-        {rootOrphans(concepts).map((concept: ChildConceptTerm) => {
-          return (
-            <Concepts
-              key={`${concept.id}+${treeId}`}
-              concept={concept}
-              treeVisibility={treeVisibility}
-              inputComponent={inputComponent}
-              selectConcept={selectConcept}
-            />
-          )
-        })}
+        {rootOrphans(concepts).map((concept: ChildConceptTerm) => (
+          <ConceptRow
+            key={`${concept.id}+${treeId}`}
+            concept={concept}
+            kind="orphan"
+            parentId={null}
+            inputComponent={inputComponent}
+            selectConcept={selectConcept}
+          />
+        ))}
       </Stack>
     </Box>
   )

@@ -1,8 +1,9 @@
 import {Box, Stack} from '@sanity/ui'
 
+import {useControlWidth} from '../hooks'
 import type {ChildConceptTerm} from '../types'
 
-import {Children} from './Children'
+import {ConceptRow} from './ConceptRow'
 
 /**
  * #### Child Concepts
@@ -27,15 +28,24 @@ export const ChildConcepts = ({
   inputComponent: boolean
   childVisibility: string // retype to 'open' | 'closed
 }) => {
+  // One control per level, which lands a child's caret under the first
+  // letter of its parent's label.
+  const indent = useControlWidth()
+
   return (
     // the container for child terms
-    <Box marginLeft={4} marginTop={2} display={childVisibility == 'closed' ? 'none' : 'block'}>
+    <Box
+      marginTop={2}
+      display={childVisibility == 'closed' ? 'none' : 'block'}
+      style={{marginLeft: indent}}
+    >
       <Stack gap={3}>
         {concepts.map((concept: ChildConceptTerm) => {
           return (
-            <Children
+            <ConceptRow
               key={concept.id}
               concept={concept}
+              kind="child"
               parentId={parentId}
               selectConcept={selectConcept}
               inputComponent={inputComponent}
