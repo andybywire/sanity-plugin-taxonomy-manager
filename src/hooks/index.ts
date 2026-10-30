@@ -1,4 +1,6 @@
 export * from './useAddTitle'
+export * from './useConceptDrop'
+export * from './useConceptRowDnd'
 export * from './useCreateConcept'
 export * from './useMoveConcept'
 export * from './useOpenNewConceptPane'

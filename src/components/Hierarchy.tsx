@@ -14,6 +14,7 @@ import {useTaxonomyDataPort} from '../seams/TaxonomyPortContext'
 import type {ConceptSchemeDocument, DocumentConcepts, TreeViewProps} from '../types'
 
 import {NewScheme} from './guides'
+import {ConceptDragContext} from './interactions/ConceptDragContext'
 import {TreeStructure} from './TreeStructure'
 
 /** Two pending moves are the same when they describe the same edge and destination. */
@@ -218,11 +219,13 @@ export const Hierarchy = ({
             </Card>
           </Stack>
           <OptimisticTreeContext.Provider value={optimisticValue}>
-            <TreeStructure
-              concepts={treeData}
-              inputComponent={inputComponent}
-              selectConcept={selectConcept || (() => undefined)}
-            />
+            <ConceptDragContext>
+              <TreeStructure
+                concepts={treeData}
+                inputComponent={inputComponent}
+                selectConcept={selectConcept || (() => undefined)}
+              />
+            </ConceptDragContext>
           </OptimisticTreeContext.Provider>
         </>
       </Box>
