@@ -2,6 +2,7 @@ import {Box, Stack} from '@sanity/ui'
 import {useContext} from 'react'
 
 import {TreeContext} from '../context'
+import {rootOrphans} from '../core/tree/rootOrphans'
 import type {DocumentConcepts, TopConceptTerm, ChildConceptTerm} from '../types'
 
 import {Concepts} from './Concepts'
@@ -41,19 +42,17 @@ export const TreeStructure = ({
             selectConcept={selectConcept}
           />
         ))}
-        {concepts?.concepts
-          ?.filter((concept: ChildConceptTerm) => concept?.isOrphan)
-          .map((concept: ChildConceptTerm) => {
-            return (
-              <Concepts
-                key={`${concept.id}+${treeId}`}
-                concept={concept}
-                treeVisibility={treeVisibility}
-                inputComponent={inputComponent}
-                selectConcept={selectConcept}
-              />
-            )
-          })}
+        {rootOrphans(concepts).map((concept: ChildConceptTerm) => {
+          return (
+            <Concepts
+              key={`${concept.id}+${treeId}`}
+              concept={concept}
+              treeVisibility={treeVisibility}
+              inputComponent={inputComponent}
+              selectConcept={selectConcept}
+            />
+          )
+        })}
       </Stack>
     </Box>
   )

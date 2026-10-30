@@ -217,6 +217,77 @@ describe('the move command, for an orphan', () => {
     renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}))
 
     const dialog = await openMoveDialog(user, 'Unfiled')
-    expect(within(dialog).queryByRole('button', {name: /as a broader term/})).not.toBeInTheDocument()
+    expect(
+      within(dialog).queryByRole('button', {name: /as a broader term/}),
+    ).not.toBeInTheDocument()
+  })
+})
+
+/**
+ * The handle is aria-hidden on purpose — dragging is a pointer accelerator and
+ * the row menu is the accessible path — so it is found by its icon rather than
+ * by role. The gesture itself needs layout, which jsdom has none of; what is
+ * worth pinning is which rows can be grabbed, and when the grip shows itself.
+ */
+const rowOf = (label: string) =>
+  screen.getByRole('button', {name: new RegExp(`^${label}`)}).closest('.open') as HTMLElement
+
+/** A row's own line. Rows nested beneath it sit outside this element. */
+const lineOf = (row: HTMLElement) => row.querySelector(':scope > [data-ui="Card"]') as HTMLElement
+
+const handleIn = (row: HTMLElement) =>
+  lineOf(row).querySelector('[data-sanity-icon="drag-handle"]')?.closest('button') ?? null
+
+describe('the drag handle, where it is offered', () => {
+  it('reveals a grip on a nested concept and on an orphan when the row is hovered', async () => {
+    const user = userEvent.setup()
+    renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}))
+
+    for (const label of ['Birds', 'Falcons', 'Mammals', 'Unfiled']) {
+      const row = rowOf(label)
+      const handle = handleIn(row)!
+      expect(handle).not.toBeVisible()
+      await user.hover(lineOf(row))
+      expect(handle).toBeVisible()
+    }
+  })
+
+  it('leaves the root edge flush when every row there is a top concept', () => {
+    // Nothing at this root can be dragged, so a reserved column would be dead space.
+    renderHierarchy(createFakeDataPort({tree: tree()}))
+    expect(handleIn(rowOf('Animals'))).toBeNull()
+  })
+
+  it('holds the slot open on a top concept once the root also holds an orphan', async () => {
+    const user = userEvent.setup()
+    renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}))
+
+    // The slot exists so a root of top concepts and orphans shares a left edge…
+    const animals = rowOf('Animals')
+    expect(handleIn(animals)).toBeInTheDocument()
+
+    // …but a top concept cannot be dragged, so hovering it reveals nothing.
+    await user.hover(lineOf(animals))
+    expect(handleIn(animals)).not.toBeVisible()
+  })
+
+  it('offers none at all in the published perspective', () => {
+    const {container} = renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}), 'published')
+    expect(container.querySelectorAll('[data-sanity-icon="drag-handle"]')).toHaveLength(0)
+  })
+
+  it('offers none at all inside a release, which the move path cannot target yet', () => {
+    const {container} = renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}), 'rSummerDrop')
+    expect(container.querySelectorAll('[data-sanity-icon="drag-handle"]')).toHaveLength(0)
+  })
+})
+
+describe('the drag handle, when it shows itself', () => {
+  it('holds the space open so the label does not shift when it appears', () => {
+    renderHierarchy(createFakeDataPort({tree: tree()}))
+    // Hidden by visibility rather than removed, so it still occupies its slot.
+    const handle = handleIn(rowOf('Falcons'))!
+    expect(handle).toBeInTheDocument()
+    expect(handle.style.visibility).toBe('hidden')
   })
 })

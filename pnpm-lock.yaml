@@ -170,6 +170,9 @@ importers:
 
   .:
     dependencies:
+      '@dnd-kit/core':
+        specifier: ^6.3.1
+        version: 6.3.1(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       '@sanity/icons':
         specifier: ^5.2.3
         version: 5.2.3(react@19.3.1)
