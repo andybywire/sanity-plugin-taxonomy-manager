@@ -114,6 +114,7 @@ export const Concepts = ({
       {concept?.childConcepts && concept.childConcepts.length > 0 && (
         <ChildConcepts
           concepts={concept.childConcepts}
+          parentId={concept.id}
           selectConcept={selectConcept}
           inputComponent={inputComponent}
           childVisibility={levelVisibility}

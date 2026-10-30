@@ -11,11 +11,14 @@ import {Children} from './Children'
  */
 export const ChildConcepts = ({
   concepts,
+  parentId,
   inputComponent = false,
   selectConcept,
   childVisibility,
 }: {
   concepts: ChildConceptTerm[]
+  /** The concept these children hang under — the broader term of each one. */
+  parentId: string
   selectConcept: (conceptId: {
     _ref: string
     _type: 'reference'
@@ -33,6 +36,7 @@ export const ChildConcepts = ({
             <Children
               key={concept.id}
               concept={concept}
+              parentId={parentId}
               selectConcept={selectConcept}
               inputComponent={inputComponent}
             />
