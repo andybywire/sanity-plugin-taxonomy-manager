@@ -6,13 +6,24 @@ import {nanoid} from 'nanoid'
 import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 
 import {OptimisticTreeContext, SchemeContext, TreeContext, ReleaseContext} from '../context'
+import type {ConceptMove} from '../core/tree/moveConcept'
+import {isMoveApplied, moveConcept} from '../core/tree/moveConcept'
 import {collectConceptIds, pruneConcepts} from '../core/tree/pruneConcepts'
 import {useCreateConcept} from '../hooks'
 import {useTaxonomyDataPort} from '../seams/TaxonomyPortContext'
-import type {ConceptSchemeDocument, TreeViewProps} from '../types'
+import type {ConceptSchemeDocument, DocumentConcepts, TreeViewProps} from '../types'
 
 import {NewScheme} from './guides'
 import {TreeStructure} from './TreeStructure'
+
+/** Two pending moves are the same when they describe the same edge and destination. */
+function isSameMove(a: ConceptMove, b: ConceptMove): boolean {
+  return (
+    a.conceptId === b.conceptId &&
+    a.fromParentId === b.fromParentId &&
+    a.toParentId === b.toParentId
+  )
+}
 
 /**
  * #### Hierarchy Component
@@ -78,9 +89,20 @@ export const Hierarchy = ({
       return next
     })
   }, [])
+  // Optimistic moves: re-parent the tree immediately, then let the live
+  // listener reconcile (see core/tree/moveConcept). Held as a list so several
+  // drags in quick succession all show, and replayed in the order they were made.
+  const [pendingMoves, setPendingMoves] = useState<ConceptMove[]>([])
+  const markMoved = useCallback((move: ConceptMove) => {
+    setPendingMoves((prev) => [...prev, move])
+  }, [])
+  const unmarkMoved = useCallback((move: ConceptMove) => {
+    setPendingMoves((prev) => prev.filter((pending) => !isSameMove(pending, move)))
+  }, [])
+
   const optimisticValue = useMemo(
-    () => ({markRemoved, unmarkRemoved}),
-    [markRemoved, unmarkRemoved],
+    () => ({markRemoved, unmarkRemoved, markMoved, unmarkMoved}),
+    [markRemoved, unmarkRemoved, markMoved, unmarkMoved],
   )
 
   const {data, loading, error} = port.useWatchTree({
@@ -100,7 +122,25 @@ export const Hierarchy = ({
     })
   }, [data])
 
+  // Once fresh data reflects a move, stop replaying it — otherwise the concept
+  // would be moved a second time on top of the listener's own result.
+  useEffect(() => {
+    setPendingMoves((prev) => {
+      if (prev.length === 0) return prev
+      const next = prev.filter((move) => !isMoveApplied(data, move))
+      return next.length === prev.length ? prev : next
+    })
+  }, [data])
+
   const prunedData = useMemo(() => pruneConcepts(data, removedIds), [data, removedIds])
+  const treeData = useMemo(
+    () =>
+      pendingMoves.reduce<DocumentConcepts | null>(
+        (tree, move) => moveConcept(tree, move),
+        prunedData,
+      ),
+    [prunedData, pendingMoves],
+  )
 
   if (loading) {
     return (
@@ -116,7 +156,7 @@ export const Hierarchy = ({
   } else if (error) {
     console.error(error)
     return <div>Error here</div>
-  } else if (!prunedData) {
+  } else if (!treeData) {
     return <NewScheme document={document} />
   }
   return (
@@ -127,10 +167,10 @@ export const Hierarchy = ({
             <Card borderBottom paddingBottom={1} display={'flex'} flex={1}>
               <Flex justify={'space-between'} flex={1}>
                 <Card>
-                  {(prunedData.topConcepts?.filter(
+                  {(treeData.topConcepts?.filter(
                     (concept) => (concept?.childConcepts?.length ?? 0) > 0,
                   ).length > 0 ||
-                    prunedData.concepts?.filter(
+                    treeData.concepts?.filter(
                       (concept) => (concept?.childConcepts?.length ?? 0) > 0,
                     ).length > 0) && (
                     <Inline gap={1}>
@@ -174,7 +214,7 @@ export const Hierarchy = ({
           </Stack>
           <OptimisticTreeContext.Provider value={optimisticValue}>
             <TreeStructure
-              concepts={prunedData}
+              concepts={treeData}
               inputComponent={inputComponent}
               selectConcept={selectConcept || (() => undefined)}
             />

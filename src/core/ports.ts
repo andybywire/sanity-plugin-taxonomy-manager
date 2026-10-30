@@ -1,4 +1,4 @@
-import type {CreateConceptPlan, RemoveConceptPlan} from './mutations'
+import type {CreateConceptPlan, MoveConceptPlan, RemoveConceptPlan} from './mutations'
 import type {ConceptRecommendation, DocumentConcepts, SemanticSearchConfig} from '../types'
 
 /**
@@ -20,7 +20,7 @@ import type {ConceptRecommendation, DocumentConcepts, SemanticSearchConfig} from
 export interface TaxonomyDataPort {
   /** Live concept tree for a scheme document (`trunk`) or a branch within it (`input`). */
   useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts>
-  /** Replay a pure create/remove plan (`core/mutations`) onto a Studio transaction. */
+  /** Replay a pure create/remove/move plan (`core/mutations`) onto the Studio client. */
   useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void>
   /** Semantic term recommendations for the input components (GROQ `text::semanticSimilarity()`). */
   useSemanticRecommendations(config?: SemanticSearchConfig): SemanticRecommendationsResult
@@ -47,8 +47,8 @@ export interface WatchResult<T> {
   error: Error | null
 }
 
-/** A create or remove transaction plan, discriminated by `kind` (see `core/mutations`). */
-export type ConceptPlan = CreateConceptPlan | RemoveConceptPlan
+/** A create, remove or move plan, discriminated by `kind` (see `core/mutations`). */
+export type ConceptPlan = CreateConceptPlan | RemoveConceptPlan | MoveConceptPlan
 
 /** Return shape of the semantic-recommendations seam. */
 export interface SemanticRecommendationsResult {

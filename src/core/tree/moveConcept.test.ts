@@ -2,7 +2,7 @@ import {describe, expect, it} from 'vitest'
 
 import type {DocumentConcepts} from '../../types'
 
-import {canMoveConcept, MAX_VISIBLE_LEVEL, moveConcept} from './moveConcept'
+import {canMoveConcept, isMoveApplied, MAX_VISIBLE_LEVEL, moveConcept} from './moveConcept'
 
 /**
  * Animals ─┬─ Birds ── Falcons
@@ -465,5 +465,27 @@ describe('moveConcept, out of the hierarchy', () => {
     const snapshot = JSON.stringify(data)
     moveConcept(data, {conceptId: 'falcons', fromParentId: 'birds', toParentId: null})
     expect(JSON.stringify(data)).toBe(snapshot)
+  })
+})
+
+describe('isMoveApplied', () => {
+  const move = {conceptId: 'falcons', fromParentId: 'birds', toParentId: 'mammals'}
+
+  it('is false while the listener still nests the concept under its former parent', () => {
+    expect(isMoveApplied(schemeTree(), move)).toBe(false)
+  })
+
+  it('is true once the concept is gone from under its former parent', () => {
+    expect(isMoveApplied(moveConcept(schemeTree(), move), move)).toBe(true)
+  })
+
+  it('is true once a dropped broader term is gone, with no new parent to look for', () => {
+    const detach = {conceptId: 'falcons', fromParentId: 'birds', toParentId: null}
+    expect(isMoveApplied(schemeTree(), detach)).toBe(false)
+    expect(isMoveApplied(moveConcept(schemeTree(), detach), detach)).toBe(true)
+  })
+
+  it('is false against a tree that has not loaded, so the move stays pending', () => {
+    expect(isMoveApplied(null, move)).toBe(false)
   })
 })
