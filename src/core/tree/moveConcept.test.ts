@@ -2,7 +2,13 @@ import {describe, expect, it} from 'vitest'
 
 import type {DocumentConcepts} from '../../types'
 
-import {canMoveConcept, isMoveApplied, MAX_VISIBLE_LEVEL, moveConcept} from './moveConcept'
+import {
+  canMoveConcept,
+  findConcept,
+  isMoveApplied,
+  MAX_VISIBLE_LEVEL,
+  moveConcept,
+} from './moveConcept'
 
 /**
  * Animals ─┬─ Birds ── Falcons
@@ -487,5 +493,20 @@ describe('isMoveApplied', () => {
 
   it('is false against a tree that has not loaded, so the move stays pending', () => {
     expect(isMoveApplied(null, move)).toBe(false)
+  })
+})
+
+describe('findConcept', () => {
+  it('finds a nested concept anywhere in the tree', () => {
+    expect(findConcept(tree(), 'falcons')?.prefLabel).toBe('Falcons')
+  })
+
+  it('finds a concept at the root', () => {
+    expect(findConcept(tree(), 'minerals')?.prefLabel).toBe('Minerals')
+  })
+
+  it('returns undefined for a concept that is not there, or no tree at all', () => {
+    expect(findConcept(tree(), 'nowhere')).toBeUndefined()
+    expect(findConcept(null, 'falcons')).toBeUndefined()
   })
 })

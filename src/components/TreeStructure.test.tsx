@@ -44,7 +44,7 @@ function renderTree(concepts: DocumentConcepts | null) {
 
 /** A row's own container, which also holds the rows nested beneath it. */
 function row(label: string) {
-  const button = screen.getByRole('button', {name: new RegExp(label)})
+  const button = screen.getByRole('button', {name: new RegExp(`^${label}`)})
   const container = button.closest('.open')
   if (!container) throw new Error(`No row container found for ${label}`)
   return container as HTMLElement
@@ -53,17 +53,17 @@ function row(label: string) {
 describe('TreeStructure (what renders at the root)', () => {
   it('renders the empty-state guide when the scheme has no concepts', () => {
     renderTree({topConcepts: [], concepts: []})
-    expect(screen.queryByRole('button', {name: /Animals/})).not.toBeInTheDocument()
+    expect(screen.queryByRole('button', {name: /^Animals/})).not.toBeInTheDocument()
   })
 
   it('renders top concepts at the root', () => {
     renderTree({topConcepts: [{id: 'c1', prefLabel: 'Animals'}], concepts: []})
-    expect(screen.getByRole('button', {name: /Animals/})).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: /^Animals/})).toBeInTheDocument()
   })
 
   it('renders orphan concepts at the root', () => {
     renderTree({topConcepts: [], concepts: [{id: 'c9', prefLabel: 'Unfiled', isOrphan: true}]})
-    expect(screen.getByRole('button', {name: /Unfiled/})).toBeInTheDocument()
+    expect(screen.getByRole('button', {name: /^Unfiled/})).toBeInTheDocument()
   })
 
   it('renders a non-orphan concept only in its nested position, never at the root', () => {
@@ -76,8 +76,8 @@ describe('TreeStructure (what renders at the root)', () => {
       concepts: [{id: 'c2', prefLabel: 'Birds', isOrphan: false}],
     })
 
-    expect(screen.getAllByRole('button', {name: /Birds/})).toHaveLength(1)
-    expect(row('Animals')).toContainElement(screen.getByRole('button', {name: /Birds/}))
+    expect(screen.getAllByRole('button', {name: /^Birds/})).toHaveLength(1)
+    expect(row('Animals')).toContainElement(screen.getByRole('button', {name: /^Birds/}))
   })
 })
 
@@ -90,7 +90,7 @@ describe('TreeStructure (how the hierarchy nests)', () => {
       concepts: [],
     })
 
-    expect(row('Animals')).toContainElement(screen.getByRole('button', {name: /Birds/}))
+    expect(row('Animals')).toContainElement(screen.getByRole('button', {name: /^Birds/}))
   })
 
   it('nests each generation inside the one above it, down to level five', () => {
@@ -128,13 +128,13 @@ describe('TreeStructure (how the hierarchy nests)', () => {
 
     const labels = ['Animals', 'Birds', 'Raptors', 'Falcons', 'Kestrels']
     labels.forEach((label) =>
-      expect(screen.getByRole('button', {name: new RegExp(label)})).toBeInTheDocument(),
+      expect(screen.getByRole('button', {name: new RegExp(`^${label}`)})).toBeInTheDocument(),
     )
 
     // Every generation sits inside the row of the one above it.
     labels.slice(0, -1).forEach((label, i) => {
       expect(row(label)).toContainElement(
-        screen.getByRole('button', {name: new RegExp(labels[i + 1])}),
+        screen.getByRole('button', {name: new RegExp(`^${labels[i + 1]}`)}),
       )
     })
   })
@@ -148,8 +148,8 @@ describe('TreeStructure (how the hierarchy nests)', () => {
       concepts: [],
     })
 
-    expect(screen.getAllByRole('button', {name: /Carbon/})).toHaveLength(2)
-    expect(row('Animals')).toContainElement(screen.getAllByRole('button', {name: /Carbon/})[0])
-    expect(row('Minerals')).toContainElement(screen.getAllByRole('button', {name: /Carbon/})[1])
+    expect(screen.getAllByRole('button', {name: /^Carbon/})).toHaveLength(2)
+    expect(row('Animals')).toContainElement(screen.getAllByRole('button', {name: /^Carbon/})[0])
+    expect(row('Minerals')).toContainElement(screen.getAllByRole('button', {name: /^Carbon/})[1])
   })
 })

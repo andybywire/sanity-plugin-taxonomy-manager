@@ -142,6 +142,11 @@ export const Hierarchy = ({
     [prunedData, pendingMoves],
   )
 
+  const treeContextValue = useMemo(
+    () => ({globalVisibility, concepts: treeData}),
+    [globalVisibility, treeData],
+  )
+
   if (loading) {
     return (
       <Box padding={4} paddingTop={6}>
@@ -160,7 +165,7 @@ export const Hierarchy = ({
     return <NewScheme document={document} />
   }
   return (
-    <TreeContext.Provider value={{globalVisibility}}>
+    <TreeContext.Provider value={treeContextValue}>
       <Box padding={4}>
         <>
           <Stack gap={4}>

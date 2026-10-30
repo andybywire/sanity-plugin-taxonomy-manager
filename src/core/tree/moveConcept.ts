@@ -222,6 +222,19 @@ function eachNode(data: DocumentConcepts, visit: (node: ChildConceptTerm) => voi
   step(data.concepts)
 }
 
+/**
+ * The first rendering of a concept in the tree, for reading its label or level.
+ * A concept with several broader terms renders more than once, but every copy
+ * carries the same concept, so the first will do.
+ */
+export function findConcept(
+  data: DocumentConcepts | null,
+  id: string,
+): ChildConceptTerm | undefined {
+  if (!data) return undefined
+  return occurrencesOf(data, id)[0]
+}
+
 /** Every rendering of a concept — more than one when it has several broader terms. */
 function occurrencesOf(data: DocumentConcepts, id: string): ChildConceptTerm[] {
   const found: ChildConceptTerm[] = []
