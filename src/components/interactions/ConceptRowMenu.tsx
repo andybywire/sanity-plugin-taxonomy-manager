@@ -2,7 +2,7 @@ import {ArrowDownIcon} from '@sanity/icons/ArrowDown'
 import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {ArrowUpIcon} from '@sanity/icons/ArrowUp'
 import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
-import {TrashIcon} from '@sanity/icons/Trash'
+import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
 import {Button} from '@sanity/ui'
 import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
 
@@ -61,7 +61,12 @@ export function ConceptRowMenu({
           {onDemote && (
             <MenuItem icon={ArrowDownIcon} text="Demote to Concept" onClick={onDemote} />
           )}
-          <MenuItem icon={TrashIcon} text="Remove from scheme" tone="critical" onClick={onRemove} />
+          <MenuItem
+            icon={RemoveCircleIcon}
+            text="Remove from scheme"
+            tone="critical"
+            onClick={onRemove}
+          />
         </Menu>
       }
       popover={{portal: true, placement: 'bottom-end'}}
