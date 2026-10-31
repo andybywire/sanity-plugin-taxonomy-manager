@@ -24,7 +24,7 @@ describe('InputHierarchy (input watch seam)', () => {
             <InputHierarchy branchId={'branch-1'} inputComponent selectConcept={() => undefined} />
           </ReleaseContext.Provider>
         </SchemeContext.Provider>
-      </TaxonomyPortProvider>
+      </TaxonomyPortProvider>,
     )
 
     expect(screen.getByText('Loading hierarchy…')).toBeInTheDocument()

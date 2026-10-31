@@ -52,7 +52,7 @@ export function useAddTitle() {
           })
         })
     },
-    [client, toast]
+    [client, toast],
   )
 
   return addTitle

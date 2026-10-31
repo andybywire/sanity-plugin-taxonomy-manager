@@ -108,9 +108,12 @@ describe('TreeStructure (the reserved caret slot)', () => {
           id: 'c1',
           prefLabel: 'Animals',
           childConcepts: [
-            {id: 'c2', prefLabel: 'Birds', level: 1, childConcepts: [
-              {id: 'c3', prefLabel: 'Falcons', level: 2},
-            ]},
+            {
+              id: 'c2',
+              prefLabel: 'Birds',
+              level: 1,
+              childConcepts: [{id: 'c3', prefLabel: 'Falcons', level: 2}],
+            },
             {id: 'c4', prefLabel: 'Fish', level: 1},
           ],
         },

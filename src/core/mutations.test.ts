@@ -3,15 +3,14 @@ import {describe, expect, it} from 'vitest'
 import type {ConceptSchemeDocument} from '../types'
 
 import {SKOS_CONCEPT_STRENGTHEN} from './ids'
-import {
-  conceptMovePatch,
-  planCreateConcept,
-  planMoveConcept,
-  planRemoveConcept,
-} from './mutations'
+import {conceptMovePatch, planCreateConcept, planMoveConcept, planRemoveConcept} from './mutations'
 
 const scheme = (id: string): ConceptSchemeDocument['displayed'] =>
-  ({_id: id, _type: 'skosConceptScheme', title: 'Test Scheme'}) as ConceptSchemeDocument['displayed']
+  ({
+    _id: id,
+    _type: 'skosConceptScheme',
+    title: 'Test Scheme',
+  }) as ConceptSchemeDocument['displayed']
 
 describe('planCreateConcept', () => {
   it('plans a top concept on a published scheme (draft target, no broader)', () => {
@@ -98,7 +97,11 @@ describe('planCreateConcept', () => {
 describe('planRemoveConcept', () => {
   it('plans removal of a top concept from a published scheme (draft target)', () => {
     expect(
-      planRemoveConcept({scheme: scheme('scheme-1'), conceptRef: 'concept-9', conceptType: 'topConcept'}),
+      planRemoveConcept({
+        scheme: scheme('scheme-1'),
+        conceptRef: 'concept-9',
+        conceptType: 'topConcept',
+      }),
     ).toEqual({
       kind: 'remove',
       schemeId: 'drafts.scheme-1',

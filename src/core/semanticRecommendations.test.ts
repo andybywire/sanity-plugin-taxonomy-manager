@@ -51,7 +51,7 @@ describe('assembleQueryText', () => {
       assembleQueryText([
         {name: 'title', value: 'Summer'},
         {name: 'description', value: ''},
-      ])
+      ]),
     ).toThrowError('Please fill out the description field to enable match scores.')
   })
 
@@ -60,9 +60,9 @@ describe('assembleQueryText', () => {
       assembleQueryText([
         {name: 'title', value: ''},
         {name: 'description', value: '   '},
-      ])
+      ]),
     ).toThrowError(
-      'The following fields must be filled out to enable match scores: title, description'
+      'The following fields must be filled out to enable match scores: title, description',
     )
   })
 
@@ -71,10 +71,8 @@ describe('assembleQueryText', () => {
       assembleQueryText([
         {name: 'title', value: '  '},
         {name: 'count', value: 42},
-      ])
-    ).toThrowError(
-      'The following fields must be filled out to enable match scores: title, count'
-    )
+      ]),
+    ).toThrowError('The following fields must be filled out to enable match scores: title, count')
   })
 })
 
@@ -143,17 +141,17 @@ describe('recommendedConceptIds', () => {
 describe('recommendationsErrorMessage', () => {
   it('flags an embeddings-related error as the dataset not being enabled', () => {
     const message = recommendationsErrorMessage(
-      new Error('text::semanticSimilarity requires embeddings to be enabled')
+      new Error('text::semanticSimilarity requires embeddings to be enabled'),
     )
     expect(message).toBe("Semantic recommendations aren't enabled for this dataset.")
   })
 
   it('falls back to a generic message for any other failure', () => {
     expect(recommendationsErrorMessage(new Error('Network request failed'))).toBe(
-      'Unable to load semantic recommendations.'
+      'Unable to load semantic recommendations.',
     )
     expect(recommendationsErrorMessage('socket hang up')).toBe(
-      'Unable to load semantic recommendations.'
+      'Unable to load semantic recommendations.',
     )
     expect(recommendationsErrorMessage(undefined)).toBe('Unable to load semantic recommendations.')
   })

@@ -88,7 +88,12 @@ const deepTree = (): DocumentConcepts => ({
 describe('canMoveConcept', () => {
   it('allows moving a nested concept to another nested concept', () => {
     expect(
-      canMoveConcept({data: tree(), conceptId: 'falcons', fromParentId: 'birds', toParentId: 'mammals'}),
+      canMoveConcept({
+        data: tree(),
+        conceptId: 'falcons',
+        fromParentId: 'birds',
+        toParentId: 'mammals',
+      }),
     ).toEqual({allowed: true})
   })
 
@@ -96,7 +101,12 @@ describe('canMoveConcept', () => {
     // Children of a top concept come from the scheme's concepts[] too, so this
     // is still a single patch to a single concept document.
     expect(
-      canMoveConcept({data: tree(), conceptId: 'falcons', fromParentId: 'birds', toParentId: 'minerals'}),
+      canMoveConcept({
+        data: tree(),
+        conceptId: 'falcons',
+        fromParentId: 'birds',
+        toParentId: 'minerals',
+      }),
     ).toEqual({allowed: true})
   })
 
@@ -256,9 +266,9 @@ describe('moveConcept', () => {
       fromParentId: 'birds',
       toParentId: 'mammals',
     })
-    expect(
-      result!.topConcepts[0].childConcepts![1].childConcepts!.map((c) => c.prefLabel),
-    ).toEqual(['Apes', 'Falcons', 'Zebras'])
+    expect(result!.topConcepts[0].childConcepts![1].childConcepts!.map((c) => c.prefLabel)).toEqual(
+      ['Apes', 'Falcons', 'Zebras'],
+    )
   })
 
   it('re-levels the moved concept and everything beneath it', () => {

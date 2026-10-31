@@ -65,7 +65,7 @@ export function assembleQueryText(fields: RecommendationField[]): string {
   }
   if (emptyFields.length > 1) {
     throw new Error(
-      `The following fields must be filled out to enable match scores: ${emptyFields.join(', ')}`
+      `The following fields must be filled out to enable match scores: ${emptyFields.join(', ')}`,
     )
   }
   return values.join(' ')
@@ -83,7 +83,7 @@ export interface RecommendationRow {
  * published id. Rows missing a string id or numeric score are dropped.
  */
 export function toConceptRecommendations(
-  rows: readonly RecommendationRow[] | null | undefined
+  rows: readonly RecommendationRow[] | null | undefined,
 ): ConceptRecommendation[] {
   if (!rows) return []
   const recs: ConceptRecommendation[] = []

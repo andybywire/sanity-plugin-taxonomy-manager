@@ -26,7 +26,7 @@ export function useOpenNewConceptPane() {
       const href = routerContext.resolvePathFromState({panes})
       routerContext.navigateUrl({path: href})
     },
-    [routerContext, routerPanesState, groupIndex]
+    [routerContext, routerPanesState, groupIndex],
   )
 
   return openInNewPane

@@ -15,7 +15,7 @@ type ConceptNodeList = readonly {id: string; childConcepts?: ChildConceptTerm[]}
  */
 export function pruneConcepts(
   data: DocumentConcepts | null,
-  removedIds: ReadonlySet<string>
+  removedIds: ReadonlySet<string>,
 ): DocumentConcepts | null {
   if (!data || removedIds.size === 0) return data
   return {
@@ -25,28 +25,28 @@ export function pruneConcepts(
       .map((concept) =>
         concept.childConcepts
           ? {...concept, childConcepts: pruneChildren(concept.childConcepts, removedIds)}
-          : concept
+          : concept,
       ),
     concepts: (data.concepts ?? [])
       .filter((concept) => !removedIds.has(concept.id))
       .map((concept) =>
         concept.childConcepts
           ? {...concept, childConcepts: pruneChildren(concept.childConcepts, removedIds)}
-          : concept
+          : concept,
       ),
   }
 }
 
 function pruneChildren(
   children: ChildConceptTerm[],
-  removedIds: ReadonlySet<string>
+  removedIds: ReadonlySet<string>,
 ): ChildConceptTerm[] {
   return children
     .filter((concept) => !removedIds.has(concept.id))
     .map((concept) =>
       concept.childConcepts
         ? {...concept, childConcepts: pruneChildren(concept.childConcepts, removedIds)}
-        : concept
+        : concept,
     )
 }
 

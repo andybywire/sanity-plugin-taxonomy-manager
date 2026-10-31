@@ -1,0 +1,11 @@
+# Commits that only reformat, and so should be skipped when tracing authorship.
+#
+# GitHub honors this file automatically. For local `git blame`, one-time setup:
+#
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# Entries must be full 40-character SHAs. These stay valid because `main` is only
+# ever merged into, never rebased — see CLAUDE.md.
+
+# chore: format the repo with prettier
+8c5b25a5cc6e81fe017af572de5a047a06b9e4a2

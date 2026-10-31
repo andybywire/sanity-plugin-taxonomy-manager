@@ -1,16 +1,5 @@
 import type {DocumentId} from '@sanity/id-utils'
-import {
-  Grid,
-  Stack,
-  Button,
-  Dialog,
-  Box,
-  Card,
-  Label,
-  Text,
-  Flex,
-  Spinner,
-} from '@sanity/ui'
+import {Grid, Stack, Button, Dialog, Box, Card, Label, Text, Flex, Spinner} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {useState, useEffect, useCallback} from 'react'
 import type {ArrayFieldProps, ObjectOptions} from 'sanity'

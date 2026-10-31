@@ -51,7 +51,7 @@ export function useRemoveConcept(document: ConceptSchemeDocument) {
           })
         })
     },
-    [applyConceptPlan, document.displayed, toast, markRemoved, unmarkRemoved]
+    [applyConceptPlan, document.displayed, toast, markRemoved, unmarkRemoved],
   )
   return removeConcept
 }
