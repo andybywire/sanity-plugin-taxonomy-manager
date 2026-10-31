@@ -24,6 +24,8 @@ const optimistic = () => ({
   unmarkRemoved: vi.fn(),
   markMoved: vi.fn(),
   unmarkMoved: vi.fn(),
+  markTopConcept: vi.fn(),
+  unmarkTopConcept: vi.fn(),
 })
 
 function renderMoveConcept(

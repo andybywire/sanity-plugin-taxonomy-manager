@@ -4,7 +4,7 @@ import {useCallback, useContext, useState} from 'react'
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
 import {conceptStatusMarkers, hasDraftVersion} from '../core/publicationStatus'
 import {hasRootOrphans} from '../core/tree/rootOrphans'
-import {useConceptRowDnd, useCreateConcept, useRemoveConcept} from '../hooks'
+import {useConceptRowDnd, useCreateConcept, useRemoveConcept, useSetTopConcept} from '../hooks'
 import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
 
 import {ChildConcepts} from './ChildConcepts'
@@ -79,6 +79,7 @@ export const ConceptRow = ({
 
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
+  const setTopConcept = useSetTopConcept(document)
 
   const isTop = kind === 'top'
   const level = concept.level ?? 0
@@ -89,6 +90,15 @@ export const ConceptRow = ({
   // target a release version yet, so it is offered in drafts alone.
   const canEdit = !inputComponent && releaseContext !== 'published'
   const canMove = !inputComponent && releaseContext === undefined && !isTop
+  // Promotion and demotion patch the scheme alone, which the id math already
+  // makes release-aware — so unlike a move they follow the ordinary edit gate.
+  // Only an orphan can be promoted: a concept with a broader term in this
+  // scheme would render both at the root and under that parent. Gated on the
+  // row's kind rather than on the orphan badge, which additionally wants the
+  // scheme to have top concepts already — exactly the case where promoting the
+  // first one matters.
+  const canPromote = canEdit && kind === 'orphan'
+  const canDemote = canEdit && isTop
   // A top concept cannot be dragged, but a sibling orphan can. Holding the slot
   // open keeps those orphans from reading as nested — and with nothing
   // draggable at the root at all, the slot would be dead space.
@@ -117,6 +127,14 @@ export const ConceptRow = ({
   const handleAddChild = useCallback(() => {
     createConcept('concept', concept)
   }, [concept, createConcept])
+
+  const handlePromote = useCallback(() => {
+    setTopConcept(concept, true)
+  }, [concept, setTopConcept])
+
+  const handleDemote = useCallback(() => {
+    setTopConcept(concept, false)
+  }, [concept, setTopConcept])
 
   const handleRemoveConcept = useCallback(() => {
     removeConcept(concept.id, isTop ? 'topConcept' : 'concept', concept.prefLabel)
@@ -221,6 +239,8 @@ export const ConceptRow = ({
                 conceptId={concept.id}
                 label={label}
                 onMove={canMove ? openMove : undefined}
+                onPromote={canPromote ? handlePromote : undefined}
+                onDemote={canDemote ? handleDemote : undefined}
                 onRemove={handleRemoveConcept}
               />
             )}

@@ -10,6 +10,8 @@ import type {ConceptMove} from '../core/tree/moveConcept'
 import {isMoveApplied, moveConcept} from '../core/tree/moveConcept'
 import {collectDraftConceptIds} from '../core/publicationStatus'
 import {collectConceptIds, pruneConcepts} from '../core/tree/pruneConcepts'
+import type {TopConceptChange} from '../core/tree/setTopConcept'
+import {isTopConceptApplied, setTopConceptInTree} from '../core/tree/setTopConcept'
 import {useCreateConcept} from '../hooks'
 import {useTaxonomyDataPort} from '../seams/TaxonomyPortContext'
 import type {ConceptSchemeDocument, DocumentConcepts, TreeViewProps} from '../types'
@@ -102,9 +104,32 @@ export const Hierarchy = ({
     setPendingMoves((prev) => prev.filter((pending) => !isSameMove(pending, move)))
   }, [])
 
+  // Optimistic promote/demote: move the row between the tree's two root lists
+  // immediately (see core/tree/setTopConcept). Held as a list, like the moves,
+  // so a run of changes all show and replay in the order they were made.
+  const [pendingTopConcepts, setPendingTopConcepts] = useState<TopConceptChange[]>([])
+  const markTopConcept = useCallback((change: TopConceptChange) => {
+    setPendingTopConcepts((prev) => [...prev, change])
+  }, [])
+  const unmarkTopConcept = useCallback((change: TopConceptChange) => {
+    setPendingTopConcepts((prev) =>
+      prev.filter(
+        (pending) =>
+          !(pending.conceptId === change.conceptId && pending.isTopConcept === change.isTopConcept),
+      ),
+    )
+  }, [])
+
   const optimisticValue = useMemo(
-    () => ({markRemoved, unmarkRemoved, markMoved, unmarkMoved}),
-    [markRemoved, unmarkRemoved, markMoved, unmarkMoved],
+    () => ({
+      markRemoved,
+      unmarkRemoved,
+      markMoved,
+      unmarkMoved,
+      markTopConcept,
+      unmarkTopConcept,
+    }),
+    [markRemoved, unmarkRemoved, markMoved, unmarkMoved, markTopConcept, unmarkTopConcept],
   )
 
   const {data, loading, error} = port.useWatchTree({
@@ -134,15 +159,26 @@ export const Hierarchy = ({
     })
   }, [data])
 
+  // Once fresh data reflects a promotion or demotion, stop replaying it.
+  useEffect(() => {
+    setPendingTopConcepts((prev) => {
+      if (prev.length === 0) return prev
+      const next = prev.filter((change) => !isTopConceptApplied(data, change))
+      return next.length === prev.length ? prev : next
+    })
+  }, [data])
+
   const prunedData = useMemo(() => pruneConcepts(data, removedIds), [data, removedIds])
-  const treeData = useMemo(
-    () =>
-      pendingMoves.reduce<DocumentConcepts | null>(
-        (tree, move) => moveConcept(tree, move),
-        prunedData,
-      ),
-    [prunedData, pendingMoves],
-  )
+  const treeData = useMemo(() => {
+    const moved = pendingMoves.reduce<DocumentConcepts | null>(
+      (tree, move) => moveConcept(tree, move),
+      prunedData,
+    )
+    return pendingTopConcepts.reduce<DocumentConcepts | null>(
+      (tree, change) => setTopConceptInTree(tree, change),
+      moved,
+    )
+  }, [prunedData, pendingMoves, pendingTopConcepts])
 
   // Publication markers are off in an input tree, which browses published
   // concepts in a published scheme, and in a release, where the comparable
