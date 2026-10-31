@@ -8,6 +8,7 @@ import {useCallback, useContext, useEffect, useMemo, useState} from 'react'
 import {OptimisticTreeContext, SchemeContext, TreeContext, ReleaseContext} from '../context'
 import type {ConceptMove} from '../core/tree/moveConcept'
 import {isMoveApplied, moveConcept} from '../core/tree/moveConcept'
+import {collectDraftConceptIds} from '../core/publicationStatus'
 import {collectConceptIds, pruneConcepts} from '../core/tree/pruneConcepts'
 import {useCreateConcept} from '../hooks'
 import {useTaxonomyDataPort} from '../seams/TaxonomyPortContext'
@@ -143,9 +144,29 @@ export const Hierarchy = ({
     [prunedData, pendingMoves],
   )
 
+  // Publication markers are off in an input tree, which browses published
+  // concepts in a published scheme, and in a release, where the comparable
+  // thing is the release version rather than a draft. Gating is an empty id
+  // list: the query then matches nothing and its listener never fires.
+  const showsPublicationStatus = !inputComponent && releaseContext === undefined
+  // Only the drafted concepts: every other node in the tree is its own
+  // published document, so asking about it would be dead weight (see
+  // `collectDraftConceptIds`). Sorted, because the id list is a query parameter
+  // and `useListeningQuery` memoizes params by their JSON — an unstable order
+  // would resubscribe the listener on every tree update.
+  const publishedQueryIds = useMemo(
+    () => (showsPublicationStatus ? [...collectDraftConceptIds(treeData)].sort() : []),
+    [showsPublicationStatus, treeData],
+  )
+  const {data: publishedIds} = port.useWatchPublishedConcepts({ids: publishedQueryIds})
+
   const treeContextValue = useMemo(
-    () => ({globalVisibility, concepts: treeData}),
-    [globalVisibility, treeData],
+    () => ({
+      globalVisibility,
+      concepts: treeData,
+      publishedIds: showsPublicationStatus ? publishedIds : undefined,
+    }),
+    [globalVisibility, treeData, showsPublicationStatus, publishedIds],
   )
 
   if (loading) {
