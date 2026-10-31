@@ -106,6 +106,22 @@ function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
         })
         return
       }
+      if (plan.kind === 'setTopConcept') {
+        // Only the scheme is written, so this works in a release as well as in
+        // drafts. The unset and the append name different arrays, so the order
+        // Content Lake applies them in does not matter here.
+        await client
+          .transaction()
+          .createIfNotExists(plan.createIfNotExists)
+          .patch(plan.schemeId, (patch) =>
+            patch
+              .setIfMissing({[plan.appendField]: []})
+              .unset(plan.unsetPaths)
+              .append(plan.appendField, [plan.reference]),
+          )
+          .commit()
+        return
+      }
       if (plan.kind === 'remove') {
         await client
           .transaction()

@@ -200,3 +200,61 @@ export function conceptMovePatch(plan: MoveConceptPlan): {
     ...(plan.insertBroader ? {insert: {after: 'broader[-1]', items: [plan.insertBroader]}} : {}),
   }
 }
+
+export type SetTopConceptPlan = {
+  kind: 'setTopConcept'
+  schemeId: string
+  createIfNotExists: SchemeDisplayed & {_id: string}
+  /** The array the reference leaves. */
+  unsetPaths: string[]
+  /** The array it joins. */
+  appendField: 'topConcepts' | 'concepts'
+  reference: SkosConceptReference
+}
+
+/**
+ * Plan a concept's move across the boundary between a scheme's `topConcepts[]`
+ * and its `concepts[]` — promotion when `isTopConcept` is true, demotion when
+ * it is false. One planner rather than two, because the two directions differ
+ * only in which array each end of the move names.
+ *
+ * This is a single patch to a single document, the scheme. Promotion is only
+ * offered on an orphan, which by definition has no broader term within this
+ * scheme, so there is nothing on the concept itself to clear — the case that
+ * would otherwise have made the concept render twice, once at the root and once
+ * under its old parent, and would have needed two documents written together.
+ *
+ * Because only the scheme is patched, and `deriveSchemeMutationTarget` already
+ * resolves a release version, these commands work inside a release. A move does
+ * not: it patches the concept document through the Actions API, which has no
+ * `versionId`.
+ *
+ * The reference is rebuilt rather than carried over, so its strength is decided
+ * fresh from the concept's `_originalId` — a concept that is still a draft needs
+ * a weak reference, as everywhere else.
+ */
+export function planSetTopConcept(input: {
+  scheme: SchemeDisplayed
+  concept: {id: string; _originalId?: string}
+  /** The state being moved *to*, not the current one. */
+  isTopConcept: boolean
+  referenceKey: string
+}): SetTopConceptPlan {
+  const {schemeId} = deriveSchemeMutationTarget(input.scheme._id)
+  const conceptRef = getPublishedId(DocumentId(input.concept.id))
+  const from = input.isTopConcept ? 'concepts' : 'topConcepts'
+
+  return {
+    kind: 'setTopConcept',
+    schemeId,
+    createIfNotExists: {...input.scheme, _id: schemeId},
+    unsetPaths: [`${from}[_ref=="${conceptRef}"]`],
+    appendField: input.isTopConcept ? 'topConcepts' : 'concepts',
+    reference: {
+      _key: input.referenceKey,
+      _ref: conceptRef,
+      _type: 'reference',
+      ...conceptReferenceStrength(input.concept._originalId ?? input.concept.id),
+    },
+  }
+}
