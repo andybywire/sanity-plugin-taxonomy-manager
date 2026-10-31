@@ -34,7 +34,9 @@ function renderMoveConcept(
     wrapper: ({children}: {children: ReactNode}) => (
       <UiProviders>
         <TaxonomyPortProvider port={port}>
-          <OptimisticTreeContext.Provider value={tracker}>{children}</OptimisticTreeContext.Provider>
+          <OptimisticTreeContext.Provider value={tracker}>
+            {children}
+          </OptimisticTreeContext.Provider>
         </TaxonomyPortProvider>
       </UiProviders>
     ),

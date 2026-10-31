@@ -16,7 +16,7 @@ describe('public export surface', () => {
         'branchFilter',
         'schemeFilter',
         'taxonomyManager',
-      ].sort()
+      ].sort(),
     )
   })
 

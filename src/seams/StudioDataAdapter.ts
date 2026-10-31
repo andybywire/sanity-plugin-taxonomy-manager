@@ -41,7 +41,7 @@ function useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts> 
       options: {
         perspective: params.perspective === undefined ? 'drafts' : [params.perspective],
       },
-    }
+    },
   ) as {data: DocumentConcepts | null; loading: boolean; error: unknown}
 
   return {
@@ -59,7 +59,7 @@ function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
         if (plan.isInRelease) {
           throw new Error(
             'Moving a concept inside a content release is not supported yet. ' +
-              'Switch to the drafts perspective to restructure the hierarchy.'
+              'Switch to the drafts perspective to restructure the hierarchy.',
           )
         }
         // Not a transaction: the tree query projects a handful of fields, never
@@ -87,11 +87,11 @@ function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
         .createIfNotExists(plan.createIfNotExists)
         .create(plan.create)
         .patch(plan.schemeId, (patch) =>
-          patch.setIfMissing({[plan.appendField]: []}).append(plan.appendField, [plan.reference])
+          patch.setIfMissing({[plan.appendField]: []}).append(plan.appendField, [plan.reference]),
         )
         .commit({autoGenerateArrayKeys: true})
     },
-    [client]
+    [client],
   )
 }
 

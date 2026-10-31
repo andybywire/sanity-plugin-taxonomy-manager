@@ -5,7 +5,11 @@ import {conceptFilter, prefLabelUniquenessResult} from './validation'
 describe('conceptFilter', () => {
   it('excludes self and already-referenced broader/related concepts', () => {
     const result = conceptFilter({
-      document: {_id: 'concept-1', broader: [{_ref: 'b-1'}, {_ref: 'b-2'}], related: [{_ref: 'r-1'}]} as never,
+      document: {
+        _id: 'concept-1',
+        broader: [{_ref: 'b-1'}, {_ref: 'b-2'}],
+        related: [{_ref: 'r-1'}],
+      } as never,
     })
     expect(result.filter).toBe('!(_id in $broader || _id in $related || _id == $self)')
     expect(result.params).toEqual({self: 'concept-1', broader: ['b-1', 'b-2'], related: ['r-1']})

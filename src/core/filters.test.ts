@@ -47,7 +47,11 @@ describe('buildSchemeFilterResult', () => {
       "(_id in $concepts
                     || _id in $topConcepts)"
     `)
-    expect(result.params).toEqual({concepts: ['c-a', 'c-b'], topConcepts: ['t-1'], schemeId: 'abc123'})
+    expect(result.params).toEqual({
+      concepts: ['c-a', 'c-b'],
+      topConcepts: ['t-1'],
+      schemeId: 'abc123',
+    })
     expect(result.expanded).toBe(true)
     expect(result.browseOnly).toBe(false)
   })
@@ -55,7 +59,11 @@ describe('buildSchemeFilterResult', () => {
 
 describe('buildBranchFilterResult', () => {
   it('assembles the filter, params, and option passthrough', () => {
-    const result = buildBranchFilterResult({schemeId: 'abc123', branchId: 'd4e5f6', concepts: ['c-x']})
+    const result = buildBranchFilterResult({
+      schemeId: 'abc123',
+      branchId: 'd4e5f6',
+      concepts: ['c-x'],
+    })
     expect(result.filter).toMatchInlineSnapshot(`"_id in $concepts"`)
     expect(result.params).toEqual({concepts: ['c-x'], schemeId: 'abc123', branchId: 'd4e5f6'})
     expect(result.expanded).toBeUndefined()

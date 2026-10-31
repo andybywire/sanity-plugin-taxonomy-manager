@@ -23,7 +23,7 @@ describe('createFakeDataPort', () => {
   it('defaults to a null, non-loading, error-free result', () => {
     const port = createFakeDataPort()
     const {result} = renderHook(() =>
-      port.useWatchTree({mode: 'trunk', documentId: 's', perspective: undefined})
+      port.useWatchTree({mode: 'trunk', documentId: 's', perspective: undefined}),
     )
     expect(result.current).toEqual({data: null, loading: false, error: null})
   })

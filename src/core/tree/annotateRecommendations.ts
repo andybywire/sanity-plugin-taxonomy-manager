@@ -10,12 +10,12 @@ import type {ChildConceptTerm} from '../../types'
  */
 export function annotateRecommendations<T extends ChildConceptTerm>(
   node: T,
-  recommendedIds: Set<string>
+  recommendedIds: Set<string>,
 ): T {
   const recommended = recommendedIds.has(getPublishedId(node.id as DocumentId))
 
   const annotatedChildren = node.childConcepts?.map((child) =>
-    annotateRecommendations(child, recommendedIds)
+    annotateRecommendations(child, recommendedIds),
   )
 
   const hasMatchingDescendant =

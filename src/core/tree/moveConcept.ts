@@ -231,10 +231,7 @@ function applyMove(
 }
 
 /** Insert a node among siblings ordered by `prefLabel`, as the query orders them. */
-function insertInOrder(
-  siblings: ChildConceptTerm[],
-  node: ChildConceptTerm,
-): ChildConceptTerm[] {
+function insertInOrder(siblings: ChildConceptTerm[], node: ChildConceptTerm): ChildConceptTerm[] {
   const at = siblings.findIndex((sibling) => sibling.prefLabel.localeCompare(node.prefLabel) > 0)
   if (at === -1) return [...siblings, node]
   return [...siblings.slice(0, at), node, ...siblings.slice(at)]

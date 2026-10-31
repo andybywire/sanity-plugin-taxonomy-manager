@@ -197,8 +197,6 @@ export function conceptMovePatch(plan: MoveConceptPlan): {
   return {
     setIfMissing: {broader: []},
     ...(plan.unsetBroader ? {unset: [plan.unsetBroader]} : {}),
-    ...(plan.insertBroader
-      ? {insert: {after: 'broader[-1]', items: [plan.insertBroader]}}
-      : {}),
+    ...(plan.insertBroader ? {insert: {after: 'broader[-1]', items: [plan.insertBroader]}} : {}),
   }
 }

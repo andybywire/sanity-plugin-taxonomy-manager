@@ -40,12 +40,7 @@ export function ConceptRowMenu({
       menu={
         <Menu>
           {onMove && <MenuItem icon={ArrowRightIcon} text="Move to…" onClick={onMove} />}
-          <MenuItem
-            icon={TrashIcon}
-            text="Remove from scheme"
-            tone="critical"
-            onClick={onRemove}
-          />
+          <MenuItem icon={TrashIcon} text="Remove from scheme" tone="critical" onClick={onRemove} />
         </Menu>
       }
       popover={{portal: true, placement: 'bottom-end'}}

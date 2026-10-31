@@ -30,7 +30,7 @@ export const structure = (S: StructureBuilder): ListBuilder =>
  * wrapper component identity stays stable across resolver invocations.
  */
 export const createDefaultDocumentNode = (
-  config: {ident?: Options['ident']} = {}
+  config: {ident?: Options['ident']} = {},
 ): DefaultDocumentNodeResolver => {
   // Provide plugin config to the structure Tree View subtree (the only place
   // concept creation reads `ident`). Input-component trees render without this

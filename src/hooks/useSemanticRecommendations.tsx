@@ -51,11 +51,11 @@ export function useSemanticRecommendations(semanticSearch?: SemanticSearchConfig
       let searchQuery: string
       try {
         searchQuery = assembleQueryText(
-          fieldReferences.map((name) => ({name, value: getFormValue([name])}))
+          fieldReferences.map((name) => ({name, value: getFormValue([name])})),
         )
       } catch (error) {
         setRecsError(
-          error instanceof Error ? error.message : 'One or more required fields are empty'
+          error instanceof Error ? error.message : 'One or more required fields are empty',
         )
         return
       }
@@ -68,7 +68,7 @@ export function useSemanticRecommendations(semanticSearch?: SemanticSearchConfig
           setRecsError(recommendationsErrorMessage(error))
         })
     },
-    [client, getFormValue, semanticSearch]
+    [client, getFormValue, semanticSearch],
   )
 
   return {conceptRecs, recsError, triggerSearch}

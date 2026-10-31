@@ -12,7 +12,11 @@ import type {ReferenceHierarchyInput} from '../components/inputs/ReferenceHierar
 
 /** A Studio client stub that resolves the scheme lookup and no-ops mutations. */
 export function fakeSchemeClient(
-  scheme: Record<string, unknown> = {_id: 'scheme-x', _type: 'skosConceptScheme', title: 'Test Scheme'}
+  scheme: Record<string, unknown> = {
+    _id: 'scheme-x',
+    _type: 'skosConceptScheme',
+    title: 'Test Scheme',
+  },
 ) {
   const client: Record<string, unknown> = {
     withConfig: () => client,

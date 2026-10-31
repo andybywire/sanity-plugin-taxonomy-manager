@@ -67,7 +67,7 @@ describe('pruneConcepts', () => {
 describe('collectConceptIds', () => {
   it('collects every id across top, orphan, and nested children', () => {
     expect(collectConceptIds(tree())).toEqual(
-      new Set(['top-1', 'child-1', 'child-2', 'grandchild-1', 'top-2', 'orphan-1'])
+      new Set(['top-1', 'child-1', 'child-2', 'grandchild-1', 'top-2', 'orphan-1']),
     )
   })
 
