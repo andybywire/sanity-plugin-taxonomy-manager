@@ -37,14 +37,30 @@ const scheme = {
   displayed: {_id: 'scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
 } as unknown as ConceptSchemeDocument
 
+/**
+ * A scheme that lists a top concept. The default fixture above has no
+ * `topConcepts`, which silently switches the orphan badge off — `ConceptRow`
+ * reads the scheme document, not the tree, to decide whether "orphan" means
+ * anything in this scheme.
+ */
+const schemeWithTopConcepts = {
+  displayed: {
+    _id: 'scheme-1',
+    _type: 'skosConceptScheme',
+    title: 'Test Scheme',
+    topConcepts: [{_key: 'k1', _ref: 'top-1', _type: 'reference'}],
+  },
+} as unknown as ConceptSchemeDocument
+
 function renderHierarchy(
   port: ReturnType<typeof createFakeDataPort>,
   releaseContext: string | undefined = undefined,
   inputComponent = false,
+  schemeDocument: ConceptSchemeDocument = scheme,
 ) {
   return renderWithUi(
     <TaxonomyPortProvider port={port}>
-      <SchemeContext.Provider value={scheme}>
+      <SchemeContext.Provider value={schemeDocument}>
         <ReleaseContext.Provider value={releaseContext}>
           <Hierarchy inputComponent={inputComponent} />
         </ReleaseContext.Provider>
@@ -430,5 +446,60 @@ describe('Hierarchy (promote and demote)', () => {
     expect(
       screen.queryByRole('button', {name: 'More actions for Minerals'}),
     ).not.toBeInTheDocument()
+  })
+})
+
+describe('Hierarchy (orphan badge)', () => {
+  const MIXED: DocumentConcepts = {
+    topConcepts: [{id: 'top-1', prefLabel: 'Animals'}],
+    concepts: [{id: 'orphan-1', prefLabel: 'Minerals', isOrphan: true}],
+  }
+
+  it('badges a root concept as an orphan while the scheme has top concepts', () => {
+    renderHierarchy(createFakeDataPort({tree: MIXED}), undefined, false, schemeWithTopConcepts)
+
+    expect(screen.getByRole('button', {name: /^Minerals/})).toHaveTextContent('orphan')
+  })
+
+  it('badges the top concept as such', () => {
+    renderHierarchy(createFakeDataPort({tree: MIXED}), undefined, false, schemeWithTopConcepts)
+
+    expect(screen.getByRole('button', {name: /^Animals/})).toHaveTextContent('top concept')
+  })
+
+  it('drops the orphan badge in a scheme with no top concepts, where it says nothing', () => {
+    // Every root concept is simply a concept then — which is why demoting the
+    // last top concept is "Demote to Concept" rather than "to Orphan".
+    const orphansOnly: DocumentConcepts = {
+      topConcepts: [],
+      concepts: [{id: 'orphan-1', prefLabel: 'Minerals', isOrphan: true}],
+    }
+    renderHierarchy(createFakeDataPort({tree: orphansOnly}))
+
+    expect(screen.getByRole('button', {name: /^Minerals/})).not.toHaveTextContent('orphan')
+  })
+
+  it('never badges an orphan in an input tree', () => {
+    renderHierarchy(createFakeDataPort({tree: MIXED}), undefined, true, schemeWithTopConcepts)
+
+    expect(screen.getByRole('button', {name: /^Minerals/})).not.toHaveTextContent('orphan')
+  })
+
+  it('does not badge a nested child, which has a broader term here', () => {
+    const nested: DocumentConcepts = {
+      topConcepts: [
+        {
+          id: 'top-1',
+          prefLabel: 'Animals',
+          childConcepts: [{id: 'child-1', prefLabel: 'Carbon', level: 1}],
+        },
+      ],
+      concepts: [],
+    }
+    renderHierarchy(createFakeDataPort({tree: nested}), undefined, false, schemeWithTopConcepts)
+
+    const child = screen.getByRole('button', {name: /^Carbon/})
+    expect(child).not.toHaveTextContent('orphan')
+    expect(child).not.toHaveTextContent('top concept')
   })
 })
