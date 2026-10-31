@@ -40,15 +40,32 @@ const scheme = {
 function renderHierarchy(
   port: ReturnType<typeof createFakeDataPort>,
   releaseContext: string | undefined = undefined,
+  inputComponent = false,
 ) {
   return renderWithUi(
     <TaxonomyPortProvider port={port}>
       <SchemeContext.Provider value={scheme}>
         <ReleaseContext.Provider value={releaseContext}>
-          <Hierarchy inputComponent={false} />
+          <Hierarchy inputComponent={inputComponent} />
         </ReleaseContext.Provider>
       </SchemeContext.Provider>
     </TaxonomyPortProvider>,
+  )
+}
+
+/** The publication marker group on a row, or null when the row shows none. */
+function markersFor(label: string) {
+  const link = screen.getByRole('button', {name: new RegExp(`^${label}`)})
+  const row = link.closest('[data-ui="Card"]')
+  if (!row) throw new Error(`No row card found for ${label}`)
+  return row.querySelector('[role="img"]')
+}
+
+/** The glyphs inside that group, in render order. */
+function markerGlyphs(label: string) {
+  const group = markersFor(label)
+  return [...(group?.querySelectorAll('[data-sanity-icon]') ?? [])].map((el) =>
+    el.getAttribute('data-sanity-icon'),
   )
 }
 
@@ -149,5 +166,136 @@ describe('Hierarchy (trunk watch seam)', () => {
     const occurrences = screen.getAllByRole('button', {name: /^Carbon/})
     expect(occurrences).toHaveLength(2)
     occurrences.forEach((row) => expect(row).toHaveAttribute('aria-current', 'true'))
+  })
+})
+
+describe('Hierarchy (publication markers)', () => {
+  /** A scheme of one concept, whose `_originalId` says whether a draft exists. */
+  function treeOf(originalId: string): DocumentConcepts {
+    return {
+      topConcepts: [{id: 'concept-1', prefLabel: 'Animals', _originalId: originalId}],
+      concepts: [],
+    }
+  }
+
+  it('shows the draft ring before the published dot for a concept with both', () => {
+    const port = createFakeDataPort({
+      tree: treeOf('drafts.concept-1'),
+      publishedIds: ['concept-1'],
+    })
+    renderHierarchy(port)
+
+    expect(markersFor('Animals')).toHaveAttribute(
+      'aria-label',
+      'Published, with unpublished changes',
+    )
+    expect(markerGlyphs('Animals')).toEqual(['ring', 'circle-small'])
+  })
+
+  it('shows the published dot alone for a concept with no draft', () => {
+    const port = createFakeDataPort({tree: treeOf('concept-1'), publishedIds: ['concept-1']})
+    renderHierarchy(port)
+
+    expect(markersFor('Animals')).toHaveAttribute('aria-label', 'Published')
+    expect(markerGlyphs('Animals')).toEqual(['circle-small'])
+  })
+
+  it('shows the draft ring alone for a concept that has never been published', () => {
+    const port = createFakeDataPort({tree: treeOf('drafts.concept-1'), publishedIds: []})
+    renderHierarchy(port)
+
+    expect(markersFor('Animals')).toHaveAttribute('aria-label', 'Not published')
+    expect(markerGlyphs('Animals')).toEqual(['ring'])
+  })
+
+  it('marks an undrafted concept published without waiting for the query', () => {
+    // The drafts perspective returned it and `_originalId` is not a draft, so
+    // it is the published document. No query can tell us anything more.
+    const port = createFakeDataPort({tree: treeOf('concept-1')})
+    renderHierarchy(port)
+
+    expect(markerGlyphs('Animals')).toEqual(['circle-small'])
+  })
+
+  it('leaves no row unmarked: a drafted concept shows its ring before the query lands', () => {
+    const port = createFakeDataPort({tree: treeOf('drafts.concept-1')})
+    renderHierarchy(port)
+
+    expect(markerGlyphs('Animals')).toEqual(['ring'])
+  })
+
+  it('draws the markers inside the label button, which carries the hover shading', () => {
+    // Studio puts the same dots inside the row item's own background rather
+    // than beside it. Outside the button they would sit past the shaded edge.
+    const port = createFakeDataPort({
+      tree: treeOf('drafts.concept-1'),
+      publishedIds: ['concept-1'],
+    })
+    renderHierarchy(port)
+
+    const label = screen.getByRole('button', {name: /^Animals/})
+    expect(label.querySelector('[role="img"]')).not.toBeNull()
+  })
+
+  it('lays the label and the markers out in a row, which Button does not do for children', () => {
+    // Button applies its own `justify` only to the `text`/`icon` props and puts
+    // children in a plain Box, which stacked the dots under the label. jsdom
+    // cannot see that, so this pins the structure only — the look is an
+    // eyeball check.
+    const port = createFakeDataPort({
+      tree: treeOf('drafts.concept-1'),
+      publishedIds: ['concept-1'],
+    })
+    renderHierarchy(port)
+
+    expect(markersFor('Animals')?.parentElement).toHaveAttribute('data-ui', 'Flex')
+  })
+
+  it('asks only about the drafted concepts, sorted, and not the rest of the tree', () => {
+    const port = createFakeDataPort({
+      tree: {
+        topConcepts: [
+          {
+            id: 'concept-z',
+            prefLabel: 'Zebra',
+            _originalId: 'drafts.concept-z',
+            childConcepts: [
+              {id: 'concept-a', prefLabel: 'Ant', level: 1, _originalId: 'drafts.concept-a'},
+              {id: 'concept-m', prefLabel: 'Moth', level: 1, _originalId: 'concept-m'},
+            ],
+          },
+        ],
+        concepts: [],
+      },
+      publishedIds: [],
+    })
+    renderHierarchy(port)
+
+    // 'concept-m' is already published; only the two drafts are asked about.
+    expect(port.lastPublishedParams).toEqual({ids: ['concept-a', 'concept-z']})
+  })
+
+  it('asks about nothing, and marks nothing, in a release perspective', () => {
+    // `_originalId` is a version id there, not a draft, so every row would
+    // otherwise read as unpublished.
+    const port = createFakeDataPort({
+      tree: treeOf('versions.autumn.concept-1'),
+      publishedIds: ['concept-1'],
+    })
+    renderHierarchy(port, 'autumn')
+
+    expect(port.lastPublishedParams).toEqual({ids: []})
+    expect(markersFor('Animals')).toBeNull()
+  })
+
+  it('asks about nothing, and marks nothing, in an input tree', () => {
+    const port = createFakeDataPort({
+      tree: treeOf('drafts.concept-1'),
+      publishedIds: ['concept-1'],
+    })
+    renderHierarchy(port, undefined, true)
+
+    expect(port.lastPublishedParams).toEqual({ids: []})
+    expect(markersFor('Animals')).toBeNull()
   })
 })

@@ -1,6 +1,6 @@
 import {describe, expect, it} from 'vitest'
 
-import {inputBuilder, trunkBuilder} from './queries'
+import {inputBuilder, publishedConceptsBuilder, trunkBuilder} from './queries'
 
 // Characterization tests: pin the exact GROQ the builders emit today so the
 // Stage 3 extraction into core/ (and making the depth cap configurable) cannot
@@ -46,5 +46,23 @@ describe('inputBuilder', () => {
   it('recurses childConcepts to a depth cap of 6 levels', () => {
     expect(query).toContain('"level": 6')
     expect(query).not.toContain('"level": 7')
+  })
+})
+
+describe('publishedConceptsBuilder', () => {
+  const {fetch, listen} = publishedConceptsBuilder()
+
+  it('projects only the ids, so the payload stays one array of strings', () => {
+    expect(fetch).toBe(`*[_type == "skosConcept" && _id in $ids]._id`)
+  })
+
+  it('scopes the listener to the same ids, so off-screen concepts never wake it', () => {
+    expect(listen).toContain('_id in $ids')
+    expect(listen).toContain('_type == "skosConcept"')
+  })
+
+  it('filters by id rather than by scheme membership, which the published scheme would lag', () => {
+    expect(fetch).not.toContain('topConcepts')
+    expect(fetch).not.toContain('concepts[]')
   })
 })

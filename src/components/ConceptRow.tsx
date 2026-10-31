@@ -2,6 +2,7 @@ import {Box, Card, Flex, Inline} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
+import {conceptStatusMarkers, hasDraftVersion} from '../core/publicationStatus'
 import {hasRootOrphans} from '../core/tree/rootOrphans'
 import {useConceptRowDnd, useCreateConcept, useRemoveConcept} from '../hooks'
 import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
@@ -70,8 +71,11 @@ export const ConceptRow = ({
 }) => {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
   const releaseContext = useContext(ReleaseContext)
-  const {globalVisibility: {treeVisibility} = {treeVisibility: 'open' as const}, concepts: tree} =
-    useContext(TreeContext) || {}
+  const {
+    globalVisibility: {treeVisibility} = {treeVisibility: 'open' as const},
+    concepts: tree,
+    publishedIds,
+  } = useContext(TreeContext) || {}
 
   const createConcept = useCreateConcept(document)
   const removeConcept = useRemoveConcept(document)
@@ -95,6 +99,20 @@ export const ConceptRow = ({
   // rather than between grip and label: only one grip shows at a time, so they
   // need not align, and the grip reads better kept beside its own label.
   const reservesCaret = kind === 'child' && !hasChildren
+  // `undefined` means the markers are gated off; `null` only means the query
+  // has not landed yet, which no longer blanks the row. A node the drafts
+  // perspective returned whose `_originalId` is not a draft *is* the published
+  // document, so its dot needs no query — and a node that is a draft has at
+  // least its ring. Every row therefore carries a marker, and the query is
+  // consulted for one thing only: whether a drafted concept is also published.
+  const hasDraft = hasDraftVersion(concept._originalId)
+  const statusMarkers =
+    publishedIds === undefined
+      ? undefined
+      : conceptStatusMarkers({
+          hasDraft,
+          hasPublished: !hasDraft || (publishedIds?.has(concept.id) ?? false),
+        })
 
   const handleAddChild = useCallback(() => {
     createConcept('concept', concept)
@@ -154,7 +172,10 @@ export const ConceptRow = ({
               />
             )}
             {hasChildren && <ToggleButton handler={handleToggle} visibility={levelVisibility} />}
-            <Box flex={1}>
+            {/* minWidth lets this shrink below its content. Without it a flex
+                item's min-width is `auto`, so a long label widens the whole
+                left group and shunts the markers and actions out of line. */}
+            <Box flex={1} style={{minWidth: 0}}>
               {inputComponent && concept.prefLabel ? (
                 <ConceptSelectLink
                   concept={concept}
@@ -168,6 +189,7 @@ export const ConceptRow = ({
                   topConcept={isTop}
                   orphan={showsOrphanBadge}
                   inputComponent={inputComponent}
+                  statusMarkers={statusMarkers}
                 />
               )}
             </Box>

@@ -1,10 +1,16 @@
-import {useCallback} from 'react'
+import {useCallback, useMemo} from 'react'
 import {useClient} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
-import type {ConceptPlan, ConceptTreeParams, TaxonomyDataPort, WatchResult} from '../core/ports'
+import type {
+  ConceptPlan,
+  ConceptTreeParams,
+  PublishedConceptsParams,
+  TaxonomyDataPort,
+  WatchResult,
+} from '../core/ports'
 import {conceptMovePatch} from '../core/mutations'
-import {inputBuilder, trunkBuilder} from '../core/queries'
+import {inputBuilder, publishedConceptsBuilder, trunkBuilder} from '../core/queries'
 import {useSemanticRecommendations} from '../hooks/useSemanticRecommendations'
 import type {DocumentConcepts} from '../types'
 
@@ -22,6 +28,11 @@ import type {DocumentConcepts} from '../types'
 
 // Content Releases API version — must be preserved on the mutation path.
 const MUTATION_API_VERSION = '2025-02-19'
+
+// Built once. `useListeningQuery` keys its subscription effect on the query
+// object's identity, so building it in the hook body would tear the listener
+// down and set it up again on every render.
+const PUBLISHED_CONCEPTS_QUERY = publishedConceptsBuilder()
 
 function useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts> {
   const isInput = params.mode === 'input'
@@ -46,6 +57,27 @@ function useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts> 
 
   return {
     data: result.data ?? null,
+    loading: result.loading,
+    error: result.error ? (result.error as Error) : null,
+  }
+}
+
+function useWatchPublishedConcepts(
+  params: PublishedConceptsParams,
+): WatchResult<ReadonlySet<string>> {
+  const {ids} = params
+  const result = useListeningQuery<string[]>(PUBLISHED_CONCEPTS_QUERY, {
+    // ListenQueryParams types values as scalars; GROQ takes an array here, and
+    // the same cast is made for the input tree's null branchId above.
+    params: {ids} as any,
+    options: {perspective: 'published'},
+  }) as {data: string[] | null; loading: boolean; error: unknown}
+
+  // A new Set per result, not per render: the row reads it on every pass.
+  const data = useMemo(() => (result.data ? new Set(result.data) : null), [result.data])
+
+  return {
+    data,
     loading: result.loading,
     error: result.error ? (result.error as Error) : null,
   }
@@ -97,6 +129,7 @@ function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
 
 export const studioDataAdapter: TaxonomyDataPort = {
   useWatchTree,
+  useWatchPublishedConcepts,
   useApplyConceptPlan,
   useSemanticRecommendations,
 }

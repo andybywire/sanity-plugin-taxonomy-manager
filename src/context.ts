@@ -14,6 +14,14 @@ type TreeContextType = {
    * provides it; input trees never move anything.
    */
   concepts?: DocumentConcepts | null
+  /**
+   * Which concepts in the tree have a published version, or `null` while the
+   * query is still in flight. Paired with each node's `_originalId` it gives the
+   * row its publication status (see `core/publicationStatus`). Watched once for
+   * the whole tree rather than per row, and left undefined wherever the markers
+   * are gated off — input trees and release perspectives.
+   */
+  publishedIds?: ReadonlySet<string> | null
 }
 
 export const SchemeContext = createContext<ConceptSchemeDocument | null>(null)

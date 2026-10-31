@@ -140,3 +140,21 @@ export const inputBuilder = (): string => {
     }
   )`
 }
+
+/**
+ * #### Published Concepts Builder
+ * The ids, among those asked about, that exist as published documents.
+ *
+ * A second query rather than a field on the tree: GROQ cannot see outside the
+ * perspective it runs under, and the tree runs under `drafts`, where every
+ * concept resolves whether or not it was ever published. Run this one under
+ * `published` and membership is the answer.
+ *
+ * Both halves are scoped to `$ids` — the ids the tree is actually showing —
+ * so the listener wakes only for concepts on screen, and not at all while the
+ * markers are gated off and the list is empty.
+ */
+export const publishedConceptsBuilder = (): {fetch: string; listen: string} => ({
+  fetch: `*[_type == "skosConcept" && _id in $ids]._id`,
+  listen: `*[_type == "skosConcept" && _id in $ids]`,
+})

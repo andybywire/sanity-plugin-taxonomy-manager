@@ -59,4 +59,21 @@ describe('createFakeDataPort', () => {
     expect(port.triggeredSearches).toBe(1)
     expect(port.lastSearchSchemeId).toBe('scheme-7')
   })
+
+  it('useWatchPublishedConcepts returns the configured ids as a set and records params', () => {
+    const port = createFakeDataPort({publishedIds: ['concept-1', 'concept-2']})
+    const params = {ids: ['concept-1', 'concept-2', 'concept-3']}
+
+    const {result} = renderHook(() => port.useWatchPublishedConcepts(params))
+
+    expect(result.current.data).toEqual(new Set(['concept-1', 'concept-2']))
+    expect(port.lastPublishedParams).toEqual(params)
+  })
+
+  it('reports published ids as null until configured, standing in for a query in flight', () => {
+    const port = createFakeDataPort()
+    const {result} = renderHook(() => port.useWatchPublishedConcepts({ids: []}))
+
+    expect(result.current.data).toBeNull()
+  })
 })
