@@ -231,9 +231,7 @@ export const ConceptRow = ({
                 }
               />
             )}
-            {canEdit && level < MAX_VISIBLE_LEVEL && (
-              <ConceptEditAction action="add" handler={handleAddChild} />
-            )}
+            {canEdit && level < MAX_VISIBLE_LEVEL && <ConceptEditAction handler={handleAddChild} />}
             {canEdit && (
               <ConceptRowMenu
                 conceptId={concept.id}
