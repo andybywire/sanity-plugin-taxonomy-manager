@@ -34,15 +34,27 @@ const MUTATION_API_VERSION = '2025-02-19'
 // down and set it up again on every render.
 const PUBLISHED_CONCEPTS_QUERY = publishedConceptsBuilder()
 
+// The tree queries, built once for the same reason. A fresh object here meant
+// the listener was torn down and rebuilt on *every render* of the tree — and a
+// teardown drops whatever refetch that subscription had pending. A mutation's
+// own re-render could therefore race the refetch it triggered: the replacement
+// subscription fetches immediately on `welcome`, before Content Lake has made
+// the mutation query-visible, and the delayed refetch that would have caught it
+// died with the old subscription. The tree then stays stale until something
+// else mutates or the view reloads.
+const TRUNK_TREE_QUERY = {
+  fetch: trunkBuilder(),
+  listen: `*[_type == "skosConcept" || _type == "skosConceptScheme" ]`,
+}
+const INPUT_TREE_QUERY = {
+  fetch: inputBuilder(),
+  listen: `*[_type == "skosConcept" || _id == $id]`,
+}
+
 function useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts> {
   const isInput = params.mode === 'input'
   const result = useListeningQuery<DocumentConcepts>(
-    {
-      fetch: isInput ? inputBuilder() : trunkBuilder(),
-      listen: isInput
-        ? `*[_type == "skosConcept" || _id == $id]`
-        : `*[_type == "skosConcept" || _type == "skosConceptScheme" ]`,
-    },
+    isInput ? INPUT_TREE_QUERY : TRUNK_TREE_QUERY,
     {
       params: isInput
         ? // GROQ's select($branchId != null => …) needs null, not ''. ListenQueryParams
@@ -104,6 +116,22 @@ function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
           draftId: plan.targetId,
           patch: conceptMovePatch(plan),
         })
+        return
+      }
+      if (plan.kind === 'setTopConcept') {
+        // Only the scheme is written, so this works in a release as well as in
+        // drafts. The unset and the append name different arrays, so the order
+        // Content Lake applies them in does not matter here.
+        await client
+          .transaction()
+          .createIfNotExists(plan.createIfNotExists)
+          .patch(plan.schemeId, (patch) =>
+            patch
+              .setIfMissing({[plan.appendField]: []})
+              .unset(plan.unsetPaths)
+              .append(plan.appendField, [plan.reference]),
+          )
+          .commit()
         return
       }
       if (plan.kind === 'remove') {

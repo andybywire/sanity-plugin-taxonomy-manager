@@ -1,6 +1,7 @@
 import {createContext} from 'react'
 
 import type {ConceptMove} from './core/tree/moveConcept'
+import type {TopConceptChange} from './core/tree/setTopConcept'
 import type {ConceptSchemeDocument, DocumentConcepts, Options} from './types'
 
 type TreeContextType = {
@@ -58,10 +59,14 @@ export type OptimisticTreeContextType = {
   unmarkRemoved: (id: string) => void
   markMoved: (move: ConceptMove) => void
   unmarkMoved: (move: ConceptMove) => void
+  markTopConcept: (change: TopConceptChange) => void
+  unmarkTopConcept: (change: TopConceptChange) => void
 }
 export const OptimisticTreeContext = createContext<OptimisticTreeContextType>({
   markRemoved: () => undefined,
   unmarkRemoved: () => undefined,
   markMoved: () => undefined,
   unmarkMoved: () => undefined,
+  markTopConcept: () => undefined,
+  unmarkTopConcept: () => undefined,
 })

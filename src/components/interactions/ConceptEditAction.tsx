@@ -1,40 +1,28 @@
 import {AddCircleIcon} from '@sanity/icons/AddCircle'
-import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Text, Button} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-// import {useCallback, useState} from 'react'
 
-export const ConceptEditAction = ({
-  action,
-  handler,
-}: {
-  action: 'remove' | 'add'
-  handler: () => void
-}) => {
-  // const [open, setOpen] = useState(false)
-  // const onClose = useCallback(() => setOpen(false), [])
-  // const onOpen = useCallback(() => setOpen(true), [])
+const MESSAGE = 'Add a child concept below this concept'
 
-  const typeMap = {
-    add: {
-      message: 'Add a child concept below this concept' as const,
-      icon: AddCircleIcon,
-      tone: 'positive' as const,
-    },
-    remove: {
-      message: 'Remove this concept from this scheme' as const,
-      icon: TrashIcon,
-      tone: 'critical' as const,
-    },
-  }
-
+/**
+ * #### Concept Edit Action
+ * The row's add control: a bleed icon button with a tooltip naming what it does.
+ *
+ * It used to switch on an `action` of `'add' | 'remove'`. Removal moved into the
+ * row's overflow menu, where a destructive action is not one stray click from
+ * the surface, and the `'remove'` arm was left behind unreachable. A prop whose
+ * only job is to pick between one option is not worth keeping for a second
+ * control that does not exist yet; whatever joins this one can generalize it
+ * then, knowing what it actually needs.
+ */
+export const ConceptEditAction = ({handler}: {handler: () => void}) => {
   return (
     <Tooltip
       delay={{open: 750}}
       content={
         <Box padding={1} sizing="content">
           <Text muted size={1}>
-            {typeMap[action].message}
+            {MESSAGE}
           </Text>
         </Box>
       }
@@ -42,11 +30,11 @@ export const ConceptEditAction = ({
       placement="top"
     >
       <Button
-        icon={typeMap[action].icon}
+        icon={AddCircleIcon}
         mode={'bleed'}
         onClick={handler}
-        tone={typeMap[action].tone}
-        aria-label={typeMap[action].message}
+        tone={'positive'}
+        aria-label={MESSAGE}
       />
     </Tooltip>
   )

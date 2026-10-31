@@ -37,14 +37,30 @@ const scheme = {
   displayed: {_id: 'scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
 } as unknown as ConceptSchemeDocument
 
+/**
+ * A scheme that lists a top concept. The default fixture above has no
+ * `topConcepts`, which silently switches the orphan badge off — `ConceptRow`
+ * reads the scheme document, not the tree, to decide whether "orphan" means
+ * anything in this scheme.
+ */
+const schemeWithTopConcepts = {
+  displayed: {
+    _id: 'scheme-1',
+    _type: 'skosConceptScheme',
+    title: 'Test Scheme',
+    topConcepts: [{_key: 'k1', _ref: 'top-1', _type: 'reference'}],
+  },
+} as unknown as ConceptSchemeDocument
+
 function renderHierarchy(
   port: ReturnType<typeof createFakeDataPort>,
   releaseContext: string | undefined = undefined,
   inputComponent = false,
+  schemeDocument: ConceptSchemeDocument = scheme,
 ) {
   return renderWithUi(
     <TaxonomyPortProvider port={port}>
-      <SchemeContext.Provider value={scheme}>
+      <SchemeContext.Provider value={schemeDocument}>
         <ReleaseContext.Provider value={releaseContext}>
           <Hierarchy inputComponent={inputComponent} />
         </ReleaseContext.Provider>
@@ -297,5 +313,193 @@ describe('Hierarchy (publication markers)', () => {
 
     expect(port.lastPublishedParams).toEqual({ids: []})
     expect(markersFor('Animals')).toBeNull()
+  })
+})
+
+describe('Hierarchy (promote and demote)', () => {
+  const ORPHAN: DocumentConcepts = {
+    topConcepts: [{id: 'top-1', prefLabel: 'Animals'}],
+    concepts: [{id: 'orphan-1', prefLabel: 'Minerals', isOrphan: true}],
+  }
+
+  /** Opens a row's overflow menu and leaves it open for inspection. */
+  async function openRowMenu(label: string) {
+    const user = userEvent.setup()
+    await user.click(screen.getByRole('button', {name: `More actions for ${label}`}))
+    return user
+  }
+
+  it('offers promotion on an orphan, and routes it through the port', async () => {
+    const port = createFakeDataPort({tree: ORPHAN})
+    renderHierarchy(port)
+
+    const user = await openRowMenu('Minerals')
+    await user.click(await screen.findByText('Promote to Top Concept'))
+
+    expect(port.appliedPlans).toHaveLength(1)
+    expect(port.appliedPlans[0]).toMatchObject({
+      kind: 'setTopConcept',
+      unsetPaths: ['concepts[_ref=="orphan-1"]'],
+      appendField: 'topConcepts',
+    })
+  })
+
+  it('offers demotion on a top concept, and routes it through the port', async () => {
+    const port = createFakeDataPort({tree: ORPHAN})
+    renderHierarchy(port)
+
+    const user = await openRowMenu('Animals')
+    await user.click(await screen.findByText('Demote to Concept'))
+
+    expect(port.appliedPlans[0]).toMatchObject({
+      kind: 'setTopConcept',
+      unsetPaths: ['topConcepts[_ref=="top-1"]'],
+      appendField: 'concepts',
+    })
+  })
+
+  it('does not offer demotion on an orphan', async () => {
+    renderHierarchy(createFakeDataPort({tree: ORPHAN}))
+    await openRowMenu('Minerals')
+
+    expect(await screen.findByText('Promote to Top Concept')).toBeInTheDocument()
+    expect(screen.queryByText('Demote to Concept')).not.toBeInTheDocument()
+  })
+
+  it('does not offer promotion on a top concept', async () => {
+    renderHierarchy(createFakeDataPort({tree: ORPHAN}))
+    await openRowMenu('Animals')
+
+    expect(await screen.findByText('Demote to Concept')).toBeInTheDocument()
+    expect(screen.queryByText('Promote to Top Concept')).not.toBeInTheDocument()
+  })
+
+  it('does not offer promotion on a nested child, which has a broader term here', async () => {
+    const nested: DocumentConcepts = {
+      topConcepts: [
+        {
+          id: 'top-1',
+          prefLabel: 'Animals',
+          childConcepts: [{id: 'child-1', prefLabel: 'Carbon', level: 1}],
+        },
+      ],
+      concepts: [],
+    }
+    renderHierarchy(createFakeDataPort({tree: nested}))
+    await openRowMenu('Carbon')
+
+    expect(await screen.findByText('Remove from scheme')).toBeInTheDocument()
+    expect(screen.queryByText('Promote to Top Concept')).not.toBeInTheDocument()
+  })
+
+  it('moves the row to the top concepts before the listener catches up', async () => {
+    // The fake's watch data stays static, standing in for the listener's lag.
+    // Without the optimistic transform the row keeps its old place while the
+    // toast says the change has landed.
+    const port = createFakeDataPort({tree: ORPHAN})
+    renderHierarchy(port)
+
+    expect(screen.getByRole('button', {name: /^Minerals/})).not.toHaveTextContent('top concept')
+
+    const user = await openRowMenu('Minerals')
+    await user.click(await screen.findByText('Promote to Top Concept'))
+
+    expect(screen.getByRole('button', {name: /^Minerals/})).toHaveTextContent('top concept')
+  })
+
+  it('moves a demoted top concept down to the root concepts immediately', async () => {
+    const port = createFakeDataPort({tree: ORPHAN})
+    renderHierarchy(port)
+
+    expect(screen.getByRole('button', {name: /^Animals/})).toHaveTextContent('top concept')
+
+    const user = await openRowMenu('Animals')
+    await user.click(await screen.findByText('Demote to Concept'))
+
+    expect(screen.getByRole('button', {name: /^Animals/})).not.toHaveTextContent('top concept')
+  })
+
+  it('puts promotion above Move to… in the menu', async () => {
+    renderHierarchy(createFakeDataPort({tree: ORPHAN}))
+    await openRowMenu('Minerals')
+
+    // @sanity/ui renders menu items as plain buttons, so read them off the menu.
+    const menu = document.querySelector('[data-ui="Menu"]')
+    const items = [...(menu?.querySelectorAll('button') ?? [])].map((item) => item.textContent)
+    expect(items).toEqual(['Promote to Top Concept', 'Move to…', 'Remove from scheme'])
+  })
+
+  it('still offers promotion in a release, where Move to… is withheld', async () => {
+    // These patch the scheme alone, which the id math already makes
+    // release-aware. A move patches the concept document through the Actions
+    // API, which has no versionId — hence the narrower gate on that one.
+    renderHierarchy(createFakeDataPort({tree: ORPHAN}), 'autumn')
+    await openRowMenu('Minerals')
+
+    expect(await screen.findByText('Promote to Top Concept')).toBeInTheDocument()
+    expect(screen.queryByText('Move to…')).not.toBeInTheDocument()
+  })
+
+  it('offers neither in the published perspective', async () => {
+    renderHierarchy(createFakeDataPort({tree: ORPHAN}), 'published')
+
+    expect(
+      screen.queryByRole('button', {name: 'More actions for Minerals'}),
+    ).not.toBeInTheDocument()
+  })
+})
+
+describe('Hierarchy (orphan badge)', () => {
+  const MIXED: DocumentConcepts = {
+    topConcepts: [{id: 'top-1', prefLabel: 'Animals'}],
+    concepts: [{id: 'orphan-1', prefLabel: 'Minerals', isOrphan: true}],
+  }
+
+  it('badges a root concept as an orphan while the scheme has top concepts', () => {
+    renderHierarchy(createFakeDataPort({tree: MIXED}), undefined, false, schemeWithTopConcepts)
+
+    expect(screen.getByRole('button', {name: /^Minerals/})).toHaveTextContent('orphan')
+  })
+
+  it('badges the top concept as such', () => {
+    renderHierarchy(createFakeDataPort({tree: MIXED}), undefined, false, schemeWithTopConcepts)
+
+    expect(screen.getByRole('button', {name: /^Animals/})).toHaveTextContent('top concept')
+  })
+
+  it('drops the orphan badge in a scheme with no top concepts, where it says nothing', () => {
+    // Every root concept is simply a concept then — which is why demoting the
+    // last top concept is "Demote to Concept" rather than "to Orphan".
+    const orphansOnly: DocumentConcepts = {
+      topConcepts: [],
+      concepts: [{id: 'orphan-1', prefLabel: 'Minerals', isOrphan: true}],
+    }
+    renderHierarchy(createFakeDataPort({tree: orphansOnly}))
+
+    expect(screen.getByRole('button', {name: /^Minerals/})).not.toHaveTextContent('orphan')
+  })
+
+  it('never badges an orphan in an input tree', () => {
+    renderHierarchy(createFakeDataPort({tree: MIXED}), undefined, true, schemeWithTopConcepts)
+
+    expect(screen.getByRole('button', {name: /^Minerals/})).not.toHaveTextContent('orphan')
+  })
+
+  it('does not badge a nested child, which has a broader term here', () => {
+    const nested: DocumentConcepts = {
+      topConcepts: [
+        {
+          id: 'top-1',
+          prefLabel: 'Animals',
+          childConcepts: [{id: 'child-1', prefLabel: 'Carbon', level: 1}],
+        },
+      ],
+      concepts: [],
+    }
+    renderHierarchy(createFakeDataPort({tree: nested}), undefined, false, schemeWithTopConcepts)
+
+    const child = screen.getByRole('button', {name: /^Carbon/})
+    expect(child).not.toHaveTextContent('orphan')
+    expect(child).not.toHaveTextContent('top concept')
   })
 })

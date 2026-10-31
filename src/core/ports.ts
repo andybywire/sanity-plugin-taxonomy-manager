@@ -1,4 +1,9 @@
-import type {CreateConceptPlan, MoveConceptPlan, RemoveConceptPlan} from './mutations'
+import type {
+  CreateConceptPlan,
+  MoveConceptPlan,
+  RemoveConceptPlan,
+  SetTopConceptPlan,
+} from './mutations'
 import type {ConceptRecommendation, DocumentConcepts, SemanticSearchConfig} from '../types'
 
 /**
@@ -66,8 +71,9 @@ export interface WatchResult<T> {
   error: Error | null
 }
 
-/** A create, remove or move plan, discriminated by `kind` (see `core/mutations`). */
-export type ConceptPlan = CreateConceptPlan | RemoveConceptPlan | MoveConceptPlan
+/** A create, remove, move or top-concept plan, discriminated by `kind` (see `core/mutations`). */
+export type ConceptPlan =
+  CreateConceptPlan | RemoveConceptPlan | MoveConceptPlan | SetTopConceptPlan
 
 /** Return shape of the semantic-recommendations seam. */
 export interface SemanticRecommendationsResult {

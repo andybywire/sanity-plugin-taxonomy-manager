@@ -3,7 +3,13 @@ import {describe, expect, it} from 'vitest'
 import type {ConceptSchemeDocument} from '../types'
 
 import {SKOS_CONCEPT_STRENGTHEN} from './ids'
-import {conceptMovePatch, planCreateConcept, planMoveConcept, planRemoveConcept} from './mutations'
+import {
+  conceptMovePatch,
+  planCreateConcept,
+  planMoveConcept,
+  planRemoveConcept,
+  planSetTopConcept,
+} from './mutations'
 
 const scheme = (id: string): ConceptSchemeDocument['displayed'] =>
   ({
@@ -312,5 +318,91 @@ describe('planMoveConcept, from outside the hierarchy', () => {
         items: [{_key: 'broader-key', _ref: 'mammals', _type: 'reference', _weak: false}],
       },
     })
+  })
+})
+
+describe('planSetTopConcept', () => {
+  it('promotes an orphan: out of concepts, into topConcepts', () => {
+    expect(
+      planSetTopConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'concept-1'},
+        isTopConcept: true,
+        referenceKey: 'ref-key',
+      }),
+    ).toEqual({
+      kind: 'setTopConcept',
+      schemeId: 'drafts.scheme-1',
+      createIfNotExists: {_id: 'drafts.scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
+      unsetPaths: ['concepts[_ref=="concept-1"]'],
+      appendField: 'topConcepts',
+      reference: {
+        _key: 'ref-key',
+        _ref: 'concept-1',
+        _type: 'reference',
+        _weak: false,
+      },
+    })
+  })
+
+  it('demotes a top concept: out of topConcepts, into concepts', () => {
+    expect(
+      planSetTopConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'concept-1'},
+        isTopConcept: false,
+        referenceKey: 'ref-key',
+      }),
+    ).toMatchObject({
+      kind: 'setTopConcept',
+      unsetPaths: ['topConcepts[_ref=="concept-1"]'],
+      appendField: 'concepts',
+    })
+  })
+
+  it('writes a weak reference when the concept itself is still a draft', () => {
+    // Same rule as every other reference to a concept: it must survive until the
+    // concept is published, or Content Lake would reject it.
+    expect(
+      planSetTopConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'drafts.concept-1'},
+        isTopConcept: true,
+        referenceKey: 'ref-key',
+      }).reference,
+    ).toEqual({
+      _key: 'ref-key',
+      _ref: 'concept-1',
+      _type: 'reference',
+      _weak: true,
+      _strengthenOnPublish: SKOS_CONCEPT_STRENGTHEN,
+    })
+  })
+
+  it('targets the release version when the scheme is being edited in one', () => {
+    // Unlike a move, this patches only the scheme — which the id math already
+    // makes release-aware — so these commands work in a release.
+    expect(
+      planSetTopConcept({
+        scheme: scheme('versions.autumn.scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'versions.autumn.concept-1'},
+        isTopConcept: true,
+        referenceKey: 'ref-key',
+      }),
+    ).toMatchObject({
+      schemeId: 'versions.autumn.scheme-1',
+      createIfNotExists: {_id: 'versions.autumn.scheme-1'},
+    })
+  })
+
+  it('normalizes a draft concept id to its published id in the reference', () => {
+    expect(
+      planSetTopConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'drafts.concept-1', _originalId: 'drafts.concept-1'},
+        isTopConcept: true,
+        referenceKey: 'ref-key',
+      }).reference._ref,
+    ).toBe('concept-1')
   })
 })
