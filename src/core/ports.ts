@@ -20,6 +20,8 @@ import type {ConceptRecommendation, DocumentConcepts, SemanticSearchConfig} from
 export interface TaxonomyDataPort {
   /** Live concept tree for a scheme document (`trunk`) or a branch within it (`input`). */
   useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts>
+  /** Which of the given concepts exist as published documents (`published` perspective). */
+  useWatchPublishedConcepts(params: PublishedConceptsParams): WatchResult<ReadonlySet<string>>
   /** Replay a pure create/remove/move plan (`core/mutations`) onto the Studio client. */
   useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void>
   /** Semantic term recommendations for the input components (GROQ `text::semanticSimilarity()`). */
@@ -39,6 +41,23 @@ export type TaxonomyPerspective = string | undefined
 export type ConceptTreeParams =
   | {mode: 'trunk'; documentId: string; perspective: TaxonomyPerspective}
   | {mode: 'input'; documentId: string; branchId: string | null; perspective: TaxonomyPerspective}
+
+/**
+ * Which concepts to test for a published version.
+ *
+ * The caller passes the ids the tree is showing, so the query and its listener
+ * are scoped to what is on screen. An empty list is the off switch: the query
+ * matches nothing and the listener never fires, which is how the publication
+ * markers are turned off in an input tree or a release perspective — there is
+ * no `enabled` flag because `useListeningQuery` cannot be called conditionally.
+ *
+ * Sort the ids before passing them. The list is a query parameter, so an
+ * unstable order would resubscribe the listener on every tree update.
+ */
+export type PublishedConceptsParams = {
+  /** Published concept ids, sorted. Empty means "ask nothing". */
+  ids: readonly string[]
+}
 
 /** Result shape of a live query: mirrors `useListeningQuery`, with `error` normalized to `Error | null`. */
 export interface WatchResult<T> {

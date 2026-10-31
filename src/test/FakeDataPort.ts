@@ -1,6 +1,7 @@
 import type {
   ConceptPlan,
   ConceptTreeParams,
+  PublishedConceptsParams,
   SemanticRecommendationsResult,
   TaxonomyDataPort,
   WatchResult,
@@ -14,6 +15,8 @@ export interface FakeDataPortConfig {
   error?: Error | null
   recommendations?: ConceptRecommendation[]
   recsError?: string | null
+  /** Concept ids the fake reports as published. `undefined` stands for "not loaded yet". */
+  publishedIds?: string[]
 }
 
 /** A {@link TaxonomyDataPort} that also exposes recorded interactions for assertions. */
@@ -26,6 +29,8 @@ export interface FakeDataPort extends TaxonomyDataPort {
   lastSearchSchemeId: string | undefined
   /** Params from the most recent `useWatchTree` call. */
   lastWatchParams: ConceptTreeParams | null
+  /** Params from the most recent `useWatchPublishedConcepts` call. */
+  lastPublishedParams: PublishedConceptsParams | null
 }
 
 /**
@@ -49,6 +54,11 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
       fake.lastSearchSchemeId = schemeId
     },
   }
+  const publishedResult: WatchResult<ReadonlySet<string>> = {
+    data: config.publishedIds ? new Set(config.publishedIds) : null,
+    loading: config.loading ?? false,
+    error: config.error ?? null,
+  }
   const apply = (plan: ConceptPlan): Promise<void> => {
     fake.appliedPlans.push(plan)
     return Promise.resolve()
@@ -58,9 +68,14 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
     triggeredSearches: 0,
     lastSearchSchemeId: undefined,
     lastWatchParams: null,
+    lastPublishedParams: null,
     useWatchTree: (params: ConceptTreeParams) => {
       fake.lastWatchParams = params
       return watchResult
+    },
+    useWatchPublishedConcepts: (params: PublishedConceptsParams) => {
+      fake.lastPublishedParams = params
+      return publishedResult
     },
     useApplyConceptPlan: () => apply,
     useSemanticRecommendations: () => recsResult,
