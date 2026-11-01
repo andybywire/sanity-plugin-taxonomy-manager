@@ -1,5 +1,7 @@
 import type {
   CreateConceptPlan,
+  InsertConceptPlan,
+  InsertRootConceptPlan,
   MoveConceptPlan,
   RemoveConceptPlan,
   SetTopConceptPlan,
@@ -29,6 +31,8 @@ export interface TaxonomyDataPort {
   useWatchPublishedConcepts(params: PublishedConceptsParams): WatchResult<ReadonlySet<string>>
   /** Replay a pure create/remove/move plan (`core/mutations`) onto the Studio client. */
   useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void>
+  /** One-shot search for concepts outside a scheme, for the insert picker. */
+  useSearchConcepts(): (params: ConceptSearchParams) => Promise<ConceptSearchResult[]>
   /** Semantic term recommendations for the input components (GROQ `text::semanticSimilarity()`). */
   useSemanticRecommendations(config?: SemanticSearchConfig): SemanticRecommendationsResult
 }
@@ -73,7 +77,41 @@ export interface WatchResult<T> {
 
 /** A create, remove, move or top-concept plan, discriminated by `kind` (see `core/mutations`). */
 export type ConceptPlan =
-  CreateConceptPlan | RemoveConceptPlan | MoveConceptPlan | SetTopConceptPlan
+  | CreateConceptPlan
+  | RemoveConceptPlan
+  | MoveConceptPlan
+  | SetTopConceptPlan
+  | InsertConceptPlan
+  | InsertRootConceptPlan
+
+/**
+ * What the insert picker asks for. A one-shot fetch rather than a live query:
+ * a picker wants the answer to what has been typed, not a subscription.
+ */
+export type ConceptSearchParams = {
+  /** Published ids already in the scheme, which the search excludes. */
+  excludeIds: readonly string[]
+  /** The typed text, passed to GROQ `match`. */
+  searchQuery: string
+  /**
+   * False only when picking a top concept, which SKOS says may not hold a
+   * broader term inside its own scheme. A broader term in another scheme is no
+   * bar. Defaults to true wherever it is left out.
+   */
+  allowBroaderInScheme?: boolean
+}
+
+/** One candidate in the insert picker. */
+export type ConceptSearchResult = {
+  id: string
+  _originalId?: string
+  prefLabel: string
+  /**
+   * The concept's broader references, so the caller can work out where it will
+   * land before the listener says (see `inSchemeBroaderRef`).
+   */
+  broaderRefs?: string[]
+}
 
 /** Return shape of the semantic-recommendations seam. */
 export interface SemanticRecommendationsResult {

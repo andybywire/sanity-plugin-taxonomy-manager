@@ -158,3 +158,56 @@ export const publishedConceptsBuilder = (): {fetch: string; listen: string} => (
   fetch: `*[_type == "skosConcept" && _id in $ids]._id`,
   listen: `*[_type == "skosConcept" && _id in $ids]`,
 })
+
+/**
+ * How many candidates the insert picker fetches.
+ *
+ * This is a browse list as much as a search one — an empty query lists what is
+ * available rather than nothing — so the cap has to be big enough to be worth
+ * scrolling. 147 named concepts sat outside one scheme in the dev dataset, and
+ * each row is three short fields, so a hundred costs almost nothing. Past the
+ * cap, typing narrows.
+ */
+export const CONCEPT_SEARCH_LIMIT = 100
+
+/**
+ * #### Concept Search Builder
+ * Concepts that are *not* members of a scheme, matched by preferred label, for
+ * the "insert an existing concept" picker.
+ *
+ * Run under the drafts perspective, where `_id` comes back normalized to the
+ * published id — so the scheme's own published references can be passed
+ * straight in as `$excludeIds` with no draft/published reconciliation.
+ *
+ * The parameter is `$searchQuery`, never `$query`: `query` is a reserved
+ * `@sanity/client` `QueryParams` key and fails typecheck cryptically.
+ *
+ * GROQ `match` is word-based, so "co" matches "A wee childe concept" as well as
+ * "Collection". That is ordinary typeahead behavior rather than a prefix match
+ * on the whole label. A `$searchQuery` of `*` matches everything, which is how
+ * the picker lists what is available before anything is typed.
+ *
+ * Concepts with no preferred label are left out. They exist — nine of them in
+ * the dev dataset — and they sort first, so without this the browse list opens
+ * on a run of blank rows that identify nothing.
+ *
+ * `$allowBroaderInScheme` is false only when picking a **top** concept. SKOS
+ * says a top concept has no broader term within its own scheme, so a candidate
+ * holding one is not eligible — a broader term in some *other* scheme is fine,
+ * and still eligible. Everywhere else the flag is true and the predicate costs
+ * nothing: 142 of 147 candidates survived it against one scheme in the dev
+ * dataset.
+ */
+export const conceptSearchBuilder = (): string => {
+  return `*[_type == "skosConcept"
+    && !(_id in $excludeIds)
+    && defined(prefLabel) && prefLabel != ""
+    && ($allowBroaderInScheme || !array::intersects(coalesce(broader[]._ref, []), $excludeIds))
+    && prefLabel match $searchQuery]
+    | order(prefLabel) [0...${CONCEPT_SEARCH_LIMIT}] {
+      "id": _id,
+      _originalId,
+      prefLabel,
+      "broaderRefs": broader[]._ref
+    }`
+}

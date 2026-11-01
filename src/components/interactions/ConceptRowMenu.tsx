@@ -3,8 +3,11 @@ import {ArrowRightIcon} from '@sanity/icons/ArrowRight'
 import {ArrowUpIcon} from '@sanity/icons/ArrowUp'
 import {EllipsisHorizontalIcon} from '@sanity/icons/EllipsisHorizontal'
 import {RemoveCircleIcon} from '@sanity/icons/RemoveCircle'
-import {Button} from '@sanity/ui'
+import {Box, Button, Flex, Text} from '@sanity/ui'
 import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
+import {Tooltip} from '@sanity/ui/tooltip'
+
+import {MORE_ACTIONS_TOOLTIP} from './SchemeActionsMenu'
 
 /**
  * #### Concept Row Menu
@@ -19,7 +22,9 @@ import {Menu, MenuButton, MenuItem} from '@sanity/ui/menu'
  * Items carry no tooltip. Studio puts one on a menu item only to say why that
  * item is *disabled* (`TooltipOfDisabled`); an enabled item's label is already
  * its explanation, and a tooltip inside an open menu would cover its
- * neighbours.
+ * neighbours. The *button* does carry one, the same on every menu — but its
+ * accessible name still names its row, because identical names would leave a
+ * screen reader unable to tell one row's menu from another's.
  */
 export function ConceptRowMenu({
   conceptId,
@@ -44,11 +49,31 @@ export function ConceptRowMenu({
     <MenuButton
       id={`concept-row-menu-${conceptId}`}
       button={
-        <Button
-          icon={EllipsisHorizontalIcon}
-          mode="bleed"
-          aria-label={`More actions for ${label}`}
-        />
+        // `MenuButton` needs a ref to its button element, and a Tooltip around
+        // it breaks that chain — the popover then has no reference element and
+        // throws. Studio's own WorkspaceMenuButton solves it the same way: give
+        // MenuButton a Flex to hold, and put the tooltip inside it.
+        <Flex>
+          <Tooltip
+            delay={{open: 750}}
+            content={
+              <Box padding={1} sizing="content">
+                <Text muted size={1}>
+                  {MORE_ACTIONS_TOOLTIP}
+                </Text>
+              </Box>
+            }
+            fallbackPlacements={['right', 'left']}
+            placement="top"
+            portal
+          >
+            <Button
+              icon={EllipsisHorizontalIcon}
+              mode="bleed"
+              aria-label={`More actions for ${label}`}
+            />
+          </Tooltip>
+        </Flex>
       }
       menu={
         <Menu>

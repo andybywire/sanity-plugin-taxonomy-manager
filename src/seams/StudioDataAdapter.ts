@@ -4,13 +4,20 @@ import {useListeningQuery} from 'sanity-plugin-utils'
 
 import type {
   ConceptPlan,
+  ConceptSearchParams,
+  ConceptSearchResult,
   ConceptTreeParams,
   PublishedConceptsParams,
   TaxonomyDataPort,
   WatchResult,
 } from '../core/ports'
-import {conceptMovePatch} from '../core/mutations'
-import {inputBuilder, publishedConceptsBuilder, trunkBuilder} from '../core/queries'
+import {conceptMovePatch, insertBroaderPatch, insertSchemePatch} from '../core/mutations'
+import {
+  conceptSearchBuilder,
+  inputBuilder,
+  publishedConceptsBuilder,
+  trunkBuilder,
+} from '../core/queries'
 import {useSemanticRecommendations} from '../hooks/useSemanticRecommendations'
 import type {DocumentConcepts} from '../types'
 
@@ -33,6 +40,7 @@ const MUTATION_API_VERSION = '2025-02-19'
 // object's identity, so building it in the hook body would tear the listener
 // down and set it up again on every render.
 const PUBLISHED_CONCEPTS_QUERY = publishedConceptsBuilder()
+const CONCEPT_SEARCH_QUERY = conceptSearchBuilder()
 
 // The tree queries, built once for the same reason. A fresh object here meant
 // the listener was torn down and rebuilt on *every render* of the tree — and a
@@ -95,6 +103,25 @@ function useWatchPublishedConcepts(
   }
 }
 
+function useSearchConcepts(): (params: ConceptSearchParams) => Promise<ConceptSearchResult[]> {
+  const client = useClient({apiVersion: MUTATION_API_VERSION})
+  return useCallback(
+    (params: ConceptSearchParams) =>
+      client.fetch<ConceptSearchResult[]>(
+        CONCEPT_SEARCH_QUERY,
+        {
+          excludeIds: [...params.excludeIds],
+          searchQuery: params.searchQuery,
+          allowBroaderInScheme: params.allowBroaderInScheme ?? true,
+        },
+        // Drafts, so `_id` arrives normalized and the scheme's published
+        // references can be excluded without reconciling draft ids.
+        {perspective: 'drafts'},
+      ),
+    [client],
+  )
+}
+
 function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
   const client = useClient({apiVersion: MUTATION_API_VERSION})
   return useCallback(
@@ -116,6 +143,46 @@ function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
           draftId: plan.targetId,
           patch: conceptMovePatch(plan),
         })
+        return
+      }
+      if (plan.kind === 'insertRoot') {
+        // Scheme only — no broader reference is written for a concept at the
+        // root — so this stays on the transaction path and works in a release.
+        await client
+          .transaction()
+          .createIfNotExists(plan.createIfNotExists)
+          .patch(plan.schemeId, (patch) =>
+            patch.setIfMissing({[plan.appendField]: []}).append(plan.appendField, [plan.reference]),
+          )
+          .commit()
+        return
+      }
+      if (plan.kind === 'insert') {
+        if (plan.isInRelease) {
+          throw new Error(
+            'Inserting a concept inside a content release is not supported yet. ' +
+              'Switch to the drafts perspective to add existing concepts.',
+          )
+        }
+        // One array, applied atomically. Either edit alone leaves the scheme
+        // wrong: a member with no broader term renders at the root as an
+        // orphan, a broader term on a non-member renders nowhere. `document
+        // .edit` rather than a transaction because neither document is held in
+        // full here, so there is nothing to `createIfNotExists` from.
+        await client.action([
+          {
+            actionType: 'sanity.action.document.edit',
+            publishedId: plan.schemeEdit.publishedId,
+            draftId: plan.schemeEdit.targetId,
+            patch: insertSchemePatch(plan),
+          },
+          {
+            actionType: 'sanity.action.document.edit',
+            publishedId: plan.conceptEdit.publishedId,
+            draftId: plan.conceptEdit.targetId,
+            patch: insertBroaderPatch(plan),
+          },
+        ])
         return
       }
       if (plan.kind === 'setTopConcept') {
@@ -157,6 +224,7 @@ function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
 
 export const studioDataAdapter: TaxonomyDataPort = {
   useWatchTree,
+  useSearchConcepts,
   useWatchPublishedConcepts,
   useApplyConceptPlan,
   useSemanticRecommendations,

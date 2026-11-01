@@ -1,6 +1,12 @@
 import {describe, expect, it} from 'vitest'
 
-import {inputBuilder, publishedConceptsBuilder, trunkBuilder} from './queries'
+import {
+  CONCEPT_SEARCH_LIMIT,
+  conceptSearchBuilder,
+  inputBuilder,
+  publishedConceptsBuilder,
+  trunkBuilder,
+} from './queries'
 
 // Characterization tests: pin the exact GROQ the builders emit today so the
 // Stage 3 extraction into core/ (and making the depth cap configurable) cannot
@@ -64,5 +70,42 @@ describe('publishedConceptsBuilder', () => {
   it('filters by id rather than by scheme membership, which the published scheme would lag', () => {
     expect(fetch).not.toContain('topConcepts')
     expect(fetch).not.toContain('concepts[]')
+  })
+})
+
+describe('conceptSearchBuilder', () => {
+  const query = conceptSearchBuilder()
+
+  it('excludes the scheme’s existing members', () => {
+    expect(query).toContain('!(_id in $excludeIds)')
+  })
+
+  it('names the search parameter $searchQuery, not the reserved $query', () => {
+    expect(query).toContain('prefLabel match $searchQuery')
+    expect(query).not.toMatch(/\$query\b/)
+  })
+
+  it('orders by prefLabel and slices to the search limit', () => {
+    expect(query).toContain('| order(prefLabel)')
+    expect(query).toContain(`[0...${CONCEPT_SEARCH_LIMIT}]`)
+  })
+
+  it('projects only what the picker renders and the plan needs', () => {
+    expect(query).toContain('"id": _id')
+    expect(query).toContain('_originalId')
+    expect(query).toContain('prefLabel')
+    expect(query).not.toContain('childConcepts')
+  })
+})
+
+describe('conceptSearchBuilder — browse list', () => {
+  const query = conceptSearchBuilder()
+
+  it('leaves out concepts with no preferred label, which sort first and name nothing', () => {
+    expect(query).toContain('defined(prefLabel) && prefLabel != ""')
+  })
+
+  it('caps the list high enough to browse, not just to typeahead', () => {
+    expect(CONCEPT_SEARCH_LIMIT).toBeGreaterThanOrEqual(100)
   })
 })
