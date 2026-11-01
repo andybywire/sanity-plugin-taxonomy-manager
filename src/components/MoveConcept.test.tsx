@@ -49,13 +49,27 @@ const tree = (): DocumentConcepts => ({
   concepts: [],
 })
 
+/**
+ * Studio sets `displayed._id` from the selected perspective, so a scheme open
+ * in a release carries the version id — before any version document exists.
+ */
+const schemeInRelease = (release: string) =>
+  ({
+    displayed: {
+      _id: `versions.${release}.scheme-1`,
+      _type: 'skosConceptScheme',
+      title: 'Test Scheme',
+    },
+  }) as unknown as ConceptSchemeDocument
+
 function renderHierarchy(
   port: ReturnType<typeof createFakeDataPort>,
   releaseContext: string | undefined = undefined,
+  schemeDocument: ConceptSchemeDocument = scheme,
 ) {
   return renderWithUi(
     <TaxonomyPortProvider port={port}>
-      <SchemeContext.Provider value={scheme}>
+      <SchemeContext.Provider value={schemeDocument}>
         <ReleaseContext.Provider value={releaseContext}>
           <Hierarchy inputComponent={false} />
         </ReleaseContext.Provider>
@@ -100,13 +114,15 @@ describe('the move command, where it is offered', () => {
     expect(screen.queryByRole('button', {name: 'More actions for Falcons'})).not.toBeInTheDocument()
   })
 
-  it('keeps remove but drops move inside a release, which the move path cannot target yet', async () => {
+  it('offers move inside a release, which the edit action can now target', async () => {
+    // `EditAction` names a release version through `versionId`, creating it
+    // from the published document — so a move is no longer drafts-only.
     const user = userEvent.setup()
     renderHierarchy(createFakeDataPort({tree: tree()}), 'rSummerDrop')
 
     await openRowMenu(user, 'Falcons')
     expect(await screen.findByText('Remove from scheme')).toBeInTheDocument()
-    expect(screen.queryByText('Move to…')).not.toBeInTheDocument()
+    expect(screen.getByText('Move to…')).toBeInTheDocument()
   })
 })
 
@@ -122,9 +138,27 @@ describe('the move command, choosing a destination', () => {
     expect(port.appliedPlans).toHaveLength(1)
     expect(port.appliedPlans[0]).toMatchObject({
       kind: 'move',
-      publishedId: 'falcons',
+      concept: {publishedId: 'falcons'},
       unsetBroader: 'broader[_ref=="birds"]',
       insertBroader: {_ref: 'mammals', _type: 'reference'},
+    })
+  })
+
+  it('targets the release version of the concept when the scheme is open in one', async () => {
+    // The affordance showing is not the point — this is the write that used to
+    // be refused, and the document it now names.
+    const user = userEvent.setup()
+    const port = createFakeDataPort({tree: tree()})
+    renderHierarchy(port, 'rSummerDrop', schemeInRelease('rSummerDrop'))
+
+    const dialog = await openMoveDialog(user, 'Falcons')
+    await user.click(within(dialog).getByRole('button', {name: /^Mammals/}))
+
+    expect(port.appliedPlans).toHaveLength(1)
+    expect(port.appliedPlans[0]).toMatchObject({
+      kind: 'move',
+      concept: {publishedId: 'falcons', targetId: 'versions.rSummerDrop.falcons'},
+      insertBroader: {_ref: 'mammals'},
     })
   })
 
@@ -208,7 +242,7 @@ describe('the move command, for an orphan', () => {
     expect(port.appliedPlans).toHaveLength(1)
     expect(port.appliedPlans[0]).toMatchObject({
       kind: 'move',
-      publishedId: 'unfiled',
+      concept: {publishedId: 'unfiled'},
       unsetBroader: null,
       insertBroader: {_ref: 'mammals', _type: 'reference'},
     })
@@ -293,9 +327,9 @@ describe('the drag handle, where it is offered', () => {
     expect(container.querySelectorAll('[data-sanity-icon="drag-handle"]')).toHaveLength(0)
   })
 
-  it('offers none at all inside a release, which the move path cannot target yet', () => {
+  it('offers them inside a release, where dragging now reaches the version', () => {
     const {container} = renderHierarchy(createFakeDataPort({tree: treeWithOrphan()}), 'rSummerDrop')
-    expect(container.querySelectorAll('[data-sanity-icon="drag-handle"]')).toHaveLength(0)
+    expect(container.querySelectorAll('[data-sanity-icon="drag-handle"]').length).toBeGreaterThan(0)
   })
 })
 

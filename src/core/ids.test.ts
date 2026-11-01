@@ -13,6 +13,7 @@ describe('deriveSchemeMutationTarget', () => {
       isInRelease: false,
       releaseName: undefined,
       schemeId: 'drafts.scheme-1',
+      publishedId: 'scheme-1',
     })
   })
 
@@ -21,6 +22,7 @@ describe('deriveSchemeMutationTarget', () => {
       isInRelease: false,
       releaseName: undefined,
       schemeId: 'drafts.scheme-1',
+      publishedId: 'scheme-1',
     })
   })
 
@@ -29,6 +31,7 @@ describe('deriveSchemeMutationTarget', () => {
       isInRelease: true,
       releaseName: 'rel1',
       schemeId: 'versions.rel1.scheme-1',
+      publishedId: 'scheme-1',
     })
   })
 })

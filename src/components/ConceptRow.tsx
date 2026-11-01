@@ -89,29 +89,31 @@ export const ConceptRow = ({
   const hasChildren = (concept.childConcepts?.length ?? 0) > 0
   const label = concept.prefLabel || '[new concept]'
 
-  // Editing is off in the published view. Moving is narrower still: it cannot
-  // target a release version yet, so it is offered in drafts alone.
+  // Editing is off in the published view, and every edit affordance now shares
+  // that one gate. Moving and inserting used to be narrower — drafts only,
+  // because both patch a *concept* document and `EditAction` appeared to have
+  // no way to name a release version. It has one: `versionId` in place of
+  // `draftId`, which also creates the version from the published document. So
+  // there is nothing left for a release to be excluded from.
   const canEdit = !inputComponent && releaseContext !== 'published'
-  const canMove = !inputComponent && releaseContext === undefined && !isTop
-  // Promotion and demotion patch the scheme alone, which the id math already
-  // makes release-aware — so unlike a move they follow the ordinary edit gate.
+  // A top concept's move would have to cross between the scheme's two arrays,
+  // which is promotion/demotion rather than a re-parent, so it is not offered
+  // here.
+  const canMove = canEdit && !isTop
   // Only an orphan can be promoted: a concept with a broader term in this
   // scheme would render both at the root and under that parent. Gated on the
   // row's kind rather than on the orphan badge, which additionally wants the
   // scheme to have top concepts already — exactly the case where promoting the
   // first one matters.
-  // Inserting writes to the chosen concept's document through the Actions API,
-  // which has no `versionId` — so drafts only, like a move. The depth cap is
-  // the same one the add control follows: children of a level-5 concept are
-  // fetched but never rendered.
-  const canInsert = !inputComponent && releaseContext === undefined && level < MAX_VISIBLE_LEVEL
+  // The depth cap on inserting is the same one the add control follows:
+  // children of a level-5 concept are fetched but never rendered.
+  const canInsert = canEdit && level < MAX_VISIBLE_LEVEL
   const canPromote = canEdit && kind === 'orphan'
   const canDemote = canEdit && isTop
   // A top concept cannot be dragged, but a sibling orphan can. Holding the slot
   // open keeps those orphans from reading as nested — and with nothing
   // draggable at the root at all, the slot would be dead space.
-  const reservesGrip =
-    isTop && !inputComponent && releaseContext === undefined && hasRootOrphans(tree ?? null)
+  const reservesGrip = isTop && canEdit && hasRootOrphans(tree ?? null)
   // A child with no children of its own holds the caret slot open, so every
   // label at a level shares one vertical edge. It sits to the left of the grip
   // rather than between grip and label: only one grip shows at a time, so they
