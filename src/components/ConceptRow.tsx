@@ -1,3 +1,5 @@
+import {AddCircleIcon} from '@sanity/icons/AddCircle'
+import {InsertBelowIcon} from '@sanity/icons/InsertBelow'
 import {Box, Card, Flex, Inline} from '@sanity/ui'
 import {useCallback, useContext, useState} from 'react'
 
@@ -13,6 +15,7 @@ import {ConceptDetailLink} from './interactions/ConceptDetailLink'
 import {ConceptDragHandle} from './interactions/ConceptDragHandle'
 import {ConceptEditAction} from './interactions/ConceptEditAction'
 import {ConceptRowMenu} from './interactions/ConceptRowMenu'
+import {InsertConceptDialog} from './interactions/InsertConceptDialog'
 import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 import {MoveConceptDialog} from './interactions/MoveConceptDialog'
 import {StructureDetailDialogue} from './interactions/StructureDetailDialogue'
@@ -97,6 +100,11 @@ export const ConceptRow = ({
   // row's kind rather than on the orphan badge, which additionally wants the
   // scheme to have top concepts already — exactly the case where promoting the
   // first one matters.
+  // Inserting writes to the chosen concept's document through the Actions API,
+  // which has no `versionId` — so drafts only, like a move. The depth cap is
+  // the same one the add control follows: children of a level-5 concept are
+  // fetched but never rendered.
+  const canInsert = !inputComponent && releaseContext === undefined && level < MAX_VISIBLE_LEVEL
   const canPromote = canEdit && kind === 'orphan'
   const canDemote = canEdit && isTop
   // A top concept cannot be dragged, but a sibling orphan can. Holding the slot
@@ -139,6 +147,10 @@ export const ConceptRow = ({
   const handleRemoveConcept = useCallback(() => {
     removeConcept(concept.id, isTop ? 'topConcept' : 'concept', concept.prefLabel)
   }, [concept.id, concept.prefLabel, isTop, removeConcept])
+
+  const [insertOpen, setInsertOpen] = useState(false)
+  const openInsert = useCallback(() => setInsertOpen(true), [])
+  const closeInsert = useCallback(() => setInsertOpen(false), [])
 
   const [moveOpen, setMoveOpen] = useState(false)
   const openMove = useCallback(() => setMoveOpen(true), [])
@@ -231,7 +243,20 @@ export const ConceptRow = ({
                 }
               />
             )}
-            {canEdit && level < MAX_VISIBLE_LEVEL && <ConceptEditAction handler={handleAddChild} />}
+            {canEdit && level < MAX_VISIBLE_LEVEL && (
+              <ConceptEditAction
+                icon={AddCircleIcon}
+                message="Add a new concept as a child of this concept"
+                handler={handleAddChild}
+              />
+            )}
+            {canInsert && (
+              <ConceptEditAction
+                icon={InsertBelowIcon}
+                message="Insert an existing concept as a child of this concept"
+                handler={openInsert}
+              />
+            )}
             {canEdit && (
               <ConceptRowMenu
                 conceptId={concept.id}
@@ -245,6 +270,10 @@ export const ConceptRow = ({
           </Inline>
         </Flex>
       </Card>
+
+      {insertOpen && (
+        <InsertConceptDialog target={{kind: 'child', concept}} onClose={closeInsert} />
+      )}
 
       {moveOpen && <MoveConceptDialog concept={concept} parentId={parentId} onClose={closeMove} />}
 

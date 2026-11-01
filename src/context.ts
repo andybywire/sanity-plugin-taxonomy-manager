@@ -1,5 +1,6 @@
 import {createContext} from 'react'
 
+import type {ConceptInsert, RootConceptInsert} from './core/tree/insertConcept'
 import type {ConceptMove} from './core/tree/moveConcept'
 import type {TopConceptChange} from './core/tree/setTopConcept'
 import type {ConceptSchemeDocument, DocumentConcepts, Options} from './types'
@@ -61,6 +62,10 @@ export type OptimisticTreeContextType = {
   unmarkMoved: (move: ConceptMove) => void
   markTopConcept: (change: TopConceptChange) => void
   unmarkTopConcept: (change: TopConceptChange) => void
+  markInserted: (insert: ConceptInsert) => void
+  unmarkInserted: (insert: ConceptInsert) => void
+  markRootInserted: (insert: RootConceptInsert) => void
+  unmarkRootInserted: (insert: RootConceptInsert) => void
 }
 export const OptimisticTreeContext = createContext<OptimisticTreeContextType>({
   markRemoved: () => undefined,
@@ -69,4 +74,8 @@ export const OptimisticTreeContext = createContext<OptimisticTreeContextType>({
   unmarkMoved: () => undefined,
   markTopConcept: () => undefined,
   unmarkTopConcept: () => undefined,
+  markInserted: () => undefined,
+  unmarkInserted: () => undefined,
+  markRootInserted: () => undefined,
+  unmarkRootInserted: () => undefined,
 })
