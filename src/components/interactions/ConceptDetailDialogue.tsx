@@ -59,6 +59,9 @@ export const ConceptDetailDialogue = ({
           header={concept.prefLabel}
           id="dialog-example"
           onClose={onClose}
+          // Informational, so an outside click dismisses it — including a
+          // click on the move dialog behind it, which this one opens over.
+          onClickOutside={onClose}
           zOffset={1000}
           width={1}
         >

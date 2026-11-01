@@ -82,6 +82,10 @@ export function MoveConceptDialog({
       header={`Move “${label}”`}
       id={`move-concept-${concept.id}`}
       onClose={onClose}
+      // A picker, so it dismisses on an outside click — the same split Studio
+      // draws between choosing something and confirming something. Nothing is
+      // lost by closing: a destination has been chosen or it has not.
+      onClickOutside={onClose}
       width={1}
       zOffset={900}
     >

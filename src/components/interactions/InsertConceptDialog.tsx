@@ -134,6 +134,11 @@ export function InsertConceptDialog({
       }
       id={`insert-concept-${dialogKey}`}
       onClose={onClose}
+      // Studio splits its dialogs on this: confirmations and destructive ones
+      // keep you until you answer, while pickers, editors and informational
+      // ones dismiss on an outside click. This is a picker, and nothing in it
+      // is lost by closing — you have either chosen a concept or you have not.
+      onClickOutside={onClose}
       width={1}
     >
       <Box padding={4}>
