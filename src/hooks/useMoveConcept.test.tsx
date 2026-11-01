@@ -61,8 +61,7 @@ describe('useMoveConcept', () => {
     expect(port.appliedPlans).toHaveLength(1)
     expect(port.appliedPlans[0]).toMatchObject({
       kind: 'move',
-      publishedId: 'falcons',
-      targetId: 'drafts.falcons',
+      concept: {publishedId: 'falcons', targetId: 'drafts.falcons'},
       unsetBroader: 'broader[_ref=="birds"]',
       insertBroader: {_ref: 'mammals', _type: 'reference'},
     })

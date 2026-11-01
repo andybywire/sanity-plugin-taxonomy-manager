@@ -1,4 +1,4 @@
-import {DocumentId, getDraftId, getPublishedId} from '@sanity/id-utils'
+import {DocumentId, getPublishedId} from '@sanity/id-utils'
 
 import type {ConceptSchemeDocument, SkosConceptDocument, SkosConceptReference} from '../types'
 
@@ -12,18 +12,84 @@ import {
 type SchemeDisplayed = ConceptSchemeDocument['displayed']
 
 /**
- * "Describe, don't execute": the create/remove/move planners below compute a pure
- * description of the transaction a concept mutation should run. The hooks stay
- * thin — they generate the random ids/keys, pass them in, and replay the plan
- * onto client.transaction(). This makes the release/version-aware mutation logic
- * exhaustively unit-testable without a Studio.
+ * "Describe, don't execute": the planners below compute a pure description of
+ * the document actions a concept mutation should dispatch. The hooks stay thin
+ * — they generate the random ids/keys, pass them in, and hand the plan to the
+ * port, which turns it into actions with {@link conceptPlanEdits}. This makes
+ * the release/version-aware mutation logic exhaustively unit-testable without a
+ * Studio.
+ *
+ * Every plan is applied through the Actions API rather than
+ * `client.transaction()`, and the reason is the same in each case: we never
+ * hold the whole document. The tree query projects a handful of fields, and the
+ * insert picker fewer still, so `createIfNotExists` has nothing to create from.
+ * `sanity.action.document.edit` creates the draft — or the release version —
+ * **from the published document** and patches it in one call.
+ *
+ * That server-side seeding is the correctness argument, not just a convenience.
+ * Seeding from `displayed` instead, as this module used to, copies whatever the
+ * form holds: in a release perspective that is the *draft*, while the tree is
+ * rendering the release layered over *published*. Adding one concept to a
+ * scheme in a release was observed writing a version carrying two unpublished
+ * draft members the editor had never seen, which publishing the release would
+ * then have published. The server's seed matches what is on screen.
  */
+
+/** Which document an edit is applied to. */
+export type EditTarget = {
+  /** The published id — the Actions API `publishedId`. */
+  publishedId: string
+  /**
+   * The draft or release version to patch. It need not exist: the edit action
+   * creates it from the published document.
+   */
+  targetId: string
+}
+
+/**
+ * A patch, shaped to satisfy `@sanity/client`'s `PatchOperations` structurally
+ * without importing it — the core stays free of Sanity dependencies.
+ */
+export type ConceptPatch = {
+  setIfMissing?: Record<string, never[]>
+  unset?: string[]
+  insert?: {after: string; items: SkosConceptReference[]}
+}
+
+/**
+ * One document action in a plan. A plan's edits are dispatched as a single
+ * atomic array, so either every document lands or none does.
+ */
+export type ConceptEdit =
+  | {
+      op: 'create'
+      publishedId: string
+      /** The draft or version document to create, `_id` included. */
+      attributes: SkosConceptDocument
+    }
+  | ({op: 'edit'; patch: ConceptPatch} & EditTarget)
+
+/**
+ * Append `reference` to `field`, optionally clearing other paths first.
+ *
+ * Content Lake applies `setIfMissing` → `set` → `unset` → `insert`, so the
+ * array exists before the append, and an unset of the reference's former home
+ * lands before it is added to its new one. Verified against a real dataset:
+ * appending after `[-1]` still lands when an unset has just emptied the array,
+ * so these never need to be split into two patches.
+ */
+function appendTo(field: string, reference: SkosConceptReference, unset?: string[]): ConceptPatch {
+  return {
+    setIfMissing: {[field]: []},
+    ...(unset ? {unset} : {}),
+    insert: {after: `${field}[-1]`, items: [reference]},
+  }
+}
 
 export type CreateConceptPlan = {
   kind: 'create'
-  schemeId: string
   newConceptId: string
-  createIfNotExists: SchemeDisplayed & {_id: string}
+  scheme: EditTarget
   create: SkosConceptDocument
   appendField: 'topConcepts' | 'concepts'
   reference: SkosConceptReference
@@ -73,9 +139,8 @@ export function planCreateConcept(input: {
 
   return {
     kind: 'create',
-    schemeId: target.schemeId,
     newConceptId,
-    createIfNotExists: {...input.scheme, _id: target.schemeId},
+    scheme: {publishedId: target.publishedId, targetId: target.schemeId},
     create,
     appendField: input.conceptType === 'topConcept' ? 'topConcepts' : 'concepts',
     reference,
@@ -84,8 +149,7 @@ export function planCreateConcept(input: {
 
 export type RemoveConceptPlan = {
   kind: 'remove'
-  schemeId: string
-  createIfNotExists: SchemeDisplayed & {_id: string}
+  scheme: EditTarget
   unsetPaths: string[]
 }
 
@@ -95,11 +159,10 @@ export function planRemoveConcept(input: {
   conceptType: string
 }): RemoveConceptPlan {
   const field = input.conceptType === 'topConcept' ? 'topConcepts' : 'concepts'
-  const {schemeId} = deriveSchemeMutationTarget(input.scheme._id)
+  const target = deriveSchemeMutationTarget(input.scheme._id)
   return {
     kind: 'remove',
-    schemeId,
-    createIfNotExists: {...input.scheme, _id: schemeId},
+    scheme: {publishedId: target.publishedId, targetId: target.schemeId},
     unsetPaths: [`${field}[_ref=="${input.conceptRef}"]`],
   }
 }
@@ -122,12 +185,8 @@ export type MoveConceptInput =
 
 export type MoveConceptPlan = {
   kind: 'move'
-  /** Published id of the moved concept — the Actions API `publishedId`. */
-  publishedId: string
-  /** The draft, or release version, the patch is applied to. */
-  targetId: string
-  /** True when `targetId` names a release version rather than a draft. */
-  isInRelease: boolean
+  /** The moved concept: its published id, and the draft or version to patch. */
+  concept: EditTarget
   /** Path unsetting the former broader term, or `null` when there was none. */
   unsetBroader: string | null
   /** The concept's new broader term, or `null` when it is simply dropped. */
@@ -146,9 +205,9 @@ export type MoveConceptPlan = {
  * scheme field changes. Moving a *top* concept is the case that needs a second
  * document, and is not this plan.
  *
- * `unsetBroader` and `insertBroader` go in one patch. The patch order Content
- * Lake applies is `setIfMissing` → `set` → `unset` → `insert`, so the unset of
- * the old reference lands before the new one is appended.
+ * The concept is edited in whichever context its scheme is being edited — the
+ * same draft/version math as a new concept, applied to an existing one — so a
+ * move inside a release patches the release version.
  */
 export function planMoveConcept(input: MoveConceptInput): MoveConceptPlan {
   const target = deriveSchemeMutationTarget(input.scheme._id)
@@ -156,11 +215,7 @@ export function planMoveConcept(input: MoveConceptInput): MoveConceptPlan {
 
   return {
     kind: 'move',
-    publishedId,
-    // Same draft/version math as a new concept, applied to an existing one: the
-    // moved concept is edited in whichever context its scheme is being edited.
-    targetId: deriveNewConceptId(publishedId, target),
-    isInRelease: target.isInRelease,
+    concept: {publishedId, targetId: deriveNewConceptId(publishedId, target)},
     unsetBroader:
       input.fromParentId === null
         ? null
@@ -176,35 +231,9 @@ export function planMoveConcept(input: MoveConceptInput): MoveConceptPlan {
   }
 }
 
-/**
- * The patch a {@link MoveConceptPlan} applies to the moved concept's document.
- *
- * One patch does both halves. Content Lake applies `setIfMissing` → `set` →
- * `unset` → `insert`, so the reference to the old broader term is gone before
- * the new one is appended, and `setIfMissing` guarantees there is an array to
- * append to even for a concept that had none. Verified against a real dataset:
- * appending after `broader[-1]` still lands when the unset emptied the array,
- * so these do not need to be two patches.
- *
- * Shaped to satisfy `@sanity/client`'s `PatchOperations` structurally, without
- * importing it — the core stays free of Sanity dependencies.
- */
-export function conceptMovePatch(plan: MoveConceptPlan): {
-  setIfMissing: {broader: never[]}
-  unset?: string[]
-  insert?: {after: string; items: SkosConceptReference[]}
-} {
-  return {
-    setIfMissing: {broader: []},
-    ...(plan.unsetBroader ? {unset: [plan.unsetBroader]} : {}),
-    ...(plan.insertBroader ? {insert: {after: 'broader[-1]', items: [plan.insertBroader]}} : {}),
-  }
-}
-
 export type SetTopConceptPlan = {
   kind: 'setTopConcept'
-  schemeId: string
-  createIfNotExists: SchemeDisplayed & {_id: string}
+  scheme: EditTarget
   /** The array the reference leaves. */
   unsetPaths: string[]
   /** The array it joins. */
@@ -224,11 +253,6 @@ export type SetTopConceptPlan = {
  * would otherwise have made the concept render twice, once at the root and once
  * under its old parent, and would have needed two documents written together.
  *
- * Because only the scheme is patched, and `deriveSchemeMutationTarget` already
- * resolves a release version, these commands work inside a release. A move does
- * not: it patches the concept document through the Actions API, which has no
- * `versionId`.
- *
  * The reference is rebuilt rather than carried over, so its strength is decided
  * fresh from the concept's `_originalId` — a concept that is still a draft needs
  * a weak reference, as everywhere else.
@@ -240,14 +264,13 @@ export function planSetTopConcept(input: {
   isTopConcept: boolean
   referenceKey: string
 }): SetTopConceptPlan {
-  const {schemeId} = deriveSchemeMutationTarget(input.scheme._id)
+  const target = deriveSchemeMutationTarget(input.scheme._id)
   const conceptRef = getPublishedId(DocumentId(input.concept.id))
   const from = input.isTopConcept ? 'concepts' : 'topConcepts'
 
   return {
     kind: 'setTopConcept',
-    schemeId,
-    createIfNotExists: {...input.scheme, _id: schemeId},
+    scheme: {publishedId: target.publishedId, targetId: target.schemeId},
     unsetPaths: [`${from}[_ref=="${conceptRef}"]`],
     appendField: input.isTopConcept ? 'topConcepts' : 'concepts',
     reference: {
@@ -260,18 +283,10 @@ export function planSetTopConcept(input: {
 }
 
 /** One document's half of an insert: where to write, and the reference to append. */
-export type InsertConceptEdit = {
-  /** Published id — the Actions API `publishedId`. */
-  publishedId: string
-  /** The draft the patch is applied to. */
-  targetId: string
-  reference: SkosConceptReference
-}
+export type InsertConceptEdit = EditTarget & {reference: SkosConceptReference}
 
 export type InsertConceptPlan = {
   kind: 'insert'
-  /** True when the scheme is being edited in a release, which this cannot target. */
-  isInRelease: boolean
   /** Appends the concept to the scheme's membership. */
   schemeEdit: InsertConceptEdit & {appendField: 'concepts'}
   /** Appends the row's concept to the inserted concept's `broader`. */
@@ -285,16 +300,10 @@ export type InsertConceptPlan = {
  * gains the concept as a member, and the concept gains the row's concept as a
  * broader term. Either alone is wrong — a member with no broader term renders
  * at the root as an orphan, and a broader term on a non-member renders nowhere.
- * So the caller applies them as one atomic array of actions.
+ * So the two edits are dispatched as one atomic array.
  *
- * The Actions API rather than `client.transaction()`, for the same reason a move
- * uses it: we never hold the chosen concept's full document, so there is nothing
- * to `createIfNotExists` from when it has no draft. `EditAction` creates the
- * draft from the published document — which is also why both documents end up
- * drafted, putting the editor in front of the two things left to publish.
- *
- * Drafts only. `EditAction` takes `draftId`/`publishedId` and has no
- * `versionId`, so a release needs `version.create` first — Phase 2, stage 10.
+ * Both documents follow the scheme's own draft/version context, so an insert
+ * inside a release writes release versions of both.
  *
  * Both references are rebuilt here rather than copied, so each takes its
  * strength from the document it points at: a reference to a concept that is
@@ -311,16 +320,15 @@ export function planInsertConcept(input: {
   /** `_key` for the concept's new broader reference. */
   broaderKey: string
 }): InsertConceptPlan {
-  const schemePublishedId = getPublishedId(DocumentId(input.scheme._id))
+  const target = deriveSchemeMutationTarget(input.scheme._id)
   const conceptPublishedId = getPublishedId(DocumentId(input.concept.id))
   const broaderPublishedId = getPublishedId(DocumentId(input.broaderConcept.id))
 
   return {
     kind: 'insert',
-    isInRelease: deriveSchemeMutationTarget(input.scheme._id).isInRelease,
     schemeEdit: {
-      publishedId: schemePublishedId,
-      targetId: getDraftId(DocumentId(schemePublishedId)),
+      publishedId: target.publishedId,
+      targetId: target.schemeId,
       appendField: 'concepts',
       reference: {
         _key: input.schemeKey,
@@ -331,7 +339,7 @@ export function planInsertConcept(input: {
     },
     conceptEdit: {
       publishedId: conceptPublishedId,
-      targetId: getDraftId(DocumentId(conceptPublishedId)),
+      targetId: deriveNewConceptId(conceptPublishedId, target),
       reference: {
         _key: input.broaderKey,
         _ref: broaderPublishedId,
@@ -342,42 +350,9 @@ export function planInsertConcept(input: {
   }
 }
 
-/**
- * The two patches an {@link InsertConceptPlan} applies, one per document.
- *
- * `setIfMissing` guarantees there is an array to append to — the scheme may
- * have no `concepts` yet, and the chosen concept may have no `broader`. Content
- * Lake applies `setIfMissing` before `insert`, so appending after `[-1]` lands
- * either way, as `conceptMovePatch` already relies on.
- *
- * Shaped to satisfy `@sanity/client`'s `PatchOperations` structurally, without
- * importing it — the core stays free of Sanity dependencies.
- */
-export function insertSchemePatch(plan: InsertConceptPlan): {
-  setIfMissing: Record<string, never[]>
-  insert: {after: string; items: SkosConceptReference[]}
-} {
-  const field = plan.schemeEdit.appendField
-  return {
-    setIfMissing: {[field]: []},
-    insert: {after: `${field}[-1]`, items: [plan.schemeEdit.reference]},
-  }
-}
-
-export function insertBroaderPatch(plan: InsertConceptPlan): {
-  setIfMissing: {broader: never[]}
-  insert: {after: string; items: SkosConceptReference[]}
-} {
-  return {
-    setIfMissing: {broader: []},
-    insert: {after: 'broader[-1]', items: [plan.conceptEdit.reference]},
-  }
-}
-
 export type InsertRootConceptPlan = {
   kind: 'insertRoot'
-  schemeId: string
-  createIfNotExists: SchemeDisplayed & {_id: string}
+  scheme: EditTarget
   appendField: 'topConcepts' | 'concepts'
   reference: SkosConceptReference
 }
@@ -389,9 +364,7 @@ export type InsertRootConceptPlan = {
  * One document, unlike inserting as a child. A concept at the root needs no
  * `broader` reference written: a top concept has none within its scheme by
  * definition, and a plain member added without one is what the query reads as
- * an orphan. So this is an append to the scheme and nothing else, on the same
- * `client.transaction()` path as create and remove — which also means it works
- * inside a release, where inserting as a child cannot.
+ * an orphan. So this is an append to the scheme and nothing else.
  *
  * Note what this does *not* do: it never clears a broader term the concept
  * already has. A concept whose broader term is a member of this scheme will
@@ -405,12 +378,11 @@ export function planInsertRootConcept(input: {
   conceptType: 'topConcept' | 'concept'
   referenceKey: string
 }): InsertRootConceptPlan {
-  const {schemeId} = deriveSchemeMutationTarget(input.scheme._id)
+  const target = deriveSchemeMutationTarget(input.scheme._id)
 
   return {
     kind: 'insertRoot',
-    schemeId,
-    createIfNotExists: {...input.scheme, _id: schemeId},
+    scheme: {publishedId: target.publishedId, targetId: target.schemeId},
     appendField: input.conceptType === 'topConcept' ? 'topConcepts' : 'concepts',
     reference: {
       _key: input.referenceKey,
@@ -418,6 +390,89 @@ export function planInsertRootConcept(input: {
       _type: 'reference',
       ...conceptReferenceStrength(input.concept._originalId ?? input.concept.id),
     },
+  }
+}
+
+/** A create, remove, move or top-concept plan, discriminated by `kind`. */
+export type ConceptPlan =
+  | CreateConceptPlan
+  | RemoveConceptPlan
+  | MoveConceptPlan
+  | SetTopConceptPlan
+  | InsertConceptPlan
+  | InsertRootConceptPlan
+
+/**
+ * The document actions a plan performs, in the order they are dispatched.
+ *
+ * This is the whole of the seam's mutation logic: the adapter maps each edit
+ * onto an Actions API call and sends the array, and does nothing else. Keeping
+ * the switch here rather than in the adapter is what makes every mutation —
+ * drafts and releases alike — testable as plain input→output.
+ */
+export function conceptPlanEdits(plan: ConceptPlan): ConceptEdit[] {
+  switch (plan.kind) {
+    case 'create':
+      // The new concept and the scheme's reference to it, atomically: a scheme
+      // member that was never created renders nothing, and a concept no scheme
+      // lists is invisible to the tree.
+      return [
+        {
+          op: 'create',
+          publishedId: getPublishedId(DocumentId(plan.newConceptId)),
+          attributes: plan.create,
+        },
+        {...plan.scheme, op: 'edit', patch: appendTo(plan.appendField, plan.reference)},
+      ]
+    case 'remove':
+      // No `setIfMissing`: unsetting from an array that is not there is already
+      // a no-op, and creating it first would write an empty array for nothing.
+      return [{...plan.scheme, op: 'edit', patch: {unset: plan.unsetPaths}}]
+    case 'move':
+      return [
+        {
+          ...plan.concept,
+          op: 'edit',
+          patch: {
+            setIfMissing: {broader: []},
+            ...(plan.unsetBroader ? {unset: [plan.unsetBroader]} : {}),
+            ...(plan.insertBroader
+              ? {insert: {after: 'broader[-1]', items: [plan.insertBroader]}}
+              : {}),
+          },
+        },
+      ]
+    case 'setTopConcept':
+      // The unset and the append name different arrays, so the order Content
+      // Lake applies them in does not matter here.
+      return [
+        {
+          ...plan.scheme,
+          op: 'edit',
+          patch: appendTo(plan.appendField, plan.reference, plan.unsetPaths),
+        },
+      ]
+    case 'insert':
+      return [
+        {
+          publishedId: plan.schemeEdit.publishedId,
+          targetId: plan.schemeEdit.targetId,
+          op: 'edit',
+          patch: appendTo(plan.schemeEdit.appendField, plan.schemeEdit.reference),
+        },
+        {
+          publishedId: plan.conceptEdit.publishedId,
+          targetId: plan.conceptEdit.targetId,
+          op: 'edit',
+          patch: appendTo('broader', plan.conceptEdit.reference),
+        },
+      ]
+    case 'insertRoot':
+      return [{...plan.scheme, op: 'edit', patch: appendTo(plan.appendField, plan.reference)}]
+    default: {
+      const unreachable: never = plan
+      throw new Error(`Unknown concept plan: ${JSON.stringify(unreachable)}`)
+    }
   }
 }
 

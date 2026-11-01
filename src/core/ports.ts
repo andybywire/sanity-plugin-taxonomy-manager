@@ -1,12 +1,12 @@
-import type {
-  CreateConceptPlan,
-  InsertConceptPlan,
-  InsertRootConceptPlan,
-  MoveConceptPlan,
-  RemoveConceptPlan,
-  SetTopConceptPlan,
-} from './mutations'
+import type {ConceptPlan} from './mutations'
 import type {ConceptRecommendation, DocumentConcepts, SemanticSearchConfig} from '../types'
+
+/**
+ * A create, remove, move or top-concept plan, discriminated by `kind`. Defined
+ * with the planners in `core/mutations`, and re-exported here because the port
+ * is where callers meet it.
+ */
+export type {ConceptPlan}
 
 /**
  * #### Taxonomy Data Port
@@ -74,15 +74,6 @@ export interface WatchResult<T> {
   loading: boolean
   error: Error | null
 }
-
-/** A create, remove, move or top-concept plan, discriminated by `kind` (see `core/mutations`). */
-export type ConceptPlan =
-  | CreateConceptPlan
-  | RemoveConceptPlan
-  | MoveConceptPlan
-  | SetTopConceptPlan
-  | InsertConceptPlan
-  | InsertRootConceptPlan
 
 /**
  * What the insert picker asks for. A one-shot fetch rather than a live query:

@@ -1,3 +1,4 @@
+import {DocumentId, isVersionId} from '@sanity/id-utils'
 import {useCallback, useMemo} from 'react'
 import {useClient} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'
@@ -11,7 +12,7 @@ import type {
   TaxonomyDataPort,
   WatchResult,
 } from '../core/ports'
-import {conceptMovePatch, insertBroaderPatch, insertSchemePatch} from '../core/mutations'
+import {type ConceptEdit, conceptPlanEdits} from '../core/mutations'
 import {
   conceptSearchBuilder,
   inputBuilder,
@@ -122,101 +123,54 @@ function useSearchConcepts(): (params: ConceptSearchParams) => Promise<ConceptSe
   )
 }
 
+/**
+ * One {@link ConceptEdit} as an Actions API action.
+ *
+ * `document.edit` takes the id of the document to patch under one of two keys,
+ * and that key is the only thing separating a draft from a release version:
+ * `draftId` or `versionId`. Either way the action creates that document **from
+ * the published one** when it does not exist, which is both why no
+ * `version.create` is needed here and why the seam never has to hold a whole
+ * document. `version.create` would in fact be a trap: it is not idempotent, and
+ * an action array is atomic, so a blind create-then-patch fails outright the
+ * second time a concept is touched in the same release.
+ *
+ * `@sanity/client@7.27.0` types `EditAction` with `draftId` alone, so this goes
+ * out through `client.request` rather than `client.action` — the workaround
+ * Sanity's own Actions API guide gives for exactly this gap.
+ */
+function toAction(edit: ConceptEdit): Record<string, unknown> {
+  if (edit.op === 'create') {
+    return {
+      actionType: 'sanity.action.document.create',
+      publishedId: edit.publishedId,
+      attributes: edit.attributes,
+      // The id is a freshly generated uuid, so a published document under it
+      // cannot exist; if one somehow does, failing is the honest outcome.
+      ifExists: 'fail',
+    }
+  }
+  const idKey = isVersionId(DocumentId(edit.targetId)) ? 'versionId' : 'draftId'
+  return {
+    actionType: 'sanity.action.document.edit',
+    publishedId: edit.publishedId,
+    [idKey]: edit.targetId,
+    patch: edit.patch,
+  }
+}
+
 function useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void> {
   const client = useClient({apiVersion: MUTATION_API_VERSION})
   return useCallback(
     async (plan: ConceptPlan): Promise<void> => {
-      if (plan.kind === 'move') {
-        if (plan.isInRelease) {
-          throw new Error(
-            'Moving a concept inside a content release is not supported yet. ' +
-              'Switch to the drafts perspective to restructure the hierarchy.',
-          )
-        }
-        // Not a transaction: the tree query projects a handful of fields, never
-        // the concept document, so there is nothing to `createIfNotExists` from
-        // when no draft exists. `document.edit` creates the draft from the
-        // published document and patches it in one call.
-        await client.action({
-          actionType: 'sanity.action.document.edit',
-          publishedId: plan.publishedId,
-          draftId: plan.targetId,
-          patch: conceptMovePatch(plan),
-        })
-        return
-      }
-      if (plan.kind === 'insertRoot') {
-        // Scheme only — no broader reference is written for a concept at the
-        // root — so this stays on the transaction path and works in a release.
-        await client
-          .transaction()
-          .createIfNotExists(plan.createIfNotExists)
-          .patch(plan.schemeId, (patch) =>
-            patch.setIfMissing({[plan.appendField]: []}).append(plan.appendField, [plan.reference]),
-          )
-          .commit()
-        return
-      }
-      if (plan.kind === 'insert') {
-        if (plan.isInRelease) {
-          throw new Error(
-            'Inserting a concept inside a content release is not supported yet. ' +
-              'Switch to the drafts perspective to add existing concepts.',
-          )
-        }
-        // One array, applied atomically. Either edit alone leaves the scheme
-        // wrong: a member with no broader term renders at the root as an
-        // orphan, a broader term on a non-member renders nowhere. `document
-        // .edit` rather than a transaction because neither document is held in
-        // full here, so there is nothing to `createIfNotExists` from.
-        await client.action([
-          {
-            actionType: 'sanity.action.document.edit',
-            publishedId: plan.schemeEdit.publishedId,
-            draftId: plan.schemeEdit.targetId,
-            patch: insertSchemePatch(plan),
-          },
-          {
-            actionType: 'sanity.action.document.edit',
-            publishedId: plan.conceptEdit.publishedId,
-            draftId: plan.conceptEdit.targetId,
-            patch: insertBroaderPatch(plan),
-          },
-        ])
-        return
-      }
-      if (plan.kind === 'setTopConcept') {
-        // Only the scheme is written, so this works in a release as well as in
-        // drafts. The unset and the append name different arrays, so the order
-        // Content Lake applies them in does not matter here.
-        await client
-          .transaction()
-          .createIfNotExists(plan.createIfNotExists)
-          .patch(plan.schemeId, (patch) =>
-            patch
-              .setIfMissing({[plan.appendField]: []})
-              .unset(plan.unsetPaths)
-              .append(plan.appendField, [plan.reference]),
-          )
-          .commit()
-        return
-      }
-      if (plan.kind === 'remove') {
-        await client
-          .transaction()
-          .createIfNotExists(plan.createIfNotExists)
-          .patch(plan.schemeId, (patch) => patch.unset(plan.unsetPaths))
-          .commit()
-        return
-      }
-      await client
-        .transaction()
-        .createIfNotExists(plan.createIfNotExists)
-        .create(plan.create)
-        .patch(plan.schemeId, (patch) =>
-          patch.setIfMissing({[plan.appendField]: []}).append(plan.appendField, [plan.reference]),
-        )
-        .commit({autoGenerateArrayKeys: true})
+      // All of the mutation logic is `conceptPlanEdits`, in the pure core. This
+      // replays it: one array of actions, applied atomically, so a plan that
+      // touches two documents can never half-land.
+      await client.request({
+        uri: `/data/actions/${client.config().dataset}`,
+        method: 'POST',
+        body: {actions: conceptPlanEdits(plan).map(toAction)},
+      })
     },
     [client],
   )

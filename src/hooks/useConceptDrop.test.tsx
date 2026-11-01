@@ -67,7 +67,7 @@ describe('useConceptDrop', () => {
     expect(port.appliedPlans).toHaveLength(1)
     expect(port.appliedPlans[0]).toMatchObject({
       kind: 'move',
-      publishedId: 'falcons',
+      concept: {publishedId: 'falcons'},
       unsetBroader: 'broader[_ref=="birds"]',
       insertBroader: {_ref: 'mammals', _type: 'reference'},
     })
@@ -84,7 +84,7 @@ describe('useConceptDrop', () => {
 
     expect(port.appliedPlans[0]).toMatchObject({
       kind: 'move',
-      publishedId: 'unfiled',
+      concept: {publishedId: 'unfiled'},
       unsetBroader: null,
       insertBroader: {_ref: 'mammals'},
     })

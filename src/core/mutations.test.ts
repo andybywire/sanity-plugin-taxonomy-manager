@@ -4,11 +4,9 @@ import type {ConceptSchemeDocument} from '../types'
 
 import {SKOS_CONCEPT_STRENGTHEN} from './ids'
 import {
-  conceptMovePatch,
+  conceptPlanEdits,
   planCreateConcept,
   planMoveConcept,
-  insertBroaderPatch,
-  insertSchemePatch,
   inSchemeBroaderRef,
   planInsertConcept,
   planInsertRootConcept,
@@ -37,9 +35,8 @@ describe('planCreateConcept', () => {
       }),
     ).toEqual({
       kind: 'create',
-      schemeId: 'drafts.scheme-1',
       newConceptId: 'drafts.new-1',
-      createIfNotExists: {_id: 'drafts.scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
+      scheme: {publishedId: 'scheme-1', targetId: 'drafts.scheme-1'},
       create: {
         _id: 'drafts.new-1',
         _type: 'skosConcept',
@@ -71,7 +68,7 @@ describe('planCreateConcept', () => {
       newConceptKey: 'ref-key',
       broaderKey: 'broader-key',
     })
-    expect(plan.schemeId).toBe('drafts.scheme-1')
+    expect(plan.scheme).toEqual({publishedId: 'scheme-1', targetId: 'drafts.scheme-1'})
     expect(plan.newConceptId).toBe('drafts.new-2')
     expect(plan.appendField).toBe('concepts')
     expect(plan.create.broader).toEqual([
@@ -90,9 +87,8 @@ describe('planCreateConcept', () => {
       newConceptKey: 'ref-key',
       broaderKey: 'broader-key',
     })
-    expect(plan.schemeId).toBe('versions.rel1.scheme-1')
     expect(plan.newConceptId).toBe('versions.rel1.new-3')
-    expect(plan.reference._ref).toBe('new-3')
+    expect(plan.scheme).toEqual({publishedId: 'scheme-1', targetId: 'versions.rel1.scheme-1'})
     expect(plan.create.broader).toEqual([
       {
         _key: 'broader-key',
@@ -115,8 +111,7 @@ describe('planRemoveConcept', () => {
       }),
     ).toEqual({
       kind: 'remove',
-      schemeId: 'drafts.scheme-1',
-      createIfNotExists: {_id: 'drafts.scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
+      scheme: {publishedId: 'scheme-1', targetId: 'drafts.scheme-1'},
       unsetPaths: ['topConcepts[_ref=="concept-9"]'],
     })
   })
@@ -127,7 +122,7 @@ describe('planRemoveConcept', () => {
       conceptRef: 'concept-9',
       conceptType: 'concept',
     })
-    expect(plan.schemeId).toBe('versions.rel1.scheme-1')
+    expect(plan.scheme).toEqual({publishedId: 'scheme-1', targetId: 'versions.rel1.scheme-1'})
     expect(plan.unsetPaths).toEqual(['concepts[_ref=="concept-9"]'])
   })
 })
@@ -144,9 +139,7 @@ describe('planMoveConcept', () => {
       }),
     ).toEqual({
       kind: 'move',
-      publishedId: 'falcons',
-      targetId: 'drafts.falcons',
-      isInRelease: false,
+      concept: {publishedId: 'falcons', targetId: 'drafts.falcons'},
       unsetBroader: 'broader[_ref=="birds"]',
       insertBroader: {
         _key: 'broader-key',
@@ -165,9 +158,7 @@ describe('planMoveConcept', () => {
       toParent: {id: 'mammals', _originalId: 'mammals'},
       broaderKey: 'broader-key',
     })
-    expect(plan.targetId).toBe('versions.rel1.falcons')
-    expect(plan.isInRelease).toBe(true)
-    expect(plan.publishedId).toBe('falcons')
+    expect(plan.concept).toEqual({publishedId: 'falcons', targetId: 'versions.rel1.falcons'})
   })
 
   it('weakens the new broader reference when the new parent is not published yet', () => {
@@ -195,8 +186,7 @@ describe('planMoveConcept', () => {
       toParent: {id: 'drafts.mammals', _originalId: 'drafts.mammals'},
       broaderKey: 'broader-key',
     })
-    expect(plan.publishedId).toBe('falcons')
-    expect(plan.targetId).toBe('drafts.falcons')
+    expect(plan.concept).toEqual({publishedId: 'falcons', targetId: 'drafts.falcons'})
     expect(plan.unsetBroader).toBe('broader[_ref=="birds"]')
     expect(plan.insertBroader!._ref).toBe('mammals')
   })
@@ -224,9 +214,7 @@ describe('planMoveConcept, out of the hierarchy', () => {
       }),
     ).toEqual({
       kind: 'move',
-      publishedId: 'falcons',
-      targetId: 'drafts.falcons',
-      isInRelease: false,
+      concept: {publishedId: 'falcons', targetId: 'drafts.falcons'},
       unsetBroader: 'broader[_ref=="birds"]',
       insertBroader: null,
     })
@@ -239,47 +227,8 @@ describe('planMoveConcept, out of the hierarchy', () => {
       fromParentId: 'birds',
       toParent: null,
     })
-    expect(plan.targetId).toBe('versions.rel1.falcons')
-    expect(plan.isInRelease).toBe(true)
+    expect(plan.concept.targetId).toBe('versions.rel1.falcons')
     expect(plan.insertBroader).toBeNull()
-  })
-})
-
-describe('conceptMovePatch', () => {
-  const plan = (toParent: {id: string; _originalId?: string} | null) =>
-    toParent === null
-      ? planMoveConcept({
-          scheme: scheme('scheme-1'),
-          concept: {id: 'falcons'},
-          fromParentId: 'birds',
-          toParent: null,
-        })
-      : planMoveConcept({
-          scheme: scheme('scheme-1'),
-          concept: {id: 'falcons'},
-          fromParentId: 'birds',
-          toParent,
-          broaderKey: 'broader-key',
-        })
-
-  it('drops the old reference and appends the new one in a single patch', () => {
-    expect(conceptMovePatch(plan({id: 'mammals', _originalId: 'mammals'}))).toEqual({
-      // Content Lake applies setIfMissing → set → unset → insert, so one patch
-      // can empty the old reference out and append the new one after it.
-      setIfMissing: {broader: []},
-      unset: ['broader[_ref=="birds"]'],
-      insert: {
-        after: 'broader[-1]',
-        items: [{_key: 'broader-key', _ref: 'mammals', _type: 'reference', _weak: false}],
-      },
-    })
-  })
-
-  it('omits the insert entirely when the broader term is simply dropped', () => {
-    expect(conceptMovePatch(plan(null))).toEqual({
-      setIfMissing: {broader: []},
-      unset: ['broader[_ref=="birds"]'],
-    })
   })
 })
 
@@ -295,32 +244,13 @@ describe('planMoveConcept, from outside the hierarchy', () => {
       }),
     ).toEqual({
       kind: 'move',
-      publishedId: 'unfiled',
-      targetId: 'drafts.unfiled',
-      isInRelease: false,
+      concept: {publishedId: 'unfiled', targetId: 'drafts.unfiled'},
       unsetBroader: null,
       insertBroader: {
         _key: 'broader-key',
         _ref: 'mammals',
         _type: 'reference',
         _weak: false,
-      },
-    })
-  })
-
-  it('omits the unset from the patch entirely', () => {
-    const plan = planMoveConcept({
-      scheme: scheme('scheme-1'),
-      concept: {id: 'unfiled'},
-      fromParentId: null,
-      toParent: {id: 'mammals', _originalId: 'mammals'},
-      broaderKey: 'broader-key',
-    })
-    expect(conceptMovePatch(plan)).toEqual({
-      setIfMissing: {broader: []},
-      insert: {
-        after: 'broader[-1]',
-        items: [{_key: 'broader-key', _ref: 'mammals', _type: 'reference', _weak: false}],
       },
     })
   })
@@ -337,8 +267,7 @@ describe('planSetTopConcept', () => {
       }),
     ).toEqual({
       kind: 'setTopConcept',
-      schemeId: 'drafts.scheme-1',
-      createIfNotExists: {_id: 'drafts.scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
+      scheme: {publishedId: 'scheme-1', targetId: 'drafts.scheme-1'},
       unsetPaths: ['concepts[_ref=="concept-1"]'],
       appendField: 'topConcepts',
       reference: {
@@ -385,19 +314,14 @@ describe('planSetTopConcept', () => {
   })
 
   it('targets the release version when the scheme is being edited in one', () => {
-    // Unlike a move, this patches only the scheme — which the id math already
-    // makes release-aware — so these commands work in a release.
     expect(
       planSetTopConcept({
         scheme: scheme('versions.autumn.scheme-1'),
         concept: {id: 'concept-1', _originalId: 'versions.autumn.concept-1'},
         isTopConcept: true,
         referenceKey: 'ref-key',
-      }),
-    ).toMatchObject({
-      schemeId: 'versions.autumn.scheme-1',
-      createIfNotExists: {_id: 'versions.autumn.scheme-1'},
-    })
+      }).scheme,
+    ).toEqual({publishedId: 'scheme-1', targetId: 'versions.autumn.scheme-1'})
   })
 
   it('normalizes a draft concept id to its published id in the reference', () => {
@@ -426,7 +350,6 @@ describe('planInsertConcept', () => {
       }),
     ).toEqual({
       kind: 'insert',
-      isInRelease: false,
       schemeEdit: {
         publishedId: 'scheme-1',
         targetId: 'drafts.scheme-1',
@@ -481,18 +404,19 @@ describe('planInsertConcept', () => {
     ).toBe(true)
   })
 
-  it('flags a scheme being edited in a release, which the Actions API cannot target', () => {
-    // `EditAction` has no `versionId`, so the seam refuses rather than writing
-    // the edit to the wrong document. Phase 2 lifts this.
-    expect(
-      planInsertConcept({
-        scheme: scheme('versions.autumn.scheme-1'),
-        concept,
-        broaderConcept: {id: 'parent-1', _originalId: 'parent-1'},
-        schemeKey: 'scheme-key',
-        broaderKey: 'broader-key',
-      }).isInRelease,
-    ).toBe(true)
+  it('targets the release version of both documents when the scheme is in a release', () => {
+    // The edit action reaches a version through `versionId`, creating it from
+    // the published document, so a child insert is no longer drafts-only.
+    const plan = planInsertConcept({
+      scheme: scheme('versions.autumn.scheme-1'),
+      concept,
+      broaderConcept: {id: 'parent-1', _originalId: 'parent-1'},
+      schemeKey: 'scheme-key',
+      broaderKey: 'broader-key',
+    })
+    expect(plan.schemeEdit.targetId).toBe('versions.autumn.scheme-1')
+    expect(plan.conceptEdit.targetId).toBe('versions.autumn.concept-1')
+    expect(plan.conceptEdit.publishedId).toBe('concept-1')
   })
 
   it('normalizes draft ids to published ones in both references', () => {
@@ -510,30 +434,6 @@ describe('planInsertConcept', () => {
   })
 })
 
-describe('insert patches', () => {
-  const plan = planInsertConcept({
-    scheme: scheme('scheme-1'),
-    concept: {id: 'concept-1', _originalId: 'concept-1'},
-    broaderConcept: {id: 'parent-1', _originalId: 'parent-1'},
-    schemeKey: 'scheme-key',
-    broaderKey: 'broader-key',
-  })
-
-  it('appends the concept to the scheme, creating the array if absent', () => {
-    expect(insertSchemePatch(plan)).toEqual({
-      setIfMissing: {concepts: []},
-      insert: {after: 'concepts[-1]', items: [plan.schemeEdit.reference]},
-    })
-  })
-
-  it('appends the broader term to the concept, creating the array if absent', () => {
-    expect(insertBroaderPatch(plan)).toEqual({
-      setIfMissing: {broader: []},
-      insert: {after: 'broader[-1]', items: [plan.conceptEdit.reference]},
-    })
-  })
-})
-
 describe('planInsertRootConcept', () => {
   it('appends a top concept to topConcepts, and nothing else', () => {
     expect(
@@ -545,8 +445,7 @@ describe('planInsertRootConcept', () => {
       }),
     ).toEqual({
       kind: 'insertRoot',
-      schemeId: 'drafts.scheme-1',
-      createIfNotExists: {_id: 'drafts.scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
+      scheme: {publishedId: 'scheme-1', targetId: 'drafts.scheme-1'},
       appendField: 'topConcepts',
       reference: {_key: 'ref-key', _ref: 'concept-1', _type: 'reference', _weak: false},
     })
@@ -570,7 +469,7 @@ describe('planInsertRootConcept', () => {
         concept: {id: 'concept-1', _originalId: 'versions.autumn.concept-1'},
         conceptType: 'topConcept',
         referenceKey: 'ref-key',
-      }).schemeId,
+      }).scheme.targetId,
     ).toBe('versions.autumn.scheme-1')
   })
 
@@ -583,6 +482,199 @@ describe('planInsertRootConcept', () => {
         referenceKey: 'ref-key',
       }).reference._weak,
     ).toBe(true)
+  })
+})
+
+describe('conceptPlanEdits', () => {
+  it('creates the concept before the scheme learns to reference it', () => {
+    const plan = planCreateConcept({
+      scheme: scheme('scheme-1'),
+      conceptType: 'topConcept',
+      newConceptUuid: 'new-1',
+      conceptId: 'abc123',
+      schemeBaseIri: undefined,
+      newConceptKey: 'ref-key',
+      broaderKey: 'broader-key',
+    })
+    expect(conceptPlanEdits(plan)).toEqual([
+      {op: 'create', publishedId: 'new-1', attributes: plan.create},
+      {
+        op: 'edit',
+        publishedId: 'scheme-1',
+        targetId: 'drafts.scheme-1',
+        patch: {
+          setIfMissing: {topConcepts: []},
+          insert: {after: 'topConcepts[-1]', items: [plan.reference]},
+        },
+      },
+    ])
+  })
+
+  it('names the version document when the create happens in a release', () => {
+    const plan = planCreateConcept({
+      scheme: scheme('versions.rel1.scheme-1'),
+      conceptType: 'concept',
+      newConceptUuid: 'new-1',
+      conceptId: 'abc123',
+      schemeBaseIri: undefined,
+      newConceptKey: 'ref-key',
+      broaderKey: 'broader-key',
+    })
+    expect(conceptPlanEdits(plan)).toMatchObject([
+      {op: 'create', publishedId: 'new-1', attributes: {_id: 'versions.rel1.new-1'}},
+      {op: 'edit', publishedId: 'scheme-1', targetId: 'versions.rel1.scheme-1'},
+    ])
+  })
+
+  it('unsets without creating the array first, for a removal', () => {
+    // Unsetting from an array that is not there is already a no-op, so a
+    // `setIfMissing` here would write an empty array for nothing.
+    expect(
+      conceptPlanEdits(
+        planRemoveConcept({
+          scheme: scheme('scheme-1'),
+          conceptRef: 'concept-9',
+          conceptType: 'topConcept',
+        }),
+      ),
+    ).toEqual([
+      {
+        op: 'edit',
+        publishedId: 'scheme-1',
+        targetId: 'drafts.scheme-1',
+        patch: {unset: ['topConcepts[_ref=="concept-9"]']},
+      },
+    ])
+  })
+
+  it('drops the old broader reference and appends the new one in a single patch', () => {
+    // Content Lake applies setIfMissing → set → unset → insert, so one patch
+    // can empty the old reference out and append the new one after it.
+    const plan = planMoveConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'falcons'},
+      fromParentId: 'birds',
+      toParent: {id: 'mammals', _originalId: 'mammals'},
+      broaderKey: 'broader-key',
+    })
+    expect(conceptPlanEdits(plan)).toEqual([
+      {
+        op: 'edit',
+        publishedId: 'falcons',
+        targetId: 'drafts.falcons',
+        patch: {
+          setIfMissing: {broader: []},
+          unset: ['broader[_ref=="birds"]'],
+          insert: {
+            after: 'broader[-1]',
+            items: [{_key: 'broader-key', _ref: 'mammals', _type: 'reference', _weak: false}],
+          },
+        },
+      },
+    ])
+  })
+
+  it('omits the insert entirely when the broader term is simply dropped', () => {
+    const plan = planMoveConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'falcons'},
+      fromParentId: 'birds',
+      toParent: null,
+    })
+    expect(conceptPlanEdits(plan)[0]).toMatchObject({
+      patch: {setIfMissing: {broader: []}, unset: ['broader[_ref=="birds"]']},
+    })
+    expect(conceptPlanEdits(plan)[0]).not.toHaveProperty('patch.insert')
+  })
+
+  it('omits the unset entirely when an orphan is given a broader term', () => {
+    const plan = planMoveConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'unfiled'},
+      fromParentId: null,
+      toParent: {id: 'mammals', _originalId: 'mammals'},
+      broaderKey: 'broader-key',
+    })
+    expect(conceptPlanEdits(plan)[0]).not.toHaveProperty('patch.unset')
+    expect(conceptPlanEdits(plan)[0]).toMatchObject({
+      patch: {
+        insert: {
+          after: 'broader[-1]',
+          items: [{_key: 'broader-key', _ref: 'mammals', _type: 'reference', _weak: false}],
+        },
+      },
+    })
+  })
+
+  it('moves a reference between the two scheme arrays in one patch', () => {
+    const plan = planSetTopConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'concept-1', _originalId: 'concept-1'},
+      isTopConcept: true,
+      referenceKey: 'ref-key',
+    })
+    expect(conceptPlanEdits(plan)).toEqual([
+      {
+        op: 'edit',
+        publishedId: 'scheme-1',
+        targetId: 'drafts.scheme-1',
+        patch: {
+          setIfMissing: {topConcepts: []},
+          unset: ['concepts[_ref=="concept-1"]'],
+          insert: {after: 'topConcepts[-1]', items: [plan.reference]},
+        },
+      },
+    ])
+  })
+
+  it('writes the scheme and the inserted concept as one atomic pair', () => {
+    const plan = planInsertConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'concept-1', _originalId: 'concept-1'},
+      broaderConcept: {id: 'parent-1', _originalId: 'parent-1'},
+      schemeKey: 'scheme-key',
+      broaderKey: 'broader-key',
+    })
+    expect(conceptPlanEdits(plan)).toEqual([
+      {
+        op: 'edit',
+        publishedId: 'scheme-1',
+        targetId: 'drafts.scheme-1',
+        patch: {
+          setIfMissing: {concepts: []},
+          insert: {after: 'concepts[-1]', items: [plan.schemeEdit.reference]},
+        },
+      },
+      {
+        op: 'edit',
+        publishedId: 'concept-1',
+        targetId: 'drafts.concept-1',
+        patch: {
+          setIfMissing: {broader: []},
+          insert: {after: 'broader[-1]', items: [plan.conceptEdit.reference]},
+        },
+      },
+    ])
+  })
+
+  it('appends to the scheme alone for a root insert', () => {
+    const plan = planInsertRootConcept({
+      scheme: scheme('versions.autumn.scheme-1'),
+      concept: {id: 'concept-1', _originalId: 'concept-1'},
+      conceptType: 'topConcept',
+      referenceKey: 'ref-key',
+    })
+    expect(conceptPlanEdits(plan)).toEqual([
+      {
+        op: 'edit',
+        publishedId: 'scheme-1',
+        targetId: 'versions.autumn.scheme-1',
+        patch: {
+          setIfMissing: {topConcepts: []},
+          insert: {after: 'topConcepts[-1]', items: [plan.reference]},
+        },
+      },
+    ])
   })
 })
 
