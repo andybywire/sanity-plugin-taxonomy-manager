@@ -1,4 +1,4 @@
-import {DocumentId, getPublishedId} from '@sanity/id-utils'
+import {DocumentId, getDraftId, getPublishedId} from '@sanity/id-utils'
 
 import type {ConceptSchemeDocument, SkosConceptDocument, SkosConceptReference} from '../types'
 
@@ -257,4 +257,188 @@ export function planSetTopConcept(input: {
       ...conceptReferenceStrength(input.concept._originalId ?? input.concept.id),
     },
   }
+}
+
+/** One document's half of an insert: where to write, and the reference to append. */
+export type InsertConceptEdit = {
+  /** Published id — the Actions API `publishedId`. */
+  publishedId: string
+  /** The draft the patch is applied to. */
+  targetId: string
+  reference: SkosConceptReference
+}
+
+export type InsertConceptPlan = {
+  kind: 'insert'
+  /** True when the scheme is being edited in a release, which this cannot target. */
+  isInRelease: boolean
+  /** Appends the concept to the scheme's membership. */
+  schemeEdit: InsertConceptEdit & {appendField: 'concepts'}
+  /** Appends the row's concept to the inserted concept's `broader`. */
+  conceptEdit: InsertConceptEdit
+}
+
+/**
+ * Plan the insertion of an existing concept as a child of another.
+ *
+ * Two documents, and both are required for the result to make sense: the scheme
+ * gains the concept as a member, and the concept gains the row's concept as a
+ * broader term. Either alone is wrong — a member with no broader term renders
+ * at the root as an orphan, and a broader term on a non-member renders nowhere.
+ * So the caller applies them as one atomic array of actions.
+ *
+ * The Actions API rather than `client.transaction()`, for the same reason a move
+ * uses it: we never hold the chosen concept's full document, so there is nothing
+ * to `createIfNotExists` from when it has no draft. `EditAction` creates the
+ * draft from the published document — which is also why both documents end up
+ * drafted, putting the editor in front of the two things left to publish.
+ *
+ * Drafts only. `EditAction` takes `draftId`/`publishedId` and has no
+ * `versionId`, so a release needs `version.create` first — Phase 2, stage 10.
+ *
+ * Both references are rebuilt here rather than copied, so each takes its
+ * strength from the document it points at: a reference to a concept that is
+ * still a draft must be weak and strengthened on publish.
+ */
+export function planInsertConcept(input: {
+  scheme: SchemeDisplayed
+  /** The concept being inserted. */
+  concept: {id: string; _originalId?: string}
+  /** The row's concept, which becomes its broader term. */
+  broaderConcept: {id: string; _originalId?: string}
+  /** `_key` for the scheme's new membership reference. */
+  schemeKey: string
+  /** `_key` for the concept's new broader reference. */
+  broaderKey: string
+}): InsertConceptPlan {
+  const schemePublishedId = getPublishedId(DocumentId(input.scheme._id))
+  const conceptPublishedId = getPublishedId(DocumentId(input.concept.id))
+  const broaderPublishedId = getPublishedId(DocumentId(input.broaderConcept.id))
+
+  return {
+    kind: 'insert',
+    isInRelease: deriveSchemeMutationTarget(input.scheme._id).isInRelease,
+    schemeEdit: {
+      publishedId: schemePublishedId,
+      targetId: getDraftId(DocumentId(schemePublishedId)),
+      appendField: 'concepts',
+      reference: {
+        _key: input.schemeKey,
+        _ref: conceptPublishedId,
+        _type: 'reference',
+        ...conceptReferenceStrength(input.concept._originalId ?? input.concept.id),
+      },
+    },
+    conceptEdit: {
+      publishedId: conceptPublishedId,
+      targetId: getDraftId(DocumentId(conceptPublishedId)),
+      reference: {
+        _key: input.broaderKey,
+        _ref: broaderPublishedId,
+        _type: 'reference',
+        ...conceptReferenceStrength(input.broaderConcept._originalId ?? input.broaderConcept.id),
+      },
+    },
+  }
+}
+
+/**
+ * The two patches an {@link InsertConceptPlan} applies, one per document.
+ *
+ * `setIfMissing` guarantees there is an array to append to — the scheme may
+ * have no `concepts` yet, and the chosen concept may have no `broader`. Content
+ * Lake applies `setIfMissing` before `insert`, so appending after `[-1]` lands
+ * either way, as `conceptMovePatch` already relies on.
+ *
+ * Shaped to satisfy `@sanity/client`'s `PatchOperations` structurally, without
+ * importing it — the core stays free of Sanity dependencies.
+ */
+export function insertSchemePatch(plan: InsertConceptPlan): {
+  setIfMissing: Record<string, never[]>
+  insert: {after: string; items: SkosConceptReference[]}
+} {
+  const field = plan.schemeEdit.appendField
+  return {
+    setIfMissing: {[field]: []},
+    insert: {after: `${field}[-1]`, items: [plan.schemeEdit.reference]},
+  }
+}
+
+export function insertBroaderPatch(plan: InsertConceptPlan): {
+  setIfMissing: {broader: never[]}
+  insert: {after: string; items: SkosConceptReference[]}
+} {
+  return {
+    setIfMissing: {broader: []},
+    insert: {after: 'broader[-1]', items: [plan.conceptEdit.reference]},
+  }
+}
+
+export type InsertRootConceptPlan = {
+  kind: 'insertRoot'
+  schemeId: string
+  createIfNotExists: SchemeDisplayed & {_id: string}
+  appendField: 'topConcepts' | 'concepts'
+  reference: SkosConceptReference
+}
+
+/**
+ * Plan the insertion of an existing concept at the root of a scheme — as a top
+ * concept, or as a plain member with no broader term supplied.
+ *
+ * One document, unlike inserting as a child. A concept at the root needs no
+ * `broader` reference written: a top concept has none within its scheme by
+ * definition, and a plain member added without one is what the query reads as
+ * an orphan. So this is an append to the scheme and nothing else, on the same
+ * `client.transaction()` path as create and remove — which also means it works
+ * inside a release, where inserting as a child cannot.
+ *
+ * Note what this does *not* do: it never clears a broader term the concept
+ * already has. A concept whose broader term is a member of this scheme will
+ * therefore render under it rather than at the root, which is where it belongs
+ * — the caller is responsible for not offering that as a *top concept*, where
+ * SKOS says a broader term in the same scheme does not belong.
+ */
+export function planInsertRootConcept(input: {
+  scheme: SchemeDisplayed
+  concept: {id: string; _originalId?: string}
+  conceptType: 'topConcept' | 'concept'
+  referenceKey: string
+}): InsertRootConceptPlan {
+  const {schemeId} = deriveSchemeMutationTarget(input.scheme._id)
+
+  return {
+    kind: 'insertRoot',
+    schemeId,
+    createIfNotExists: {...input.scheme, _id: schemeId},
+    appendField: input.conceptType === 'topConcept' ? 'topConcepts' : 'concepts',
+    reference: {
+      _key: input.referenceKey,
+      _ref: getPublishedId(DocumentId(input.concept.id)),
+      _type: 'reference',
+      ...conceptReferenceStrength(input.concept._originalId ?? input.concept.id),
+    },
+  }
+}
+
+/**
+ * The broader term a concept would hang under once it joins a scheme, or `null`
+ * when it would sit at the root.
+ *
+ * The query computes `isOrphan` as "no broader reference that is a member of
+ * this scheme", so a concept added without a broader term still renders nested
+ * if it already had one pointing inside. This says where, so the tree can show
+ * the result immediately rather than putting it at the root and then moving it.
+ *
+ * The first matching reference wins. A concept with two broader terms in the
+ * scheme renders under both, and the tree will show the second once the
+ * listener catches up.
+ *
+ * Pure: reads its arguments and returns a string or null.
+ */
+export function inSchemeBroaderRef(
+  broaderRefs: readonly string[] | undefined,
+  schemeMemberIds: readonly string[],
+): string | null {
+  return (broaderRefs ?? []).find((ref) => schemeMemberIds.includes(ref)) ?? null
 }

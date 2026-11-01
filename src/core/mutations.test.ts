@@ -7,6 +7,11 @@ import {
   conceptMovePatch,
   planCreateConcept,
   planMoveConcept,
+  insertBroaderPatch,
+  insertSchemePatch,
+  inSchemeBroaderRef,
+  planInsertConcept,
+  planInsertRootConcept,
   planRemoveConcept,
   planSetTopConcept,
 } from './mutations'
@@ -404,5 +409,200 @@ describe('planSetTopConcept', () => {
         referenceKey: 'ref-key',
       }).reference._ref,
     ).toBe('concept-1')
+  })
+})
+
+describe('planInsertConcept', () => {
+  const concept = {id: 'concept-1', _originalId: 'concept-1'}
+
+  it('plans one edit for the scheme and one for the inserted concept', () => {
+    expect(
+      planInsertConcept({
+        scheme: scheme('scheme-1'),
+        concept,
+        broaderConcept: {id: 'parent-1', _originalId: 'parent-1'},
+        schemeKey: 'scheme-key',
+        broaderKey: 'broader-key',
+      }),
+    ).toEqual({
+      kind: 'insert',
+      isInRelease: false,
+      schemeEdit: {
+        publishedId: 'scheme-1',
+        targetId: 'drafts.scheme-1',
+        appendField: 'concepts',
+        reference: {
+          _key: 'scheme-key',
+          _ref: 'concept-1',
+          _type: 'reference',
+          _weak: false,
+        },
+      },
+      conceptEdit: {
+        publishedId: 'concept-1',
+        targetId: 'drafts.concept-1',
+        reference: {
+          _key: 'broader-key',
+          _ref: 'parent-1',
+          _type: 'reference',
+          _weak: false,
+        },
+      },
+    })
+  })
+
+  it('weakens the scheme reference when the inserted concept is a draft', () => {
+    expect(
+      planInsertConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'drafts.concept-1'},
+        broaderConcept: {id: 'parent-1', _originalId: 'parent-1'},
+        schemeKey: 'scheme-key',
+        broaderKey: 'broader-key',
+      }).schemeEdit.reference,
+    ).toEqual({
+      _key: 'scheme-key',
+      _ref: 'concept-1',
+      _type: 'reference',
+      _weak: true,
+      _strengthenOnPublish: SKOS_CONCEPT_STRENGTHEN,
+    })
+  })
+
+  it('weakens the broader reference when the parent is a draft', () => {
+    expect(
+      planInsertConcept({
+        scheme: scheme('scheme-1'),
+        concept,
+        broaderConcept: {id: 'parent-1', _originalId: 'drafts.parent-1'},
+        schemeKey: 'scheme-key',
+        broaderKey: 'broader-key',
+      }).conceptEdit.reference._weak,
+    ).toBe(true)
+  })
+
+  it('flags a scheme being edited in a release, which the Actions API cannot target', () => {
+    // `EditAction` has no `versionId`, so the seam refuses rather than writing
+    // the edit to the wrong document. Phase 2 lifts this.
+    expect(
+      planInsertConcept({
+        scheme: scheme('versions.autumn.scheme-1'),
+        concept,
+        broaderConcept: {id: 'parent-1', _originalId: 'parent-1'},
+        schemeKey: 'scheme-key',
+        broaderKey: 'broader-key',
+      }).isInRelease,
+    ).toBe(true)
+  })
+
+  it('normalizes draft ids to published ones in both references', () => {
+    const plan = planInsertConcept({
+      scheme: scheme('scheme-1'),
+      concept: {id: 'drafts.concept-1', _originalId: 'drafts.concept-1'},
+      broaderConcept: {id: 'drafts.parent-1', _originalId: 'drafts.parent-1'},
+      schemeKey: 'scheme-key',
+      broaderKey: 'broader-key',
+    })
+
+    expect(plan.schemeEdit.reference._ref).toBe('concept-1')
+    expect(plan.conceptEdit.reference._ref).toBe('parent-1')
+    expect(plan.conceptEdit.publishedId).toBe('concept-1')
+  })
+})
+
+describe('insert patches', () => {
+  const plan = planInsertConcept({
+    scheme: scheme('scheme-1'),
+    concept: {id: 'concept-1', _originalId: 'concept-1'},
+    broaderConcept: {id: 'parent-1', _originalId: 'parent-1'},
+    schemeKey: 'scheme-key',
+    broaderKey: 'broader-key',
+  })
+
+  it('appends the concept to the scheme, creating the array if absent', () => {
+    expect(insertSchemePatch(plan)).toEqual({
+      setIfMissing: {concepts: []},
+      insert: {after: 'concepts[-1]', items: [plan.schemeEdit.reference]},
+    })
+  })
+
+  it('appends the broader term to the concept, creating the array if absent', () => {
+    expect(insertBroaderPatch(plan)).toEqual({
+      setIfMissing: {broader: []},
+      insert: {after: 'broader[-1]', items: [plan.conceptEdit.reference]},
+    })
+  })
+})
+
+describe('planInsertRootConcept', () => {
+  it('appends a top concept to topConcepts, and nothing else', () => {
+    expect(
+      planInsertRootConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'concept-1'},
+        conceptType: 'topConcept',
+        referenceKey: 'ref-key',
+      }),
+    ).toEqual({
+      kind: 'insertRoot',
+      schemeId: 'drafts.scheme-1',
+      createIfNotExists: {_id: 'drafts.scheme-1', _type: 'skosConceptScheme', title: 'Test Scheme'},
+      appendField: 'topConcepts',
+      reference: {_key: 'ref-key', _ref: 'concept-1', _type: 'reference', _weak: false},
+    })
+  })
+
+  it('appends a plain concept to concepts', () => {
+    expect(
+      planInsertRootConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'concept-1'},
+        conceptType: 'concept',
+        referenceKey: 'ref-key',
+      }).appendField,
+    ).toBe('concepts')
+  })
+
+  it('targets the release version, since only the scheme is written', () => {
+    expect(
+      planInsertRootConcept({
+        scheme: scheme('versions.autumn.scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'versions.autumn.concept-1'},
+        conceptType: 'topConcept',
+        referenceKey: 'ref-key',
+      }).schemeId,
+    ).toBe('versions.autumn.scheme-1')
+  })
+
+  it('weakens the reference when the concept is still a draft', () => {
+    expect(
+      planInsertRootConcept({
+        scheme: scheme('scheme-1'),
+        concept: {id: 'concept-1', _originalId: 'drafts.concept-1'},
+        conceptType: 'topConcept',
+        referenceKey: 'ref-key',
+      }).reference._weak,
+    ).toBe(true)
+  })
+})
+
+describe('inSchemeBroaderRef', () => {
+  const members = ['member-1', 'member-2']
+
+  it('finds the broader term that is a member of the scheme', () => {
+    expect(inSchemeBroaderRef(['outside-1', 'member-2'], members)).toBe('member-2')
+  })
+
+  it('returns null when every broader term is outside the scheme', () => {
+    expect(inSchemeBroaderRef(['outside-1', 'outside-2'], members)).toBeNull()
+  })
+
+  it('returns null for a concept with no broader terms at all', () => {
+    expect(inSchemeBroaderRef(undefined, members)).toBeNull()
+    expect(inSchemeBroaderRef([], members)).toBeNull()
+  })
+
+  it('takes the first match, which is where the tree will first show it', () => {
+    expect(inSchemeBroaderRef(['member-2', 'member-1'], members)).toBe('member-2')
   })
 })

@@ -1,5 +1,7 @@
 import type {
   ConceptPlan,
+  ConceptSearchParams,
+  ConceptSearchResult,
   ConceptTreeParams,
   PublishedConceptsParams,
   SemanticRecommendationsResult,
@@ -17,6 +19,8 @@ export interface FakeDataPortConfig {
   recsError?: string | null
   /** Concept ids the fake reports as published. `undefined` stands for "not loaded yet". */
   publishedIds?: string[]
+  /** Candidates the insert picker's search returns, before the fake applies `excludeIds`. */
+  searchResults?: ConceptSearchResult[]
 }
 
 /** A {@link TaxonomyDataPort} that also exposes recorded interactions for assertions. */
@@ -31,6 +35,8 @@ export interface FakeDataPort extends TaxonomyDataPort {
   lastWatchParams: ConceptTreeParams | null
   /** Params from the most recent `useWatchPublishedConcepts` call. */
   lastPublishedParams: PublishedConceptsParams | null
+  /** Params from the most recent `useSearchConcepts` call. */
+  lastSearchParams: ConceptSearchParams | null
 }
 
 /**
@@ -59,6 +65,15 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
     loading: config.loading ?? false,
     error: config.error ?? null,
   }
+  // The real query excludes the scheme's members in GROQ; the fake applies the
+  // same exclusion here, so a test can assert the picker never offers one.
+  const search = (params: ConceptSearchParams): Promise<ConceptSearchResult[]> => {
+    fake.lastSearchParams = params
+    const matches = (config.searchResults ?? []).filter(
+      (result) => !params.excludeIds.includes(result.id),
+    )
+    return Promise.resolve(matches)
+  }
   const apply = (plan: ConceptPlan): Promise<void> => {
     fake.appliedPlans.push(plan)
     return Promise.resolve()
@@ -69,6 +84,7 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
     lastSearchSchemeId: undefined,
     lastWatchParams: null,
     lastPublishedParams: null,
+    lastSearchParams: null,
     useWatchTree: (params: ConceptTreeParams) => {
       fake.lastWatchParams = params
       return watchResult
@@ -77,6 +93,7 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
       fake.lastPublishedParams = params
       return publishedResult
     },
+    useSearchConcepts: () => search,
     useApplyConceptPlan: () => apply,
     useSemanticRecommendations: () => recsResult,
   }
