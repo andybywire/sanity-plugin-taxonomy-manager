@@ -484,15 +484,14 @@ describe('Hierarchy (promote and demote)', () => {
     expect(icons).toEqual([ICON.promote, ICON.move, ICON.remove])
   })
 
-  it('still offers promotion in a release, where Move to… is withheld', async () => {
-    // These patch the scheme alone, which the id math already makes
-    // release-aware. A move patches the concept document through the Actions
-    // API, which has no versionId — hence the narrower gate on that one.
+  it('offers promotion and move alike in a release', async () => {
+    // Promotion patches the scheme and a move patches the concept document,
+    // but both reach a release version now, so they share one gate.
     renderHierarchy(createFakeDataPort({tree: ORPHAN}), 'autumn')
     await openRowMenu('Minerals')
 
     expect(menuItem(ICON.promote)).not.toBeNull()
-    expect(menuItem(ICON.move)).toBeNull()
+    expect(menuItem(ICON.move)).not.toBeNull()
   })
 
   it('offers neither in the published perspective', async () => {
@@ -598,10 +597,10 @@ describe('Hierarchy (insert an existing concept)', () => {
     expect(insertButtons()).toHaveLength(1)
   })
 
-  it('withholds it in a release, where the Actions API cannot target the version', () => {
+  it('offers it in a release, where both documents now resolve to versions', () => {
     renderHierarchy(createFakeDataPort({tree: TREE}), 'autumn')
 
-    expect(insertButtons()).toHaveLength(0)
+    expect(insertButtons()).toHaveLength(1)
   })
 
   it('withholds it in an input tree', () => {
