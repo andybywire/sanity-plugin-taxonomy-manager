@@ -434,6 +434,9 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
           header={title}
           id="concept-select-dialog"
           onClose={handleClose}
+          // A picker, so an outside click dismisses it. Choosing a concept is
+          // the only thing here, and it has either happened or it has not.
+          onClickOutside={handleClose}
           zOffset={900}
           width={1}
         >
