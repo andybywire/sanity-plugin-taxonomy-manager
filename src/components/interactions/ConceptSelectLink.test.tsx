@@ -16,7 +16,7 @@ const concept = (over: Partial<ChildConceptTerm> = {}): ChildConceptTerm => ({
 describe('ConceptSelectLink (recommendation display)', () => {
   it('shows a "recommended" badge, never a percentage', () => {
     renderWithUi(
-      <ConceptSelectLink concept={concept({recommended: true})} selectConcept={() => undefined} />
+      <ConceptSelectLink concept={concept({recommended: true})} selectConcept={() => undefined} />,
     )
 
     expect(screen.getByText('recommended')).toBeInTheDocument()
@@ -35,7 +35,7 @@ describe('ConceptSelectLink (recommendation display)', () => {
       <ConceptSelectLink
         concept={concept({id: 'concept-9', _originalId: 'drafts.concept-9'})}
         selectConcept={selectConcept}
-      />
+      />,
     )
 
     await userEvent.setup().click(screen.getByRole('button', {name: /Mathematics/}))

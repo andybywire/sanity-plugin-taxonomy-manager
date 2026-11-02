@@ -1,16 +1,5 @@
 import type {DocumentId} from '@sanity/id-utils'
-import {
-  Grid,
-  Stack,
-  Button,
-  Dialog,
-  Box,
-  Card,
-  Label,
-  Text,
-  Flex,
-  Spinner,
-} from '@sanity/ui'
+import {Grid, Stack, Button, Dialog, Box, Card, Label, Text, Flex, Spinner} from '@sanity/ui'
 import {useToast} from '@sanity/ui/toast'
 import {useState, useEffect, useCallback} from 'react'
 import type {ArrayFieldProps, ObjectOptions} from 'sanity'
@@ -445,6 +434,9 @@ export function ArrayHierarchyInput(props: ArrayHierarchyInputProps) {
           header={title}
           id="concept-select-dialog"
           onClose={handleClose}
+          // A picker, so an outside click dismisses it. Choosing a concept is
+          // the only thing here, and it has either happened or it has not.
+          onClickOutside={handleClose}
           zOffset={900}
           width={1}
         >

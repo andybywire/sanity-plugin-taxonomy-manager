@@ -36,14 +36,11 @@ vi.mock('sanity', async (importOriginal) => {
   }
 })
 
-function renderInput(
-  props = referenceFieldProps(),
-  port = createFakeDataPort()
-) {
+function renderInput(props = referenceFieldProps(), port = createFakeDataPort()) {
   return renderWithUi(
     <TaxonomyPortProvider port={port}>
       <ReferenceHierarchyInput {...props} />
-    </TaxonomyPortProvider>
+    </TaxonomyPortProvider>,
   )
 }
 
@@ -78,7 +75,7 @@ describe('ReferenceHierarchyInput', () => {
     renderInput(
       referenceFieldProps({
         schemaType: {options: {filter: filterFor({schemeId: 'scheme-x'}, {browseOnly: true})}},
-      })
+      }),
     )
 
     expect(await screen.findByText('No items')).toBeInTheDocument()
@@ -93,12 +90,17 @@ describe('ReferenceHierarchyInput', () => {
 
   it('runs a scheme-scoped search on browse and badges recommended concepts', async () => {
     const port = createFakeDataPort({
-      tree: {topConcepts: [{id: 'concept-1', prefLabel: 'Biology', _originalId: 'concept-1'}], concepts: []},
+      tree: {
+        topConcepts: [{id: 'concept-1', prefLabel: 'Biology', _originalId: 'concept-1'}],
+        concepts: [],
+      },
       recommendations: [{conceptId: 'concept-1', score: 0.9}],
     })
     renderInput(referenceFieldProps(), port)
 
-    await userEvent.setup().click(await screen.findByRole('button', {name: /browse taxonomy tree/i}))
+    await userEvent
+      .setup()
+      .click(await screen.findByRole('button', {name: /browse taxonomy tree/i}))
 
     // The search is triggered scoped to the field's resolved scheme...
     expect(port.lastSearchSchemeId).toBe('scheme-x')

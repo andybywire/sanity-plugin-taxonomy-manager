@@ -1,4 +1,3 @@
-import {screen} from '@testing-library/react'
 import {describe, expect, it} from 'vitest'
 
 import {ReleaseContext, SchemeContext} from '../../context'
@@ -24,10 +23,10 @@ describe('InputHierarchy (input watch seam)', () => {
             <InputHierarchy branchId={'branch-1'} inputComponent selectConcept={() => undefined} />
           </ReleaseContext.Provider>
         </SchemeContext.Provider>
-      </TaxonomyPortProvider>
+      </TaxonomyPortProvider>,
     )
 
-    expect(screen.getByText('Loading hierarchy…')).toBeInTheDocument()
+    expect(document.querySelector('[data-ui="Spinner"]')).not.toBeNull()
     expect(port.lastWatchParams).toEqual({
       mode: 'input',
       documentId: 'scheme-9',

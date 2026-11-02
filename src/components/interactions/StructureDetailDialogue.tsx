@@ -52,7 +52,16 @@ export const StructureDetailDialogue = ({
       </Tooltip>
 
       {open && (
-        <Dialog header={title} id="dialog-example" onClose={onClose} zOffset={1000} width={1}>
+        <Dialog
+          header={title}
+          id="dialog-example"
+          onClose={onClose}
+          // Informational, so an outside click dismisses it. There is nothing
+          // here to answer and nothing to lose.
+          onClickOutside={onClose}
+          zOffset={1000}
+          width={1}
+        >
           <Box padding={4} paddingBottom={5}>
             <Text>{message}</Text>
           </Box>

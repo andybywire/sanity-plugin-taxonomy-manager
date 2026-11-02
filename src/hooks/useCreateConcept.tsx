@@ -57,7 +57,7 @@ export function useCreateConcept(document: ConceptSchemeDocument) {
           })
         })
     },
-    [document.displayed, ident, schemaBaseIri, applyConceptPlan, toast, openInNewPane]
+    [document.displayed, ident, schemaBaseIri, applyConceptPlan, toast, openInNewPane],
   )
   return createConcept
 }

@@ -51,6 +51,10 @@ export const NewScheme = ({document}: {document: SanityDocument}) => {
           header="Title & Description"
           id="title-description"
           onClose={onClose}
+          // Deliberately no `onClickOutside`, unlike every other dialog here.
+          // This one holds typed text that has not been saved, and dismissing
+          // it on a stray click would throw that away — which is the line
+          // Studio draws too.
           zOffset={1000}
           width={1}
         >

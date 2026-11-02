@@ -1,53 +1,45 @@
-import {AddCircleIcon} from '@sanity/icons/AddCircle'
-import {TrashIcon} from '@sanity/icons/Trash'
 import {Box, Text, Button} from '@sanity/ui'
 import {Tooltip} from '@sanity/ui/tooltip'
-// import {useCallback, useState} from 'react'
+import type {ComponentType} from 'react'
 
+/**
+ * #### Concept Edit Action
+ * One of the row's icon buttons: a bleed button with a tooltip naming what it
+ * does, since the icon alone does not.
+ *
+ * It takes what it draws rather than a named action it looks up. An earlier
+ * version switched on `'add' | 'remove'` through a lookup table, and when
+ * removal moved into the overflow menu the `'remove'` arm stayed behind
+ * unreachable — a whole branch of live-looking configuration for something
+ * nothing rendered. Passing the icon and message in keeps the component unable
+ * to describe a control that does not exist.
+ */
 export const ConceptEditAction = ({
-  action,
+  icon,
+  message,
+  tone = 'positive',
   handler,
 }: {
-  action: 'remove' | 'add'
+  icon: ComponentType
+  /** Both the tooltip text and the accessible name — the icon carries neither. */
+  message: string
+  tone?: 'positive' | 'critical' | 'caution' | 'primary' | 'default'
   handler: () => void
 }) => {
-  // const [open, setOpen] = useState(false)
-  // const onClose = useCallback(() => setOpen(false), [])
-  // const onOpen = useCallback(() => setOpen(true), [])
-
-  const typeMap = {
-    add: {
-      message: 'Add a child concept below this concept' as const,
-      icon: AddCircleIcon,
-      tone: 'positive' as const,
-    },
-    remove: {
-      message: 'Remove this concept from this scheme' as const,
-      icon: TrashIcon,
-      tone: 'critical' as const,
-    },
-  }
-
   return (
     <Tooltip
       delay={{open: 750}}
       content={
         <Box padding={1} sizing="content">
           <Text muted size={1}>
-            {typeMap[action].message}
+            {message}
           </Text>
         </Box>
       }
       fallbackPlacements={['right', 'left']}
       placement="top"
     >
-      <Button
-        icon={typeMap[action].icon}
-        mode={'bleed'}
-        onClick={handler}
-        tone={typeMap[action].tone}
-        aria-label={typeMap[action].message}
-      />
+      <Button icon={icon} mode={'bleed'} onClick={handler} tone={tone} aria-label={message} />
     </Tooltip>
   )
 }

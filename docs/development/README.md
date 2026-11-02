@@ -15,3 +15,4 @@ Architecture Decision Records — one per major architectural axis. Each capture
 - [0002 — Semantic recommendations via `text::semanticSimilarity`](decisions/0002-semantic-recommendations.md)
 - [0003 — 5.0.0 platform modernization](decisions/0003-5.0.0-platform-modernization.md)
 - [0004 — `@sanity/ui` v4 and the 6.0.0 peer floor](decisions/0004-sanity-ui-v4.md)
+- [0005 — Hierarchy editing: the concept-mutation surface](decisions/0005-hierarchy-editing.md)

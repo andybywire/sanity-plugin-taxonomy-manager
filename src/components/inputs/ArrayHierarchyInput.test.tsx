@@ -38,7 +38,7 @@ function renderInput(props = arrayFieldProps(), port = createFakeDataPort()) {
   return renderWithUi(
     <TaxonomyPortProvider port={port}>
       <ArrayHierarchyInput {...props} />
-    </TaxonomyPortProvider>
+    </TaxonomyPortProvider>,
   )
 }
 
@@ -60,7 +60,7 @@ describe('ArrayHierarchyInput', () => {
     renderInput(
       arrayFieldProps({
         schemaType: {of: [{options: {filter: filterFor({schemeId: 'scheme-x'})}}, {options: {}}]},
-      })
+      }),
     )
 
     expect(screen.getByText(/not supported for multi-schema arrays/i)).toBeInTheDocument()
@@ -76,8 +76,10 @@ describe('ArrayHierarchyInput', () => {
   it('suppresses the default input in browse-only mode, showing an empty preview', async () => {
     renderInput(
       arrayFieldProps({
-        schemaType: {of: [{options: {filter: filterFor({schemeId: 'scheme-x'}, {browseOnly: true})}}]},
-      })
+        schemaType: {
+          of: [{options: {filter: filterFor({schemeId: 'scheme-x'}, {browseOnly: true})}}],
+        },
+      }),
     )
 
     expect(await screen.findByText('No items')).toBeInTheDocument()
@@ -86,11 +88,14 @@ describe('ArrayHierarchyInput', () => {
 
   it('warns instead of adding a term already present in the field', async () => {
     const port = createFakeDataPort({
-      tree: {topConcepts: [{id: 'concept-1', prefLabel: 'Biology', _originalId: 'concept-1'}], concepts: []},
+      tree: {
+        topConcepts: [{id: 'concept-1', prefLabel: 'Biology', _originalId: 'concept-1'}],
+        concepts: [],
+      },
     })
     renderInput(
       arrayFieldProps({value: [{_key: 'k1', _ref: 'concept-1', _type: 'reference'}]}),
-      port
+      port,
     )
 
     const user = userEvent.setup()

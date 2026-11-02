@@ -1,5 +1,12 @@
-import type {CreateConceptPlan, RemoveConceptPlan} from './mutations'
+import type {ConceptPlan} from './mutations'
 import type {ConceptRecommendation, DocumentConcepts, SemanticSearchConfig} from '../types'
+
+/**
+ * A create, remove, move or top-concept plan, discriminated by `kind`. Defined
+ * with the planners in `core/mutations`, and re-exported here because the port
+ * is where callers meet it.
+ */
+export type {ConceptPlan}
 
 /**
  * #### Taxonomy Data Port
@@ -20,8 +27,12 @@ import type {ConceptRecommendation, DocumentConcepts, SemanticSearchConfig} from
 export interface TaxonomyDataPort {
   /** Live concept tree for a scheme document (`trunk`) or a branch within it (`input`). */
   useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts>
-  /** Replay a pure create/remove plan (`core/mutations`) onto a Studio transaction. */
+  /** Which of the given concepts exist as published documents (`published` perspective). */
+  useWatchPublishedConcepts(params: PublishedConceptsParams): WatchResult<ReadonlySet<string>>
+  /** Replay a pure create/remove/move plan (`core/mutations`) onto the Studio client. */
   useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void>
+  /** One-shot search for concepts outside a scheme, for the insert picker. */
+  useSearchConcepts(): (params: ConceptSearchParams) => Promise<ConceptSearchResult[]>
   /** Semantic term recommendations for the input components (GROQ `text::semanticSimilarity()`). */
   useSemanticRecommendations(config?: SemanticSearchConfig): SemanticRecommendationsResult
 }
@@ -40,6 +51,23 @@ export type ConceptTreeParams =
   | {mode: 'trunk'; documentId: string; perspective: TaxonomyPerspective}
   | {mode: 'input'; documentId: string; branchId: string | null; perspective: TaxonomyPerspective}
 
+/**
+ * Which concepts to test for a published version.
+ *
+ * The caller passes the ids the tree is showing, so the query and its listener
+ * are scoped to what is on screen. An empty list is the off switch: the query
+ * matches nothing and the listener never fires, which is how the publication
+ * markers are turned off in an input tree or a release perspective — there is
+ * no `enabled` flag because `useListeningQuery` cannot be called conditionally.
+ *
+ * Sort the ids before passing them. The list is a query parameter, so an
+ * unstable order would resubscribe the listener on every tree update.
+ */
+export type PublishedConceptsParams = {
+  /** Published concept ids, sorted. Empty means "ask nothing". */
+  ids: readonly string[]
+}
+
 /** Result shape of a live query: mirrors `useListeningQuery`, with `error` normalized to `Error | null`. */
 export interface WatchResult<T> {
   data: T | null
@@ -47,8 +75,48 @@ export interface WatchResult<T> {
   error: Error | null
 }
 
-/** A create or remove transaction plan, discriminated by `kind` (see `core/mutations`). */
-export type ConceptPlan = CreateConceptPlan | RemoveConceptPlan
+/**
+ * What the insert picker asks for. A one-shot fetch rather than a live query:
+ * a picker wants the answer to what has been typed, not a subscription.
+ */
+export type ConceptSearchParams = {
+  /** Published ids already in the scheme, which the search excludes. */
+  excludeIds: readonly string[]
+  /** The typed text, passed to GROQ `match`. */
+  searchQuery: string
+  /**
+   * The perspective to search under — the same one the tree is rendering.
+   *
+   * Both halves of the picker's question have to be asked in one perspective.
+   * The exclusion list comes from the tree, so pinning the candidate list to
+   * `drafts` while the tree renders a release asks them in two: inside a
+   * release the picker then offered concepts that exist only as drafts and are
+   * invisible in that release, and filing one pulled it in, seeded from the
+   * draft, for the release to publish.
+   *
+   * Ids come back normalized to published form under a release just as they do
+   * under drafts, so the exclusion list needs no reconciling either way.
+   */
+  perspective: TaxonomyPerspective
+  /**
+   * False only when picking a top concept, which SKOS says may not hold a
+   * broader term inside its own scheme. A broader term in another scheme is no
+   * bar. Defaults to true wherever it is left out.
+   */
+  allowBroaderInScheme?: boolean
+}
+
+/** One candidate in the insert picker. */
+export type ConceptSearchResult = {
+  id: string
+  _originalId?: string
+  prefLabel: string
+  /**
+   * The concept's broader references, so the caller can work out where it will
+   * land before the listener says (see `inSchemeBroaderRef`).
+   */
+  broaderRefs?: string[]
+}
 
 /** Return shape of the semantic-recommendations seam. */
 export interface SemanticRecommendationsResult {

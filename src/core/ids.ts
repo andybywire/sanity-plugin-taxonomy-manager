@@ -1,6 +1,7 @@
 import {
   DocumentId,
   getDraftId,
+  getPublishedId,
   getVersionId,
   getVersionNameFromId,
   isPublishedId,
@@ -15,19 +16,25 @@ export type SchemeMutationTarget = {
   isInRelease: boolean
   releaseName: string | undefined
   schemeId: string
+  /** The scheme's published id — the Actions API `publishedId`. */
+  publishedId: string
 }
 
 /**
  * Resolve the document id a scheme mutation should write to, from the displayed
  * scheme id: the matching version id when the scheme is being edited inside a
- * release, otherwise its draft id. Shared by concept create/remove.
+ * release, otherwise its draft id. Shared by every concept mutation.
+ *
+ * Studio sets `displayed._id` from the selected perspective, so it already
+ * names the version **before any version document exists** — verified against a
+ * real release. That is what makes this derivation sufficient on its own.
  */
 export function deriveSchemeMutationTarget(displayedId: string): SchemeMutationTarget {
   const docId = DocumentId(displayedId)
   const isInRelease = isVersionId(docId)
   const releaseName = isInRelease ? getVersionNameFromId(docId as VersionId) : undefined
   const schemeId = isInRelease ? getVersionId(docId, releaseName as string) : getDraftId(docId)
-  return {isInRelease, releaseName, schemeId}
+  return {isInRelease, releaseName, schemeId, publishedId: getPublishedId(docId)}
 }
 
 /**
