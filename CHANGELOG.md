@@ -5,6 +5,31 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.2.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.1.0...v6.2.0) (2026-11-02)
+
+### Features
+
+* add a row menu with a Move to… command ([f37bd84](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/f37bd8496b0be1727bd56e813a11fa2be263343e)), closes [#115](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/115)
+* add existing concepts to a scheme, as children and at the root ([02945d1](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/02945d1b60dcc74aaaf185dec8b52dd71da9bbf9)), closes [#123](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/123)
+* add the pure core for concept moves ([cf33818](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/cf33818d1ab22885a4b08f6be6a4be56ebe22c89)), closes [#113](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/113)
+* drag a concept onto another to re-parent it ([8d4e7ac](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/8d4e7ac80c3d1f63b8e4813e9c72fdfb82b9b2f2)), closes [#117](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/117)
+* execute concept moves through the data port ([ad69c19](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/ad69c1980cb6a7f722235c8e5ade988884ee5f9f)), closes [#114](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/114)
+* let orphans be moved back into the hierarchy ([b78096b](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/b78096b23e97da04819b5542d9b313418bcb4deb)), closes [#116](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/116)
+* mark Tree View rows with their publication status ([1df2668](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/1df26684b530aebeddb54e4ba713c97e2c399df9)), closes [#120](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/120)
+* plan a concept's move across the top-concept boundary ([19340f4](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/19340f495efe04e9647c1fe7f75ab4281c4d9371)), closes [#121](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/121)
+* plan the insertion of existing concepts into a scheme ([80387bb](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/80387bbff6f8ddf1b2b4e788dbdf5484c652dace)), closes [#123](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/123)
+* promote an orphan to a top concept, and demote a top concept ([7e8338f](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/7e8338f8980fa16f15f641dc9b38db1c55a53342)), closes [#121](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/121)
+* restructure a taxonomy inside a Content Release ([212e82b](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/212e82b24c7593afe53a653b104ffa4326cecf91)), closes [#125](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/125)
+* watch which concepts in a scheme are published ([824ac49](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/824ac49441b8a34aedd61cedefabb3f233910324)), closes [#120](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/120)
+
+### Bug Fixes
+
+* dismiss the plugin's dialogs on an outside click ([cf6293c](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/cf6293c56b794cf9285920b06bb51af6087dbd69)), closes [#124](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/124)
+* keep rows draggable after the Move to… dialog has been opened ([700329a](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/700329abf0ad20ec11af9534eed656ffc3b0fcb6)), closes [#126](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/126)
+* keep the tree listener alive across renders ([a66a781](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/a66a781f7cd992902114d2ad7206353b5700e01f)), closes [#122](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/122)
+* search the picker's own perspective, not always drafts ([2670b39](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/2670b39677240da74399cf3e2ad04f5ea8871c7f)), closes [#128](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/128)
+* seed release versions from published, not from the open draft ([77c0522](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/77c0522ebb37209d96d4f6a9e779729f2f01af51)), closes [#125](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/125)
+
 ## [6.1.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.0.2...v6.1.0) (2026-10-29)
 
 ### Features
