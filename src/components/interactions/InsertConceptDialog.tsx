@@ -2,7 +2,7 @@ import {Box, Card, Dialog, Spinner, Stack, Text} from '@sanity/ui'
 import {Autocomplete} from '@sanity/ui/autocomplete'
 import {useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 
-import {SchemeContext} from '../../context'
+import {ReleaseContext, SchemeContext} from '../../context'
 import type {ConceptSearchResult} from '../../core/ports'
 import {useInsertConcept, useInsertRootConcept} from '../../hooks'
 import {useTaxonomyDataPort} from '../../seams/TaxonomyPortContext'
@@ -52,6 +52,7 @@ export function InsertConceptDialog({
   onClose: () => void
 }) {
   const document: ConceptSchemeDocument = useContext(SchemeContext) || ({} as ConceptSchemeDocument)
+  const releaseContext = useContext(ReleaseContext)
   const port = useTaxonomyDataPort()
   const searchConcepts = port.useSearchConcepts()
   const insertConcept = useInsertConcept(document)
@@ -91,7 +92,7 @@ export function InsertConceptDialog({
     setLoading(true)
     const ticket = ++latestSearch.current
     const timer = setTimeout(() => {
-      searchConcepts({excludeIds, searchQuery, allowBroaderInScheme})
+      searchConcepts({excludeIds, searchQuery, allowBroaderInScheme, perspective: releaseContext})
         .then((found) => {
           if (ticket !== latestSearch.current) return
           setResults(found)
@@ -105,7 +106,7 @@ export function InsertConceptDialog({
     }, delay)
 
     return () => clearTimeout(timer)
-  }, [query, excludeIds, searchConcepts, allowBroaderInScheme])
+  }, [query, excludeIds, searchConcepts, allowBroaderInScheme, releaseContext])
 
   const options = useMemo(
     () => results.map((result) => ({value: result.id, payload: result})),

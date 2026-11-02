@@ -85,6 +85,20 @@ export type ConceptSearchParams = {
   /** The typed text, passed to GROQ `match`. */
   searchQuery: string
   /**
+   * The perspective to search under — the same one the tree is rendering.
+   *
+   * Both halves of the picker's question have to be asked in one perspective.
+   * The exclusion list comes from the tree, so pinning the candidate list to
+   * `drafts` while the tree renders a release asks them in two: inside a
+   * release the picker then offered concepts that exist only as drafts and are
+   * invisible in that release, and filing one pulled it in, seeded from the
+   * draft, for the release to publish.
+   *
+   * Ids come back normalized to published form under a release just as they do
+   * under drafts, so the exclusion list needs no reconciling either way.
+   */
+  perspective: TaxonomyPerspective
+  /**
    * False only when picking a top concept, which SKOS says may not hold a
    * broader term inside its own scheme. A broader term in another scheme is no
    * bar. Defaults to true wherever it is left out.

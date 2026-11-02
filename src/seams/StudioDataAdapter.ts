@@ -115,9 +115,11 @@ function useSearchConcepts(): (params: ConceptSearchParams) => Promise<ConceptSe
           searchQuery: params.searchQuery,
           allowBroaderInScheme: params.allowBroaderInScheme ?? true,
         },
-        // Drafts, so `_id` arrives normalized and the scheme's published
-        // references can be excluded without reconciling draft ids.
-        {perspective: 'drafts'},
+        // The perspective the tree is rendering, so the candidates and the
+        // exclusion list agree. `_id` arrives normalized to published form
+        // under a release as well as under drafts, so the scheme's published
+        // references can be excluded without reconciling ids either way.
+        {perspective: params.perspective === undefined ? 'drafts' : [params.perspective]},
       ),
     [client],
   )

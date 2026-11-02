@@ -584,8 +584,11 @@ describe('Hierarchy (insert an existing concept)', () => {
     return screen.getByRole('combobox')
   }
 
-  async function openPicker(port: ReturnType<typeof createFakeDataPort>) {
-    renderHierarchy(port, undefined, false, schemeWithTopConcepts)
+  async function openPicker(
+    port: ReturnType<typeof createFakeDataPort>,
+    releaseContext: string | undefined = undefined,
+  ) {
+    renderHierarchy(port, releaseContext, false, schemeWithTopConcepts)
     const user = userEvent.setup()
     await user.click(insertButtons()[0])
     return user
@@ -618,6 +621,26 @@ describe('Hierarchy (insert an existing concept)', () => {
     // The browse search fires on open, so wait for the typed one specifically.
     await waitFor(() => expect(port.lastSearchParams?.searchQuery).toBe('mo*'))
     expect(port.lastSearchParams?.excludeIds).toContain('top-1')
+  })
+
+  it('searches the perspective the tree is rendering, not always drafts', async () => {
+    // Both halves of "concepts not already in this scheme" have to be asked in
+    // one perspective. The exclusion list comes from the tree, so searching
+    // drafts while the tree renders a release offered concepts that exist only
+    // as drafts and are invisible in that release — and filing one pulled it
+    // in, seeded from the draft, for the release to publish.
+    const port = createFakeDataPort({tree: TREE, searchResults: CANDIDATES})
+    await openPicker(port, 'autumn')
+
+    await waitFor(() => expect(port.lastSearchParams?.perspective).toBe('autumn'))
+  })
+
+  it('searches drafts when no release is selected', async () => {
+    const port = createFakeDataPort({tree: TREE, searchResults: CANDIDATES})
+    await openPicker(port)
+
+    await waitFor(() => expect(port.lastSearchParams).not.toBeNull())
+    expect(port.lastSearchParams?.perspective).toBeUndefined()
   })
 
   it('lists what is available before anything is typed, so the menu can be browsed', async () => {
