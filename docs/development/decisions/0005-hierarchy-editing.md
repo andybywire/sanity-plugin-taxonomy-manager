@@ -85,6 +85,12 @@ findings, because every one of them is cheap to get wrong by reasoning:
   with `draftId` only. Dispatch goes through
   `client.request({uri: '/data/actions/<dataset>'})` — the workaround Sanity's own Actions API
   guide gives for this gap. Revisit when the client types `versionId`.
+- **`document.edit` falls back to the draft when there is no published document.** The action is
+  documented as seeding from the published document, and where one exists that is what it does.
+  Where none does, it seeds from the draft instead and records `_system.base` pointing at that
+  draft's revision — it does not fail, and it does not write an empty document. Worth knowing,
+  because it means the action will happily pull an unpublished concept into a release if it is
+  handed one; see the picker's perspective, below.
 
 ### Drag state lives outside the port, and the gesture is not the tested unit
 
@@ -126,6 +132,25 @@ decline is the coupling.
 Three things it needed that were not obvious: an empty query lists what is available rather than
 nothing; options must be rendered as buttons or they neither highlight nor take a pointer cursor;
 and `openOnFocus` has to stay off, or a dismissing click inside the dialog reopens the list.
+
+**The picker searches the perspective the tree is rendering, and this is a rule, not a detail.**
+Its question has two halves — which concepts exist, and which are already in this scheme — and
+the second comes from the tree. Asking them in different perspectives is incoherent, and was:
+the search was pinned to `drafts` while the tree ran under `releaseContext`, so inside a release
+the picker offered concepts that exist only as drafts and are invisible in that release. Filing
+one created a version of it seeded from the draft, by the fallback described above, and the
+release quietly acquired an unpublished concept that publishing it would publish
+([#128](https://github.com/andybywire/sanity-plugin-taxonomy-manager/issues/128)).
+
+The original reason for pinning to `drafts` — that `_id` arrives normalized, so the scheme's
+published references can be excluded without reconciling ids — holds under a release too, which
+is why the fix is simply to follow the tree. **Any future query the plugin adds should take its
+perspective from the same place the tree does**, rather than choosing one.
+
+The behavior this settles: draft-only concepts are not offered while a release is selected. A
+release is a set of changes on top of published, so a concept existing only as someone's draft
+should not be drawn into one by a picker that never showed it in the tree. Filing it from the
+drafts perspective stays open.
 
 ## The trap this plugin keeps falling into
 
@@ -172,3 +197,10 @@ closing, and comes back empty without the fix.
 - Claims about Studio or Content Lake behavior in this plugin should be **observed before they are
   relied on**. Every release-related claim in the original plan was derived from id math, and most
   of them were wrong in one direction or the other.
+- **Nothing in the gate found any of this.** The seeding bug, the `@dnd-kit` registry collision and
+  the picker's perspective were all caught by a person using the Studio, or by reading a scratch
+  release afterwards to see what it had accumulated. The suite went green throughout. That is not
+  a gap to close by writing more jsdom tests — it is the reason the author's eyeball pass is part
+  of the process rather than a formality, and the reason a release used in anger is worth more
+  than another assertion. Where such a bug is found, pin the *mechanism* it turned on, which is
+  usually testable even when the interaction is not.
