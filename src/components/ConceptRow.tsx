@@ -5,6 +5,7 @@ import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
 import {conceptStatusMarkers, hasDraftVersion} from '../core/publicationStatus'
+import {MAX_VISIBLE_LEVEL} from '../core/tree/moveConcept'
 import {hasRootOrphans} from '../core/tree/rootOrphans'
 import {useConceptRowDnd, useCreateConcept, useRemoveConcept, useSetTopConcept} from '../hooks'
 import type {ChildConceptTerm, ConceptSchemeDocument} from '../types'
@@ -20,9 +21,6 @@ import {ConceptSelectLink} from './interactions/ConceptSelectLink'
 import {MoveConceptDialog} from './interactions/MoveConceptDialog'
 import {StructureDetailDialogue} from './interactions/StructureDetailDialogue'
 import {ToggleButton} from './interactions/ToggleButton'
-
-/** The deepest level the tree renders; see `core/tree/moveConcept`. */
-const MAX_VISIBLE_LEVEL = 5
 
 /**
  * Where a row sits in the scheme. Everything that differs between rows follows
