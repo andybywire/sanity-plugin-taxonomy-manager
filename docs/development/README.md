@@ -6,6 +6,11 @@ directory holds the deeper *why*. User-facing docs are the rest of [`docs/`](../
 [sanitytaxonomymanager.com](https://sanitytaxonomymanager.com)); these development docs live alongside it
 but are kept out of the site navigation (`_navbar.md`).
 
+## Planning
+
+- [Feature backlog](feature-backlog.md) — what is planned after 6.2.0, in order, with the
+  decisions already taken for each.
+
 ## Decision records
 
 Architecture Decision Records — one per major architectural axis. Each captures the context, the decision
