@@ -189,7 +189,16 @@ describe('TreeStructure (how the hierarchy nests)', () => {
                       id: 'c4',
                       prefLabel: 'Falcons',
                       level: 3,
-                      childConcepts: [{id: 'c5', prefLabel: 'Kestrels', level: 4}],
+                      childConcepts: [
+                        {
+                          id: 'c5',
+                          prefLabel: 'Kestrels',
+                          level: 4,
+                          // MAX_VISIBLE_LEVEL is 5: this is the row that carries
+                          // the structure notice in place of its two actions.
+                          childConcepts: [{id: 'c6', prefLabel: 'Merlins', level: 5}],
+                        },
+                      ],
                     },
                   ],
                 },
@@ -234,5 +243,78 @@ describe('TreeStructure (how the hierarchy nests)', () => {
     expect(screen.getAllByRole('button', {name: /^Carbon/})).toHaveLength(2)
     expect(row('Animals')).toContainElement(screen.getAllByRole('button', {name: /^Carbon/})[0])
     expect(row('Minerals')).toContainElement(screen.getAllByRole('button', {name: /^Carbon/})[1])
+  })
+})
+
+describe('TreeStructure (the reserved action slot at the depth cap)', () => {
+  // A row at the maximum depth trades two actions — add and insert — for one
+  // structure notice, so it offers one control fewer than every row above it.
+  // Its own left-hand group flexes, so that missing slot pushes the row's
+  // status markers and overflow menu a step to the right and breaks the
+  // vertical line the markers otherwise hold. One reserved slot squares it.
+  const deep = {
+    topConcepts: [
+      {
+        id: 'c1',
+        prefLabel: 'Animals',
+        childConcepts: [
+          {
+            id: 'c2',
+            prefLabel: 'Birds',
+            level: 1,
+            childConcepts: [
+              {
+                id: 'c3',
+                prefLabel: 'Raptors',
+                level: 2,
+                childConcepts: [
+                  {
+                    id: 'c4',
+                    prefLabel: 'Falcons',
+                    level: 3,
+                    childConcepts: [
+                      {
+                        id: 'c5',
+                        prefLabel: 'Kestrels',
+                        level: 4,
+                        // MAX_VISIBLE_LEVEL is 5: this is the row that carries
+                        // the structure notice in place of its two actions.
+                        childConcepts: [{id: 'c6', prefLabel: 'Merlins', level: 5}],
+                      },
+                    ],
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    ],
+    concepts: [],
+  } as unknown as DocumentConcepts
+
+  /** Every action button in a row, reserved ones included. */
+  function actionCount(label: string) {
+    const button = screen.getByRole('button', {name: new RegExp(`^${label}`)})
+    const actions = button
+      .closest('[data-ui="Flex"]')
+      ?.parentElement?.querySelectorAll(
+        ':scope > [data-ui="Inline"] button, :scope > [data-ui="Inline"] > * > button',
+      )
+    return actions?.length ?? 0
+  }
+
+  it('gives a row at the cap the same number of action slots as one above it', () => {
+    renderTree(deep)
+
+    expect(actionCount('Merlins')).toBe(actionCount('Falcons'))
+  })
+
+  it('reserves the slot rather than leaving a gap, so it takes no focus', () => {
+    renderTree(deep)
+
+    const capped = screen.getByRole('button', {name: /^Merlins/}).closest('.open')!
+    const reserved = capped.querySelector('button[aria-hidden="true"][tabindex="-1"]')
+    expect(reserved).toBeTruthy()
   })
 })

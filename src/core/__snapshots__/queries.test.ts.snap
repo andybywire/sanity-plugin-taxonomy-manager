@@ -1,5 +1,16 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`conceptUsageBuilder > matches the characterized GROQ output 1`] = `
+"*[_type == "skosConcept" && _id in $ids]{
+      "id": _id,
+      "uses": count(*[_type != "skosConcept" && _type != "skosConceptScheme" && !(_id in path("_.**")) && references(^._id)])
+    }"
+`;
+
+exports[`conceptUsageBuilder > matches the characterized GROQ output 2`] = `"*[_type != "skosConcept" && _type != "skosConceptScheme" && !(_id in path("_.**")) && references($ids)]"`;
+
+exports[`conceptUseBuilder > matches the characterized GROQ output 1`] = `"*[_type != "skosConcept" && _type != "skosConceptScheme" && !(_id in path("_.**")) && references($refId)]{_id,_type,title}"`;
+
 exports[`inputBuilder > matches the characterized GROQ output 1`] = `
 "
   select($branchId != null => 

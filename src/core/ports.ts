@@ -29,6 +29,8 @@ export interface TaxonomyDataPort {
   useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts>
   /** Which of the given concepts exist as published documents (`published` perspective). */
   useWatchPublishedConcepts(params: PublishedConceptsParams): WatchResult<ReadonlySet<string>>
+  /** How many resources are tagged with each of the given concepts (governance view). */
+  useWatchConceptUsage(params: ConceptUsageParams): WatchResult<ReadonlyMap<string, number>>
   /** Replay a pure create/remove/move plan (`core/mutations`) onto the Studio client. */
   useApplyConceptPlan(): (plan: ConceptPlan) => Promise<void>
   /** One-shot search for concepts outside a scheme, for the insert picker. */
@@ -66,6 +68,29 @@ export type ConceptTreeParams =
 export type PublishedConceptsParams = {
   /** Published concept ids, sorted. Empty means "ask nothing". */
   ids: readonly string[]
+}
+
+/**
+ * Which concepts to count tagged resources for, and under which perspective.
+ *
+ * The ids are the ones the tree is showing, exactly as
+ * {@link PublishedConceptsParams} works, and an empty list is the same off
+ * switch: the query matches nothing and the listener never fires. Sort them —
+ * the list is a query parameter, so an unstable order would resubscribe the
+ * listener on every tree update.
+ *
+ * Unlike the publication markers, which are pinned to `published` because that
+ * is the question they ask, usage takes the perspective it is given. It is the
+ * one the tree is rendering, which is the rule ADR 0005 drew from the insert
+ * picker: any query the plugin adds takes its perspective from the same place
+ * the tree does rather than choosing one. A count shown beside a tree row has
+ * to be counting the same world that row came from.
+ */
+export type ConceptUsageParams = {
+  /** Concept ids, sorted. Empty means "ask nothing". */
+  ids: readonly string[]
+  /** The perspective the tree is rendering. */
+  perspective: TaxonomyPerspective
 }
 
 /** Result shape of a live query: mirrors `useListeningQuery`, with `error` normalized to `Error | null`. */

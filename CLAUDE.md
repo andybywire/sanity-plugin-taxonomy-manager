@@ -9,7 +9,9 @@ This file is the "how we work here" summary.
 
 A Sanity Studio plugin for building and maintaining [SKOS](https://www.w3.org/TR/skos-reference/)-compliant
 taxonomies. It contributes two document types — `skosConcept` and `skosConceptScheme` — and a **Taxonomy**
-structure tool whose **Tree View** renders a scheme's concept hierarchy. Two field input components,
+structure tool with two views on a scheme: **Tree View**, which renders and edits its concept
+hierarchy, and **Stats**, a read-only governance view showing each concept with a count of the
+resources tagged with it ([ADR 0006](docs/development/decisions/0006-governance-view.md)). Two field input components,
 `ReferenceHierarchyInput` and `ArrayHierarchyInput`, replace the default reference inputs with a hierarchy
 browser, with optional **semantic term recommendations** backed by dataset embeddings. The public API is
 exactly **six exports**, pinned by [`src/index.test.ts`](src/index.test.ts).
@@ -57,6 +59,16 @@ array-input resource patch, and `views/ConceptUseView` (calls `useListeningQuery
   step can see it, and a dev Studio structurally cannot either. It runs two real npm installs, so it
   lives in CI (its own **Consumer install** job, which the release depends on) rather than the
   pre-commit gate. See [ADR 0004](docs/development/decisions/0004-sanity-ui-v4.md).
+- **Colors come from the theme, and none of them are where you would guess.** `color.selectable` is
+  the palette Studio styles its current pane items from and **no `@sanity/ui` component consumes it**;
+  `Badge` wraps its children in a `Text` declaring `color: var(--card-fg-color)`, so set the
+  *variable*, not `color`; never set an inline `boxShadow` on a control, which is how the focus ring
+  is drawn; and the space scale is Fibonacci-ish — `paddingTop={5}` is 32px, not 20.
+  [ADR 0006](docs/development/decisions/0006-governance-view.md) has the rest.
+- **GROQ claims get measured.** `explain=true` is readable: `Aggregate`/`Fetch` with the predicate in
+  `Filter:` is pushed down, `Pipeline { Fetch → FilterStep }` is a scan. `^` inside a *top-level*
+  filter has no scope to bind to and returns plausible, wrong numbers. System documents carry `_.**`
+  ids, never `system.**`.
 - Three non-obvious traps: the recommendations GROQ parameter is `$searchQuery`, **not** `$query` (`query`
   is a reserved `@sanity/client` `QueryParams` key — a `$query` param fails typecheck cryptically); and
   reference-field `filter` functions must be **arity-1** (the inputs treat a zero-arity filter as
@@ -88,7 +100,8 @@ GitHub Issues are the work queue (e.g.
 ## Layout
 
 - **`src/core/`** — the pure, tested core (queries, ids, mutations, filters, validation, `tree/`,
-  `semanticRecommendations`, `activeConcept`, and `ports.ts` — the data-port interface).
+  `semanticRecommendations`, `activeConcept`, `usage`, `perspective`, `rowScaffolding`, and
+  `ports.ts` — the data-port interface).
 - **`src/seams/`** — `StudioDataAdapter` (default port impl) + `TaxonomyPortContext`.
 - **`src/components/`, `src/hooks/`, `src/views/`** — the thin component shell.
 - **`src/test/`** — `FakeDataPort`, `inputHarness`, `renderWithUi` (test infrastructure).

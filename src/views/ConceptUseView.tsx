@@ -5,6 +5,14 @@ import type {UserViewComponent} from 'sanity/structure'
 import {usePaneRouter} from 'sanity/structure'
 import {Feedback, useListeningQuery} from 'sanity-plugin-utils'
 
+import {perspectiveOption} from '../core/perspective'
+import {conceptUseBuilder} from '../core/queries'
+
+// Built once, outside the component: `useListeningQuery` keys its subscription
+// effect on the query's identity, so a fresh string per render would tear the
+// listener down and set it up again on every pass.
+const CONCEPT_USE_QUERY = conceptUseBuilder()
+
 interface TagReference {
   _id: string
   _type: string
@@ -37,15 +45,10 @@ export const ConceptUseView: UserViewComponent<Record<string, never>> = ({
     [routerPanesState, groupIndex, handleEditReference],
   )
 
-  const {data, loading, error} = useListeningQuery<TagReference[]>(
-    `*[!(_type in ["skosConcept","skosConceptScheme"]) && references($refId)]{_id,_type,title}`,
-    {
-      params: {refId},
-      options: {
-        perspective: selectedPerspectiveName ? [selectedPerspectiveName] : 'drafts',
-      },
-    },
-  )
+  const {data, loading, error} = useListeningQuery<TagReference[]>(CONCEPT_USE_QUERY, {
+    params: {refId},
+    options: {perspective: perspectiveOption(selectedPerspectiveName)},
+  })
 
   if (loading) {
     return (

@@ -19,13 +19,35 @@ export const ConceptEditAction = ({
   message,
   tone = 'positive',
   handler,
+  reserved = false,
 }: {
   icon: ComponentType
   /** Both the tooltip text and the accessible name — the icon carries neither. */
   message: string
   tone?: 'positive' | 'critical' | 'caution' | 'primary' | 'default'
-  handler: () => void
+  handler?: () => void
+  /**
+   * Render the same button hidden, holding its slot open so rows that offer
+   * fewer actions keep the rest on the same vertical edges. The button itself
+   * rather than a box of a matching width, for the reason `ToggleButton`
+   * gives: an icon's rendered width is not the number you would compute from
+   * its nominal size and padding.
+   */
+  reserved?: boolean
 }) => {
+  if (reserved) {
+    return (
+      <Button
+        icon={icon}
+        mode={'bleed'}
+        tone={tone}
+        aria-hidden="true"
+        tabIndex={-1}
+        style={{visibility: 'hidden'}}
+      />
+    )
+  }
+
   return (
     <Tooltip
       delay={{open: 750}}

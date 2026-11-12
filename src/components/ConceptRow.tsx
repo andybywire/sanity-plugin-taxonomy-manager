@@ -5,6 +5,7 @@ import {useCallback, useContext, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../context'
 import {conceptStatusMarkers, hasDraftVersion} from '../core/publicationStatus'
+import {reservesGripSlot} from '../core/rowScaffolding'
 import {MAX_VISIBLE_LEVEL} from '../core/tree/moveConcept'
 import {hasRootOrphans} from '../core/tree/rootOrphans'
 import {useConceptRowDnd, useCreateConcept, useRemoveConcept, useSetTopConcept} from '../hooks'
@@ -108,10 +109,14 @@ export const ConceptRow = ({
   const canInsert = canEdit && level < MAX_VISIBLE_LEVEL
   const canPromote = canEdit && kind === 'orphan'
   const canDemote = canEdit && isTop
-  // A top concept cannot be dragged, but a sibling orphan can. Holding the slot
-  // open keeps those orphans from reading as nested — and with nothing
-  // draggable at the root at all, the slot would be dead space.
-  const reservesGrip = isTop && canEdit && hasRootOrphans(tree ?? null)
+  // Whether this row holds the grip's width open — not the same question as
+  // whether it can be dragged. Shared with the governance view's row through
+  // `core/rowScaffolding`, so the two trees keep one left edge.
+  const reservesGrip = reservesGripSlot({
+    isTopConcept: isTop,
+    canEdit,
+    schemeHasRootOrphans: hasRootOrphans(tree ?? null),
+  })
   // A child with no children of its own holds the caret slot open, so every
   // label at a level shares one vertical edge. It sits to the left of the grip
   // rather than between grip and label: only one grip shows at a time, so they
@@ -195,7 +200,7 @@ export const ConceptRow = ({
           {/* (reserved caret) · grip · caret · label */}
           <Flex align="center" gap={0} flex={1} style={{minWidth: 0}}>
             {reservesCaret && <ToggleButton reserved />}
-            {(canMove || reservesGrip) && (
+            {reservesGrip && (
               <ConceptDragHandle
                 handleProps={canMove ? dnd.handleProps : undefined}
                 visible={canMove && (rowHovered || dnd.isDragging)}
@@ -249,6 +254,13 @@ export const ConceptRow = ({
                 message="Add a new concept as a child of this concept"
                 handler={handleAddChild}
               />
+            )}
+            {/* A row at the depth cap trades two actions for one notice, so
+                without this its menu — and the status markers, which sit at
+                the end of a label that flexes — land a slot to the right of
+                every other row's. One reserved slot squares the count. */}
+            {canEdit && level === MAX_VISIBLE_LEVEL && (
+              <ConceptEditAction reserved icon={AddCircleIcon} message="" />
             )}
             {canInsert && (
               <ConceptEditAction

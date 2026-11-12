@@ -3,6 +3,7 @@ import type {
   ConceptSearchParams,
   ConceptSearchResult,
   ConceptTreeParams,
+  ConceptUsageParams,
   PublishedConceptsParams,
   SemanticRecommendationsResult,
   TaxonomyDataPort,
@@ -21,6 +22,12 @@ export interface FakeDataPortConfig {
   publishedIds?: string[]
   /** Candidates the insert picker's search returns, before the fake applies `excludeIds`. */
   searchResults?: ConceptSearchResult[]
+  /**
+   * Tagged-resource counts, keyed by concept id. `undefined` stands for "not
+   * loaded yet"; an explicit `{}` is a loaded, wholly untagged scheme — the
+   * distinction the governance view draws between a spinner and a run of zeros.
+   */
+  usage?: Record<string, number>
 }
 
 /** A {@link TaxonomyDataPort} that also exposes recorded interactions for assertions. */
@@ -35,6 +42,8 @@ export interface FakeDataPort extends TaxonomyDataPort {
   lastWatchParams: ConceptTreeParams | null
   /** Params from the most recent `useWatchPublishedConcepts` call. */
   lastPublishedParams: PublishedConceptsParams | null
+  /** Params from the most recent `useWatchConceptUsage` call. */
+  lastUsageParams: ConceptUsageParams | null
   /** Params from the most recent `useSearchConcepts` call. */
   lastSearchParams: ConceptSearchParams | null
 }
@@ -65,6 +74,11 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
     loading: config.loading ?? false,
     error: config.error ?? null,
   }
+  const usageResult: WatchResult<ReadonlyMap<string, number>> = {
+    data: config.usage ? new Map(Object.entries(config.usage)) : null,
+    loading: config.loading ?? false,
+    error: config.error ?? null,
+  }
   // The real query excludes the scheme's members in GROQ; the fake applies the
   // same exclusion here, so a test can assert the picker never offers one.
   const search = (params: ConceptSearchParams): Promise<ConceptSearchResult[]> => {
@@ -84,6 +98,7 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
     lastSearchSchemeId: undefined,
     lastWatchParams: null,
     lastPublishedParams: null,
+    lastUsageParams: null,
     lastSearchParams: null,
     useWatchTree: (params: ConceptTreeParams) => {
       fake.lastWatchParams = params
@@ -92,6 +107,10 @@ export function createFakeDataPort(config: FakeDataPortConfig = {}): FakeDataPor
     useWatchPublishedConcepts: (params: PublishedConceptsParams) => {
       fake.lastPublishedParams = params
       return publishedResult
+    },
+    useWatchConceptUsage: (params: ConceptUsageParams) => {
+      fake.lastUsageParams = params
+      return usageResult
     },
     useSearchConcepts: () => search,
     useApplyConceptPlan: () => apply,
