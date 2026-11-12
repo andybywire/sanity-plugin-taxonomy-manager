@@ -5,6 +5,12 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [6.3.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.2.0...v6.3.0) (2026-11-12)
+
+### Features
+
+* add a governance "Stats" view to concept schemes ([af2052e](https://github.com/andybywire/sanity-plugin-taxonomy-manager/commit/af2052ec5636baf863509ac18af773c6186b8304))
+
 ## [6.2.0](https://github.com/andybywire/sanity-plugin-taxonomy-manager/compare/v6.1.0...v6.2.0) (2026-11-02)
 
 ### Features
