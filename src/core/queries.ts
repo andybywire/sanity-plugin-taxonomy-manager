@@ -160,6 +160,98 @@ export const publishedConceptsBuilder = (): {fetch: string; listen: string} => (
 })
 
 /**
+ * #### Tagged Resource Filter
+ * What counts as a resource tagged with a concept: any document that is
+ * neither part of the taxonomy itself nor one of Sanity's own system
+ * documents. The single predicate behind both the scheme-wide governance
+ * rollup (`conceptUsageBuilder`) and the per-concept list in
+ * `views/ConceptUseView`, which answer the same question at two scales and
+ * must never disagree about what they are counting.
+ *
+ * Concepts and schemes are excluded so that `broader` and `related` links are
+ * not mistaken for use: a term referenced only by its own narrower terms is
+ * unused, and that is exactly what a steward is looking for.
+ *
+ * **System documents are excluded by `path("_.**")`, not `path("system.**")`.**
+ * The usage-query spike recorded the latter, and it matches nothing: system
+ * documents carry ids like `_.groups.administrator`, `_.releases.<name>` and
+ * `_.schemas.<id>` — under `raw` and under a perspective alike. Measured
+ * against the dev dataset, `path("system.**")` excluded 0 of the 14 present
+ * and `path("_.**")` excluded all of them. Counts were right only because no
+ * system document happened to reference a concept.
+ *
+ * Written as two `!=` comparisons rather than `!(_type in [...])` because
+ * every clause here is then on Sanity's documented list of optimizable filter
+ * expressions, and a `count()` is optimizable only when its interior is
+ * *completely* optimizable. Both forms were measured to push down to the index
+ * today; only this one is documented to.
+ */
+export const TAGGED_RESOURCE_FILTER =
+  '_type != "skosConcept" && _type != "skosConceptScheme" && !(_id in path("_.**"))'
+
+/**
+ * #### Concept Usage Builder
+ * How many resources are tagged with each of the given concepts — the
+ * governance view's rollup.
+ *
+ * Scoped to `$ids`, the ids the tree is already showing, exactly as
+ * `publishedConceptsBuilder` is. An empty list is the off switch: the query
+ * matches nothing and the listener never fires.
+ *
+ * Run under the perspective the tree is rendering, which is what makes the
+ * count simple. A perspective already collapses each document to one
+ * normalized id, so there is no `array::unique` and no id reconciliation —
+ * the complications the `raw` version of this query needed.
+ *
+ * The projection is the id and the count and nothing else; the tree supplies
+ * every label the view draws.
+ *
+ * On the shape of the count: the planner does **not** run one subquery per
+ * term. It unions every id in `$ids` and runs a single indexed fetch, bucketed
+ * per term (`HashBatchStep` over `unionFlat`), so term count is cheap and
+ * dataset growth does not affect an optimized filter. What is not yet known is
+ * how this behaves as reference *density* into one scheme rises: that batched
+ * fetch carries no projection, so it appears to materialize matching
+ * documents. Projecting `._id` on the inner count does not change the plan.
+ */
+export const conceptUsageBuilder = (): {fetch: string; listen: string} => ({
+  fetch: `*[_type == "skosConcept" && _id in $ids]{
+      "id": _id,
+      "uses": count(*[${TAGGED_RESOURCE_FILTER} && references(^._id)])
+    }`,
+  // Narrowed to documents that tag one of these concepts, rather than to every
+  // content document, so an unrelated edit does not refetch the rollup. This
+  // follows the pattern `ConceptUseView` already ships.
+  //
+  // The open question was whether a listener scoped this way also fires when a
+  // document *stops* matching — a tag being removed, which is the decrement a
+  // steward most needs to see. **Observed in the Studio on 2026-11-11: it
+  // does.** Counts move in both directions as tags are added and removed
+  // elsewhere. Recorded rather than reasoned about, per ADR 0005: the id math
+  // said this was doubtful and the dataset says otherwise.
+  listen: `*[${TAGGED_RESOURCE_FILTER} && references($ids)]`,
+})
+
+/**
+ * #### Concept Use Builder
+ * The resources tagged with one concept, for `views/ConceptUseView` — the
+ * per-concept list the governance rollup aggregates.
+ *
+ * The same `TAGGED_RESOURCE_FILTER` as `conceptUsageBuilder`, which is the
+ * whole point: the two answer one question at two scales, and a steward who
+ * opens a term showing 12 and counts 11 rows has no reason to trust either
+ * number again. Sharing the predicate is what makes that impossible rather
+ * than merely unlikely.
+ *
+ * Projects what `Preview` needs to render a row and nothing more.
+ *
+ * The view stays outside the data port (see ADR 0001) and calls
+ * `useListeningQuery` itself; only the GROQ is shared.
+ */
+export const conceptUseBuilder = (): string =>
+  `*[${TAGGED_RESOURCE_FILTER} && references($refId)]{_id,_type,title}`
+
+/**
  * How many candidates the insert picker fetches.
  *
  * This is a browse list as much as a search one — an empty query lists what is

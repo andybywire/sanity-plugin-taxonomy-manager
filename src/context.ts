@@ -24,6 +24,23 @@ type TreeContextType = {
    * are gated off — input trees and release perspectives.
    */
   publishedIds?: ReadonlySet<string> | null
+  /**
+   * Tagged-resource counts for the concepts in the tree, keyed by published id,
+   * or `null` while the query is in flight. Only the governance view provides
+   * it; the Tree View leaves it undefined.
+   *
+   * Held as a map the row looks itself up in, rather than annotated onto the
+   * tree nodes, which is how `publishedIds` works and for the same reason: the
+   * count is per-row and nothing propagates up the ancestor chain. (The branch
+   * rollup that *would* propagate is deferred — see the feature backlog.)
+   */
+  usage?: ReadonlyMap<string, number> | null
+  /**
+   * The largest count in the scheme — the value a full-length bar stands for.
+   * Taken over every term the query answered for, not the rows on screen, so
+   * expanding or collapsing a branch cannot rescale the bars that remain.
+   */
+  usageMax?: number
 }
 
 export const SchemeContext = createContext<ConceptSchemeDocument | null>(null)

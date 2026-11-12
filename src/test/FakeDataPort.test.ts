@@ -77,3 +77,32 @@ describe('createFakeDataPort', () => {
     expect(result.current.data).toBeNull()
   })
 })
+
+describe('createFakeDataPort — concept usage', () => {
+  it('useWatchConceptUsage returns the configured counts as a map and records params', () => {
+    const port = createFakeDataPort({usage: {a: 19, b: 0}})
+    const {result} = renderHook(() =>
+      port.useWatchConceptUsage({ids: ['a', 'b'], perspective: undefined}),
+    )
+
+    expect(result.current.data?.get('a')).toBe(19)
+    expect(result.current.data?.get('b')).toBe(0)
+    expect(port.lastUsageParams).toEqual({ids: ['a', 'b'], perspective: undefined})
+  })
+
+  it('reports usage as null until configured, standing in for a query in flight', () => {
+    const port = createFakeDataPort()
+    const {result} = renderHook(() =>
+      port.useWatchConceptUsage({ids: ['a'], perspective: undefined}),
+    )
+
+    expect(result.current.data).toBeNull()
+  })
+
+  it('records the perspective it was asked under', () => {
+    const port = createFakeDataPort({usage: {}})
+    renderHook(() => port.useWatchConceptUsage({ids: [], perspective: 'rMyRelease'}))
+
+    expect(port.lastUsageParams?.perspective).toBe('rMyRelease')
+  })
+})

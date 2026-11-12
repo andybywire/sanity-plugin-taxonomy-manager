@@ -77,7 +77,23 @@ const MARKER_LABELS: Record<string, string> = {
  * A derived width is what went wrong in the row-layout pass, and jsdom cannot
  * check one.
  */
-export function ConceptStatusMarkers({markers}: {markers: readonly ConceptStatusMarker[]}) {
+export function ConceptStatusMarkers({
+  markers,
+  colors,
+}: {
+  markers: readonly ConceptStatusMarker[]
+  /**
+   * Per-marker colors, for a row drawn on the current-item fill, where the
+   * `--card-*` variables still hold the values for an unselected card.
+   *
+   * A *pair*, not one color for both. The two dots carry different meanings,
+   * and flattening them to a single foreground throws that away — which is
+   * what an earlier version of this did, and the markers went monochrome on a
+   * selected row. Studio keeps them apart there too, with its own paired
+   * colors for the state.
+   */
+  colors?: Record<ConceptStatusMarker, string>
+}) {
   if (markers.length === 0) return null
 
   return (
@@ -91,9 +107,11 @@ export function ConceptStatusMarkers({markers}: {markers: readonly ConceptStatus
         <Flex key={marker} align="center" justify="center" style={{width: 15, flexShrink: 0}}>
           <Text size={2}>
             {marker === 'draft' ? (
-              <DraftRingGlyph style={MARKER_STYLE.draft} />
+              <DraftRingGlyph style={colors ? {color: colors.draft} : MARKER_STYLE.draft} />
             ) : (
-              <PublishedDotGlyph style={MARKER_STYLE.published} />
+              <PublishedDotGlyph
+                style={colors ? {color: colors.published} : MARKER_STYLE.published}
+              />
             )}
           </Text>
         </Flex>

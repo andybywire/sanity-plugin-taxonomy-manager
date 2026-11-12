@@ -333,7 +333,11 @@ export const Hierarchy = ({
     [globalVisibility, treeData, showsPublicationStatus, publishedIds],
   )
 
-  if (loading) {
+  // `loading` only means a fetch is in flight, and it is true on every mount —
+  // including one the cache has already filled. Gating the spinner on there
+  // being nothing to show is what turns that cache into a visible difference:
+  // a tab switch keeps the tree on screen while the listener catches up.
+  if (loading && !treeData) {
     return (
       <Box padding={4} paddingTop={6}>
         <Flex align="center" direction="column" gap={5} height="fill" justify="center">

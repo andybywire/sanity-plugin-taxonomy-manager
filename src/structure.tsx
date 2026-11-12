@@ -1,3 +1,4 @@
+import {BarChartIcon} from '@sanity/icons/BarChart'
 import {DocumentsIcon} from '@sanity/icons/Documents'
 import {EditIcon} from '@sanity/icons/Edit'
 import type {StructureBuilder, ListBuilder, DefaultDocumentNodeResolver} from 'sanity/structure'
@@ -7,6 +8,7 @@ import {TaxonomyConfigContext} from './context'
 import NodeTree from './static/NodeTree'
 import type {Options, TreeViewProps} from './types'
 import {ConceptUseView} from './views/ConceptUseView'
+import {StatsView} from './views/StatsView'
 
 /**
  * #### Default Desk Structure for Concept and Concept Scheme
@@ -47,6 +49,11 @@ export const createDefaultDocumentNode = (
       case 'skosConceptScheme':
         return S.document().views([
           S.view.component(TreeViewWithConfig).title('Tree View').icon(NodeTree),
+          // A sibling view on the same document node, which is what lets it
+          // share the Tree View's pane group: opening a concept from either
+          // puts it in the same pane, so `core/activeConcept` reads the
+          // highlight the same way and switching tabs preserves it.
+          S.view.component(StatsView).title('Stats').icon(BarChartIcon),
           S.view.form().icon(EditIcon),
         ])
       case 'skosConcept':

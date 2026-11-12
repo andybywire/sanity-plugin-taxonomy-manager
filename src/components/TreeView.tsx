@@ -1,10 +1,11 @@
-import {Box, Container, Stack, Text} from '@sanity/ui'
+import {Container} from '@sanity/ui'
 import {usePerspective} from 'sanity'
 
 import {ReleaseContext, SchemeContext} from '../context'
 import type {ConceptSchemeDocument, TreeViewProps} from '../types'
 
 import {Hierarchy} from './Hierarchy'
+import {SchemeDescription} from './SchemeDescription'
 import {InputHierarchy} from './inputs'
 
 /**
@@ -41,20 +42,7 @@ export const TreeView = ({
           />
         ) : (
           <Container width={1}>
-            {document?.displayed?.description && (
-              <Box padding={4} paddingTop={6}>
-                <Stack gap={4}>
-                  <Stack gap={2}>
-                    <Text size={1} weight="semibold">
-                      Description
-                    </Text>
-                    <Text size={2} muted>
-                      {document?.displayed.description}
-                    </Text>
-                  </Stack>
-                </Stack>
-              </Box>
-            )}
+            <SchemeDescription description={document?.displayed?.description} />
             <Hierarchy inputComponent={inputComponent} branchId={branchId} />
           </Container>
         )}

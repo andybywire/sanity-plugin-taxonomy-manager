@@ -1,5 +1,5 @@
 import {DocumentId, isVersionId} from '@sanity/id-utils'
-import {useCallback, useMemo} from 'react'
+import {useCallback, useEffect, useMemo} from 'react'
 import {useClient} from 'sanity'
 import {useListeningQuery} from 'sanity-plugin-utils'
 
@@ -8,13 +8,16 @@ import type {
   ConceptSearchParams,
   ConceptSearchResult,
   ConceptTreeParams,
+  ConceptUsageParams,
   PublishedConceptsParams,
   TaxonomyDataPort,
   WatchResult,
 } from '../core/ports'
 import {type ConceptEdit, conceptPlanEdits} from '../core/mutations'
+import {perspectiveOption} from '../core/perspective'
 import {
   conceptSearchBuilder,
+  conceptUsageBuilder,
   inputBuilder,
   publishedConceptsBuilder,
   trunkBuilder,
@@ -42,6 +45,7 @@ const MUTATION_API_VERSION = '2025-02-19'
 // down and set it up again on every render.
 const PUBLISHED_CONCEPTS_QUERY = publishedConceptsBuilder()
 const CONCEPT_SEARCH_QUERY = conceptSearchBuilder()
+const CONCEPT_USAGE_QUERY = conceptUsageBuilder()
 
 // The tree queries, built once for the same reason. A fresh object here meant
 // the listener was torn down and rebuilt on *every render* of the tree — and a
@@ -60,8 +64,49 @@ const INPUT_TREE_QUERY = {
   listen: `*[_type == "skosConcept" || _id == $id]`,
 }
 
+/**
+ * The last tree each query returned, so a view that mounts on a tree it has
+ * already seen starts from it instead of from nothing.
+ *
+ * The two structure views are separate `S.view.component()`s, so Studio
+ * unmounts one and mounts the other when an editor switches tabs. Without
+ * this, every switch tears the subscription down and starts over: the pane
+ * drops to a spinner, loses its scrollbar, and the content jumps sideways by
+ * the scrollbar's width when the tree lands and it comes back. The tree is the
+ * same tree; only the component rendering it changed.
+ *
+ * This is the one piece of memory in the data port, and it is deliberately
+ * dumb. Entries are overwritten whenever a result arrives, so the only
+ * staleness possible is between a mount and the refetch that follows it
+ * immediately — and the alternative on display during that window is a
+ * spinner, which is not more truthful, just emptier.
+ *
+ * Keyed by everything that changes the answer, perspective included: a release
+ * and the drafts view are different trees and must never be handed each
+ * other's. Capped, because a long session can visit many schemes and a tree
+ * for a large one is not small.
+ */
+const TREE_CACHE = new Map<string, DocumentConcepts>()
+const TREE_CACHE_LIMIT = 20
+
+function treeCacheKey(params: ConceptTreeParams): string {
+  const branch = params.mode === 'input' ? (params.branchId ?? '') : ''
+  return [params.mode, params.documentId, branch, params.perspective ?? 'drafts'].join('|')
+}
+
+function rememberTree(key: string, tree: DocumentConcepts): void {
+  // Re-inserting moves the key to the end, so the oldest is evicted first.
+  TREE_CACHE.delete(key)
+  TREE_CACHE.set(key, tree)
+  if (TREE_CACHE.size > TREE_CACHE_LIMIT) {
+    const oldest = TREE_CACHE.keys().next().value
+    if (oldest !== undefined) TREE_CACHE.delete(oldest)
+  }
+}
+
 function useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts> {
   const isInput = params.mode === 'input'
+  const cacheKey = treeCacheKey(params)
   const result = useListeningQuery<DocumentConcepts>(
     isInput ? INPUT_TREE_QUERY : TRUNK_TREE_QUERY,
     {
@@ -70,11 +115,19 @@ function useWatchTree(params: ConceptTreeParams): WatchResult<DocumentConcepts> 
           // rejects null, so we cast past it — preserved from the original InputHierarchy.
           ({id: params.documentId, branchId: params.branchId} as any)
         : {id: params.documentId},
-      options: {
-        perspective: params.perspective === undefined ? 'drafts' : [params.perspective],
-      },
+      options: {perspective: perspectiveOption(params.perspective)},
+      // Only the value at mount is used; `useListeningQuery` seeds its state
+      // with it and ignores it afterwards. That is exactly the moment that
+      // matters here.
+      initialValue: TREE_CACHE.get(cacheKey) ?? null,
     },
   ) as {data: DocumentConcepts | null; loading: boolean; error: unknown}
+
+  // In an effect, not in render: this writes outside React and must not run
+  // on a render that gets thrown away.
+  useEffect(() => {
+    if (result.data) rememberTree(cacheKey, result.data)
+  }, [cacheKey, result.data])
 
   return {
     data: result.data ?? null,
@@ -104,6 +157,35 @@ function useWatchPublishedConcepts(
   }
 }
 
+/** One row of the usage rollup, as `conceptUsageBuilder` projects it. */
+type ConceptUsageRow = {id: string; uses: number}
+
+function useWatchConceptUsage(
+  params: ConceptUsageParams,
+): WatchResult<ReadonlyMap<string, number>> {
+  const {ids, perspective} = params
+  const result = useListeningQuery<ConceptUsageRow[]>(CONCEPT_USAGE_QUERY, {
+    // ListenQueryParams types values as scalars; GROQ takes an array here, the
+    // same cast the published-concepts watch and the input tree make.
+    params: {ids} as any,
+    // The tree's perspective, mapped exactly as `useWatchTree` maps it, so a
+    // count never describes a different world from the row it sits beside.
+    options: {perspective: perspectiveOption(perspective)},
+  }) as {data: ConceptUsageRow[] | null; loading: boolean; error: unknown}
+
+  // A new Map per result, not per render: every row reads it on every pass.
+  const data = useMemo(
+    () => (result.data ? new Map(result.data.map((row) => [row.id, row.uses])) : null),
+    [result.data],
+  )
+
+  return {
+    data,
+    loading: result.loading,
+    error: result.error ? (result.error as Error) : null,
+  }
+}
+
 function useSearchConcepts(): (params: ConceptSearchParams) => Promise<ConceptSearchResult[]> {
   const client = useClient({apiVersion: MUTATION_API_VERSION})
   return useCallback(
@@ -119,7 +201,7 @@ function useSearchConcepts(): (params: ConceptSearchParams) => Promise<ConceptSe
         // exclusion list agree. `_id` arrives normalized to published form
         // under a release as well as under drafts, so the scheme's published
         // references can be excluded without reconciling ids either way.
-        {perspective: params.perspective === undefined ? 'drafts' : [params.perspective]},
+        {perspective: perspectiveOption(params.perspective)},
       ),
     [client],
   )
@@ -182,6 +264,7 @@ export const studioDataAdapter: TaxonomyDataPort = {
   useWatchTree,
   useSearchConcepts,
   useWatchPublishedConcepts,
+  useWatchConceptUsage,
   useApplyConceptPlan,
   useSemanticRecommendations,
 }
