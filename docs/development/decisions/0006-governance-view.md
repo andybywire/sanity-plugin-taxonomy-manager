@@ -175,10 +175,10 @@ passes vacuously.
 
 ## Accessibility
 
-- **The current row's cue is not carried by colour.** The row uses Studio's own current-item
+- **The current row's cue is not carried by color.** The row uses Studio's own current-item
   treatment, a solid fill from `color.selectable`. It differs from an unselected row by
-  **4.29:1** in light and **6.76:1** in dark — a luminance step that survives greyscale, with the
-  label inverting dark-to-white on top of it. The grey `selected` tint it replaced measured
+  **4.29:1** in light and **6.76:1** in dark — a luminance step that survives grayscale, with the
+  label inverting dark-to-white on top of it. The gray `selected` tint it replaced measured
   **1.16:1**, a hue difference and essentially nothing else.
 - **Focus moves when the pane opens, and Studio does it.** `PaneRouterContextValue` exposes no
   focus API; the only way to focus the opened pane would be to DOM-query Studio's pane container.
@@ -187,9 +187,9 @@ passes vacuously.
   bar are siblings. Pinned by a test, because the deferred per-row overflow menu would otherwise
   have to break it open again.
 
-## `@sanity/ui`, and four more ways to get a colour wrong
+## `@sanity/ui`, and four more ways to get a color wrong
 
-This is the ADR 0005 trap in its colour form: the values are all in the theme, and none of them
+This is the ADR 0005 trap in its color form: the values are all in the theme, and none of them
 are where you would guess.
 
 - **`color.selectable` is the palette Studio styles its current pane items from, and no
@@ -219,7 +219,7 @@ value was found by walking lightness a notch at a time until it broke.
 - **The Tree View changed too**, in four ways, all shared rather than duplicated: the description
   block is one component at 32px, the grip rule is one function, a row at the depth cap reserves
   the action slot it had been dropping, and the current row is now Studio's fill rather than a
-  grey tint.
+  gray tint.
 - **The public API is unchanged.** The Stats view is reached through `createDefaultDocumentNode`;
   the six exports pinned by `src/index.test.ts` are the same six.
 - **Density is unresolved by choice.** If the view is slow on a real corpus, the adapter changes

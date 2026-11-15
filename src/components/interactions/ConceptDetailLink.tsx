@@ -38,7 +38,7 @@ import {ConceptStatusMarkers} from './ConceptStatusMarkers'
  * - dark, near-black text: `#98AAE1` — 8.43:1 on the text, **1.19:1** on the row
  *
  * Each notch is a step in lightness alone. Hue and saturation stay at the
- * row's, which is what keeps the chip reading as the row's own colour, and it
+ * row's, which is what keeps the chip reading as the row's own color, and it
  * means a future adjustment is one value moved along the same line.
  *
  * **The two schemes do not share a recipe, and copying one to the other is
@@ -46,8 +46,8 @@ import {ConceptStatusMarkers} from './ConceptStatusMarkers'
  * *below* the row's luminance, and a blue that is both darker and less
  * saturated than a vivid ground reads as mud. So the light chip keeps the
  * row's own saturation and takes its whole step from lightness: same hue,
- * same chroma, a shade deeper, which reads as the row's colour rather than a
- * greyed version of it. The dark ground sits *above* its row instead, where
+ * same chroma, a shade deeper, which reads as the row's color rather than a
+ * grayed version of it. The dark ground sits *above* its row instead, where
  * desaturating lands on a pastel and stays clean — so that one is held at 55%.
  *
  * Going lighter in light mode would fix the mud the same way, and is not
@@ -180,7 +180,7 @@ export function ConceptDetailLink({
         aria-current={isActive ? 'true' : undefined}
         // Studio's own current-item treatment: a solid blue fill, which is
         // what the structure panes use for the item whose pane is open, while
-        // grey stays the hover and the ancestor state. No outline — that was
+        // gray stays the hover and the ancestor state. No outline — that was
         // this plugin's own invention and it read as foreign beside the panes
         // either side of it.
         //
