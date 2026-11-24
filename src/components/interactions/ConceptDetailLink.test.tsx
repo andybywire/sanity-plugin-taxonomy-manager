@@ -120,7 +120,7 @@ describe('ConceptDetailLink (current-concept marking)', () => {
 })
 
 describe('ConceptDetailLink (current-row fill)', () => {
-  // Studio fills the item whose pane is open with a solid blue and keeps grey
+  // Studio fills the item whose pane is open with a solid blue and keeps gray
   // for hover and for ancestors. An outline here — this plugin's own earlier
   // invention — read as foreign beside the panes either side of it.
   it('fills the current row with the theme’s selected background', () => {
@@ -131,7 +131,7 @@ describe('ConceptDetailLink (current-row fill)', () => {
     expect(button.style.backgroundColor).toBe(selectedBg())
   })
 
-  it('leaves a row that is not current unfilled, so hover stays the grey', () => {
+  it('leaves a row that is not current unfilled, so hover stays the gray', () => {
     mocks.usePaneRouter.mockReturnValue(panes('concept-2'))
     renderWithUi(<ConceptDetailLink concept={concept()} />)
 
@@ -206,7 +206,7 @@ describe('ConceptDetailLink (current row — markers and chip)', () => {
     expect(chip.style.getPropertyValue('--card-fg-color')).toBe(selected.fg)
   })
 
-  it('grounds the chip in a grey that clears AA against its own text', () => {
+  it('grounds the chip in a gray that clears AA against its own text', () => {
     mocks.usePaneRouter.mockReturnValue(panes('concept-1'))
     renderWithUi(<ConceptDetailLink concept={concept()} topConcept />)
 
@@ -216,7 +216,7 @@ describe('ConceptDetailLink (current row — markers and chip)', () => {
   })
 
   // Two failure modes, opposite directions, and only the pair describes the
-  // chip. Too close to the row and it vanishes — the grey this replaced
+  // chip. Too close to the row and it vanishes — the gray this replaced
   // measured 1.06:1 and disappeared while its AA test stayed green. Too far
   // and it separates harder than the badge warrants, which at 2.11:1 read as
   // selection having promoted it.
