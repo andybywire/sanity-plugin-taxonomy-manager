@@ -175,11 +175,37 @@ passes vacuously.
 
 ## Accessibility
 
-- **The current row's cue is not carried by colour.** The row uses Studio's own current-item
+- **The current row's cue is not carried by color.** The row uses Studio's own current-item
   treatment, a solid fill from `color.selectable`. It differs from an unselected row by
-  **4.29:1** in light and **6.76:1** in dark — a luminance step that survives greyscale, with the
-  label inverting dark-to-white on top of it. The grey `selected` tint it replaced measured
+  **4.29:1** in light and **6.76:1** in dark — a luminance step that survives grayscale, with the
+  label inverting dark-to-white on top of it. The gray `selected` tint it replaced measured
   **1.16:1**, a hue difference and essentially nothing else.
+- **The current-row fill covers the concept, not the row.** Settled 2026-11-15, after the
+  design file briefly introduced a full-row treatment and it was walked back.
+
+  Studio has no single pattern to copy, and nothing it does is a solid full-width fill except in
+  one place. A pane-list item, which carries **no per-row actions at all**, gets the solid blue.
+  A Releases row gets a grey fill over its central content block only — the type column and the
+  edited column sit outside it. A Media Library row gets a full-width *outline* and no fill. Read
+  in order, the rule is that **the more affordances a row carries, the less Studio fills it**.
+
+  A concept row carries more than any of them: a caret, a drag grip, add-child, insert-below and
+  an overflow menu. All five remain usable while the row is current, and Studio has no precedent
+  for a hover state on top of a saturated fill — so a full-row treatment would mean inventing
+  five, which is the move "The trap this plugin keeps falling into" in
+  [ADR 0005](0005-hierarchy-editing.md) exists to prevent.
+
+  So the fill spans **what the row is** — the label, its badge, and the publication markers that
+  describe the concept's state — and stops before **what you can do to it**. That is already
+  exactly where `ConceptDetailLink`'s button ends, so the boundary is structural rather than
+  styled: the markers render *inside* that button, the caret, grip and actions are its siblings.
+  Hover has the same extent for the same reason. A side effect worth keeping: the fill's left
+  edge tracks the indent, which reinforces depth where a full-row fill would flatten it.
+
+  The design file mirrors this with a `Concept link` frame wrapping the label area and markers,
+  named after the component it stands for. **If this is ever revisited, the thing to solve first
+  is the five hover states, not the fill.**
+
 - **Focus moves when the pane opens, and Studio does it.** `PaneRouterContextValue` exposes no
   focus API; the only way to focus the opened pane would be to DOM-query Studio's pane container.
   Checked in a running Studio instead: Studio already moves focus there. Nothing added.
@@ -187,9 +213,9 @@ passes vacuously.
   bar are siblings. Pinned by a test, because the deferred per-row overflow menu would otherwise
   have to break it open again.
 
-## `@sanity/ui`, and four more ways to get a colour wrong
+## `@sanity/ui`, and four more ways to get a color wrong
 
-This is the ADR 0005 trap in its colour form: the values are all in the theme, and none of them
+This is the ADR 0005 trap in its color form: the values are all in the theme, and none of them
 are where you would guess.
 
 - **`color.selectable` is the palette Studio styles its current pane items from, and no
@@ -219,7 +245,7 @@ value was found by walking lightness a notch at a time until it broke.
 - **The Tree View changed too**, in four ways, all shared rather than duplicated: the description
   block is one component at 32px, the grip rule is one function, a row at the depth cap reserves
   the action slot it had been dropping, and the current row is now Studio's fill rather than a
-  grey tint.
+  gray tint.
 - **The public API is unchanged.** The Stats view is reached through `createDefaultDocumentNode`;
   the six exports pinned by `src/index.test.ts` are the same six.
 - **Density is unresolved by choice.** If the view is slow on a real corpus, the adapter changes
