@@ -1,0 +1,2189 @@
+{
+  "version": "v5",
+  "createdAt": "2026-11-06T19:24:52.418Z",
+  "dataset": "recommendations-lab",
+  "matrix": "scores/spike-recommendations-lab-combined-20261106T192359Z.json",
+  "config": {
+    "floor": 4.9,
+    "bands": [
+      {
+        "count": 3,
+        "min": 0.45
+      },
+      {
+        "count": 3,
+        "min": 0.54
+      }
+    ],
+    "minimum": 1,
+    "ruleOfN": null
+  },
+  "crossRule": {
+    "crossMinShared": 0.5,
+    "crossMinCount": 2,
+    "crossMax": 1
+  },
+  "tieBreak": "genre-strength",
+  "authorTags": "none: every round retags from scratch (plan.md → Open questions)",
+  "documents": [
+    {
+      "_id": "64213d45-8be1-47cc-80a4-630b1de47785",
+      "_type": "article",
+      "slug": "ai-supported-auto-categorization",
+      "title": "AI Supported Auto-Categorization",
+      "tags": [
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.5873,
+          "raw": 7.767358,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5cb6a0d5-dde7-46b6-adbc-bc3e0abcad6c",
+          "prefLabel": "Natural Language Processing",
+          "score": 0.5253,
+          "raw": 7.434087,
+          "slot": "band 1"
+        },
+        {
+          "concept": "535c9c5d-f0e5-4d3a-b0a3-c41bbe557485",
+          "prefLabel": "Card Sorting",
+          "score": 0.4928,
+          "raw": 7.2269583,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "82b76788-f6f1-484e-aedd-4bf189704d24",
+      "_type": "article",
+      "slug": "ai-taxonomy-term-generation",
+      "title": "AI Supported Taxonomy Term Generation",
+      "tags": [
+        {
+          "concept": "6cef888f-2393-4112-9ed7-8f9964a8c29c",
+          "prefLabel": "AI",
+          "score": 0.5888,
+          "raw": 7.6572394,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.5798,
+          "raw": 7.7306128,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcepta7f5f35426b9",
+          "prefLabel": "Python",
+          "score": 0.5195,
+          "raw": 7.1525097,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "247ff45e-41ce-4001-9a33-7cffafa20efa",
+      "_type": "article",
+      "slug": "boutique-knowledge-graphs",
+      "title": "Boutique Knowledge Graphs: Creating Smart Content at Any Scale",
+      "tags": [
+        {
+          "concept": "skosConcept5ff5e1375b86",
+          "prefLabel": "Knowledge Graphs",
+          "score": 0.6909,
+          "raw": 8.224001,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.6838,
+          "raw": 8.032098,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.5666,
+          "raw": 7.6437783,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptb0ab1a4c00ba",
+          "prefLabel": "Content Discovery",
+          "score": 0.5547,
+          "raw": 7.60993,
+          "slot": "band 2"
+        },
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.5473,
+          "raw": 7.519989,
+          "slot": "band 2"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.5423,
+          "raw": 7.560065,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "6d0ba798-f8fd-4f18-a9e4-69c7feac73b7",
+      "_type": "article",
+      "slug": "choosing-card-sorting-topics",
+      "title": "How to Choose Topics for Card Sorting",
+      "tags": [
+        {
+          "concept": "535c9c5d-f0e5-4d3a-b0a3-c41bbe557485",
+          "prefLabel": "Card Sorting",
+          "score": 0.8434,
+          "raw": 8.881958,
+          "slot": "band 1"
+        },
+        {
+          "concept": "6055ca4e-70fc-4b85-89a4-a63dac9556b1",
+          "prefLabel": "Tree Testing",
+          "score": 0.5056,
+          "raw": 7.276163,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptada46566c164",
+          "prefLabel": "Discoverability",
+          "score": 0.5056,
+          "raw": 7.38641,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "08d1758b-d5c0-4541-a257-c596804ea448",
+      "_type": "article",
+      "slug": "cognitive-science-for-designers",
+      "title": "A Cognitive Sciences Reading List for Designers",
+      "tags": [
+        {
+          "concept": "9da1dce4-9927-419b-aade-94dfd6217dff",
+          "prefLabel": "Cognition",
+          "score": 0.6279,
+          "raw": 7.885244,
+          "slot": "band 1"
+        },
+        {
+          "concept": "da6c82ab-4243-4d22-aac4-ba4751f392d7",
+          "prefLabel": "Decision Making",
+          "score": 0.5426,
+          "raw": 7.373481,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptf7102e5be5c9",
+          "prefLabel": "Design Principles",
+          "score": 0.4906,
+          "raw": 7.1510077,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "f7a71104-99a6-47f0-81c6-7cea01be4e1f",
+      "_type": "article",
+      "slug": "content-modeling-in-the-age-of-flying-cars",
+      "title": "Content Modeling in the Age of Flying Cars",
+      "tags": [
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.7314,
+          "raw": 8.44202,
+          "slot": "band 1"
+        },
+        {
+          "concept": "83295bd4-9958-4263-80a4-c797e08dcf6d",
+          "prefLabel": "Domain Modeling",
+          "score": 0.67,
+          "raw": 8.138515,
+          "slot": "band 1"
+        },
+        {
+          "concept": "6e570b93-0a61-4d2f-97dd-c11ed8f41d4c",
+          "prefLabel": "Content Operations",
+          "score": 0.6537,
+          "raw": 8.123959,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.6239,
+          "raw": 7.7573776,
+          "slot": "band 2"
+        },
+        {
+          "concept": "fd10110f-2c13-493d-b474-e89d5c34cf92",
+          "prefLabel": "CMS",
+          "score": 0.6123,
+          "raw": 7.7990746,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConceptca50ca2bc0a5",
+          "prefLabel": "Technology Integration",
+          "score": 0.559,
+          "raw": 7.604015,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "de569eb0-7fd5-4a33-a937-2718be3c3a1f",
+      "_type": "article",
+      "slug": "conversations-with-robots",
+      "title": "Conversations with Robots: Voice, Smart Agents & the Case for Structured Content",
+      "tags": [
+        {
+          "concept": "skosConceptcce86c220fbc",
+          "prefLabel": "Linked Data",
+          "score": 0.7148,
+          "raw": 8.344133,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.7044,
+          "raw": 8.126516,
+          "slot": "band 1"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.5984,
+          "raw": 7.8353286,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept5ff5e1375b86",
+          "prefLabel": "Knowledge Graphs",
+          "score": 0.5953,
+          "raw": 7.764046,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConcept103b850abb89",
+          "prefLabel": "Semantic Web",
+          "score": 0.5902,
+          "raw": 7.7626514,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.567,
+          "raw": 7.683277,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "0c6323e6-09c5-4b40-9ea5-a41a2ddbbb29",
+      "_type": "article",
+      "slug": "delivering-ia",
+      "title": "Delivering Information Architecture",
+      "tags": [
+        {
+          "concept": "skosConcept782f8bd5e6cb",
+          "prefLabel": "Navigation Design",
+          "score": 0.7171,
+          "raw": 8.419514,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5589ed0d-26ab-446a-b5e4-8cf6ebdb6272",
+          "prefLabel": "Site Maps",
+          "score": 0.6512,
+          "raw": 8.129945,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5ce459fa-f57b-4960-b845-70ac206e81da",
+          "prefLabel": "User Interface Design",
+          "score": 0.6189,
+          "raw": 7.867887,
+          "slot": "band 1"
+        },
+        {
+          "concept": "0cea1942-4bd0-4f1a-9da0-20581a3b28cd",
+          "prefLabel": "Human Centered Design",
+          "score": 0.6022,
+          "raw": 7.818587,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConcept418495454409",
+          "prefLabel": "Systems Thinking",
+          "score": 0.6009,
+          "raw": 7.803805,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConceptcd47dd017453",
+          "prefLabel": "Best Practices",
+          "score": 0.5771,
+          "raw": 7.6336646,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "8aec2572-76bf-4288-a172-271b8eb04825",
+      "_type": "article",
+      "slug": "designing-with-code",
+      "title": "Designing with Code",
+      "tags": [
+        {
+          "concept": "495ed524-22ad-4c0d-a45a-d1d95500c494",
+          "prefLabel": "Prototyping",
+          "score": 0.6151,
+          "raw": 7.935009,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5578,
+          "raw": 7.4550653,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcepta78cd7e0feb2",
+          "prefLabel": "Contextual Research",
+          "score": 0.5141,
+          "raw": 7.4002337,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "5f070014-bd99-402d-b240-8c380da903e4",
+      "_type": "article",
+      "slug": "deskilling-large-language-models",
+      "title": "Deskilling Large Language Models",
+      "tags": [
+        {
+          "concept": "6cef888f-2393-4112-9ed7-8f9964a8c29c",
+          "prefLabel": "AI",
+          "score": 0.6742,
+          "raw": 8.05685,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5cb6a0d5-dde7-46b6-adbc-bc3e0abcad6c",
+          "prefLabel": "Natural Language Processing",
+          "score": 0.5256,
+          "raw": 7.4356604,
+          "slot": "band 1"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.513,
+          "raw": 7.416644,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "5efd0d18-6f7e-4a89-8236-688c2092496b",
+      "_type": "article",
+      "slug": "domain-modeling",
+      "title": "Domain Modeling for Structured Content",
+      "tags": [
+        {
+          "concept": "83295bd4-9958-4263-80a4-c797e08dcf6d",
+          "prefLabel": "Domain Modeling",
+          "score": 0.8061,
+          "raw": 8.7964325,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.7355,
+          "raw": 8.2688,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.6641,
+          "raw": 8.116183,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept9e2a99441475",
+          "prefLabel": "User Experience Design",
+          "score": 0.6238,
+          "raw": 7.9145455,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConcept98491a29e88a",
+          "prefLabel": "Structural Analysis",
+          "score": 0.5621,
+          "raw": 7.652495,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConcepte623e7fb15aa",
+          "prefLabel": "Mental Models",
+          "score": 0.5445,
+          "raw": 7.5791645,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "9da8b536-23eb-4844-9fd7-6572acf4cad2",
+      "_type": "article",
+      "slug": "graphcon-2026-themes-takeaways",
+      "title": "GraphCon 2026 Themes & Takeaways",
+      "tags": [
+        {
+          "concept": "f852abd2-3bb7-4ce9-82d2-c0e6b118ba80",
+          "prefLabel": "Graph Databases",
+          "score": 0.6119,
+          "raw": 7.9187202,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept5ff5e1375b86",
+          "prefLabel": "Knowledge Graphs",
+          "score": 0.5229,
+          "raw": 7.415638,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "0808cd9e-a5c0-4901-b823-9ce3d80edd7f",
+      "_type": "article",
+      "slug": "how-to-hire-an-ia",
+      "title": "How to Hire an Information Architect",
+      "tags": [
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.5634,
+          "raw": 7.6655507,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "8f5604c0-febb-4792-8edd-362b11e9eda7",
+      "_type": "article",
+      "slug": "keyword-extraction-nlp",
+      "title": "Keyword Extraction with NLP: A Beginner's Guide",
+      "tags": [
+        {
+          "concept": "skosConcepta7f5f35426b9",
+          "prefLabel": "Python",
+          "score": 0.7926,
+          "raw": 8.336412,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5cb6a0d5-dde7-46b6-adbc-bc3e0abcad6c",
+          "prefLabel": "Natural Language Processing",
+          "score": 0.7022,
+          "raw": 8.287835,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptac4ece69b7b7",
+          "prefLabel": "User Research",
+          "score": 0.5605,
+          "raw": 7.5410104,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "9106bf66-d338-49fe-b0fb-05faed7c0463",
+      "_type": "article",
+      "slug": "language-meaning-user-experience-architecture",
+      "title": "Language + Meaning + User Experience Architecture",
+      "tags": [
+        {
+          "concept": "skosConcepte623e7fb15aa",
+          "prefLabel": "Mental Models",
+          "score": 0.5833,
+          "raw": 7.7701545,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.5655,
+          "raw": 7.675724,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept9e2a99441475",
+          "prefLabel": "User Experience Design",
+          "score": 0.4861,
+          "raw": 7.2491074,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "8cd3522e-6b34-4800-84ac-118b9427dd4a",
+      "_type": "article",
+      "slug": "purpose-driven-taxonomy-design",
+      "title": "Purpose-Driven Taxonomy Design",
+      "tags": [
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.6662,
+          "raw": 8.152216,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept13348442cc6a",
+          "prefLabel": "Search",
+          "score": 0.5881,
+          "raw": 7.7188516,
+          "slot": "band 1"
+        },
+        {
+          "concept": "535c9c5d-f0e5-4d3a-b0a3-c41bbe557485",
+          "prefLabel": "Card Sorting",
+          "score": 0.553,
+          "raw": 7.5111604,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "bb59c854-f527-4f6d-84f7-49cb27921048",
+      "_type": "article",
+      "slug": "sanity-everything-nyc-conference-themes-takeaways",
+      "title": "Sanity Everything*[NYC] Conference Themes & Takeaways",
+      "tags": [
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.6827,
+          "raw": 8.167753,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptca50ca2bc0a5",
+          "prefLabel": "Technology Integration",
+          "score": 0.5589,
+          "raw": 7.603388,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5292,
+          "raw": 7.3240423,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "f68ed174-bc4b-45b1-afc7-3a8cfbf6b059",
+      "_type": "article",
+      "slug": "sanity-studio-taxonomy-migration",
+      "title": "Sanity Studio Taxonomy Migration",
+      "tags": [
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.6405,
+          "raw": 8.026915,
+          "slot": "band 1"
+        },
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.5773,
+          "raw": 7.6632643,
+          "slot": "band 1"
+        },
+        {
+          "concept": "dc849871-1501-43c0-a339-9e4e6fab7f15",
+          "prefLabel": "Standards Compliance",
+          "score": 0.5294,
+          "raw": 7.5075555,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "9d24f3a3-f7e6-4cb3-8a53-bac144173dcb",
+      "_type": "article",
+      "slug": "self-hosting-sanity-studio",
+      "title": "Self-Hosting Sanity Studio with GitHub Actions",
+      "tags": [
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.7258,
+          "raw": 8.374136,
+          "slot": "band 1"
+        },
+        {
+          "concept": "f0c6d461-4a5d-4c21-ab15-ad621f6bd182",
+          "prefLabel": "Continuous Integration",
+          "score": 0.5261,
+          "raw": 7.4664187,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "9c881418-5b5f-4ab9-b7d6-efb53f27cb05",
+      "_type": "article",
+      "slug": "site-maps-connected-content",
+      "title": "Site Maps & Connected Content",
+      "tags": [
+        {
+          "concept": "5589ed0d-26ab-446a-b5e4-8cf6ebdb6272",
+          "prefLabel": "Site Maps",
+          "score": 0.7317,
+          "raw": 8.528984,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.6468,
+          "raw": 7.8624654,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.641,
+          "raw": 8.0043335,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "dcc69d65-439f-46c8-a823-47c95340c15c",
+      "_type": "article",
+      "slug": "site-updates-structure-semantics-standards",
+      "title": "Site Updates: Structure, Semantics & Standards",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.6529,
+          "raw": 7.890284,
+          "slot": "band 1"
+        },
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.6074,
+          "raw": 7.8073,
+          "slot": "band 1"
+        },
+        {
+          "concept": "dc849871-1501-43c0-a339-9e4e6fab7f15",
+          "prefLabel": "Standards Compliance",
+          "score": 0.5979,
+          "raw": 7.844932,
+          "slot": "band 1"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.566,
+          "raw": 7.676251,
+          "slot": "band 2"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.5472,
+          "raw": 7.550199,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "1fe73d0a-2cc5-4cce-9ebd-9d6432a70035",
+      "_type": "article",
+      "slug": "structured-content-design",
+      "title": "Structured Content Design Workflow",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.7893,
+          "raw": 8.515175,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.7287,
+          "raw": 8.428769,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept98491a29e88a",
+          "prefLabel": "Structural Analysis",
+          "score": 0.675,
+          "raw": 8.205145,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept782f8bd5e6cb",
+          "prefLabel": "Navigation Design",
+          "score": 0.5904,
+          "raw": 7.797568,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConceptd845b87f1fe8",
+          "prefLabel": "Performance Evaluation",
+          "score": 0.5871,
+          "raw": 7.7563047,
+          "slot": "band 2"
+        },
+        {
+          "concept": "5589ed0d-26ab-446a-b5e4-8cf6ebdb6272",
+          "prefLabel": "Site Maps",
+          "score": 0.586,
+          "raw": 7.8067493,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "ba7353cd-c250-4eea-a2cc-ec350453303a",
+      "_type": "article",
+      "slug": "structured-content-design-22",
+      "title": "Structured Content Design Workflow 2022",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.8377,
+          "raw": 8.736806,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.7393,
+          "raw": 8.480299,
+          "slot": "band 1"
+        },
+        {
+          "concept": "83295bd4-9958-4263-80a4-c797e08dcf6d",
+          "prefLabel": "Domain Modeling",
+          "score": 0.6652,
+          "raw": 8.115649,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept98491a29e88a",
+          "prefLabel": "Structural Analysis",
+          "score": 0.6545,
+          "raw": 8.104606,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConcept9e2a99441475",
+          "prefLabel": "User Experience Design",
+          "score": 0.5846,
+          "raw": 7.725153,
+          "slot": "band 2"
+        },
+        {
+          "concept": "skosConceptac4ece69b7b7",
+          "prefLabel": "User Research",
+          "score": 0.5631,
+          "raw": 7.5533843,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "4b461d31-125c-4735-b9b8-80c22f9c2501",
+      "_type": "article",
+      "slug": "structured-content-headless-cms",
+      "title": "Structured Content and the Headless CMS",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.7745,
+          "raw": 8.447475,
+          "slot": "band 1"
+        },
+        {
+          "concept": "fd10110f-2c13-493d-b474-e89d5c34cf92",
+          "prefLabel": "CMS",
+          "score": 0.7628,
+          "raw": 8.5113,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.6162,
+          "raw": 7.8842163,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept98491a29e88a",
+          "prefLabel": "Structural Analysis",
+          "score": 0.5991,
+          "raw": 7.8333354,
+          "slot": "band 2"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.5411,
+          "raw": 7.5540423,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "26d21d24-cce4-4953-94b9-a32cfc43b227",
+      "_type": "article",
+      "slug": "taxonomy-boot-camp-2022-themes-takeaways",
+      "title": "Taxonomy Boot Camp 2022 Themes & Takeaways",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.6561,
+          "raw": 7.9050493,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.6144,
+          "raw": 7.899685,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptb0ab1a4c00ba",
+          "prefLabel": "Content Discovery",
+          "score": 0.5488,
+          "raw": 7.5807905,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "fea85e03-4ea2-46d1-ab8c-597b2636fd7c",
+      "_type": "article",
+      "slug": "taxonomy-boot-camp-2024-themes-takeaways",
+      "title": "Taxonomy Boot Camp 2024 Themes & Takeaways",
+      "tags": [
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.6461,
+          "raw": 8.054531,
+          "slot": "band 1"
+        },
+        {
+          "concept": "6cef888f-2393-4112-9ed7-8f9964a8c29c",
+          "prefLabel": "AI",
+          "score": 0.5685,
+          "raw": 7.5621295,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptada46566c164",
+          "prefLabel": "Discoverability",
+          "score": 0.5364,
+          "raw": 7.537749,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "be93e14c-6312-4f8c-9c36-e10de4dfdb31",
+      "_type": "article",
+      "slug": "the-trouble-with-systems",
+      "title": "The Trouble with Systems",
+      "tags": [
+        {
+          "concept": "skosConcept418495454409",
+          "prefLabel": "Systems Thinking",
+          "score": 0.6209,
+          "raw": 7.9006243,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.5952,
+          "raw": 7.8217173,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5ce459fa-f57b-4960-b845-70ac206e81da",
+          "prefLabel": "User Interface Design",
+          "score": 0.5149,
+          "raw": 7.3694015,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "9eb6fd3e-fe27-43a4-b5fd-e6691376ac05",
+      "_type": "article",
+      "slug": "web-writing",
+      "title": "Four Web Writing Style Guides from which to Borrow",
+      "tags": [
+        {
+          "concept": "338b5df5-da25-43f7-851b-f4ece0d85219",
+          "prefLabel": "Web Writing",
+          "score": 0.7614,
+          "raw": 8.62665,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5225,
+          "raw": 7.293062,
+          "slot": "band 1"
+        },
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.4655,
+          "raw": 7.128098,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "8142383a-b6e9-42df-a188-fecda37b4377",
+      "_type": "article",
+      "slug": "what-is-information-architecture",
+      "title": "What Is Information Architecture?",
+      "tags": [
+        {
+          "concept": "skosConcept13348442cc6a",
+          "prefLabel": "Search",
+          "score": 0.5169,
+          "raw": 7.3772597,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept630472d20d3c",
+          "prefLabel": "Interaction Design",
+          "score": 0.5104,
+          "raw": 7.381296,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5589ed0d-26ab-446a-b5e4-8cf6ebdb6272",
+          "prefLabel": "Site Maps",
+          "score": 0.5034,
+          "raw": 7.397082,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "38b51499-0d57-4669-adf6-0f6bede45330",
+      "_type": "article",
+      "slug": "when-to-use-an-ia",
+      "title": "When Do You Need an Information Architect?",
+      "tags": [
+        {
+          "concept": "5589ed0d-26ab-446a-b5e4-8cf6ebdb6272",
+          "prefLabel": "Site Maps",
+          "score": 0.5044,
+          "raw": 7.402017,
+          "slot": "band 1"
+        },
+        {
+          "concept": "1579c078-1248-467a-844f-5f5cf20cf603",
+          "prefLabel": "Design Outcomes",
+          "score": 0.4668,
+          "raw": 7.1761084,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "fb52551b-106a-42c6-8208-c930ffb36ea2",
+      "_type": "article",
+      "slug": "working-with-an-ia",
+      "title": "What's It Like to Work with an Information Architect?",
+      "tags": [
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.6671,
+          "raw": 8.174906,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept3f483f8930ed",
+          "prefLabel": "Collaborative Design",
+          "score": 0.5201,
+          "raw": 7.376621,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept630472d20d3c",
+          "prefLabel": "Interaction Design",
+          "score": 0.4911,
+          "raw": 7.287686,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "511fba96-1a7d-4fd8-949f-44f263a2620c",
+      "_type": "caseStudy",
+      "slug": "content-review-approval-workflow-integration",
+      "title": "Content Review & Approval Workflow Integration",
+      "tags": [
+        {
+          "concept": "skosConceptca50ca2bc0a5",
+          "prefLabel": "Technology Integration",
+          "score": 0.5787,
+          "raw": 7.699406,
+          "slot": "band 1"
+        },
+        {
+          "concept": "6e570b93-0a61-4d2f-97dd-c11ed8f41d4c",
+          "prefLabel": "Content Operations",
+          "score": 0.5016,
+          "raw": 7.3737574,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.479,
+          "raw": 7.0937896,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "e35b6652-5207-4bcb-aaef-2e452b5e59a8",
+      "_type": "caseStudy",
+      "slug": "elemeno-health-structured-content",
+      "title": "Elemeno Health Structured Content Design & Development",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.681,
+          "raw": 8.019239,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept98491a29e88a",
+          "prefLabel": "Structural Analysis",
+          "score": 0.6164,
+          "raw": 7.9182243,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptdf13da8210f3",
+          "prefLabel": "Content Reuse",
+          "score": 0.5775,
+          "raw": 7.706983,
+          "slot": "band 1"
+        },
+        {
+          "concept": "fd10110f-2c13-493d-b474-e89d5c34cf92",
+          "prefLabel": "CMS",
+          "score": 0.5646,
+          "raw": 7.572868,
+          "slot": "band 2"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.5609,
+          "raw": 7.6163697,
+          "slot": "band 2"
+        },
+        {
+          "concept": "6e570b93-0a61-4d2f-97dd-c11ed8f41d4c",
+          "prefLabel": "Content Operations",
+          "score": 0.5494,
+          "raw": 7.609353,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "787a3f7c-00ea-43e2-9f41-341c75cc6a34",
+      "_type": "caseStudy",
+      "slug": "seattle-childrens",
+      "title": "Seattle Children's Hospital",
+      "tags": [
+        {
+          "concept": "skosConcept782f8bd5e6cb",
+          "prefLabel": "Navigation Design",
+          "score": 0.6119,
+          "raw": 7.903323,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5ce459fa-f57b-4960-b845-70ac206e81da",
+          "prefLabel": "User Interface Design",
+          "score": 0.5354,
+          "raw": 7.4673605,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcepta78cd7e0feb2",
+          "prefLabel": "Contextual Research",
+          "score": 0.5151,
+          "raw": 7.4049926,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "1e6c36fb-44a8-400e-a014-5eca8af938f4",
+      "_type": "caseStudy",
+      "slug": "shoreline",
+      "title": "Shoreline Community College",
+      "tags": [
+        {
+          "concept": "skosConcept782f8bd5e6cb",
+          "prefLabel": "Navigation Design",
+          "score": 0.5637,
+          "raw": 7.666509,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptada46566c164",
+          "prefLabel": "Discoverability",
+          "score": 0.5515,
+          "raw": 7.612095,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4ce68dd7-b2f2-47ef-9eba-a5da950244a1",
+          "prefLabel": "Discovery",
+          "score": 0.5439,
+          "raw": 7.460623,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "dcc02d5e-d74e-4196-b219-6321fc02b2b7",
+      "_type": "caseStudy",
+      "slug": "uw-medicine",
+      "title": "UW Medicine",
+      "tags": [
+        {
+          "concept": "9bd13e07-4e81-4116-af65-1e66f19c6f0a",
+          "prefLabel": "Content Strategy",
+          "score": 0.5821,
+          "raw": 7.7309155,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5663,
+          "raw": 7.4938846,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptb0ab1a4c00ba",
+          "prefLabel": "Content Discovery",
+          "score": 0.5277,
+          "raw": 7.477982,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "a9664990-656e-46bf-b8d3-0eb85dafb560",
+      "_type": "caseStudy",
+      "slug": "who-kap",
+      "title": "WHO Knowledge Action Portal",
+      "tags": [
+        {
+          "concept": "b490234ff630e4b7ed8c2af6a19e37c5",
+          "prefLabel": "Accessibility Evaluation",
+          "score": 0.6031,
+          "raw": 7.8408313,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptd845b87f1fe8",
+          "prefLabel": "Performance Evaluation",
+          "score": 0.5076,
+          "raw": 7.3695803,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept60493dda870a",
+          "prefLabel": "Usability Testing",
+          "score": 0.5064,
+          "raw": 7.364309,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "3b596131-81dd-4ed5-98ee-a84d5b7b80b5",
+      "_type": "caseStudy",
+      "slug": "who-ntd",
+      "title": "WHO Department of Neglected Tropical Diseases",
+      "tags": [
+        {
+          "concept": "skosConcept782f8bd5e6cb",
+          "prefLabel": "Navigation Design",
+          "score": 0.571,
+          "raw": 7.7025676,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5589ed0d-26ab-446a-b5e4-8cf6ebdb6272",
+          "prefLabel": "Site Maps",
+          "score": 0.5649,
+          "raw": 7.702074,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptb0ab1a4c00ba",
+          "prefLabel": "Content Discovery",
+          "score": 0.5347,
+          "raw": 7.5121117,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "c5822e56-5ceb-4d8b-9907-78b231a9b3d0",
+      "_type": "note",
+      "slug": "designing-and-implementing-semantic-data-layers",
+      "title": "Designing and Implementing Semantic Data Layers",
+      "tags": [
+        {
+          "concept": "skosConcept103b850abb89",
+          "prefLabel": "Semantic Web",
+          "score": 0.606,
+          "raw": 7.839663,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "3ae51a50-c4c4-4c7b-9978-c64e83b75620",
+      "_type": "note",
+      "slug": "designing-content-authoring-experiences",
+      "title": "Designing Content Authoring Experiences",
+      "tags": [
+        {
+          "concept": "skosConcept9e2a99441475",
+          "prefLabel": "User Experience Design",
+          "score": 0.5809,
+          "raw": 7.706845,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5204,
+          "raw": 7.2837114,
+          "slot": "band 1"
+        },
+        {
+          "concept": "fd10110f-2c13-493d-b474-e89d5c34cf92",
+          "prefLabel": "CMS",
+          "score": 0.4969,
+          "raw": 7.2526264,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "ef27057a-6e6f-4b01-ad2f-5606d5810a95",
+      "_type": "note",
+      "slug": "proust-and-the-squid",
+      "title": "Proust and the Squid",
+      "tags": [
+        {
+          "concept": "9da1dce4-9927-419b-aade-94dfd6217dff",
+          "prefLabel": "Cognition",
+          "score": 0.4195,
+          "raw": 6.894424,
+          "slot": "minimum"
+        }
+      ]
+    },
+    {
+      "_id": "9704b5b1-0dd2-47fa-8740-a560a063c333",
+      "_type": "note",
+      "slug": "shacl-for-the-practitioner",
+      "title": "SHACL for the Practitioner",
+      "tags": [
+        {
+          "concept": "skosConcept103b850abb89",
+          "prefLabel": "Semantic Web",
+          "score": 0.5765,
+          "raw": 7.696314,
+          "slot": "band 1"
+        },
+        {
+          "concept": "3a7c017c-bcac-41d1-990e-2e6690dc37dd",
+          "prefLabel": "RDF",
+          "score": 0.5613,
+          "raw": 7.619047,
+          "slot": "band 1"
+        },
+        {
+          "concept": "dc849871-1501-43c0-a339-9e4e6fab7f15",
+          "prefLabel": "Standards Compliance",
+          "score": 0.5387,
+          "raw": 7.5533056,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "4ad3c7bd-dc55-4163-a636-2f2b276bc419",
+      "_type": "note",
+      "slug": "the-calm-before-the-storm",
+      "title": "The Calm Before the Storm",
+      "tags": [
+        {
+          "concept": "skosConceptcaea8340e2d1",
+          "prefLabel": "Automation",
+          "score": 0.407,
+          "raw": 6.8868876,
+          "slot": "minimum"
+        }
+      ]
+    },
+    {
+      "_id": "6aa06467-cbba-49ff-b843-c1ceac45dca4",
+      "_type": "note",
+      "slug": "why-shortcuts-arent-the-road",
+      "title": "Why Shortcuts Aren't the Road",
+      "tags": [
+        {
+          "concept": "skosConceptac4ece69b7b7",
+          "prefLabel": "User Research",
+          "score": 0.4121,
+          "raw": 6.8415785,
+          "slot": "minimum"
+        }
+      ]
+    },
+    {
+      "_id": "3c619185-987f-4c0d-82f8-04dd7d5ae77d",
+      "_type": "presentation",
+      "slug": "ai-assisted-content-operations-in-practice",
+      "title": "AI Assisted Content Operations in Practice",
+      "tags": [
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.6517,
+          "raw": 8.019581,
+          "slot": "band 1"
+        },
+        {
+          "concept": "6cef888f-2393-4112-9ed7-8f9964a8c29c",
+          "prefLabel": "AI",
+          "score": 0.602,
+          "raw": 7.7187514,
+          "slot": "band 1"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.5348,
+          "raw": 7.523167,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "4fe208e5-681a-4cc8-8750-c596fff05948",
+      "_type": "presentation",
+      "slug": "beyond-the-page-with-structured-content",
+      "title": "Beyond the Page with Structured Content",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.6983,
+          "raw": 8.098461,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5589ed0d-26ab-446a-b5e4-8cf6ebdb6272",
+          "prefLabel": "Site Maps",
+          "score": 0.511,
+          "raw": 7.4344993,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptada46566c164",
+          "prefLabel": "Discoverability",
+          "score": 0.4972,
+          "raw": 7.3453546,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "31ca73d8-b780-48c8-a703-39b739edf834",
+      "_type": "presentation",
+      "slug": "boutique-knowledge-graphs-building-smart-content-at-any-scale",
+      "title": "Boutique Knowledge Graphs: Building Smart Content At Any Scale",
+      "tags": [
+        {
+          "concept": "skosConcept5ff5e1375b86",
+          "prefLabel": "Knowledge Graphs",
+          "score": 0.5919,
+          "raw": 7.747786,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept103b850abb89",
+          "prefLabel": "Semantic Web",
+          "score": 0.5392,
+          "raw": 7.515495,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.4882,
+          "raw": 7.1359873,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "fae0850d-e970-4bd5-84f3-0ef8727a04a7",
+      "_type": "presentation",
+      "slug": "browsability-with-dan-brown",
+      "title": "Browsability with Dan Brown",
+      "tags": [
+        {
+          "concept": "skosConceptada46566c164",
+          "prefLabel": "Discoverability",
+          "score": 0.5156,
+          "raw": 7.4356008,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept13348442cc6a",
+          "prefLabel": "Search",
+          "score": 0.5115,
+          "raw": 7.351725,
+          "slot": "band 1"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.4981,
+          "raw": 7.343507,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "dd1db5ec-024a-4c2e-9d68-5ec21e0ac289",
+      "_type": "presentation",
+      "slug": "content-first-prototyping",
+      "title": "Content First Prototyping",
+      "tags": [
+        {
+          "concept": "495ed524-22ad-4c0d-a45a-d1d95500c494",
+          "prefLabel": "Prototyping",
+          "score": 0.6608,
+          "raw": 8.160491,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5238,
+          "raw": 7.2993183,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept60493dda870a",
+          "prefLabel": "Usability Testing",
+          "score": 0.5175,
+          "raw": 7.418747,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "4f3cf2bd-b43d-4d58-881c-aa9ff39550f2",
+      "_type": "presentation",
+      "slug": "conversations-with-robots-voice-ai-structured-content",
+      "title": "Conversations With Robots: Voice, AI & Structured Content",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.6635,
+          "raw": 7.938988,
+          "slot": "band 1"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.5841,
+          "raw": 7.7653933,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptada46566c164",
+          "prefLabel": "Discoverability",
+          "score": 0.5082,
+          "raw": 7.399509,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "576fca2b-1ecd-418f-86e7-b1dc91c281b8",
+      "_type": "presentation",
+      "slug": "design-for-difference",
+      "title": "Design for Difference",
+      "tags": [
+        {
+          "concept": "0cea1942-4bd0-4f1a-9da0-20581a3b28cd",
+          "prefLabel": "Human Centered Design",
+          "score": 0.5736,
+          "raw": 7.6800084,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept630472d20d3c",
+          "prefLabel": "Interaction Design",
+          "score": 0.5353,
+          "raw": 7.5026774,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5ce459fa-f57b-4960-b845-70ac206e81da",
+          "prefLabel": "User Interface Design",
+          "score": 0.5312,
+          "raw": 7.4475646,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "a2b88ad2-b112-4547-ab88-9539ebf1f4c5",
+      "_type": "presentation",
+      "slug": "design-for-the-human-scale",
+      "title": "Design for the Human Scale ",
+      "tags": [
+        {
+          "concept": "0cea1942-4bd0-4f1a-9da0-20581a3b28cd",
+          "prefLabel": "Human Centered Design",
+          "score": 0.4354,
+          "raw": 7.010424,
+          "slot": "minimum"
+        }
+      ]
+    },
+    {
+      "_id": "6edc1863-8261-4672-bbf5-f9b96f7785c4",
+      "_type": "presentation",
+      "slug": "desiring-ecologies",
+      "title": "Desiring Ecologies",
+      "tags": [
+        {
+          "concept": "skosConcept418495454409",
+          "prefLabel": "Systems Thinking",
+          "score": 0.53,
+          "raw": 7.4611735,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.5239,
+          "raw": 7.4719024,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5ce459fa-f57b-4960-b845-70ac206e81da",
+          "prefLabel": "User Interface Design",
+          "score": 0.4725,
+          "raw": 7.165923,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "5923ac1e-b0a7-4b9a-9cd2-6b88d3747603",
+      "_type": "presentation",
+      "slug": "domain-modeling-for-digital-information-designers",
+      "title": "Domain Modeling for Digital Information Designers",
+      "tags": [
+        {
+          "concept": "83295bd4-9958-4263-80a4-c797e08dcf6d",
+          "prefLabel": "Domain Modeling",
+          "score": 0.7354,
+          "raw": 8.454576,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.524,
+          "raw": 7.437465,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcepte623e7fb15aa",
+          "prefLabel": "Mental Models",
+          "score": 0.4956,
+          "raw": 7.3385167,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "ef267031-6966-4eaa-9520-3fa45c1312d7",
+      "_type": "presentation",
+      "slug": "how-to-get-started-with-knowledge-graphs",
+      "title": "How to Get Started with Knowledge Graphs",
+      "tags": [
+        {
+          "concept": "skosConcept5ff5e1375b86",
+          "prefLabel": "Knowledge Graphs",
+          "score": 0.6128,
+          "raw": 7.8482795,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptac4ece69b7b7",
+          "prefLabel": "User Research",
+          "score": 0.4673,
+          "raw": 7.1015644,
+          "slot": "band 1"
+        },
+        {
+          "concept": "f852abd2-3bb7-4ce9-82d2-c0e6b118ba80",
+          "prefLabel": "Graph Databases",
+          "score": 0.4638,
+          "raw": 7.188332,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "10bf9f82-0a0d-439d-bab7-f4a6d6a17122",
+      "_type": "presentation",
+      "slug": "ia-the-current-and-the-future",
+      "title": "IA, the Current and the Future",
+      "tags": [
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.4277,
+          "raw": 6.9997215,
+          "slot": "minimum"
+        }
+      ]
+    },
+    {
+      "_id": "1b4b2e3c-03b8-4ede-91b2-834d14eca543",
+      "_type": "presentation",
+      "slug": "improv-consulting-yes-and-experts-improvise-solutions-to-real-problems",
+      "title": " Improv Consulting: Yes, And ... Experts Improvise Solutions to Real Problems",
+      "tags": [
+        {
+          "concept": "skosConcept6e6870311a88",
+          "prefLabel": "User Interviews",
+          "score": 0.4288,
+          "raw": 6.871364,
+          "slot": "minimum"
+        }
+      ]
+    },
+    {
+      "_id": "50c51119-5405-4828-8bde-6fe3605aa1b0",
+      "_type": "presentation",
+      "slug": "information-architecture-for-digital-content",
+      "title": "Information Architecture for Digital Content",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5362,
+          "raw": 7.3557186,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.5011,
+          "raw": 7.326932,
+          "slot": "band 1"
+        },
+        {
+          "concept": "9bd13e07-4e81-4116-af65-1e66f19c6f0a",
+          "prefLabel": "Content Strategy",
+          "score": 0.4823,
+          "raw": 7.245784,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "47c1f050-5ee3-41f0-a22a-244a837a7872",
+      "_type": "presentation",
+      "slug": "information-design",
+      "title": "Information Design",
+      "tags": [
+        {
+          "concept": "5ce459fa-f57b-4960-b845-70ac206e81da",
+          "prefLabel": "User Interface Design",
+          "score": 0.5087,
+          "raw": 7.33968,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept418495454409",
+          "prefLabel": "Systems Thinking",
+          "score": 0.5012,
+          "raw": 7.3218775,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept630472d20d3c",
+          "prefLabel": "Interaction Design",
+          "score": 0.4969,
+          "raw": 7.3155856,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "40809e80-7276-41ef-9aa8-c794401236b2",
+      "_type": "presentation",
+      "slug": "knowledge-graphs-and-ia",
+      "title": "Knowledge Graphs and IA",
+      "tags": [
+        {
+          "concept": "skosConcept5ff5e1375b86",
+          "prefLabel": "Knowledge Graphs",
+          "score": 0.5952,
+          "raw": 7.7636456,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept13348442cc6a",
+          "prefLabel": "Search",
+          "score": 0.4849,
+          "raw": 7.2239923,
+          "slot": "band 1"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.4755,
+          "raw": 7.232411,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "9be237f7-22de-41be-bbe2-501037fc95fb",
+      "_type": "presentation",
+      "slug": "language-arts-for-the-lizard-brain",
+      "title": "Language Arts for the Lizard Brain",
+      "tags": [
+        {
+          "concept": "9da1dce4-9927-419b-aade-94dfd6217dff",
+          "prefLabel": "Cognition",
+          "score": 0.4763,
+          "raw": 7.1643186,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptf7102e5be5c9",
+          "prefLabel": "Design Principles",
+          "score": 0.4615,
+          "raw": 7.017715,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "62102ecf-5f3b-45b3-946f-7775f1889da5",
+      "_type": "presentation",
+      "slug": "orchestrating-the-mundane-deskilling-language-models",
+      "title": "Orchestrating the Mundane: Deskilling Language Models ",
+      "tags": [
+        {
+          "concept": "6cef888f-2393-4112-9ed7-8f9964a8c29c",
+          "prefLabel": "AI",
+          "score": 0.6758,
+          "raw": 8.06432,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5cb6a0d5-dde7-46b6-adbc-bc3e0abcad6c",
+          "prefLabel": "Natural Language Processing",
+          "score": 0.5447,
+          "raw": 7.527733,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptcaea8340e2d1",
+          "prefLabel": "Automation",
+          "score": 0.4915,
+          "raw": 7.299702,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "bc2cb749-d9d4-490e-bc95-060d4047ed83",
+      "_type": "presentation",
+      "slug": "practical-large-scale-content-analysis",
+      "title": "Practical Large Scale Content Analysis",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5216,
+          "raw": 7.2888374,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept98491a29e88a",
+          "prefLabel": "Structural Analysis",
+          "score": 0.5145,
+          "raw": 7.419336,
+          "slot": "band 1"
+        },
+        {
+          "concept": "535c9c5d-f0e5-4d3a-b0a3-c41bbe557485",
+          "prefLabel": "Card Sorting",
+          "score": 0.4617,
+          "raw": 7.079754,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "cba6cb1c-e06e-49b8-896e-315ea3a6fdf8",
+      "_type": "presentation",
+      "slug": "prototyping-information-architecture",
+      "title": "Prototyping Information Architecture",
+      "tags": [
+        {
+          "concept": "495ed524-22ad-4c0d-a45a-d1d95500c494",
+          "prefLabel": "Prototyping",
+          "score": 0.6509,
+          "raw": 8.111736,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.5811,
+          "raw": 7.7524805,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept60493dda870a",
+          "prefLabel": "Usability Testing",
+          "score": 0.5352,
+          "raw": 7.504556,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "2682dad1-a2ec-4587-a0ac-c2b245203047",
+      "_type": "presentation",
+      "slug": "ranked-lists-of-related-content-in-sanity-studio",
+      "title": "Ranked Lists of Related Content in Sanity Studio",
+      "tags": [
+        {
+          "concept": "skosConcept13348442cc6a",
+          "prefLabel": "Search",
+          "score": 0.556,
+          "raw": 7.5650406,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.551,
+          "raw": 7.589793,
+          "slot": "band 1"
+        },
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.546,
+          "raw": 7.513652,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "f5876a14-a8d3-47e6-aba9-8dd65ef11046",
+      "_type": "presentation",
+      "slug": "responsive-information-architectures",
+      "title": "Responsive Information Architectures",
+      "tags": [
+        {
+          "concept": "skosConceptb4099ea36d61",
+          "prefLabel": "Information Architecture",
+          "score": 0.5761,
+          "raw": 7.727883,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcepta78cd7e0feb2",
+          "prefLabel": "Contextual Research",
+          "score": 0.5476,
+          "raw": 7.5631785,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5ce459fa-f57b-4960-b845-70ac206e81da",
+          "prefLabel": "User Interface Design",
+          "score": 0.5325,
+          "raw": 7.4534893,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "4541d046-5a81-4c77-844d-5c308e25145e",
+      "_type": "presentation",
+      "slug": "structured-content-in-product-design",
+      "title": "Structured Content in Product Design",
+      "tags": [
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.7516,
+          "raw": 8.342361,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.5625,
+          "raw": 7.623973,
+          "slot": "band 1"
+        },
+        {
+          "concept": "fd10110f-2c13-493d-b474-e89d5c34cf92",
+          "prefLabel": "CMS",
+          "score": 0.5588,
+          "raw": 7.545395,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept98491a29e88a",
+          "prefLabel": "Structural Analysis",
+          "score": 0.5479,
+          "raw": 7.582934,
+          "slot": "band 2"
+        }
+      ]
+    },
+    {
+      "_id": "131a8c56-1748-4e40-aedf-8cf8abb39bd7",
+      "_type": "presentation",
+      "slug": "taxonomy-and-the-headless-cms",
+      "title": "Taxonomy and the Headless CMS",
+      "tags": [
+        {
+          "concept": "fd10110f-2c13-493d-b474-e89d5c34cf92",
+          "prefLabel": "CMS",
+          "score": 0.7274,
+          "raw": 8.343981,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.5638,
+          "raw": 7.6526713,
+          "slot": "band 1"
+        },
+        {
+          "concept": "c30443b4-2c6b-4dde-8be2-12de89fc771a",
+          "prefLabel": "Structured Content",
+          "score": 0.5523,
+          "raw": 7.429483,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "24be866e-9083-49af-b5f7-54af8b834fbd",
+      "_type": "presentation",
+      "slug": "taxonomy-for-app-makers",
+      "title": "Taxonomy for App Makers",
+      "tags": [
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.5179,
+          "raw": 7.4284124,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept418495454409",
+          "prefLabel": "Systems Thinking",
+          "score": 0.4647,
+          "raw": 7.145767,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "777aa5cf-260f-44e3-8afc-233d38794aed",
+      "_type": "presentation",
+      "slug": "taxonomy-for-experience-designers",
+      "title": "Taxonomy for Experience Designers",
+      "tags": [
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.6,
+          "raw": 7.8293276,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5ce459fa-f57b-4960-b845-70ac206e81da",
+          "prefLabel": "User Interface Design",
+          "score": 0.4882,
+          "raw": 7.2411847,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept9e2a99441475",
+          "prefLabel": "User Experience Design",
+          "score": 0.4833,
+          "raw": 7.235453,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "9d152ebf-a81b-4d43-a22c-e706c982903a",
+      "_type": "presentation",
+      "slug": "taxonomy-management-and-use-in-sanity-studio",
+      "title": "Taxonomy Management and use in Sanity Studio",
+      "tags": [
+        {
+          "concept": "9869288d-fc68-4dc5-be03-58dec37f5dd2",
+          "prefLabel": "Sanity",
+          "score": 0.7299,
+          "raw": 8.394055,
+          "slot": "band 1"
+        },
+        {
+          "concept": "skosConcept30d10883c017",
+          "prefLabel": "Taxonomy",
+          "score": 0.6663,
+          "raw": 8.1529,
+          "slot": "band 1"
+        },
+        {
+          "concept": "4eb7c42e-1c45-4332-b767-dd8877457b93",
+          "prefLabel": "Content Modeling",
+          "score": 0.5071,
+          "raw": 7.3558617,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "1fe66c29-5121-4f6d-98bb-d3dccfec773a",
+      "_type": "presentation",
+      "slug": "unexpected-path-different-backgrounds-to-ux",
+      "title": "Unexpected Paths: How Different Backgrounds Led Us to UX",
+      "tags": [
+        {
+          "concept": "skosConcept9e2a99441475",
+          "prefLabel": "User Experience Design",
+          "score": 0.5894,
+          "raw": 7.748277,
+          "slot": "band 1"
+        }
+      ]
+    },
+    {
+      "_id": "f0eff07f-7a9b-43ea-a9a7-c9c6f90a0f67",
+      "_type": "presentation",
+      "slug": "yes-and-information-architecture-in-the-age-of-artificial-intelligence",
+      "title": "Yes, And: Information Architecture in the Age of Artificial Intelligence",
+      "tags": [
+        {
+          "concept": "6cef888f-2393-4112-9ed7-8f9964a8c29c",
+          "prefLabel": "AI",
+          "score": 0.7033,
+          "raw": 8.192999,
+          "slot": "band 1"
+        },
+        {
+          "concept": "5cb6a0d5-dde7-46b6-adbc-bc3e0abcad6c",
+          "prefLabel": "Natural Language Processing",
+          "score": 0.5917,
+          "raw": 7.7543306,
+          "slot": "band 1"
+        },
+        {
+          "concept": "355181f4-2bd3-4ba1-b9a5-c2556b0e2048",
+          "prefLabel": "Machine Readability",
+          "score": 0.5431,
+          "raw": 7.5639606,
+          "slot": "band 1"
+        }
+      ]
+    }
+  ]
+}

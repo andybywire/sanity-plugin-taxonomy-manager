@@ -5,7 +5,11 @@ import prettier from 'eslint-config-prettier'
 export default [
   {
     // Migrated from the legacy .eslintignore; flat config uses `ignores`.
-    ignores: ['dist/**', 'coverage/**', 'studio/**', '_local/**', 'v2-incompatible.js'],
+    // `docs/**`: reference code kept beside the design docs and never built, such as
+    // docs/development/embeddings-tagging/prototype/. eslint passes it, but it carries a
+    // react-hooks warning that would sit in this repo's lint output, and fixing that would mean
+    // editing copies kept byte-identical to their source.
+    ignores: ['dist/**', 'coverage/**', 'studio/**', '_local/**', 'v2-incompatible.js', 'docs/**'],
   },
   ...studio,
   prettier,

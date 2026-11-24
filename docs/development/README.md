@@ -10,6 +10,9 @@ but are kept out of the site navigation (`_navbar.md`).
 
 - [Feature backlog](feature-backlog.md) — what is planned after 6.2.0, in order, with the
   decisions already taken for each.
+- [Embeddings-assisted tagging](embeddings-tagging/README.md) — the starting document for tagging
+  at the scheme, concept and resource levels, with the research it rests on, the site's prototype
+  and the v5 golden reference. Moved from the consulting site's repository on 2026-11-24.
 
 ## Decision records
 

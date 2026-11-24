@@ -5,3 +5,6 @@ pnpm-lock.yaml
 *.md
 _local
 .vscode
+# Copied unchanged from the consulting site's repository, and kept that way so each file matches
+# the commit its README names. The commit hook would otherwise rewrite the .ts and .json in it.
+docs/development/embeddings-tagging
