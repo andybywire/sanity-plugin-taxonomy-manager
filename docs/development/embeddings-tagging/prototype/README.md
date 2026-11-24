@@ -1,8 +1,14 @@
 # Prototype: the site's tagger, for reference
 
-Copied unchanged from `andybywire/andyfitzgeraldconsulting`, branch `recommendations-research`,
-at commit `81173a6`: five files from `studio/tagger/` and `studio/schemas/objects/topicScore.ts`.
-They ran in the site's lab Studio only and never reached production.
+Copied unchanged from `andybywire/andyfitzgeraldconsulting` at commit `81173a6`: five files from
+`studio/tagger/` and `studio/schemas/objects/topicScore.ts`. They ran in the site's lab Studio
+only and never reached production.
+
+That commit was the tip of the site's `recommendations-research` branch, which was deleted on
+2026-11-24 and kept as the annotated tag **`archive/recommendations-research`**. Check it out there
+for what isn't copied here: how the prototype was wired into the lab Studio (the `topicScores`
+field on four document types, its validation, and the "Suggest topics" action in
+`sanity.config.ts`), and the research's 29 commits.
 
 **They are reference, not code.** They import the site's Studio and schema, which this repo
 doesn't have, so nothing here is built or type-checked: `tsconfig.json` covers `src/` only.
