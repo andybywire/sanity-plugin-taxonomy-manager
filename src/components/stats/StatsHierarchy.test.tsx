@@ -145,3 +145,21 @@ describe('StatsHierarchy — what it asks the port for', () => {
     expect(port.lastUsageParams?.perspective).toBe('rMyRelease')
   })
 })
+
+/*
+ * The governance view walks the same tree the Tree View does, so a concept
+ * deleted while the scheme still references it took this view down too — on
+ * `collectConceptIds`, which reads the id the usage query is keyed by.
+ */
+describe('StatsHierarchy (deleted concepts)', () => {
+  it('renders the tree when a referenced concept has been deleted', () => {
+    const tree = {
+      topConcepts: [null, {id: 'history', prefLabel: 'History'}],
+      concepts: [null],
+    } as unknown as DocumentConcepts
+
+    render({tree})
+
+    expect(screen.getByRole('button', {name: /^History/})).toBeInTheDocument()
+  })
+})

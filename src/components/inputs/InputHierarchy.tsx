@@ -7,6 +7,7 @@ import {useContext, useMemo} from 'react'
 import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
 import {recommendedConceptIds} from '../../core/semanticRecommendations'
 import {annotateRecommendations} from '../../core/tree/annotateRecommendations'
+import {dropMissingConcepts} from '../../core/tree/dropMissingConcepts'
 import {useTaxonomyDataPort} from '../../seams/TaxonomyPortContext'
 import type {ConceptSchemeDocument, TreeViewProps} from '../../types'
 import {TreeStructure} from '../TreeStructure'
@@ -32,12 +33,19 @@ export const InputHierarchy = ({
   const releaseContext = useContext(ReleaseContext)
   const initialVisibility = expanded ? 'open' : 'closed'
   const port = useTaxonomyDataPort()
-  const {data, loading, error} = port.useWatchTree({
+  const {
+    data: watchedTree,
+    loading,
+    error,
+  } = port.useWatchTree({
     mode: 'input',
     documentId,
     branchId,
     perspective: releaseContext,
   })
+  // The hole a deleted concept leaves, closed before the annotation walk below
+  // meets it — the same guard the Tree View applies (see `dropMissingConcepts`).
+  const data = useMemo(() => dropMissingConcepts(watchedTree), [watchedTree])
 
   // Mark which concepts are recommendations (by published id):
   const recommendedIds = useMemo(() => recommendedConceptIds(conceptRecs ?? []), [conceptRecs])

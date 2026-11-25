@@ -25,8 +25,14 @@ describe('trunkBuilder', () => {
 
   it('selects the scheme by $id and projects topConcepts + concepts, ordered by prefLabel', () => {
     expect(query).toContain('*[_id == $id][0]')
-    expect(query).toContain('"topConcepts": topConcepts[]->|order(prefLabel)')
-    expect(query).toContain('"concepts": concepts[]->|order(prefLabel)')
+    expect(query).toContain('"topConcepts": topConcepts[defined(@->)]->|order(prefLabel)')
+    expect(query).toContain('"concepts": concepts[defined(@->)]->|order(prefLabel)')
+  })
+
+  it('skips references whose concept has been deleted', () => {
+    // A bare `concepts[]->` keeps a null where the deleted document was, and
+    // the walks over the tree read through it. See `dropMissingConcepts`.
+    expect(query).not.toContain('concepts[]->')
   })
 
   it('computes isOrphan via array::intersects of broader refs against the scheme refs', () => {
@@ -50,6 +56,12 @@ describe('inputBuilder', () => {
   it('branches on the presence of $branchId via select()', () => {
     expect(query).toContain('select($branchId != null =>')
     expect(query).toContain('$branchId in @->broader[]->.conceptId')
+  })
+
+  it('skips references whose concept has been deleted', () => {
+    // The branch-scoped arm needs no filter: its predicate is already false for
+    // a reference that resolves to nothing.
+    expect(query).not.toContain('concepts[]->')
   })
 
   it('recurses childConcepts to a depth cap of 6 levels', () => {

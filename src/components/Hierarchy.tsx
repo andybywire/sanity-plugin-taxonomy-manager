@@ -17,6 +17,7 @@ import {
   isInsertApplied,
   isRootInsertApplied,
 } from '../core/tree/insertConcept'
+import {dropMissingConcepts} from '../core/tree/dropMissingConcepts'
 import {collectConceptIds, pruneConcepts} from '../core/tree/pruneConcepts'
 import type {TopConceptChange} from '../core/tree/setTopConcept'
 import {isTopConceptApplied, setTopConceptInTree} from '../core/tree/setTopConcept'
@@ -234,11 +235,20 @@ export const Hierarchy = ({
     ],
   )
 
-  const {data, loading, error} = port.useWatchTree({
+  const {
+    data: watchedTree,
+    loading,
+    error,
+  } = port.useWatchTree({
     mode: 'trunk',
     documentId,
     perspective: releaseContext,
   })
+  // A concept deleted while the scheme still references it arrives as a hole in
+  // the tree, which every walk below reads straight through (see
+  // `dropMissingConcepts`). Closed once, here, rather than guarded for at each
+  // of them.
+  const data = useMemo(() => dropMissingConcepts(watchedTree), [watchedTree])
 
   // Once fresh data no longer contains a removed id, stop tracking it so the
   // optimistic set self-cleans and never prunes a later re-added concept.

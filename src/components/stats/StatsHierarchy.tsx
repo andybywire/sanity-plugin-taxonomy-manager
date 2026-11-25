@@ -5,6 +5,7 @@ import {nanoid} from 'nanoid'
 import {useCallback, useContext, useMemo, useState} from 'react'
 
 import {ReleaseContext, SchemeContext, TreeContext} from '../../context'
+import {dropMissingConcepts} from '../../core/tree/dropMissingConcepts'
 import {collectConceptIds} from '../../core/tree/pruneConcepts'
 import {usageMax as computeUsageMax} from '../../core/usage'
 import {useTaxonomyDataPort} from '../../seams/TaxonomyPortContext'
@@ -50,7 +51,7 @@ export const StatsHierarchy = () => {
   }, [])
 
   const {
-    data: treeData,
+    data: watchedTree,
     loading,
     error,
   } = port.useWatchTree({
@@ -58,6 +59,9 @@ export const StatsHierarchy = () => {
     documentId,
     perspective: releaseContext,
   })
+  // The hole a deleted concept leaves, closed before the walks below meet it —
+  // the same guard the Tree View applies (see `dropMissingConcepts`).
+  const treeData = useMemo(() => dropMissingConcepts(watchedTree), [watchedTree])
 
   // Sorted, because the id list is a query parameter and `useListeningQuery`
   // memoizes params by their JSON — an unstable order would resubscribe the
