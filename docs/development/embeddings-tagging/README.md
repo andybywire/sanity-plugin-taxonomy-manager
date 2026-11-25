@@ -12,6 +12,7 @@ Until this lands, the site uses the plugin as it is today, with no assisted tagg
 | Path | What |
 |---|---|
 | `README.md` | This document: the goal, what the research established, the design to start from, open questions |
+| `kickoff-prompt.md` | The prompt that starts the stream's first session: what to read, the ground rules, and what that session delivers. Paste it whole |
 | `research/` | The research's own record, copied unchanged: `plan.md` (decisions, phases, specs), `report-spike.md` (how scores behave), `how.md` and `value-add.md` (the article material), `what-goes-where.md`, `related-algorithm.md` |
 | `prototype/` | The site's tagger, for reference only: nothing here builds or is linted |
 | `evidence/` | The v5 tag set and the score matrix it was selected from: the golden reference |
