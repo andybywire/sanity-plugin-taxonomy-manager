@@ -795,3 +795,40 @@ describe('Hierarchy (insert at the root)', () => {
     expect(parentBox?.contains(row)).toBe(true)
   })
 })
+
+/*
+ * A concept added from the tree view is referenced weakly until it is
+ * published, so deleting it is allowed and leaves the scheme pointing at
+ * nothing. `concepts[]->` then returns a null in its place, and every walk
+ * over the tree — publication markers first — read straight through it. The
+ * whole tool went down, and stayed down: the dangling reference is in the
+ * document, so a reload crashed again.
+ */
+describe('Hierarchy (deleted concepts)', () => {
+  const treeWithHole = {
+    topConcepts: [null, {id: 'concept-1', prefLabel: 'Animals'}],
+    concepts: [null, {id: 'concept-2', prefLabel: 'Rocks', isOrphan: true}],
+  } as unknown as DocumentConcepts
+
+  it('renders the tree when a top concept has been deleted', () => {
+    renderHierarchy(
+      createFakeDataPort({tree: treeWithHole}),
+      undefined,
+      false,
+      schemeWithTopConcepts,
+    )
+
+    expect(screen.getByRole('button', {name: /^Animals/})).toBeInTheDocument()
+  })
+
+  it('renders the tree when an orphan concept has been deleted', () => {
+    renderHierarchy(
+      createFakeDataPort({tree: treeWithHole}),
+      undefined,
+      false,
+      schemeWithTopConcepts,
+    )
+
+    expect(screen.getByRole('button', {name: /^Rocks/})).toBeInTheDocument()
+  })
+})

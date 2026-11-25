@@ -45,12 +45,20 @@ const branchBuilder = (level = 1): string | void => {
  * - filter out concepts that reference other concepts in this scheme
  *   as a broader term
  *
+ * A reference whose concept has been deleted is dropped here, with
+ * `defined(@->)`. A plain `concepts[]->` keeps a `null` in the array where the
+ * document used to be, and every walk over the tree then reads through it —
+ * which is not hypothetical: a concept is referenced weakly until it is
+ * published, so deleting one the scheme still lists is an ordinary thing for an
+ * editor to do, and it took the whole tool down. `core/tree/dropMissingConcepts`
+ * closes the same hole on the way in.
+ *
  * Used in Hierarchy.tsx
  */
 export const trunkBuilder = (): string => {
   return `*[_id == $id][0] {
     _updatedAt,
-    "topConcepts": topConcepts[]->|order(prefLabel) {
+    "topConcepts": topConcepts[defined(@->)]->|order(prefLabel) {
       "id": _id,
       "level": 0,
       _originalId,
@@ -60,7 +68,7 @@ export const trunkBuilder = (): string => {
       scopeNote,
       ${branchBuilder() || ''}
     },
-    "concepts": concepts[]->|order(prefLabel) {
+    "concepts": concepts[defined(@->)]->|order(prefLabel) {
       "id": _id,
       "level": 0,
       "isOrphan": 
@@ -87,6 +95,10 @@ export const trunkBuilder = (): string => {
  * in that branch only. Then call branchBuilder recursively — it will
  * only build terms in the scheme referenced by that concept.
  *
+ * Deleted concepts are filtered out the same way `trunkBuilder` filters them.
+ * The branch-scoped arm needs no filter: its predicate is false for a reference
+ * that resolves to nothing, so the hole never opens.
+ *
  * - trunkBuilder() is called in Hierarchy.tsx
  * - inputBuilder() is called in InputHierarchy.tsx
  */
@@ -109,7 +121,7 @@ export const inputBuilder = (): string => {
     },
     *[_id == $id][0] {
       _updatedAt,
-      "topConcepts":topConcepts[]->|order(prefLabel){
+      "topConcepts":topConcepts[defined(@->)]->|order(prefLabel){
         "id": _id,
         "level": 0,
         _originalId,
@@ -119,7 +131,7 @@ export const inputBuilder = (): string => {
         scopeNote,
         ${branchBuilder() || ''}
       }, 
-      "concepts": concepts[]->|order(prefLabel){
+      "concepts": concepts[defined(@->)]->|order(prefLabel){
         "id": _id,
         "level": 0,
         "isOrphan": 

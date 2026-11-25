@@ -90,7 +90,7 @@ exports[`inputBuilder > matches the characterized GROQ output 1`] = `
     },
     *[_id == $id][0] {
       _updatedAt,
-      "topConcepts":topConcepts[]->|order(prefLabel){
+      "topConcepts":topConcepts[defined(@->)]->|order(prefLabel){
         "id": _id,
         "level": 0,
         _originalId,
@@ -160,7 +160,7 @@ exports[`inputBuilder > matches the characterized GROQ output 1`] = `
     }
     }
       }, 
-      "concepts": concepts[]->|order(prefLabel){
+      "concepts": concepts[defined(@->)]->|order(prefLabel){
         "id": _id,
         "level": 0,
         "isOrphan": 
@@ -245,7 +245,7 @@ exports[`inputBuilder > matches the characterized GROQ output 1`] = `
 exports[`trunkBuilder > matches the characterized GROQ output 1`] = `
 "*[_id == $id][0] {
     _updatedAt,
-    "topConcepts": topConcepts[]->|order(prefLabel) {
+    "topConcepts": topConcepts[defined(@->)]->|order(prefLabel) {
       "id": _id,
       "level": 0,
       _originalId,
@@ -315,7 +315,7 @@ exports[`trunkBuilder > matches the characterized GROQ output 1`] = `
     }
     }
     },
-    "concepts": concepts[]->|order(prefLabel) {
+    "concepts": concepts[defined(@->)]->|order(prefLabel) {
       "id": _id,
       "level": 0,
       "isOrphan": 
